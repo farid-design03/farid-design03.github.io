@@ -1229,6 +1229,9 @@ body.has-invite .nav[data-tab=team] i::before{content:'';position:absolute;right
 .ajg[aria-pressed="true"]{background:var(--mc,#9B6BFF);color:#fff;box-shadow:0 3px 0 var(--ink)}
 .tkhours{display:flex;gap:8px;flex-wrap:wrap}.tkhours label{display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:800;color:var(--muted)}.tkhours label[hidden]{display:none}
 .tkhours select{font:inherit;font-size:15px;padding:6px 8px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
+.notifbar{display:flex;align-items:center;gap:12px;padding:12px 14px;border-color:var(--bad);background:#FFF1F1}
+.notifbar .nb-ic{font-size:28px}.notifbar .grow{flex:1;min-width:0;display:flex;flex-direction:column}.notifbar small{color:var(--muted);font-weight:600}
+.notifbar .primary{flex:none;padding:8px 14px;font-size:15px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3824,7 +3827,7 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(taskNag,1200)})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
@@ -3843,7 +3846,7 @@ async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs
   FBX.unsub.push(ref.onSnapshot(s=>{if(!s.exists)return;FBX.classDoc=s.data();FBX.members=FBX.classDoc.members||{};
     if(!s.metadata.hasPendingWrites){try{const d=JSON.parse(FBX.classDoc.data||'null');if(d&&d.teacher){const mine=Object.assign({},APP,{profiles:APP.profiles.filter(p=>!p._remote)});APP=mergeApp(mine,{profiles:d.roster||[],teacher:d.teacher,sessions:d.sessions||[],bank:d.bank||[],deleted:d.deleted||[]});normalizeApp()}}catch(e){}}
     fbRefreshRemote()},()=>{}));
-  FBX.unsub.push(FB.db.collection('users').where('teacherUid','==',u.uid).onSnapshot(q=>{FBX.remote=q.docs.map(d=>{const x=d.data();let p=null;try{p=JSON.parse(x.p||'null')}catch(e){}if(!p)return null;p._remote=true;p._uid=d.id;p._pin=x.pin||'';p.user=x.username;delete p.pass;p.cls=APP.teacher?APP.teacher.cls:p.cls;return p}).filter(Boolean);fbRefreshRemote()},e=>console.warn('murid',e)));
+  FBX.unsub.push(FB.db.collection('users').where('teacherUid','==',u.uid).onSnapshot(q=>{FBX.remote=q.docs.map(d=>{const x=d.data();let p=null;try{p=JSON.parse(x.p||'null')}catch(e){}if(!p)return null;p._remote=true;p._uid=d.id;p._pin=x.pin||'';p._notif=!!(x.push&&x.push.length);p.user=x.username;delete p.pass;p.cls=APP.teacher?APP.teacher.cls:p.cls;return p}).filter(Boolean);fbRefreshRemote()},e=>console.warn('murid',e)));
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(s.exists){const was=isPro();FBX.me=s.data();fbApplyPlan();if(was!==isPro()&&!document.body.classList.contains('playing')&&TEACH_R[curTab])TEACH_R[curTab]()}},()=>{}))}
 function fbRefreshRemote(){const mem=FBX.members||{};const seen=new Set();const remote=FBX.remote.filter(p=>mem[p._uid]!==undefined&&!seen.has(p.id)&&seen.add(p.id));
   APP.profiles=APP.profiles.filter(p=>!p._remote).concat(remote);
@@ -3987,9 +3990,10 @@ renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .s
 /* ---------- menu Murid versi online ---------- */
 renderTStud=function(){const list=students(),c=tCls();const online=list.filter(p=>p._remote).length;
   $('#vTStud').innerHTML=thead(['Murid','team'],`${list.length}${licMax()?' dari '+licMax():''} murid di ${c.full}. ${online} murid memakai akun sendiri.`)+fbCodeCard(false)+addStudentBlock()+
-   `<div class="tcard"><h3>Daftar murid</h3>${list.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th>Akun</th><th>Sandi</th><th class="num">XP</th><th>Terakhir belajar</th><th class="num">Rata-rata</th><th></th></tr></thead><tbody>${list.map(p=>{const a=studentAvg(p.id);
-     return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td>${p._remote?`<span class="pill ok">Online</span> <code style="font-weight:800">${esc(p.user||'')}</code>`:'<span class="pill mute">Hanya di TV</span>'}</td><td>${p._remote&&p._pin?`<span class="pill mid" style="font-family:var(--title);letter-spacing:.12em">${esc(p._pin)}</span>`:'—'}</td><td class="num">${p.xp||0}</td><td>${p.lastDay?fmtDs(p.lastDay):'—'}</td><td class="num">${a==null?'—':a}</td>
+   `<div class="tcard"><h3>Daftar murid</h3>${list.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th>Akun</th><th>Notif</th><th>Sandi</th><th class="num">XP</th><th>Terakhir belajar</th><th class="num">Rata-rata</th><th></th></tr></thead><tbody>${list.map(p=>{const a=studentAvg(p.id);
+     return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td>${p._remote?`<span class="pill ok">Online</span> <code style="font-weight:800">${esc(p.user||'')}</code>`:'<span class="pill mute">Hanya di TV</span>'}</td><td>${p._remote?(p._notif?'<span class="pill ok">🔔 Aktif</span>':'<span class="pill bad">🔕 Mati</span>'):'—'}</td><td>${p._remote&&p._pin?`<span class="pill mid" style="font-family:var(--title);letter-spacing:.12em">${esc(p._pin)}</span>`:'—'}</td><td class="num">${p.xp||0}</td><td>${p.lastDay?fmtDs(p.lastDay):'—'}</td><td class="num">${a==null?'—':a}</td>
       <td style="white-space:nowrap">${p._remote?`<button class="smallbtn" data-kick="${esc(p._uid)}">Keluarkan</button>`:`<button class="smallbtn" data-edit="${p.id}">Ubah</button> <button class="smallbtn" data-del="${p.id}" style="color:var(--bad)">Hapus</button>`}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid. Bagikan kode kelas, atau tambahkan murid yang belajar hanya di TV kelas.</p>'}
+    ${online&&list.some(p=>p._remote&&!p._notif)?`<p class="note" style="margin:0;color:var(--bad);font-weight:700">${list.filter(p=>p._remote&&!p._notif).length} murid belum menyalakan notifikasi, jadi tidak menerima pengingat tugas di HP. Minta mereka membuka JELAS lalu menekan tombol Nyalakan.</p>`:''}
     <p class="note" style="margin:0"><b>Online</b>: murid punya akun sendiri, dan latihannya di rumah terbaca otomatis. Sandinya terlihat di sini kalau murid lupa. <b>Hanya di TV</b>: murid yang kamu tambahkan untuk absensi dan evaluasi di kelas.</p></div>`;
   hydrate($('#vTStud'));bindTeacherLinks($('#vTStud'));bindStudentBlock(renderTStud);fbBindCode($('#vTStud'));
   $('#vTStud').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{const p=APP.profiles.find(x=>x.id===b.dataset.edit);openModal(`<h3>Ubah data murid</h3><div class="tfield"><label for="edNo">No. absen</label><input id="edNo" type="number" min="1" value="${p.no||''}"></div><div class="tfield"><label for="edName">Nama</label><input id="edName" maxlength="24" value="${esc(p.name)}"></div><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Simpan</button></div>`);
@@ -4178,7 +4182,7 @@ function fbSubmitTask(tid,score,correct,total){const m=FBX.me||{};if(!m.classId)
 const _finishRun=finishRun;
 finishRun=function(){const o=game&&game.lesson;if(o&&o.task&&FBX.user&&!isT()){const ok=Math.max(0,o.target-Math.min(o.target,o.wrong));fbSubmitTask(o.task,Math.round(ok/o.target*100),ok,o.target)}_finishRun()};
 const _renderPath=renderPath;
-renderPath=function(){_renderPath();if(!FBX.user||isT())return;fbTaskBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+renderPath=function(){_renderPath();if(!FBX.user||isT())return;fbTaskBanner();notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 /* ---------- peringkat kelas online ---------- */
 const _rL=renderLeague;
@@ -4341,6 +4345,22 @@ function inviteAlert(x){inviteMark(x.id);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AJAK.pendingAlert){const x=AJAK.pendingAlert;AJAK.pendingAlert=null;if(AJAK.inv.some(i=>i.id===x.id)){AJAK.inv=AJAK.inv;inviteAlert(Object.assign({},x,{_again:1}))}}});
 if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(m.task){window.fbOpenTask&&fbOpenTask(m.task);return}if(m.push){const d=m.push;if(d.type==='task'){FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();FBX.nagAt=0;taskNag()});return}if(d.type==='accepted')toast('team',d.title);return}if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
   if(m.action==='accept')inviteAnswer(x,true);else if(m.action==='decline')inviteAnswer(x,false);else if(AJAK.inv.some(i=>i.id===m.inv))inviteAlert(Object.assign({},x))});
+function notifState(){try{return 'Notification' in window?Notification.permission:'unsupported'}catch(e){return 'unsupported'}}
+function notifBanner(){let el=$('#notifBar');if(isT()||!P||!FBX.user){if(el)el.remove();return}const st=notifState();
+  if(st==='granted'||st==='unsupported'){if(el)el.remove();return}
+  if(!el){$('#path').insertAdjacentHTML('beforebegin','<div id="notifBar"></div>');el=$('#notifBar')}
+  el.innerHTML=`<div class="card notifbar"><span class="nb-ic">🔕</span><span class="grow"><b>Notifikasi masih mati</b><small>Nyalakan supaya kamu tahu kalau ada tugas dari guru atau tantangan dari teman.</small></span><button class="primary" id="nbOn">Nyalakan</button></div>`;
+  $('#nbOn').onclick=notifEnable}
+function notifEnable(){const st=notifState();
+  if(st==='denied'){openModal(`<div style="text-align:center"><span style="font-size:48px">🔕</span><h3>Notifikasi diblokir</h3></div><p>Izinkan lagi lewat pengaturan HP:</p>
+    <ol style="margin:0 0 8px;padding-left:20px;line-height:1.7"><li>Ketuk ikon <b>gembok</b> atau <b>⋮</b> di Chrome, lalu <b>Setelan situs</b> (<i>Site settings</i>).</li><li>Pilih <b>Notifikasi</b>, lalu <b>Izinkan</b>.</li><li>Kalau JELAS sudah dipasang di layar utama: tahan ikon JELAS → <b>Info aplikasi</b> → <b>Notifikasi</b> → nyalakan.</li><li>Buka lagi JELAS.</li></ol>
+    <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal;return}
+  try{Notification.requestPermission().then(r=>{if(r==='granted'){fbPushRegister();toast('check','Notifikasi menyala!')}else if(r==='denied')notifEnable();notifBanner()})}catch(e){}}
+function notifGate(){if(isT()||!P||!FBX.user||document.body.classList.contains('playing'))return;const st=notifState();if(st==='granted'||st==='unsupported'){notifBanner();return}
+  notifBanner();if(sessionStorage.getItem('jk_ngate')||!$('#modal').hidden)return;try{sessionStorage.setItem('jk_ngate','1')}catch(e){}
+  openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:100px;margin:0 auto"></div><h3>Nyalakan notifikasi, yuk!</h3><p>Supaya kamu tidak ketinggalan <b>tugas dari guru</b> dan <b>tantangan dari teman</b>.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();notifEnable()}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&FBX.user&&!isT()){notifBanner();if(notifState()==='granted')fbPushRegister()}});
 function notifAsk(){try{if(!('Notification' in window)||Notification.permission!=='default'||localStorage.getItem('jk_notif_asked'))return;localStorage.setItem('jk_notif_asked','1');
   openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3>Nyalakan pemberitahuan?</h3><p>Supaya kamu tahu saat teman menantangmu bertanding.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();try{Notification.requestPermission().then(r=>{if(r==='granted')fbPushRegister()})}catch(e){}}}catch(e){}}
@@ -4350,7 +4370,7 @@ function inviteBox(){let el=$('#invBox');const card=$('#vTeam .roomcard');if(!ca
   el.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const x=AJAK.inv.find(i=>i.id===b.dataset.dec);if(x)inviteAnswer(x,false)})}
 
 const _renderTeamR=renderTeam;
-renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox();setTimeout(notifAsk,600)};
+renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox();setTimeout(notifGate,600)};
 const _finishRunR=finishRun;
 finishRun=function(){const o=game&&game.lesson;if(o&&o.room&&FBX.user){if(o.segN>1&&o.seg<o.segN-1){ROOM.acc.correct+=game.correct||0;ROOM.acc.done+=o.target;clearInterval(timerId);if(arc.running)arcStop();roomSeg(o.seg+1);toast('game',`Game berikutnya: ${gameName(ROOM.segs[o.seg+1].mode)}`);return}ROOM.pendingShow=true;roomFinish(o)}_finishRunR()};
 const _goR=go;
