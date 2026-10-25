@@ -4191,8 +4191,8 @@ async function ajakEnsureRoom(){if(ROOM.code&&ROOM.doc&&ROOM.doc.host===FBX.user
   const s=SUBJ();await roomCreate(s,AJAK.ui,AJAK.n,true);return ROOM.code}
 async function ajakInvite(f,btn){if(btn){btn.disabled=true;btn.textContent='…'}
   try{const code=await ajakEnsureRoom();const d=ROOM.doc||{};
-    await FB.db.doc('invites/'+f.uid+'_'+code+'_'+Date.now().toString(36)).set({to:f.uid,from:FBX.user.uid,fromName:P.name,fromAv:P.avatar||null,code,subjName:d.subjName||SUBJ().name,title:d.title||(SUBJ().units[AJAK.ui]||{}).t||'',created:Date.now()});
-    AJAK.sent[f.uid]=true;if(btn){btn.textContent='TERKIRIM';btn.classList.add('sent')}toast('team',`Tantangan terkirim ke ${f.name}.`);ajakFoot()}
+    const invId=f.uid+'_'+code+'_'+Date.now().toString(36);await FB.db.doc('invites/'+invId).set({to:f.uid,from:FBX.user.uid,fromName:P.name,fromAv:P.avatar||null,code,subjName:d.subjName||SUBJ().name,title:d.title||(SUBJ().units[AJAK.ui]||{}).t||'',created:Date.now()});
+    notifyServer('invite',invId);AJAK.sent[f.uid]=true;if(btn){btn.textContent='TERKIRIM';btn.classList.add('sent')}toast('team',`Tantangan terkirim ke ${f.name}.`);ajakFoot()}
   catch(e){if(btn){btn.disabled=false;btn.textContent='UNDANG'}toast('lock',fbErr(e))}}
 async function ajakShare(){try{const code=await ajakEnsureRoom();const d=ROOM.doc||{};const link=`${location.origin}${location.pathname}?tantang=${code}`;
   const text=`Aku menantangmu di JELAS! ${d.subjName||''}: ${d.title||''}. Kode: ${code}`;
@@ -4235,12 +4235,12 @@ function fbListenInvites(){if(AJAK.unsubInv||!FBX.user||isT())return;AJAK.first=
     const fresh=list.filter(x=>!AJAK.inv.some(y=>y.id===x.id));AJAK.inv=list;document.body.classList.toggle('has-invite',list.length>0);
     const unseen=list.filter(x=>!inviteSeen(x.id));if(unseen.length)inviteAlert(unseen[0]);AJAK.first=false;if(curTab==='team')inviteBox()},()=>{});
   const un2=FB.db.collection('invites').where('from','==',FBX.user.uid).onSnapshot(q=>{q.docs.forEach(d=>{const x=d.data();if(!x.status)return;
-      AJAK.ans=AJAK.ans||new Set();if(AJAK.ans.has(d.id))return;AJAK.ans.add(d.id);FB.db.doc('invites/'+d.id).delete().catch(()=>{});
+      AJAK.ans=AJAK.ans||new Set();if(AJAK.ans.has(d.id))return;AJAK.ans.add(d.id);setTimeout(()=>FB.db.doc('invites/'+d.id).delete().catch(()=>{}),60000);
       if(x.status==='declined')openModal(`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({name:x.toName||'Teman',avatar:x.toAv||null}).replace('class="avatar','class="avatar big')}</div><h3>${esc(x.toName||'Temanmu')} menolak tantanganmu</h3><p>Coba ajak teman lain, atau tantang lagi nanti.</p></div><div class="acts"><button class="primary" id="mNo">Oke</button></div>`)||($('#mNo').onclick=closeModal);
       if(x.status==='accepted')toast('team',`${x.toName||'Temanmu'} menerima tantangan!`)})},()=>{});FBX.unsub.push(()=>{try{un2()}catch(e){}});AJAK.unsubInv=un;FBX.unsub.push(()=>{try{un()}catch(e){}AJAK.unsubInv=null;AJAK.inv=[];document.body.classList.remove('has-invite')})}
 function inviteSeen(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');return a.includes(id)}catch(e){return false}}
 function inviteMark(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');a.push(id);sessionStorage.setItem('jk_inv_seen',JSON.stringify(a.slice(-50)))}catch(e){}}
-function inviteAnswer(x,ok){inviteMark(x.id);FB.db.doc('invites/'+x.id).update({status:ok?'accepted':'declined',toName:P.name,toAv:P.avatar||null}).catch(()=>{});AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();if(ok)roomJoin(x.code);else toast('check','Tantangan ditolak.')}
+function inviteAnswer(x,ok){inviteMark(x.id);FB.db.doc('invites/'+x.id).update({status:ok?'accepted':'declined',toName:P.name,toAv:P.avatar||null}).then(()=>notifyServer('answer',x.id)).catch(()=>{});AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();if(ok)roomJoin(x.code);else toast('check','Tantangan ditolak.')}
 function inviteAlert(x){inviteMark(x.id);
   if(document.hidden){try{if('Notification' in window&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(`${x.fromName} menantangmu!`,{body:`${x.subjName}${x.title?' · '+x.title:''}. Ketuk untuk menjawab.`,icon:'icons/icon-192.png',badge:'icons/icon-192.png',tag:'inv-'+x.id,renotify:true,requireInteraction:true,vibrate:[200,100,200],data:{inv:x.id,code:x.code},actions:[{action:'accept',title:'Terima'},{action:'decline',title:'Tolak'}]}))}catch(e){}
     AJAK.pendingAlert=x;return}
@@ -4279,6 +4279,7 @@ async function fbPushRegister(){try{if(!FB.cfg.vapidKey||!firebase.messaging||!(
   await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true})}catch(e){console.warn('push',e)}}
 async function fbPushUnregister(){try{if(FBX.pushTok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(FBX.pushTok)},{merge:true})}catch(e){}}
 window.fbPushRegister=fbPushRegister;
+async function notifyServer(type,id){try{if(!FB.cfg.pushUrl||!FBX.user)return;const t=await FBX.user.getIdToken();await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify({type,id})})}catch(e){console.warn('notif',e)}}
 
 /* ---------- panel admin (penjual) ---------- */
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
