@@ -1652,7 +1652,7 @@ const LEVEL_ART={
  sd:`<svg viewBox="0 0 80 80"><g ${S3}><path d="M30 18 v-4 a10 10 0 0 1 20 0 v4" fill="none"/><rect x="14" y="18" width="52" height="56" rx="14" fill="#F2394B"/><rect x="22" y="44" width="36" height="22" rx="6" fill="#fff"/><path d="M22 52 h36"/><circle cx="40" cy="31" r="5" fill="#FFC23D"/></g></svg>`,
  smp:`<svg viewBox="0 0 80 80"><g ${S3}><path d="M40 24 C30 18 18 18 8 22 V66 C18 62 30 62 40 68Z" fill="#fff"/><path d="M40 24 C50 18 62 18 72 22 V66 C62 62 50 62 40 68Z" fill="#DCE6FF"/><path d="M40 24 V68"/><path d="M15 34 h16 M15 42 h16 M49 34 h16 M49 42 h12" stroke-width="2.5"/><path d="M52 64 L70 46 l6 6 L58 70 l-8 2z" fill="#FFC23D"/></g></svg>`,
  sma:`<svg viewBox="0 0 80 80"><g ${S3}><path d="M20 40 v14 c0 10 40 10 40 0 v-14" fill="#6676B8"/><path d="M4 32 L40 16 L76 32 L40 48Z" fill="${INK}"/><path d="M40 32 L66 37 V56" fill="none" stroke="#FFC23D" stroke-width="3"/><circle cx="66" cy="60" r="5" fill="#FFC23D"/></g></svg>`};
-const MCOL={tembak:'#FF5A5F',lari:'#FF8A3D',balon:'#3DA5FF',tikus:'#A86BFF',balap:'#2F5BEA',pancing:'#14B8A6',katak:'#22B85C',ular:'#E89A00',kuis:'#FF5C9E'};
+const MCOL={tembak:'#FF5A5F',lari:'#FF8A3D',balon:'#3DA5FF',tikus:'#A86BFF',balap:'#2F5BEA',pancing:'#14B8A6',katak:'#22B85C',ular:'#E89A00',penalti:'#2E9E4F',basket:'#E8590C',buah:'#D6336C',labirin:'#5B5BD6',kuis:'#FF5C9E'};
 const SCOL=['#FF5A5F','#3D8BFF','#F5A300','#22B85C','#A86BFF','#14B8A6','#FF8A3D'];
 const HEART='<svg viewBox="0 0 24 22"><path d="M12 20.5 C5 15 1.5 11 1.5 6.8 A5.2 5.2 0 0 1 12 4.6 A5.2 5.2 0 0 1 22.5 6.8 C22.5 11 19 15 12 20.5Z" stroke="#1B1E3D" stroke-width="2.2" stroke-linejoin="round"/></svg>';
 const CHEER=['Hebat!','Pintar!','Keren!','Mantap!','Luar biasa!','Jenius!','Hore!'];
@@ -3033,25 +3033,33 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><ellipse cx="24" cy="34" rx="19" ry="9"/><circle cx="17" cy="15" r="5"/><circle cx="31" cy="15" r="5"/><path d="M15 25c5 4 13 4 18 0"/></svg>'},
  {id:'ular',name:'Cacing Lapar',desc:'Kendalikan cacing memakan bola jawaban',help:'Tangan kiri: sentuh dan geser di sisi kiri layar untuk mengarahkan cacing. Tangan kanan: tahan tombol NOS untuk ngebut. Di laptop: cacing mengikuti mouse, klik atau Spasi untuk ngebut. Makan bola berhuruf jawaban yang benar!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 38h15a6 6 0 0 0 0-12h-8a6 6 0 0 1 0-12h22"/><circle cx="40" cy="14" r="4" fill="currentColor"/></svg>'},
+ {id:'penalti',name:'Tendang Penalti',desc:'Tendang bola ke sudut gawang yang benar',help:'Geser jari dari bola ke arah sudut gawang, atau ketuk langsung kotak jawaban di gawang. Keyboard: tekan angka pada kotak. Kiper akan mencoba menghalangi!',
+  icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M4 30V8h40v22"/><path d="M4 19h40M24 8v22" stroke-width="2"/><circle cx="24" cy="39" r="6"/></svg>'},
+ {id:'basket',name:'Lempar Basket',desc:'Lempar bola ke ring yang benar',help:'Ketuk papan jawaban atau geser jari dari bola ke arah ring untuk melempar. Keyboard: tekan angka pada papan. Ringnya bergerak pelan, jadi bidik baik-baik!',
+  icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><rect x="10" y="4" width="28" height="16" rx="2"/><path d="M15 24h18M17 24l3 10M31 24l-3 10"/><circle cx="24" cy="40" r="5"/></svg>'},
+ {id:'buah',name:'Potong Buah',desc:'Sayat buah yang membawa jawaban benar',help:'Buah melompat dari bawah membawa jawaban. Sayat (geser jari) melewati buah yang benar, atau ketuk buahnya. Keyboard: tekan angka pada kartu. Hati-hati, jangan sampai salah sayat!',
+  icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="20" cy="28" r="13"/><path d="M20 15c0-5 3-8 7-9"/><path d="M8 42L44 8" stroke-width="2.5"/></svg>'},
+ {id:'labirin',name:'Kejar Labirin',desc:'Lari di labirin ke pojok jawaban, hindari hantu',help:'Geser jari ke atas, bawah, kiri, atau kanan untuk berbelok. Keyboard: tombol panah atau W A S D. Lari ke pojok berhuruf jawaban yang benar sebelum hantu menangkapmu!',
+  icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><rect x="5" y="5" width="38" height="38" rx="3"/><path d="M5 17h14M29 5v14M17 29h14v14M37 23v10"/><circle cx="12" cy="36" r="3" fill="currentColor"/></svg>'},
  {id:'kuis',name:'Kuis Klasik',desc:'Pilih jawaban, lengkap dengan pembahasan',help:'',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><rect x="6" y="6" width="15" height="15" rx="3"/><rect x="27" y="6" width="15" height="15" rx="3"/><rect x="6" y="27" width="15" height="15" rx="3"/><rect x="27" y="27" width="15" height="15" rx="3" fill="currentColor"/></svg>'}];
 /* which games suit which subject: short numeric answers suit fast action games,
    word answers suit games with readable cards, long phrases suit games with wide labels or an A–D list */
 const FIT={
- num:{games:['tembak','balap','balon','tikus','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
- unit:{games:['tembak','balap','lari','pancing','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
- word:{games:['pancing','katak','lari','tikus','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
- phrase:{games:['ular','lari','katak','pancing','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
- long:{games:['ular','lari','katak','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
- kid:{games:['balon','tikus','katak','pancing','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
- kidSlow:{games:['balon','katak','pancing','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
+ num:{games:['tembak','balap','balon','tikus','penalti','basket','buah','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
+ unit:{games:['tembak','balap','lari','pancing','penalti','basket','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
+ word:{games:['pancing','katak','lari','tikus','penalti','buah','labirin','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
+ phrase:{games:['ular','lari','katak','pancing','penalti','labirin','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
+ long:{games:['ular','lari','katak','labirin','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
+ kid:{games:['balon','tikus','katak','pancing','buah','basket','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
+ kidSlow:{games:['balon','katak','pancing','basket','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
 const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/warna':'kidSlow','tk/banyak':'picture','tk/__mix':'kidSlow',
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
  'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
 const WHY={tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
- pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Gerbang lebar muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
+ pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Gerbang lebar muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',penalti:'Kotak gawang lebar, seru seperti adu penalti',basket:'Bidik ring, latih fokus sambil membaca',buah:'Sayat cepat, seru untuk jawaban singkat',labirin:'Jawaban di daftar A–D, kejar-kejaran dengan hantu',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
 const modeInfo=()=>MODE_LIST.find(m=>m.id===MODE)||MODE_LIST[0];
 const views=['vLearn','vTeam','vGame','vLeague','vQuest','vShop','vProfile','vPlay','vDone','vDuel','vResult','vTDash','vTAtt','vTEval','vTRun','vTRapor','vTStud','vTSet','vTBank'];
@@ -3756,7 +3764,177 @@ const Ular={
   else{const bx=a1-14,by=b1-14,bw2=120;rr(c,bx-bw2,by-12,bw2,12,6);c.fillStyle='rgba(255,255,255,.2)';c.fill();rr(c,bx-bw2,by-12,bw2*this.energy,12,6);c.fillStyle='#FFB547';c.fill();
    c.fillStyle='#fff';c.font=`800 12px ${FONT}`;c.textAlign='right';c.textBaseline='bottom';c.fillText('NOS · klik / Spasi',bx,by-16)}}
 };
-const MODES={tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular};
+/* ---- game 9: Tendang Penalti ---- */
+const Penalti={
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.gw=Math.min(W*.92,560);this.gx=(W-this.gw)/2;this.gy=Math.max(14,H*.05);this.gh=Math.min(H*.58,this.gw*.9);
+  const rows=Math.ceil(n/2),cw=this.gw/2,ch=this.gh/rows;const order=shuffle([...Array(n).keys()]);
+  this.zones=order.map((ai,k)=>{const x=this.gx+(k%2)*cw,y=this.gy+Math.floor(k/2)*ch;return {i:ai,x,y,w:cw,h:ch,f:fit(ctx,arc.labels[ai],cw-46,ch-26,22,10)}});
+  this.br=clamp(W/24,12,20);this.ball={x:W/2,y:H-this.br*3,shot:null,spin:0};this.keeper={x:W/2,t:0,dive:null};this.start=null;this.net=0},
+ shoot(z){if(this.ball.shot||arc.state!=='play')return;const others=this.zones.filter(o=>o!==z);const kz=others.length?pick(others):z;
+  this.ball.shot={z,t:0,x0:this.ball.x,y0:this.ball.y,tx:z.x+z.w/2+(Math.random()-.5)*z.w*.3,ty:z.y+z.h/2+(Math.random()-.5)*z.h*.2};this.keeper.dive={tx:kz.x+kz.w/2,ty:kz.y+kz.h/2,t:0};tone([300,520],.06)},
+ zoneAt(x,y){return this.zones.find(z=>x>=z.x&&x<=z.x+z.w&&y>=z.y&&y<=z.y+z.h)},
+ down(x,y){const z=this.zoneAt(x,y);if(z){this.shoot(z);return}this.start={x,y}},
+ move(x,y,active){if(!active||!this.start||this.ball.shot)return;const dx=x-this.start.x,dy=y-this.start.y;if(dy>-40)return;
+  const gyMid=this.gy+this.gh/2,k=(gyMid-this.ball.y)/dy,px=this.ball.x+dx*k*1.4;const up=Math.min(1,-dy/(arc.H*.45));const py=this.gy+this.gh*(1-up)*.98;
+  const z=this.zoneAt(clamp(px,this.gx+1,this.gx+this.gw-1),clamp(py,this.gy+1,this.gy+this.gh-1));this.start=null;if(z)this.shoot(z)},
+ pup(){this.start=null},
+ key(k){if(/^[1-4]$/.test(k)){const z=this.zones.find(z=>z.i===+k-1);if(z)this.shoot(z)}},
+ step(dt){const kp=this.keeper;kp.t+=dt;
+  if(kp.dive){kp.dive.t=Math.min(1,kp.dive.t+dt*2.6)}else kp.x=arc.W/2+Math.sin(kp.t*2.2)*this.gw*.22;
+  const s=this.ball.shot;if(s){s.t+=dt;const u=Math.min(1,s.t/.5);this.ball.x=s.x0+(s.tx-s.x0)*u;this.ball.y=s.y0+(s.ty-s.y0)*u-Math.sin(u*Math.PI)*30;this.ball.spin+=dt*14;
+   if(u>=1&&!s.done){s.done=true;this.net=1;burst(this.ball.x,this.ball.y,s.z.i===arc.ci?'#FFD54A':'#FF6B5B',22);arcResolve(s.z.i)}}
+  this.net=Math.max(0,this.net-dt*2)},
+ update(dt){this.step(dt)},idle(dt){this.step(dt)},
+ draw(c){const{W,H}=arc;for(let k=0;k*28<H;k++){c.fillStyle=k%2?'#4CAF50':'#43A047';c.fillRect(0,k*28,W,28)}
+  const gx=this.gx,gy=this.gy,gw=this.gw,gh=this.gh;
+  c.fillStyle='rgba(255,255,255,.18)';c.fillRect(gx,gy,gw,gh);
+  c.strokeStyle='rgba(255,255,255,.45)';c.lineWidth=1;const wob=this.net*4*Math.sin(performance.now()/40);
+  for(let x=gx;x<=gx+gw;x+=14){c.beginPath();c.moveTo(x,gy);c.lineTo(x+wob,gy+gh);c.stroke()}for(let y=gy;y<=gy+gh;y+=14){c.beginPath();c.moveTo(gx,y+wob*.5);c.lineTo(gx+gw,y+wob*.5);c.stroke()}
+  const done=arc.state==='resolved';
+  for(const z of this.zones){let fill='rgba(255,255,255,.88)',txt='#14213D',edge='#fff';if(done&&z.i===arc.ci){fill='#1C8A57';txt='#fff'}else if(done&&this.ball.shot&&this.ball.shot.z===z){fill='#C9362A';txt='#fff'}
+   rr(c,z.x+8,z.y+8,z.w-16,z.h-16,10);c.fillStyle=fill;c.fill();c.lineWidth=2;c.strokeStyle=edge;c.stroke();
+   c.fillStyle='#1E1E24';c.beginPath();c.arc(z.x+18,z.y+18,9,0,7);c.fill();c.fillStyle='#fff';c.font=`800 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(z.i+1,z.x+18,z.y+19);
+   drawFit(c,z.f,z.x+z.w/2+8,z.y+z.h/2+2,txt)}
+  c.strokeStyle='#fff';c.lineWidth=7;c.lineJoin='round';c.beginPath();c.moveTo(gx,gy+gh+4);c.lineTo(gx,gy);c.lineTo(gx+gw,gy);c.lineTo(gx+gw,gy+gh+4);c.stroke();
+  c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=3;c.beginPath();c.moveTo(gx-20,gy+gh+4);c.lineTo(gx+gw+20,gy+gh+4);c.stroke();
+  c.beginPath();c.arc(W/2,H-this.br*3,4,0,7);c.fillStyle='#fff';c.fill();
+  /* kiper */
+  const kp=this.keeper;const ks0=clamp(gw/14,18,30);let kx=kp.x,ky=gy+gh+ks0*1.3,ang=0;if(kp.dive){const u=kp.dive.t;kx=kp.x+(kp.dive.tx-kp.x)*u;ky=ky+(kp.dive.ty-ky)*u;ang=(kp.dive.tx<kp.x?-1:1)*u*1.2}
+  c.save();c.translate(kx,ky);c.rotate(ang);const ks=clamp(gw/14,18,30);
+  c.fillStyle='#FF9600';rr(c,-ks*.5,-ks*.3,ks,ks*1.1,6);c.fill();c.fillStyle='#F6C9A0';c.beginPath();c.arc(0,-ks*.65,ks*.38,0,7);c.fill();
+  c.strokeStyle='#FF9600';c.lineWidth=ks*.28;c.lineCap='round';c.beginPath();c.moveTo(-ks*.45,-ks*.15);c.lineTo(-ks*1.05,-ks*.75);c.moveTo(ks*.45,-ks*.15);c.lineTo(ks*1.05,-ks*.75);c.stroke();
+  c.fillStyle='#fff';c.beginPath();c.arc(-ks*1.1,-ks*.8,ks*.22,0,7);c.arc(ks*1.1,-ks*.8,ks*.22,0,7);c.fill();
+  c.fillStyle='#1E1E24';rr(c,-ks*.45,ks*.75,ks*.35,ks*.5,3);c.fill();rr(c,ks*.1,ks*.75,ks*.35,ks*.5,3);c.fill();c.restore();
+  /* bola */
+  const b=this.ball,sc=b.shot?1-Math.min(1,b.shot.t/.5)*.45:1,r=this.br*sc;c.save();c.translate(b.x,b.y);c.rotate(b.spin);
+  c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(2,r*.9,r,r*.35,0,0,7);c.fill();
+  c.fillStyle='#fff';c.beginPath();c.arc(0,0,r,0,7);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();
+  c.fillStyle='#1E1E24';c.beginPath();for(let k=0;k<5;k++){const a=k*Math.PI*2/5-Math.PI/2;c.lineTo(Math.cos(a)*r*.38,Math.sin(a)*r*.38)}c.fill();c.restore();
+  if(!b.shot&&arc.state==='play'){c.fillStyle='rgba(255,255,255,.85)';c.font=`800 13px ${FONT}`;c.textAlign='center';c.fillText('Geser ke atas atau ketuk gawang',W/2,H-6)}}
+};
+
+/* ---- game 10: Lempar Basket ---- */
+const Basket={
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;const cols=n>2?2:n,rows=Math.ceil(n/cols);this.bw=Math.min(W*.42,210);
+  const fits=arc.labels.map(l=>fit(ctx,l,this.bw-20,54,20,10));this.bh=Math.max(40,Math.max(...fits.map(f=>f.lines.length*f.s*1.08))+16);
+  const top=12,span=H*.62;const order=shuffle([...Array(n).keys()]);
+  this.hoops=order.map((ai,k)=>{const col=k%cols,row=Math.floor(k/cols);const x=W*(col+.5)/cols,y=top+row*(span/rows);return {i:ai,f:fits[ai],x0:x,x,y,ph:Math.random()*6,amp:(8+Math.random()*10)*arc.speed}});
+  this.br=clamp(W/22,12,20);this.ball={x:W/2,y:H-this.br*2.4,shot:null};this.start=null;this.last=null},
+ rim(h){return {x:h.x,y:h.y+this.bh+10,w:this.bw*.42}},
+ throwTo(h){if(this.ball.shot||arc.state!=='play')return;const r=this.rim(h);this.ball.shot={h,t:0,x0:this.ball.x,y0:this.ball.y,tx:r.x,ty:r.y-this.br,phase:0};tone([500,760],.05)},
+ hoopAt(x,y){return this.hoops.find(h=>Math.abs(x-h.x)<this.bw/2+6&&y>h.y-6&&y<h.y+this.bh+34)},
+ down(x,y){const h=this.hoopAt(x,y);if(h){this.throwTo(h);return}this.start={x,y};this.last={x,y}},
+ move(x,y,active){if(active&&this.start)this.last={x,y}},
+ pup(){if(!this.start||!this.last){this.start=null;return}const dx=this.last.x-this.start.x,dy=this.last.y-this.start.y;this.start=null;if(Math.hypot(dx,dy)<30)return;
+  const a=Math.atan2(dy,dx);let best=null,bd=9;for(const h of this.hoops){const r=this.rim(h);const ha=Math.atan2(r.y-this.ball.y,r.x-this.ball.x);const d=Math.abs(Math.atan2(Math.sin(ha-a),Math.cos(ha-a)));if(d<bd){bd=d;best=h}}
+  if(best&&bd<.8)this.throwTo(best)},
+ key(k){if(/^[1-4]$/.test(k)){const h=this.hoops.find(h=>h.i===+k-1);if(h)this.throwTo(h)}},
+ step(dt){const tm=performance.now()/1000;for(const h of this.hoops){if(!(this.ball.shot&&this.ball.shot.h===h))h.x=h.x0+Math.sin(tm*1.3+h.ph)*h.amp}
+  const s=this.ball.shot;if(!s)return;s.t+=dt;
+  if(s.phase===0){const u=Math.min(1,s.t/.75),r=this.rim(s.h);s.tx=r.x;this.ball.x=s.x0+(s.tx-s.x0)*u;this.ball.y=s.y0+(s.ty-s.y0)*u-Math.sin(u*Math.PI)*(arc.H*.22);if(u>=1){s.phase=1;s.t=0;tone([880,1320],.05)}}
+  else if(s.phase===1){this.ball.y+=dt*160;if(s.t>.28&&!s.done){s.done=true;burst(this.ball.x,this.ball.y,s.h.i===arc.ci?'#FFD54A':'#FF6B5B',22);arcResolve(s.h.i)}}},
+ update(dt){this.step(dt)},idle(dt){this.step(dt)},
+ draw(c){const{W,H}=arc;const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#2B2F6B');g.addColorStop(1,'#4A3F8F');c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.fillStyle='#C98A4B';c.fillRect(0,H*.78,W,H*.22);c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=2;c.beginPath();c.ellipse(W/2,H,W*.3,H*.12,0,Math.PI,0);c.stroke();
+  for(let x=0;x<W;x+=40){c.strokeStyle='rgba(0,0,0,.08)';c.beginPath();c.moveTo(x,H*.78);c.lineTo(x,H);c.stroke()}
+  const done=arc.state==='resolved',s=this.ball.shot;
+  const drawBall=()=>{const b=this.ball,r=this.br;c.fillStyle='#FF8A00';c.beginPath();c.arc(b.x,b.y,r,0,7);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();
+   c.beginPath();c.moveTo(b.x-r,b.y);c.lineTo(b.x+r,b.y);c.moveTo(b.x,b.y-r);c.lineTo(b.x,b.y+r);c.stroke();c.beginPath();c.arc(b.x-r*1.3,b.y,r,-.6,.6);c.stroke();c.beginPath();c.arc(b.x+r*1.3,b.y,r,Math.PI-.6,Math.PI+.6);c.stroke()};
+  for(const h of this.hoops){let fill='#fff',txt='#14213D',edge='#E2E2E2';if(done&&h.i===arc.ci){fill='#1C8A57';txt='#fff';edge='#0F5C39'}else if(done&&s&&s.h===h){fill='#C9362A';txt='#fff';edge='#8E1E16'}
+   rr(c,h.x-this.bw/2,h.y,this.bw,this.bh,8);c.fillStyle=fill;c.fill();c.lineWidth=3;c.strokeStyle=edge;c.stroke();
+   c.fillStyle='#1E1E24';c.beginPath();c.arc(h.x-this.bw/2+12,h.y+12,8,0,7);c.fill();c.fillStyle='#fff';c.font=`800 11px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(h.i+1,h.x-this.bw/2+12,h.y+13);
+   drawFit(c,h.f,h.x,h.y+this.bh/2,txt);
+   const r=this.rim(h);if(s&&s.h===h&&s.phase===1)drawBall();
+   c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=1.5;for(let k=-3;k<=3;k++){c.beginPath();c.moveTo(r.x+k*r.w/3.5,r.y);c.lineTo(r.x+k*r.w/5.5,r.y+22);c.stroke()}
+   c.strokeStyle='#FF3B30';c.lineWidth=4;c.beginPath();c.ellipse(r.x,r.y,r.w/2,5,0,0,7);c.stroke()}
+  if(!(s&&s.phase===1))drawBall();
+  if(!s&&arc.state==='play'){c.fillStyle='rgba(255,255,255,.85)';c.font=`800 13px ${FONT}`;c.textAlign='center';c.fillText('Lempar ke ring yang benar: ketuk atau geser',W/2,H-6)}}
+};
+
+/* ---- game 11: Potong Buah ---- */
+const FRUITS=[{c:'#E53935',in:'#FFCDD2',k:'apel'},{c:'#FB8C00',in:'#FFE0B2',k:'jeruk'},{c:'#43A047',in:'#F44336',k:'semangka'},{c:'#8E24AA',in:'#E1BEE7',k:'anggur'},{c:'#FDD835',in:'#FFF9C4',k:'pisang'}];
+const Buah={
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.R=clamp(W/11,22,38);this.tw=Math.min(W*.42,190);
+  this.T=3.6/Math.max(.6,arc.speed);this.g=2*(H*.72)/((this.T/2)**2);this.vy=this.g*this.T/2;this.extra=0;
+  const kinds=shuffle(FRUITS.slice());
+  this.fr=arc.labels.map((l,i)=>{const f=fit(ctx,l,this.tw-16,48,20,10);return {i,f,th:f.lines.length*f.s*1.08+12,k:kinds[i%kinds.length],t:-i*this.T/n,x0:0,vx:0,cut:null}});
+  this.fr.forEach(f=>this.launch(f,true));this.trail=[];this.cuts=[]},
+ launch(f,first){const{W}=arc;const m=this.tw/2+6;f.x0=m+Math.random()*(W-2*m);f.vx=(Math.random()-.5)*Math.min(60,W*.08);if(!first)f.t=0},
+ pos(f){const{H}=arc;const t=Math.max(0,f.t);return {x:clamp(f.x0+f.vx*t,this.tw/2,arc.W-this.tw/2),y:H+this.R-(this.vy*t-.5*this.g*t*t)}},
+ hitF(f,x,y){if(f.cut||f.t<0)return false;const p=this.pos(f);return Math.hypot(x-p.x,y-p.y)<this.R+6||(Math.abs(x-p.x)<this.tw/2&&y>p.y+this.R*.5&&y<p.y+this.R*.5+f.th+6)},
+ slice(f){if(f.cut||arc.state!=='play')return;const p=this.pos(f);f.cut={x:p.x,y:p.y,t:0};burst(p.x,p.y,f.k.in,26);tone([900,600],.05);arcResolve(f.i)},
+ segHit(a,b){for(const f of this.fr){if(f.cut||f.t<0)continue;const p=this.pos(f);const dx=b.x-a.x,dy=b.y-a.y,l2=dx*dx+dy*dy||1;const u=clamp(((p.x-a.x)*dx+(p.y-a.y)*dy)/l2,0,1);const qx=a.x+dx*u,qy=a.y+dy*u;if(Math.hypot(qx-p.x,qy-p.y)<this.R+4){this.slice(f);return}}},
+ down(x,y){this.trail=[{x,y,t:0}];const f=this.fr.find(f=>this.hitF(f,x,y));if(f)this.slice(f)},
+ move(x,y,active){if(!active)return;const last=this.trail[this.trail.length-1];const pt={x,y,t:0};this.trail.push(pt);if(this.trail.length>14)this.trail.shift();if(last)this.segHit(last,pt)},
+ pup(){this.trail=[]},
+ key(k){if(/^[1-4]$/.test(k)){const f=this.fr.find(f=>f.i===+k-1&&f.t>=0&&!f.cut);if(f)this.slice(f)}},
+ step(dt){for(const f of this.fr){f.t+=dt;if(f.cut){f.cut.t+=dt;continue}if(f.t>this.T+.1)this.launch(f)}this.trail.forEach(p=>p.t+=dt);this.trail=this.trail.filter(p=>p.t<.18)},
+ update(dt){this.step(dt)},idle(dt){this.step(dt)},
+ draw(c){const{W,H}=arc;const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#5D4037');g.addColorStop(1,'#3E2723');c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=2;for(let x=30;x<W;x+=60){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke()}
+  const done=arc.state==='resolved';
+  for(const f of this.fr){if(f.t<0)continue;const R=this.R;
+   if(f.cut){const u=f.cut.t;const sp=40+u*120,dy=u*u*300;[-1,1].forEach(d=>{c.save();c.translate(f.cut.x+d*sp,f.cut.y+dy);c.rotate(d*u*3);c.fillStyle=f.k.c;c.beginPath();c.arc(0,0,R,d<0?Math.PI/2:-Math.PI/2,d<0?Math.PI*1.5:Math.PI/2);c.fill();c.fillStyle=f.k.in;c.beginPath();c.arc(0,0,R*.8,d<0?Math.PI/2:-Math.PI/2,d<0?Math.PI*1.5:Math.PI/2);c.fill();c.restore()});continue}
+   const p=this.pos(f);c.fillStyle='rgba(0,0,0,.2)';c.beginPath();c.ellipse(p.x+3,p.y+R*.9,R*.8,R*.25,0,0,7);c.fill();
+   c.fillStyle=f.k.c;c.beginPath();if(f.k.k==='pisang'){c.ellipse(p.x,p.y,R*1.1,R*.55,-.4,0,7)}else c.arc(p.x,p.y,R,0,7);c.fill();c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=2;c.stroke();
+   if(f.k.k==='semangka'){c.strokeStyle='#1B5E20';c.lineWidth=3;for(let k=-2;k<=2;k++){c.beginPath();c.ellipse(p.x+k*R*.3,p.y,R*.12,R*.95,0,0,7);c.stroke()}}
+   if(f.k.k==='anggur'){c.fillStyle='#6A1B9A';for(const [a,b] of [[-.4,-.3],[.4,-.3],[0,.3],[-.45,.4],[.45,.4],[0,-.6]]){c.beginPath();c.arc(p.x+a*R,p.y+b*R,R*.35,0,7);c.fill()}}
+   if(f.k.k==='apel'||f.k.k==='jeruk'){c.fillStyle='#2E7D32';c.beginPath();c.ellipse(p.x+R*.25,p.y-R*1.05,R*.3,R*.14,-.5,0,7);c.fill()}
+   c.fillStyle='rgba(255,255,255,.4)';c.beginPath();c.ellipse(p.x-R*.35,p.y-R*.35,R*.2,R*.32,-.6,0,7);c.fill();
+   let fill='#FFF8E1',txt='#14213D',edge=f.k.c;if(done&&f.i===arc.ci){fill='#1C8A57';txt='#fff';edge='#0F5C39'}
+   const ty=p.y+R*.55;rr(c,p.x-this.tw/2,ty,this.tw,f.th,8);c.fillStyle=fill;c.fill();c.lineWidth=2.5;c.strokeStyle=edge;c.stroke();drawFit(c,f.f,p.x,ty+f.th/2,txt);
+   c.fillStyle='#1E1E24';c.beginPath();c.arc(p.x-this.tw/2+2,ty+2,8,0,7);c.fill();c.fillStyle='#fff';c.font=`800 11px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(f.i+1,p.x-this.tw/2+2,ty+3)}
+  if(this.trail.length>1){c.strokeStyle='rgba(255,255,255,.9)';c.lineCap='round';for(let k=1;k<this.trail.length;k++){c.lineWidth=2+k*.6;c.beginPath();c.moveTo(this.trail[k-1].x,this.trail[k-1].y);c.lineTo(this.trail[k].x,this.trail[k].y);c.stroke()}}
+  if(arc.state==='play'&&arc.t<2.5){c.fillStyle='rgba(255,255,255,.85)';c.font=`800 13px ${FONT}`;c.textAlign='center';c.fillText('Sayat buah yang jawabannya benar!',W/2,H-8)}}
+};
+
+/* ---- game 12: Kejar Labirin ---- */
+const Labirin={
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;const bw=(W-24)/2;
+  this.leg=arc.labels.map((l,k)=>({k,f:fit(ctx,l,bw-40,36,16,10)}));const rowsL=Math.ceil(n/2);this.bh=Math.max(30,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
+  const C=W<520?9:13;const avH=H-this.top-8;let cs=Math.floor(Math.min((W-16)/C,avH/7));let R=Math.max(7,Math.floor(avH/cs));if(R%2===0)R--;this.C=C;this.R=R;this.cs=cs;this.ox=(W-C*cs)/2;this.oy=this.top+(avH-R*cs)/2;
+  /* labirin acak (backtracking) + beberapa jalan pintas */
+  const rt=Array.from({length:C},()=>Array(R).fill(true)),dn=Array.from({length:C},()=>Array(R).fill(true)),seen=Array.from({length:C},()=>Array(R).fill(false));
+  const st=[[C>>1,R>>1]];seen[C>>1][R>>1]=true;while(st.length){const [cx,cy]=st[st.length-1];const nb=shuffle([[0,-1],[1,0],[0,1],[-1,0]]).map(([dx,dy])=>[cx+dx,cy+dy,dx,dy]).filter(([x,y])=>x>=0&&y>=0&&x<C&&y<R&&!seen[x][y]);
+   if(!nb.length){st.pop();continue}const [x,y,dx,dy]=nb[0];if(dx===1)rt[cx][cy]=false;if(dx===-1)rt[x][y]=false;if(dy===1)dn[cx][cy]=false;if(dy===-1)dn[x][y]=false;seen[x][y]=true;st.push([x,y])}
+  for(let x=0;x<C;x++)for(let y=0;y<R;y++){if(x<C-1&&Math.random()<.14)rt[x][y]=false;if(y<R-1&&Math.random()<.14)dn[x][y]=false}
+  this.rt=rt;this.dn=dn;const corners=[[0,0],[C-1,0],[0,R-1],[C-1,R-1]];const order=shuffle([...Array(n).keys()]);
+  this.zones=order.map((ai,k)=>({i:ai,c:corners[k][0],r:corners[k][1]}));
+  this.p={c:C>>1,r:R>>1,tc:C>>1,tr:R>>1,u:1,dir:-1,want:-1};this.gh={c:C>>1,r:0,tc:C>>1,tr:0,u:1,wait:1.6};if(this.zones.some(z=>z.c===this.gh.c&&z.r===this.gh.r))this.gh.c=this.gh.tc=1;
+  this.start=null;this.caught=false},
+ can(c,r,d){if(d===0)return r>0&&!this.dn[c][r-1];if(d===1)return c<this.C-1&&!this.rt[c][r];if(d===2)return r<this.R-1&&!this.dn[c][r];if(d===3)return c>0&&!this.rt[c-1][r];return false},
+ nxt(c,r,d){return [c+[0,1,0,-1][d],r+[-1,0,1,0][d]]},
+ pos(m){return {x:this.ox+(m.c+(m.tc-m.c)*m.u+.5)*this.cs,y:this.oy+(m.r+(m.tr-m.r)*m.u+.5)*this.cs}},
+ setDir(d){this.p.want=d},
+ down(x,y){this.start={x,y}},
+ move(x,y,active){if(!active||!this.start)return;const dx=x-this.start.x,dy=y-this.start.y;if(Math.hypot(dx,dy)<18)return;this.setDir(Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?2:0));this.start={x,y}},
+ pup(){if(!this.start)return;this.start=null},
+ key(k){const m={ArrowUp:0,ArrowRight:1,ArrowDown:2,ArrowLeft:3,w:0,d:1,s:2,a:3}[k];if(m!=null)this.setDir(m)},
+ step(dt){if(arc.state!=='play')return;const p=this.p,sp=4.6;
+  if(p.u<1){p.u=Math.min(1,p.u+dt*sp)}
+  if(p.u>=1){p.c=p.tc;p.r=p.tr;const z=this.zones.find(z=>z.c===p.c&&z.r===p.r);if(z){burst(this.pos(p).x,this.pos(p).y,z.i===arc.ci?'#FFD54A':'#FF6B5B',22);arcResolve(z.i);return}
+   if(p.want>=0&&this.can(p.c,p.r,p.want))p.dir=p.want;if(p.dir>=0&&this.can(p.c,p.r,p.dir)){const [nc,nr]=this.nxt(p.c,p.r,p.dir);p.tc=nc;p.tr=nr;p.u=0}}
+  const g=this.gh;if(g.wait>0){g.wait-=dt}else{const gs=1.9*arc.speed;if(g.u<1)g.u=Math.min(1,g.u+dt*gs);if(g.u>=1){g.c=g.tc;g.r=g.tr;const d=this.bfs(g.c,g.r,p.tc,p.tr);if(d>=0){const [nc,nr]=this.nxt(g.c,g.r,d);g.tc=nc;g.tr=nr;g.u=0}}}
+  const a=this.pos(p),b=this.pos(g);if(Math.hypot(a.x-b.x,a.y-b.y)<this.cs*.55){this.caught=true;burst(a.x,a.y,'#B57EDC',20);arcResolve(-1);arc.banner={text:'Tertangkap hantu!',color:'#C9362A',t:0}}},
+ bfs(sc,sr,tc,tr){if(sc===tc&&sr===tr)return -1;const C=this.C,R=this.R,prev=new Int32Array(C*R).fill(-1),q=[sc*R+sr];prev[sc*R+sr]=sc*R+sr;
+  while(q.length){const id=q.shift(),c=(id/R)|0,r=id%R;if(c===tc&&r===tr)break;for(let d=0;d<4;d++)if(this.can(c,r,d)){const [nc,nr]=this.nxt(c,r,d),ni=nc*R+nr;if(prev[ni]<0){prev[ni]=id;q.push(ni)}}}
+  let id=tc*R+tr;if(prev[id]<0)return -1;while(prev[id]!==sc*R+sr)id=prev[id];const c=(id/R)|0,r=id%R;for(let d=0;d<4;d++){const [nc,nr]=this.nxt(sc,sr,d);if(nc===c&&nr===r)return d}return -1},
+ update(dt){this.step(dt)},
+ draw(c){const{W,H}=arc;c.fillStyle='#14163A';c.fillRect(0,0,W,H);const bw=(W-24)/2,done=arc.state==='resolved';
+  this.leg.forEach((g,k)=>{const x=8+(k%2)*(bw+8),y=8+Math.floor(k/2)*(this.bh+6);let fill='rgba(255,255,255,.95)',txt='#14213D';if(done&&g.k===arc.ci){fill='#1C8A57';txt='#fff'}
+   rr(c,x,y,bw,this.bh,10);c.fillStyle=fill;c.fill();c.fillStyle=UCOL[g.k%4];c.beginPath();c.arc(x+16,y+this.bh/2,11,0,7);c.fill();c.fillStyle='#fff';c.font=`900 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[g.k],x+16,y+this.bh/2+1);drawFit(c,g.f,x+bw/2+12,y+this.bh/2,txt)});
+  const cs=this.cs,ox=this.ox,oy=this.oy;
+  for(const z of this.zones){c.fillStyle=UCOL[z.i%4];rr(c,ox+z.c*cs+2,oy+z.r*cs+2,cs-4,cs-4,6);c.fill();c.fillStyle='#fff';c.font=`900 ${Math.round(cs*.5)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[z.i],ox+(z.c+.5)*cs,oy+(z.r+.55)*cs)}
+  c.strokeStyle='#5B8CFF';c.lineWidth=Math.max(2,cs*.12);c.lineCap='round';c.beginPath();c.rect(ox,oy,this.C*cs,this.R*cs);
+  for(let x=0;x<this.C;x++)for(let y=0;y<this.R;y++){if(this.rt[x][y]&&x<this.C-1){c.moveTo(ox+(x+1)*cs,oy+y*cs);c.lineTo(ox+(x+1)*cs,oy+(y+1)*cs)}if(this.dn[x][y]&&y<this.R-1){c.moveTo(ox+x*cs,oy+(y+1)*cs);c.lineTo(ox+(x+1)*cs,oy+(y+1)*cs)}}c.stroke();
+  const g=this.pos(this.gh),gr=cs*.36;c.fillStyle=this.gh.wait>0?'rgba(181,126,220,.5)':'#B57EDC';c.beginPath();c.arc(g.x,g.y-gr*.2,gr,Math.PI,0);c.lineTo(g.x+gr,g.y+gr*.8);for(let k=0;k<3;k++){c.lineTo(g.x+gr-(k+.5)*gr*2/3,g.y+gr*.5);c.lineTo(g.x+gr-(k+1)*gr*2/3,g.y+gr*.8)}c.closePath();c.fill();
+  c.fillStyle='#fff';c.beginPath();c.arc(g.x-gr*.35,g.y-gr*.25,gr*.25,0,7);c.arc(g.x+gr*.35,g.y-gr*.25,gr*.25,0,7);c.fill();c.fillStyle='#1E1E24';c.beginPath();c.arc(g.x-gr*.3,g.y-gr*.2,gr*.12,0,7);c.arc(g.x+gr*.4,g.y-gr*.2,gr*.12,0,7);c.fill();
+  const p=this.pos(this.p),pr=cs*.36;c.fillStyle='#FFC800';c.beginPath();c.arc(p.x,p.y,pr,0,7);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();
+  c.fillStyle='#1E1E24';c.beginPath();c.arc(p.x-pr*.35,p.y-pr*.2,pr*.13,0,7);c.arc(p.x+pr*.35,p.y-pr*.2,pr*.13,0,7);c.fill();c.beginPath();c.arc(p.x,p.y+pr*.1,pr*.4,.2,Math.PI-.2);c.stroke();
+  if(arc.state==='play'&&arc.t<3){c.fillStyle='rgba(255,255,255,.85)';c.font=`800 12px ${FONT}`;c.textAlign='center';c.fillText('Geser untuk berbelok, hindari hantu!',W/2,H-4)}}
+};
+
+const MODES={tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular,penalti:Penalti,basket:Basket,buah:Buah,labirin:Labirin};
 
 
 /* ---------- split screen (layar terbagi) ---------- */
