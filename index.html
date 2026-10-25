@@ -1397,6 +1397,10 @@ body.arcfs .stage{flex:1;min-height:0;border-radius:14px}
  body.arcfs .qcard .q{font-size:clamp(15px,2.4vw,20px)}
  body.arcfs .playbar .dots{flex:1}
 }
+.aved-foot{background:#fff!important;border-top:2px solid var(--line);margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))!important;z-index:2}
+.aved-cart{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
+.aved-chip{border:2px solid var(--line);background:#F7F7F7;border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;font-weight:800;color:var(--ink);cursor:pointer}
+.aved-chip span{color:var(--bad);margin-left:2px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -5146,7 +5150,10 @@ function avSpan(p){if(p&&p.avatar)return `<span class="avatar avimg" style="--av
 function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.avOwned||[];const draft=Object.assign({},P.avatar);let tab='hair';
   let el=$('#avEd');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb aved" id="avEd" hidden></div>');el=$('#avEd')}
   const owned=(c,id)=>avFree(c,id)||P.avOwned.includes(c+':'+id)||P.avatar[c]===id;
-  const cost=()=>AV_ORDER.reduce((t,c)=>t+(owned(c,draft[c])?0:avItem(c,draft[c])[2]),0);
+  const hiddenCat=c=>{const ADx=draft.adat!=='none'?ADAT[draft.adat]:draft.dunia!=='none'?ADAT[draft.dunia]:null;
+    if(c==='shirt'&&ADx)return true;if(c==='acc'&&ADx&&(ADx.hood||ADx.head&&!ADx.keepAcc)&&['peci','topi','toga','headphone','mahkota'].includes(draft.acc))return true;if(c==='hc'&&ADx&&ADx.hood)return true;return false};
+  const toBuy=()=>AV_ORDER.filter(c=>!hiddenCat(c)&&!owned(c,draft[c]));
+  const cost=()=>toBuy().reduce((t,c)=>t+avItem(c,draft[c])[2],0);
   const gem=`<span style="width:18px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
   const render=()=>{const c=cost(),can=c<=P.gems,cat=AV_PARTS[tab];
     el.innerHTML=`<div class="onbin" style="max-width:720px;gap:12px">
@@ -5156,13 +5163,14 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
       <div class="aved-grid">${cat.items.map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id});
         const vis=it[3]&&tab!=='shirt'&&tab!=='bg'&&tab!=='adat'&&tab!=='dunia'?`<span class="aved-sw" style="background:${it[3]}"></span>`:`<span class="aved-mini">${avatarSVG(prev,{nobg:tab!=='bg'})}</span>`;
         return `<button class="aved-it ${on?'on':''}" data-id="${id}" aria-pressed="${on}">${vis}<b>${esc(it[1])}</b><small>${own?(on?'Dipakai':it[2]?'Dimiliki':'Gratis'):`${gem} ${it[2]}`}</small></button>`}).join('')}</div>
-      <div class="onbfoot aved-foot">${c?`<p class="note" style="text-align:center;margin:0 0 8px;${can?'':'color:var(--bad);font-weight:800'}">${can?`Barang baru seharga ${c} permata akan dibeli.`:`Permatamu kurang ${c-P.gems}. Kumpulkan dari pelajaran sempurna, peti hadiah, dan misi.`}</p>`:''}
+      <div class="onbfoot aved-foot">${c?`<div class="aved-cart">${toBuy().map(k=>{const it=avItem(k,draft[k]);return `<button class="aved-chip" data-undo="${k}" title="Batalkan">${esc(it[1])} · ${it[2]} <span aria-hidden="true">✕</span></button>`}).join('')}</div><p class="note" style="text-align:center;margin:0 0 8px;${can?'':'color:var(--bad);font-weight:800'}">${can?`Akan dibeli seharga ${c} permata.`:`Permatamu kurang ${c-P.gems}. Ketuk ✕ untuk membatalkan barang yang tidak jadi dibeli.`}</p>`:''}
         <button class="primary press" id="avSave" ${can?'':'disabled'}>${c?`Beli dan pakai · ${c} permata`:'Simpan avatar'}</button></div></div>`;
     hydrate(el);
     $('#avX').onclick=()=>{el.hidden=true};
     el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+    el.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>{const k=b.dataset.undo;draft[k]=P.avatar[k];if(!owned(k,draft[k]))draft[k]=AV_DEFAULT[k];render()});
     el.querySelectorAll('.aved-it').forEach(b=>b.onclick=()=>{draft[tab]=b.dataset.id;if(tab==='shirt'){draft.adat='none';draft.dunia='none'}if(tab==='adat')draft.dunia='none';if(tab==='dunia')draft.adat='none';tone([660],.03);render()});
-    $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;AV_ORDER.forEach(k=>{if(!owned(k,draft[k]))P.avOwned.push(k+':'+draft[k])});P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
+    $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;const buy=toBuy();AV_ORDER.forEach(k=>{if(!owned(k,draft[k])&&!buy.includes(k))draft[k]=P.avatar[k]});buy.forEach(k=>P.avOwned.push(k+':'+draft[k]));P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
       if(c2){sfx.win&&sfx.win();toast('gem',`Avatar baru dipakai! −${c2} permata`)}else toast('check','Avatar disimpan.');renderTop();if(curTab==='profile')renderProfile();if(curTab==='shop')renderShop()}};
   render();el.hidden=false;el.scrollTop=0}
 
