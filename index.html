@@ -1447,6 +1447,11 @@ body.arcfs #quitBtn{min-width:44px;min-height:40px;touch-action:manipulation}
 .stepper input{width:46px;border:0!important;background:transparent!important;text-align:center;font:inherit;font-size:18px;font-weight:900;color:var(--ink);padding:0;-moz-appearance:textfield}
 .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .stepper span{font-size:13px;font-weight:800;color:var(--muted);margin-right:4px}
+.buyask{position:fixed;inset:0;z-index:200;background:rgba(27,30,61,.55);display:grid;place-items:center;padding:16px}
+.buyask[hidden]{display:none}
+.buybox{background:#fff;border-radius:22px;border:2px solid var(--line);box-shadow:0 6px 0 var(--line);padding:20px;width:min(380px,100%);display:flex;flex-direction:column;gap:8px;text-align:center;animation:sheetIn .3s cubic-bezier(.2,1.25,.4,1)}
+.buybox h3{margin:0;font-size:22px}.buyprice{margin:0;font-size:22px;font-weight:900;color:#1899D6}
+.buybox .acts{display:flex;gap:10px;margin-top:8px}.buybox .acts>*{flex:1}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4376,8 +4381,9 @@ function openPets(){if(!P)return;P.pets=P.pets||['uli'];const gem=`<span style="
       return `<button class="petit ${on?'on':''}" data-id="${id}" ${!own&&P.gems<price?'data-poor="1"':''}><span class="petpic mascot">${id==='uli'?mascotSVG('uli'):petSVG(id,cap)}</span><b>${esc(name)}</b><small>${esc(reg)}</small><em>${on?'Dipakai':own?(price?'Dimiliki':'Gratis'):`${gem} ${price}`}</em></button>`}).join('')}</div><button class="ghost" id="mClose" style="margin-top:12px">Tutup</button>`);
     $('#mClose').onclick=closeModal;
     $('#mbox').querySelectorAll('.petit').forEach(b=>b.onclick=()=>{const id=b.dataset.id,pr=petOf(id)[3],own=pr===0||P.pets.includes(id);
-      if(!own){if(P.gems<pr){toast('gem',`Permatamu kurang ${pr-P.gems}.`);return}P.gems-=pr;P.pets.push(id);tone([660,880,1100],.08);toast('gem',`${petOf(id)[1]} jadi teman belajarmu! −${pr} permata`)}
-      P.pet=id;save();rerenderMascots();renderTop();if(curTab==='shop')renderShop();if(curTab==='profile')renderProfile();render()})};
+      const use=()=>{P.pet=id;save();rerenderMascots();renderTop();if(curTab==='shop')renderShop();if(curTab==='profile')renderProfile();render()};
+      if(!own){if(P.gems<pr){toast('gem',`Permatamu kurang ${pr-P.gems}.`);return}buyAsk(petOf(id)[1],pr,()=>{if(P.gems<pr)return;P.gems-=pr;P.pets.push(id);tone([660,880,1100],.08);toast('gem',`${petOf(id)[1]} jadi teman belajarmu! −${pr} permata`);use()},`<span class="mascot" style="display:block;width:90px;margin:auto">${petSVG(id,cap)||''}</span>`);return}
+      use()})};
   render()}
 
 function rerenderMascots(){document.querySelectorAll('[data-mascot]').forEach(el=>{const mood=el.dataset.mood;el.innerHTML=mascotSVG();if(mood)el.dataset.mood=mood})}
@@ -4470,7 +4476,14 @@ function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(D
 function heartsPanel(){return P.unlimited?`<p style="margin:0">Mode kelas aktif: nyawa tidak terbatas. Matikan di Profil → Pengaturan.</p>`:
   `<div style="display:flex;gap:4px;margin-bottom:8px">${Array.from({length:5},(_,i)=>`<span style="width:30px;color:${i<P.hearts?'var(--red)':'#D8DCEC'}">${ICONS.heart}</span>`).join('')}</div><p style="margin:0 0 10px;font-size:14px">${P.hearts>=5?'Nyawamu penuh.':heartTimer()} Setiap jawaban salah di pelajaran mengurangi 1 nyawa.</p>
    <div style="display:flex;flex-direction:column;gap:8px"><button class="primary" data-act="refill" ${P.hearts>=5||P.gems<50?'disabled':''}>Isi penuh · 50 permata</button><button class="ghost" data-act="practice">Latihan untuk +1 nyawa</button></div>`}
-function bindHeartActs(root){root.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{if(b.dataset.act==='refill'){if(P.gems>=50&&P.hearts<5){P.gems-=50;P.hearts=5;P.heartsAt=null;save();renderTop();tone([660,880,1100],.08);toast('heartbig','Nyawa terisi penuh!')}}else startPractice();closePop();closeModal()})}
+/* konfirmasi sebelum membeli dengan permata, supaya tidak salah pencet */
+function buyAsk(what,price,onYes,pic){let el=$('#buyAsk');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="buyask" id="buyAsk" hidden></div>');el=$('#buyAsk')}
+  const gem=`<span style="width:22px;display:inline-block;vertical-align:-4px;color:#1CB0F6">${ICONS.gem}</span>`;const after=P.gems-price;
+  el.innerHTML=`<div class="buybox" role="dialog" aria-modal="true">${pic?`<div class="buypic">${pic}</div>`:''}<h3>Beli ${esc(what)}?</h3><p class="buyprice">${gem} ${price} permata</p><p class="note" style="margin:0">Permatamu sekarang ${P.gems}, sisa setelah membeli ${after}.</p>
+    <div class="acts"><button class="ghost" id="buyNo">Batal</button><button class="primary" id="buyYes">Ya, beli</button></div></div>`;
+  el.hidden=false;try{haptic(15)}catch(e){}
+  const close=()=>{el.hidden=true};$('#buyNo').onclick=close;el.onclick=e=>{if(e.target===el)close()};$('#buyYes').onclick=()=>{close();onYes()}}
+function bindHeartActs(root){root.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{if(b.dataset.act==='refill'){if(P.gems>=50&&P.hearts<5){closePop();closeModal();buyAsk('isi nyawa penuh',50,()=>{if(P.gems<50)return;P.gems-=50;P.hearts=5;P.heartsAt=null;save();renderTop();tone([660,880,1100],.08);toast('heartbig','Nyawa terisi penuh!')});return}}else startPractice();closePop();closeModal()})}
 function heartPop(){openPop($('#heartBtn'),`<h4>Nyawa</h4>${heartsPanel()}`);bindHeartActs($('#pop'))}
 
 /* ---------- modal & toast ---------- */
@@ -4616,13 +4629,13 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
    <div class="card shopsec shopav"><div class="mascot outfitprev" data-mascot data-mood="happy" style="width:96px;margin:0"></div><div style="flex:1;min-width:160px"><h3>Teman belajar: ${esc(petOf(curPet())[1])}</h3><p class="note" style="margin:0">${PETS.length} hewan khas Indonesia: komodo, orangutan, harimau, cenderawasih, dan lainnya. ${PETS.filter(x=>!x[3]).length} gratis, sisanya dibeli dengan permata.</p></div><button class="primary" id="shopPet">Ganti hewan</button></div>
    <div class="card shopsec"><h3>Topi toga</h3>${outfit(CAPS,'cap')}${curPet()==='uli'?`<h3 style="margin-top:12px">Warna bulu Uli</h3>${outfit(BODIES,'body')}`:''}</div>`;
   hydrate($('#shopList'));
-  const buy=(price,fn)=>{if(P.gems<price)return;P.gems-=price;fn();save();renderTop();tone([660,880,1100],.08);renderShop()};
-  $('#buyHeart').onclick=()=>buy(50,()=>{P.hearts=5;P.heartsAt=null;toast('heartbig','Nyawa terisi penuh!')});
-  $('#buyFreeze').onclick=()=>buy(80,()=>{P.freeze++;toast('ice','Pelindung api siap dipakai.')});
+  const buy=(price,fn,what,pic)=>{if(P.gems<price)return;buyAsk(what||'barang ini',price,()=>{if(P.gems<price)return;P.gems-=price;fn();save();renderTop();tone([660,880,1100],.08);renderShop()},pic)};
+  $('#buyHeart').onclick=()=>buy(50,()=>{P.hearts=5;P.heartsAt=null;toast('heartbig','Nyawa terisi penuh!')},'isi nyawa penuh');
+  $('#buyFreeze').onclick=()=>buy(80,()=>{P.freeze++;toast('ice','Pelindung api siap dipakai.')},'pelindung api');
   $('#buyPractice').onclick=startPractice;
   {const sa=$('#shopAv');if(sa)sa.onclick=openAvatarEditor;const sp=$('#shopPet');if(sp)sp.onclick=openPets}
   $('#shopList').querySelectorAll('.buy[data-kind]').forEach(b=>b.onclick=()=>{const k=b.dataset.kind,id=b.dataset.id;if(P.owned[k].includes(id)){P.outfit[k]=id;save();rerenderMascots();renderShop();return}
-    buy(+b.dataset.price,()=>{P.owned[k].push(id);P.outfit[k]=id;rerenderMascots()})})}
+    const it=(k==='cap'?CAPS:BODIES).find(x=>x[0]===id);buy(+b.dataset.price,()=>{P.owned[k].push(id);P.outfit[k]=id;rerenderMascots()},it?it[1]:'gaya ini')})}
 
 /* ---------- profile ---------- */
 function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done/NODES.length);return n}
@@ -6252,7 +6265,7 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
     el.querySelectorAll('[data-hc]').forEach(b=>b.onclick=()=>{draft.hc=b.dataset.hc;tone([660],.03);render()});
     el.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>{const k=b.dataset.undo;draft[k]=P.avatar[k];if(!owned(k,draft[k]))draft[k]=AV_DEFAULT[k];render()});
     el.querySelectorAll('.aved-it').forEach(b=>b.onclick=()=>{draft[tab]=b.dataset.id;if(tab==='shirt'){draft.adat='none';draft.dunia='none'}if(tab==='adat')draft.dunia='none';if(tab==='dunia')draft.adat='none';tone([660],.03);render()});
-    $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;const buy=toBuy();AV_ORDER.forEach(k=>{if(!owned(k,draft[k])&&!buy.includes(k))draft[k]=P.avatar[k]});buy.forEach(k=>P.avOwned.push(k+':'+draft[k]));P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
+    $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;if(c2&&!el.dataset.ok){const names=toBuy().map(k=>avItem(k,draft[k])[1]).join(', ');buyAsk(names,c2,()=>{el.dataset.ok='1';$('#avSave').click();delete el.dataset.ok},`<span style="display:block;width:96px;margin:auto;border-radius:20px;overflow:hidden">${avatarSVG(draft)}</span>`);return}const buy=toBuy();AV_ORDER.forEach(k=>{if(!owned(k,draft[k])&&!buy.includes(k))draft[k]=P.avatar[k]});buy.forEach(k=>P.avOwned.push(k+':'+draft[k]));P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
       if(c2){sfx.win&&sfx.win();toast('gem',`Avatar baru dipakai! −${c2} permata`)}else toast('check','Avatar disimpan.');renderTop();if(curTab==='profile')renderProfile();if(curTab==='shop')renderShop()}};
   render();el.hidden=false;el.scrollTop=0}
 
