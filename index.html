@@ -1388,14 +1388,13 @@ body.arcfs #mascotPlay,body.arcfs #mBubble,body.arcfs #arcHint{display:none!impo
 body.arcfs .qcard{flex:1;min-height:0;padding:8px;gap:6px;border-radius:16px;box-shadow:none}
 body.arcfs .qcard .q{font-size:clamp(16px,4.6vw,22px);line-height:1.25;margin:0}
 body.arcfs .stage{flex:1;min-height:0;border-radius:14px}
-@media (orientation:landscape){
- body.arcfs .qcard{display:grid;grid-template-columns:minmax(160px,30%) 1fr;grid-template-rows:auto auto 1fr;column-gap:10px;row-gap:6px}
- body.arcfs .qcard>*{grid-column:1}
- body.arcfs .qcard>.qmeta{grid-row:1}body.arcfs .qcard>.timer{grid-row:2}
- body.arcfs .qcard>#qtext{grid-row:3;overflow:auto;align-self:start;max-height:100%}
- body.arcfs .qcard>.stage{grid-column:2;grid-row:1/4;height:100%}
- body.arcfs .qcard .q{font-size:clamp(15px,2.4vw,20px)}
- body.arcfs .playbar .dots{flex:1}
+body.arcfs .qcard>.qmeta{display:none!important}
+body.arcfs .qcard>.timer{height:6px;margin:0}
+body.arcfs .qcard>#qtext{font-size:clamp(13px,3.6vw,16px)!important;line-height:1.3;max-height:4.1em;overflow:auto;padding:0 2px;font-weight:800}
+body.arcfs .qcard>#qtext *{font-size:inherit!important}
+body.arcfs .qcard{padding:6px;gap:4px}
+body.arcfs .playbar{min-height:0;gap:8px}body.arcfs .playbar .back{padding:4px 10px}
+@media (orientation:landscape){body.arcfs .qcard>#qtext{max-height:2.7em;font-size:14px!important}body.arcfs #vPlay{gap:4px!important;padding-top:4px}body.arcfs .playbar{padding:2px 8px}}
 }
 .aved-foot{background:#fff!important;border-top:2px solid var(--line);margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))!important;z-index:2}
 .aved-cart{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
@@ -3269,7 +3268,7 @@ function isTouchDev(){try{return matchMedia('(pointer:coarse)').matches}catch(e)
 function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'portrait';
   document.body.classList.add('arcfs');document.body.dataset.ori=ori;GFS.on=true;
   const lock=()=>{try{const so=screen.orientation;if(so&&so.lock){const r=so.lock(ori);r&&r.catch&&r.catch(()=>{})}}catch(e){}};
-  try{const d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen({navigationUI:'hide'});GFS.mine=true;if(r&&r.then)r.then(lock).catch(()=>{GFS.mine=false;lock()});else lock()}else lock()}catch(e){lock()}
+  lock();
   setTimeout(gameFit,350);setTimeout(gameFit,900)}
 function gameFSOff(){if(!GFS.on)return;GFS.on=false;document.body.classList.remove('arcfs');delete document.body.dataset.ori;
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}
@@ -3675,9 +3674,9 @@ const UCOL=['#FF5A5F','#3DA5D9','#FFB627','#B57EDC'];
 const Ular={
  /* Cacing Lapar ala Worm Zone: tangan kiri mengarahkan (joystick), tangan kanan menahan NOS untuk ngebut.
     Di laptop: cacing mengikuti mouse, klik/Spasi untuk ngebut, panah kiri/kanan untuk berbelok. */
- setup(){const{W,H,ctx}=arc,n=arc.labels.length;const bw=(W-24)/2;
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;const LC=W>=600&&W>H?Math.min(4,n):2;this.LC=LC;const bw=(W-8-LC*8)/LC;
   this.leg=arc.labels.map((l,k)=>({k,f:fit(ctx,l,bw-40,36,16,10)}));
-  const rowsL=Math.ceil(n/2);this.bh=Math.max(32,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
+  const rowsL=Math.ceil(n/LC);this.bh=Math.max(32,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
   this.r=Math.max(9,Math.min(16,W/42));this.orbR=Math.max(20,Math.min(34,W/17));this.space=this.r*.62;
   const ax0=8,ay0=this.top,ax1=W-8,ay1=H-8;this.box=[ax0,ay0,ax1,ay1];
   if(!this.w||this.wW!==W||this.wH!==H){this.w={x:W/2,y:(ay0+ay1)/2,a:-Math.PI/2,len:12,path:[]};this.wW=W;this.wH=H;this.energy=1;this.pellets=[]}
@@ -3726,12 +3725,12 @@ const Ular={
  body(){const w=this.w,out=[];let acc=0,need=0,prev=w.path[0];out.push(prev);
   for(let k=1;k<w.path.length&&out.length<Math.round(w.len);k++){const p=w.path[k],d=Math.hypot(p.x-prev.x,p.y-prev.y);acc+=d;need+=0;prev=p;if(acc>=this.space){out.push(p);acc=0}}
   return out},
- draw(c){const{W,H}=arc;const done=arc.state==='resolved';const bw=(W-24)/2;
+ draw(c){const{W,H}=arc;const done=arc.state==='resolved';const LC=this.LC||2,bw=(W-8-LC*8)/LC;
   const g=c.createRadialGradient(W/2,H/2,20,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'#2B2F6E');g.addColorStop(1,'#151838');c.fillStyle=g;c.fillRect(0,0,W,H);
   const[a0,b0,a1,b1]=this.box;c.save();c.beginPath();c.rect(a0,b0,a1-a0,b1-b0);c.clip();
   c.fillStyle='rgba(255,255,255,.06)';for(let y=b0+12;y<b1;y+=26)for(let x=a0+12+((y/26|0)%2)*13;x<a1;x+=26){c.beginPath();c.arc(x,y,2,0,7);c.fill()}
   c.restore();rr(c,a0,b0,a1-a0,b1-b0,14);c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=2;c.stroke();
-  this.leg.forEach(gg=>{const col=gg.k%2,row=Math.floor(gg.k/2),x=8+col*(bw+8),y=8+row*(this.bh+6);
+  this.leg.forEach(gg=>{const col=gg.k%LC,row=Math.floor(gg.k/LC),x=8+col*(bw+8),y=8+row*(this.bh+6);
    let fill='#F4F7FB',txt='#14213D';if(done&&gg.k===arc.ci){fill='#1C8A57';txt='#fff'}
    rr(c,x,y,bw,this.bh,8);c.fillStyle=fill;c.fill();c.fillStyle=UCOL[gg.k];c.beginPath();c.arc(x+16,y+this.bh/2,11,0,7);c.fill();
    c.fillStyle='#fff';c.font=`800 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[gg.k],x+16,y+this.bh/2+1);drawFit(c,gg.f,x+14+bw/2,y+this.bh/2,txt)});
@@ -3890,8 +3889,8 @@ const Buah={
 
 /* ---- game 12: Kejar Labirin ---- */
 const Labirin={
- setup(){const{W,H,ctx}=arc,n=arc.labels.length;const bw=(W-24)/2;
-  this.leg=arc.labels.map((l,k)=>({k,f:fit(ctx,l,bw-40,36,16,10)}));const rowsL=Math.ceil(n/2);this.bh=Math.max(30,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;const LC=W>=600&&W>H?Math.min(4,n):2;this.LC=LC;const bw=(W-8-LC*8)/LC;
+  this.leg=arc.labels.map((l,k)=>({k,f:fit(ctx,l,bw-40,36,16,10)}));const rowsL=Math.ceil(n/LC);this.bh=Math.max(30,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
   const C=W<520?9:13;const avH=H-this.top-8;let cs=Math.floor(Math.min((W-16)/C,avH/7));let R=Math.max(7,Math.floor(avH/cs));if(R%2===0)R--;this.C=C;this.R=R;this.cs=cs;this.ox=(W-C*cs)/2;this.oy=this.top+(avH-R*cs)/2;
   /* labirin acak (backtracking) + beberapa jalan pintas */
   const rt=Array.from({length:C},()=>Array(R).fill(true)),dn=Array.from({length:C},()=>Array(R).fill(true)),seen=Array.from({length:C},()=>Array(R).fill(false));
@@ -3920,8 +3919,8 @@ const Labirin={
   while(q.length){const id=q.shift(),c=(id/R)|0,r=id%R;if(c===tc&&r===tr)break;for(let d=0;d<4;d++)if(this.can(c,r,d)){const [nc,nr]=this.nxt(c,r,d),ni=nc*R+nr;if(prev[ni]<0){prev[ni]=id;q.push(ni)}}}
   let id=tc*R+tr;if(prev[id]<0)return -1;while(prev[id]!==sc*R+sr)id=prev[id];const c=(id/R)|0,r=id%R;for(let d=0;d<4;d++){const [nc,nr]=this.nxt(sc,sr,d);if(nc===c&&nr===r)return d}return -1},
  update(dt){this.step(dt)},
- draw(c){const{W,H}=arc;c.fillStyle='#14163A';c.fillRect(0,0,W,H);const bw=(W-24)/2,done=arc.state==='resolved';
-  this.leg.forEach((g,k)=>{const x=8+(k%2)*(bw+8),y=8+Math.floor(k/2)*(this.bh+6);let fill='rgba(255,255,255,.95)',txt='#14213D';if(done&&g.k===arc.ci){fill='#1C8A57';txt='#fff'}
+ draw(c){const{W,H}=arc;c.fillStyle='#14163A';c.fillRect(0,0,W,H);const LC=this.LC||2,bw=(W-8-LC*8)/LC,done=arc.state==='resolved';
+  this.leg.forEach((g,k)=>{const x=8+(k%LC)*(bw+8),y=8+Math.floor(k/LC)*(this.bh+6);let fill='rgba(255,255,255,.95)',txt='#14213D';if(done&&g.k===arc.ci){fill='#1C8A57';txt='#fff'}
    rr(c,x,y,bw,this.bh,10);c.fillStyle=fill;c.fill();c.fillStyle=UCOL[g.k%4];c.beginPath();c.arc(x+16,y+this.bh/2,11,0,7);c.fill();c.fillStyle='#fff';c.font=`900 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[g.k],x+16,y+this.bh/2+1);drawFit(c,g.f,x+bw/2+12,y+this.bh/2,txt)});
   const cs=this.cs,ox=this.ox,oy=this.oy;
   for(const z of this.zones){c.fillStyle=UCOL[z.i%4];rr(c,ox+z.c*cs+2,oy+z.r*cs+2,cs-4,cs-4,6);c.fill();c.fillStyle='#fff';c.font=`900 ${Math.round(cs*.5)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[z.i],ox+(z.c+.5)*cs,oy+(z.r+.55)*cs)}
