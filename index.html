@@ -1407,6 +1407,16 @@ body.arcfs .stage{flex:1;min-height:0;border-radius:14px}
 .aved-col.on{box-shadow:0 0 0 3px #1CB0F6,0 3px 0 3px #1899D6}
 .aved-col small{position:absolute;bottom:-6px;right:-8px;background:#1CB0F6;color:#fff;border-radius:999px;font-size:10px;font-weight:900;padding:1px 4px}
 .aved{padding-bottom:0!important}.aved .onbin{padding-bottom:0!important;margin-bottom:0!important}
+.jumpcur{position:fixed;right:max(20px, env(safe-area-inset-right, 0px));bottom:calc(152px + env(safe-area-inset-bottom, 0px));z-index:35;width:54px;height:54px;border-radius:16px;background:#fff;color:var(--uc,#58CC02);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);display:grid;place-items:center;padding:0;cursor:pointer;animation:jumpIn .3s cubic-bezier(.2,1.4,.4,1)}
+.jumpcur[hidden]{display:none}
+.jumpcur.up svg{transform:rotate(180deg)}
+.jumpcur:active{transform:translateY(4px);box-shadow:none}
+@keyframes jumpIn{0%{transform:scale(.5);opacity:0}100%{transform:none;opacity:1}}
+@media (min-width:1000px){.jumpcur{bottom:84px;right:calc(50% - 650px + 384px)}}
+@media (min-width:1000px) and (max-width:1300px){.jumpcur{right:394px}}
+body.playing .jumpcur,body.teacher .jumpcur{display:none!important}
+.node.jumpflash{animation:jumpFlash .9s ease}
+@keyframes jumpFlash{0%,100%{scale:1}30%{scale:1.15}60%{scale:.95}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -5288,6 +5298,18 @@ if(GAS)google.script.run.withSuccessHandler(licFromServer).getLicense();
 
 /* getar halus saat menekan tombol (seperti aplikasi Duolingo di HP) */
 document.addEventListener('click',e=>{const b=e.target.closest('button,.node,.lrow.tap,[role=button],.tapprof');if(!b||b.disabled)return;haptic(b.classList.contains('lock')?[40,50,40]:30)},true);
+
+/* panah ke level terakhir (seperti Duolingo) */
+document.body.insertAdjacentHTML('beforeend','<button class="jumpcur" id="jumpCur" hidden aria-label="Ke level terakhir" title="Ke level terakhir"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 5 V19 M5 12 L12 19 L19 12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>');
+function jumpCheck(){const b=$('#jumpCur');if(!b)return;const n=document.querySelector('#vLearn:not([hidden]) .node.cur');
+  if(!n||curTab!=='learn'||document.body.classList.contains('playing')){b.hidden=true;return}
+  const r=n.getBoundingClientRect(),vh=window.innerHeight,top=60,bot=vh-150;
+  if(r.bottom<top){b.hidden=false;b.classList.add('up')}else if(r.top>bot){b.hidden=false;b.classList.remove('up')}else b.hidden=true;
+  b.style.setProperty('--uc',getComputedStyle(n).getPropertyValue('--uc')||'#58CC02')}
+let jumpT=0;window.addEventListener('scroll',()=>{if(jumpT)return;jumpT=requestAnimationFrame(()=>{jumpT=0;jumpCheck()})},{passive:true});
+window.addEventListener('resize',jumpCheck);
+$('#jumpCur').onclick=()=>{scrollToCurrent();const n=document.querySelector('.node.cur');if(n)setTimeout(()=>{n.classList.add('jumpflash');setTimeout(()=>n.classList.remove('jumpflash'),900)},450)};
+setInterval(jumpCheck,1000);
 </script>
 
 <script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
