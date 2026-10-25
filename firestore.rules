@@ -1,0 +1,77 @@
+rules_version = '2';
+// Aturan keamanan Jelajah Kelas.
+// Tempel seluruh isi file ini di Firebase Console → Firestore Database → Aturan, lalu klik Publikasikan.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    // Admin = pemilik aplikasi. Email harus sudah diverifikasi.
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email == 'faridalpen@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    function isProUid(uid) {
+      let u = get(/databases/$(database)/documents/users/$(uid)).data;
+      return u.get('plan', 'free') == 'pro' && u.get('proUntil', 0) > request.time.toMillis();
+    }
+
+    // Murid hanya boleh menautkan diri ke guru jika ia benar-benar tercatat sebagai anggota kelas itu.
+    function validJoin(uid) {
+      return request.resource.data.get('teacherUid', null) == null
+        || (getAfter(/databases/$(database)/documents/classes/$(request.resource.data.classId)).data.teacherUid == request.resource.data.teacherUid
+            && uid in getAfter(/databases/$(database)/documents/classes/$(request.resource.data.classId)).data.members);
+    }
+
+    match /config/{id} {
+      allow read: if id != 'admin' || isAdmin();
+      allow write: if isAdmin() && id != 'admin';
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn()
+        && (request.auth.uid == uid || resource.data.teacherUid == request.auth.uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.role in ['student', 'teacher']
+        && request.resource.data.get('plan', 'free') == 'free'
+        && request.resource.data.get('proUntil', 0) == 0
+        && request.resource.data.keys().hasAll(['teacherUid'])
+        && request.resource.data.teacherUid == null;
+      allow update: if isAdmin()
+        || (signedIn() && request.auth.uid == uid
+            && !changedKeys().hasAny(['role', 'plan', 'proUntil'])
+            && (!changedKeys().hasAny(['teacherUid', 'classId']) || validJoin(uid)))
+        || (signedIn() && resource.data.teacherUid == request.auth.uid
+            && changedKeys().hasOnly(['classId', 'teacherUid', 'joinCode'])
+            && request.resource.data.teacherUid == null);
+      allow delete: if signedIn() && (request.auth.uid == uid || isAdmin());
+    }
+
+    match /classes/{cid} {
+      allow read: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
+      allow create: if signedIn() && cid == request.auth.uid
+        && request.resource.data.teacherUid == request.auth.uid;
+      allow update: if signedIn() && (
+          (resource.data.teacherUid == request.auth.uid && request.resource.data.teacherUid == request.auth.uid)
+          || (changedKeys().hasOnly(['members'])
+              && request.resource.data.members.diff(resource.data.members).affectedKeys().hasOnly([request.auth.uid])
+              && (request.resource.data.members.size() <= resource.data.members.size()
+                  || request.resource.data.members.size() <= (isProUid(resource.data.teacherUid) ? 2000 : 10))));
+      allow delete: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
+    }
+
+    match /classCodes/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn()
+        && request.resource.data.teacherUid == request.auth.uid
+        && request.resource.data.classId == request.auth.uid;
+      allow update: if false;
+      allow delete: if signedIn() && resource.data.teacherUid == request.auth.uid;
+    }
+  }
+}
