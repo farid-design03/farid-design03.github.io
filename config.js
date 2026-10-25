@@ -15,5 +15,5 @@ window.FB_CONFIG = {
   /* kunci notifikasi web (Setelan proyek → Cloud Messaging → Web Push certificates) */
   vapidKey: "BCWfN24rrbajJ8Eb58XEXL6-kHZNpJsiDhZjar5wwTiqmmRkqYsHRlswdYmhWRscsLdd2CEetNlU4Jeg0og7EZA",
   /* alamat pengirim notifikasi di Cloudflare Workers */
-  pushUrl: ""
+  pushUrl: "https://jelas-notif.faridalpen.workers.dev"
 };
