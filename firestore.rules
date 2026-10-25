@@ -116,6 +116,23 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.host == request.auth.uid;
     }
 
+    // Nama pengguna murid untuk fitur "Cari teman" (hanya bisa dicari dengan nama persis, tidak bisa didaftar).
+    match /handles/{username} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // Undangan tanding dari teman.
+    match /invites/{id} {
+      allow read: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.from == request.auth.uid;
+      allow update: if false;
+      allow delete: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
+    }
+
     match /classCodes/{code} {
       allow get: if signedIn();
       allow list: if false;
