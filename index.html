@@ -1499,6 +1499,7 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .spanim{position:relative;background:#F4FAFF}
 .spspr{position:absolute;inset:0;background-repeat:no-repeat;z-index:1}
 .spfloor{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#DDEFD0,#E9F7DF);border-top:2px solid #C8E6B0}
+.spduo{grid-template-columns:1fr!important;justify-items:center}.spok{width:min(300px,78vw)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -5014,7 +5015,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
      <button class="primary press" id="spGo">Mulai</button><button class="ghost" id="spMini">Lagi kurang semangat? Versi mini (setengahnya)</button>`}
    else if(st.phase==='ex'||st.phase==='ready'){const timeEx=ex.t==='time';const pct=timeEx?Math.max(0,st.left/ex.amt):0;
      body=`<div class="spprog">${st.plan.map((x,i)=>`<i class="${i<st.k?'d':i===st.k?'c':''}"></i>`).join('')}</div>
-     ${(()=>{const fm=SP_FORM[spAnimKey(ex.id,spVar(ex))]||{};return `<div class="spduo"><div class="spok"><span class="sptag ok">✓ Gerakan benar</span>${spFigure(ex.id,spVar(ex))}</div>${fm.badKeys?`<div class="spbad"><span class="sptag no">✗ Hindari</span>${spFigure(ex.id,spVar(ex),true)}<small>${esc(fm.bad||'')}</small></div>`:''}</div>`})()}<h2 class="spname">${esc(ex.name)}</h2>
+     ${(()=>{const fm=SP_FORM[spAnimKey(ex.id,spVar(ex))]||{};return `<div class="spduo"><div class="spok"><span class="sptag ok">✓ Gerakan benar</span>${spFigure(ex.id,spVar(ex))}</div></div>`})()}<h2 class="spname">${esc(ex.name)}</h2>
      <div class="spamt">${timeEx?(st.phase==='ready'?ex.amt+' detik':`<span class="sptime">${st.left}</span> detik`):ex.amt+' kali'+(ex.per?` <small>${ex.per}</small>`:'')}</div>
      ${timeEx&&st.phase==='ex'?`<div class="spbar"><i style="width:${pct*100}%"></i></div>`:''}
      ${(()=>{const fm=SP_FORM[spAnimKey(ex.id,spVar(ex))]||{};return fm.cues?`<ul class="spcues">${fm.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:`<p class="sptip">${esc(ex.tip)}</p>`})()}
