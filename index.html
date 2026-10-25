@@ -1401,6 +1401,12 @@ body.arcfs .stage{flex:1;min-height:0;border-radius:14px}
 .aved-cart{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
 .aved-chip{border:2px solid var(--line);background:#F7F7F7;border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;font-weight:800;color:var(--ink);cursor:pointer}
 .aved-chip span{color:var(--bad);margin-left:2px}
+.aved-colors{display:flex;flex-direction:column;gap:6px}.aved-colors b{font-size:14px}
+.aved-colors>div{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}.aved-colors>div::-webkit-scrollbar{display:none}
+.aved-col{flex:none;width:40px;height:40px;border-radius:50%;background:var(--c);border:3px solid #fff;box-shadow:0 0 0 2px var(--line),0 3px 0 2px var(--line);position:relative;padding:0;cursor:pointer}
+.aved-col.on{box-shadow:0 0 0 3px #1CB0F6,0 3px 0 3px #1899D6}
+.aved-col small{position:absolute;bottom:-6px;right:-8px;background:#1CB0F6;color:#fff;border-radius:999px;font-size:10px;font-weight:900;padding:1px 4px}
+.aved{padding-bottom:0!important}.aved .onbin{padding-bottom:0!important;margin-bottom:0!important}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4972,20 +4978,27 @@ document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||
    ========================================================= */
 const AVK='#1B1E3D';
 const AV_PARTS={
+ face:{label:'Wajah',items:[['bulat','Bulat',0],['oval','Oval',0],['kotak','Kotak',0],['hati','Hati',0],['lebar','Lebar',0]]},
+ body:{label:'Tubuh',items:[['sedang','Sedang',0],['kurus','Ramping',0],['berisi','Berisi',0],['atletis','Atletis',0]]},
+ brow:{label:'Alis',items:[['tipis','Tipis',0],['tebal','Tebal',0],['lengkung','Melengkung',0],['lurus','Lurus',0],['tegas','Tegas',20],['ramah','Ramah',20],['none','Tanpa alis',0]]},
  skin:{label:'Kulit',items:[['s1','Kuning langsat',0,'#FFE0C7'],['s2','Sawo terang',0,'#F6C9A0'],['s3','Sawo matang',0,'#E0A574'],['s4','Cokelat',0,'#B97A4E'],['s5','Cokelat tua',0,'#8A5533']]},
  hair:{label:'Rambut',items:[['pendek','Pendek',0],['poni','Poni',0],['panjang','Panjang',0],['hijab','Hijab',0],['none','Plontos',0],['jabrik','Jabrik',20],['kuncir','Sanggul',20],['keriting','Keriting',40],['mohawk','Mohawk',80]]},
  hc:{label:'Warna',items:[['h1','Hitam',0,'#2B1D14'],['h2','Cokelat',0,'#5A3820'],['h9','Putih',0,'#F4F4F4'],['h3','Karamel',20,'#A0612D'],['h4','Emas',30,'#E8B547'],['h5','Merah',40,'#E2574C'],['h10','Merah muda',40,'#FF8FC0'],['h6','Biru',60,'#4F7CFF'],['h7','Ungu',60,'#9B6BFF'],['h11','Hijau toska',60,'#22C5B5']]},
- eyes:{label:'Mata',items:[['bulat','Bulat',0],['senyum','Senyum',0],['besar','Berbinar',30],['kedip','Kedip',40],['bintang','Bintang',80]]},
+ eyes:{label:'Mata',items:[['bulat','Bulat',0],['senyum','Senyum',0],['sipit','Sipit',0],['almond','Almond',0],['lentik','Lentik',20],['ngantuk','Sayu',20],['tajam','Tajam',30],['besar','Berbinar',30],['kedip','Kedip',40],['bintang','Bintang',80]]},
  mouth:{label:'Mulut',items:[['senyum','Senyum',0],['tawa','Tertawa',0],['datar','Tenang',0],['o','Kagum',20],['lidah','Melet',30]]},
  acc:{label:'Aksesori',items:[['none','Tanpa',0],['kacamata','Kacamata',30],['peci','Peci',30],['topi','Topi',40],['kacahitam','Kacamata hitam',60],['toga','Topi toga',80],['headphone','Headphone',100],['mahkota','Mahkota',150]]},
  shirt:{label:'Baju',items:[['merah','Kaos merah',0,'#F2394B'],['biru','Kaos biru',0,'#3D8BFF'],['hijau','Kaos hijau',0,'#26BF66'],['kuning','Kaos kuning',0,'#FFC23D'],['seragam','Seragam sekolah',20],['pramuka','Pramuka',40],['jaket','Jaket',60],['batik','Batik',80],['super','Kostum super',150]]},
  adat:{label:'Baju adat',items:[['none','Tanpa baju adat',0,'—'],['bima','Rimpu · NTB (Bima)',0],['betawi','Sadariah · Jakarta',0],['maluku','Baju Cele · Maluku',0],['madura',"Pesa'an · Jawa Timur",30],['sunda','Pangsi · Jawa Barat',30],['jawa','Beskap · Jawa Tengah',40],['bali','Payas · Bali',40],['sasak','Pegon · Lombok',40],['batak','Ulos · Sumatra Utara',50],['melayu','Teluk Belanga · Riau',50],['banjar','Bagajah · Kalsel',50],['bugis','Baju Bodo · Sulsel',50],['ntt','Tenun Ikat · NTT',60],['toraja',"Pokko' · Toraja",60],['aceh','Ulee Balang · Aceh',70],['dayak','King Baba · Dayak',80],['lampung','Tulang Bawang · Lampung',90],['minang','Bundo Kanduang · Sumbar',100],['palembang','Aesan Gede · Sumsel',110],['papua','Rumbai & Mahkota · Papua',120]]},
  dunia:{label:'Baju dunia',items:[['none','Tanpa baju dunia',0,'—'],['prancis','Prancis · marinière',0],['hawaii','Hawaii · kemeja aloha',0],['brasil','Brasil · kaus bola',0],['jepang','Jepang · kimono',40],['korea','Korea · hanbok',40],['tiongkok','Tiongkok · changshan',40],['india','India · sari',40],['vietnam','Vietnam · ao dai',50],['thailand','Thailand · chut thai',60],['arab','Arab · gamis & syal',50],['turki','Turki · fez',50],['belanda','Belanda · topi renda',50],['jerman','Jerman · lederhosen',50],['skotlandia','Skotlandia · tartan',60],['koboi','Amerika · koboi',60],['meksiko','Meksiko · sombrero',60],['peru','Peru · chullo',60],['rusia','Rusia · ushanka',70],['kenya','Kenya · Maasai',70],['inggris','Inggris · pengawal raja',90],['mesir','Mesir · firaun',120]]},
  bg:{label:'Latar',items:[['b1','Ungu',0,'#C9B6FF'],['b2','Biru',0,'#A9DEFF'],['b3','Hijau',0,'#B5EBAE'],['b4','Merah muda',0,'#FFC9DF'],['b5','Kuning',20,'#FFE596'],['bintang','Malam berbintang',60],['pelangi','Pelangi',100]]}};
-const AV_ORDER=['skin','hair','hc','eyes','mouth','acc','shirt','adat','dunia','bg'];
-const AV_DEFAULT={skin:'s2',hair:'pendek',hc:'h1',eyes:'bulat',mouth:'senyum',acc:'none',shirt:'biru',adat:'none',dunia:'none',bg:'b1'};
+const AV_ORDER=['face','skin','hair','hc','brow','eyes','mouth','body','acc','shirt','adat','dunia','bg'];
+const AV_TABS=['face','skin','hair','brow','eyes','mouth','body','acc','shirt','adat','dunia','bg'];
+const AV_DEFAULT={face:'bulat',body:'sedang',brow:'tipis',skin:'s2',hair:'pendek',hc:'h1',eyes:'bulat',mouth:'senyum',acc:'none',shirt:'biru',adat:'none',dunia:'none',bg:'b1'};
 /* baju adat daerah: menggantikan baju, sebagian membawa penutup kepala sendiri */
 const ADAT_B='M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z';
+const BODY_P={sedang:ADAT_B,kurus:'M22 121 C24 99 40 88 60 88 C80 88 96 99 98 121Z',berisi:'M5 121 C6 93 32 85 60 85 C88 85 114 93 115 121Z',atletis:'M8 121 C9 100 20 90 40 88 L80 88 C100 90 111 100 112 121Z'};
+const FACE_P={bulat:null,oval:'M35 50 C35 31 46 23 60 23 C74 23 85 31 85 50 C85 70 74 84 60 84 C46 84 35 70 35 50Z',kotak:'M33 40 C33 28 44 25 60 25 C76 25 87 28 87 40 L87 62 C87 76 76 82 60 82 C44 82 33 76 33 62Z',hati:'M31 47 C31 32 44 25 60 25 C76 25 89 32 89 47 C89 63 75 79 60 84 C45 79 31 63 31 47Z',lebar:'M29 53 C29 35 42 26 60 26 C78 26 91 35 91 53 C91 71 78 80 60 80 C42 80 29 71 29 53Z'};
+const FACE_EAR={bulat:33,oval:36,kotak:33,hati:32,lebar:30};
 const GOLD='#E9B93C';
 const ADAT={
  jawa:{c:'#23263F',on:sw=>`<path d="M60 88 L76 121" stroke="${GOLD}" stroke-width="2.2"/>${[96,104,112].map((y,i)=>`<circle cx="${64+i*4}" cy="${y}" r="1.8" fill="${GOLD}"/>`).join('')}<path d="M50 89 L60 97 L70 89" fill="#fff" ${sw}/>`,clip:`<rect x="0" y="113" width="120" height="10" fill="#7A4A26"/>${[10,22,34,46,58,70,82,94,106].map(x=>`<path d="M${x} 117 l3 -3 l3 3 l-3 3z" fill="${GOLD}"/>`).join('')}`,
@@ -5074,7 +5087,7 @@ const avItem=(cat,id)=>AV_PARTS[cat].items.find(x=>x[0]===id)||AV_PARTS[cat].ite
 const avFree=(cat,id)=>avItem(cat,id)[2]===0;
 function avNorm(a){const o=Object.assign({},AV_DEFAULT,a||{});AV_ORDER.forEach(c=>{if(!AV_PARTS[c].items.some(x=>x[0]===o[c]))o[c]=AV_DEFAULT[c]});return o}
 function avBgColor(a){a=avNorm(a);return a.bg==='bintang'?'#2A2F6B':a.bg==='pelangi'?'#FFE596':avItem('bg',a.bg)[3]}
-function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[a.adat]:a.dunia!=='none'?ADAT[a.dunia]:null;if(AD&&AD.hood){a.hair='hijab';a.hc='h1'}const skin=avItem('skin',a.skin)[3],hc=(AD&&AD.hood)||avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
+function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[a.adat]:a.dunia!=='none'?ADAT[a.dunia]:null;if(AD&&AD.hood){a.hair='hijab';a.hc='h1'}const BP=BODY_P[a.body]||ADAT_B;const skin=avItem('skin',a.skin)[3],hc=(AD&&AD.hood)||avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
   let s=`<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
   /* latar */
   if(!opt.nobg){if(a.bg==='bintang')s+=`<rect width="120" height="120" fill="#2A2F6B"/>${[[14,18],[98,14],[106,48],[18,62],[30,34],[88,30]].map(([x,y])=>`<path d="M${x} ${y-4} L${x+1.2} ${y-1.2} L${x+4} ${y} L${x+1.2} ${y+1.2} L${x} ${y+4} L${x-1.2} ${y+1.2} L${x-4} ${y} L${x-1.2} ${y-1.2}Z" fill="#FFE596"/>`).join('')}`;
@@ -5089,14 +5102,14 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}h"><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z"/></clipPath><g clip-path="url(#${uid}h)">${AD.hoodPat}</g><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="none" ${sw}/>`}
   /* baju adat */
   if(AD&&AD.back)s+=AD.back(sw);
-  if(AD){s+=`<path d="${ADAT_B}" fill="${AD.c}" ${sw}/>`;if(AD.clip)s+=`<clipPath id="${uid}d"><path d="${ADAT_B}"/></clipPath><g clip-path="url(#${uid}d)">${AD.clip}</g><path d="${ADAT_B}" fill="none" ${sw}/>`;if(AD.on)s+=AD.on(sw)}else{
+  if(AD){s+=`<path d="${BP}" fill="${AD.c}" ${sw}/>`;if(AD.clip)s+=`<clipPath id="${uid}d"><path d="${BP}"/></clipPath><g clip-path="url(#${uid}d)">${AD.clip}</g><path d="${BP}" fill="none" ${sw}/>`;if(AD.on)s+=AD.on(sw)}else{
   /* baju */
   const sc={seragam:'#FFFFFF',pramuka:'#A9763F',jaket:'#34405F',batik:'#8B4A2B',super:'#3D6BFF'}[a.shirt]||avItem('shirt',a.shirt)[3];
-  s+=`<path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="${sc}" ${sw}/>`;
+  s+=`<path d="${BP}" fill="${sc}" ${sw}/>`;
   if(a.shirt==='seragam')s+=`<path d="M48 88 L60 100 L72 88" fill="#fff" ${sw}/><path d="M57 100 L63 100 L65 117 L60 121 L55 117Z" fill="#E5383B" ${sw}/>`;
   if(a.shirt==='pramuka')s+=`<path d="M44 89 L60 108 L76 89" fill="#E5383B" ${sw}/><path d="M52 92 L60 102 L68 92" fill="#fff"/><rect x="28" y="102" width="12" height="10" rx="2" fill="none" ${sw}/><rect x="80" y="102" width="12" height="10" rx="2" fill="none" ${sw}/>`;
   if(a.shirt==='jaket')s+=`<path d="M60 88 L60 121" ${sw}/><path d="M40 90 C46 98 52 100 60 100 C68 100 74 98 80 90" fill="none" stroke="#5A6A92" stroke-width="4"/><circle cx="60" cy="104" r="2" fill="#FFC23D"/>`;
-  if(a.shirt==='batik'){s+=`<clipPath id="${uid}c"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z"/></clipPath><g clip-path="url(#${uid}c)">`;for(let y=92;y<122;y+=10)for(let x=18+(y%20?5:0);x<106;x+=12)s+=`<path d="M${x} ${y-3} L${x+3} ${y} L${x} ${y+3} L${x-3} ${y}Z" fill="#F5C26B"/><circle cx="${x+6}" cy="${y+5}" r="1.4" fill="#F5C26B"/>`;s+=`</g><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="none" ${sw}/>`}
+  if(a.shirt==='batik'){s+=`<clipPath id="${uid}c"><path d="${BP}"/></clipPath><g clip-path="url(#${uid}c)">`;for(let y=92;y<122;y+=10)for(let x=18+(y%20?5:0);x<106;x+=12)s+=`<path d="M${x} ${y-3} L${x+3} ${y} L${x} ${y+3} L${x-3} ${y}Z" fill="#F5C26B"/><circle cx="${x+6}" cy="${y+5}" r="1.4" fill="#F5C26B"/>`;s+=`</g><path d="${BP}" fill="none" ${sw}/>`}
   if(a.shirt==='super')s+=`<path d="M60 96 L63 103 L71 103 L65 108 L67 116 L60 111 L53 116 L55 108 L49 103 L57 103Z" fill="#FFC23D" ${sw}/>`;}
   /* leher, telinga, kepala */
   if(a.hair==='hijab'){const DR='M22 64 C20 30 40 14 60 14 C80 14 100 30 98 64 C98 80 102 92 110 102 C98 114 80 118 60 118 C40 118 22 114 10 102 C18 92 22 80 22 64Z';
@@ -5105,8 +5118,9 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     const fold=shade(hc,-.16);s+=`<path d="M42 84 C36 94 28 100 18 104 M78 84 C84 94 92 100 102 104 M60 92 C58 100 58 108 60 116" fill="none" stroke="${fold}" stroke-width="2.5" stroke-linecap="round"/>`;
     s+=`<ellipse cx="60" cy="58" rx="28" ry="31" fill="${fold}" stroke="none"/>`}
   else s+=`<rect x="52" y="72" width="16" height="17" fill="${skin}" ${sw}/>`;
-  if(a.hair!=='hijab')s+=`<circle cx="33" cy="56" r="7" fill="${skin}" ${sw}/><circle cx="87" cy="56" r="7" fill="${skin}" ${sw}/>`;
-  s+=a.hair==='hijab'?`<ellipse cx="60" cy="58" rx="24" ry="27" fill="${skin}" ${sw}/>`:`<circle cx="60" cy="53" r="28" fill="${skin}" ${sw}/>`;
+  {const ex=FACE_EAR[a.face]||33;if(a.hair!=='hijab')s+=`<circle cx="${ex}" cy="56" r="7" fill="${skin}" ${sw}/><circle cx="${120-ex}" cy="56" r="7" fill="${skin}" ${sw}/>`}
+  {const HR={oval:[22,28],lebar:[26,25],hati:[25,27],kotak:[25,26]}[a.face]||[24,27];
+   s+=a.hair==='hijab'?`<ellipse cx="60" cy="58" rx="${HR[0]}" ry="${HR[1]}" fill="${skin}" ${sw}/>`:FACE_P[a.face]?`<path d="${FACE_P[a.face]}" fill="${skin}" ${sw}/>`:`<circle cx="60" cy="53" r="28" fill="${skin}" ${sw}/>`}
   /* rambut depan */
   const HF={pendek:`<path d="M32 54 C30 28 45 21 60 21 C76 21 91 28 88 54 C84 40 72 34 60 35 C48 34 36 40 32 54Z" fill="${hc}" ${sw}/>`,
     poni:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L40 44 C36 44 34 47 32 54Z" fill="${hc}" ${sw}/>`,
@@ -5125,7 +5139,23 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     :kind==='besar'?`<circle cx="${x}" cy="${ey}" r="6.5" fill="#fff" ${sw}/><circle cx="${x}" cy="${ey+1}" r="3.8" fill="${K}"/><circle cx="${x+1.6}" cy="${ey-1}" r="1.5" fill="#fff"/>`
     :kind==='bintang'?`<path d="M${x} ${ey-7} L${x+2.2} ${ey-2.2} L${x+7} ${ey-1.5} L${x+3.3} ${ey+2} L${x+4.4} ${ey+7} L${x} ${ey+4.4} L${x-4.4} ${ey+7} L${x-3.3} ${ey+2} L${x-7} ${ey-1.5} L${x-2.2} ${ey-2.2}Z" fill="#FFC23D" stroke="${K}" stroke-width="1.8" stroke-linejoin="round"/>`
     :`<circle cx="${x}" cy="${ey}" r="4" fill="${K}"/><circle cx="${x+1.4}" cy="${ey-1.4}" r="1.3" fill="#fff"/>`;
-  s+=a.eyes==='kedip'?eye(49,'bulat')+eye(71,'senyum'):eye(49,a.eyes)+eye(71,a.eyes);
+  const eyeX=(x,k)=>k==='sipit'?`<path d="M${x-6} ${ey+1} Q${x} ${ey-3} ${x+6} ${ey+1}" fill="none" stroke="${K}" stroke-width="3.2" stroke-linecap="round"/>`
+    :k==='almond'?`<path d="M${x-7} ${ey} Q${x} ${ey-7} ${x+7} ${ey} Q${x} ${ey+6} ${x-7} ${ey}Z" fill="#fff" ${sw}/><circle cx="${x+0.5}" cy="${ey}" r="3.2" fill="${K}"/><circle cx="${x+1.6}" cy="${ey-1.2}" r="1.1" fill="#fff"/>`
+    :k==='lentik'?eye(x,'bulat')+`<path d="M${x-4} ${ey-3} l-2.5 -2 M${x} ${ey-4.5} l0 -2.5 M${x+4} ${ey-3} l2.5 -2" stroke="${K}" stroke-width="2" stroke-linecap="round"/>`
+    :k==='ngantuk'?`<circle cx="${x}" cy="${ey}" r="4.2" fill="${K}"/><path d="M${x-6} ${ey-1} Q${x} ${ey-7} ${x+6} ${ey-1}Z" fill="${skin}"/><path d="M${x-6} ${ey-1} L${x+6} ${ey-1}" stroke="${K}" stroke-width="2.6" stroke-linecap="round"/>`
+    :k==='tajam'?`<circle cx="${x}" cy="${ey+0.5}" r="4" fill="${K}"/><circle cx="${x+1.3}" cy="${ey-0.8}" r="1.2" fill="#fff"/><path d="M${x-6} ${ey-3} L${x+6} ${ey-6} L${x+6} ${ey-9} L${x-6} ${ey-9}Z" fill="${skin}"/><path d="M${x-6} ${ey-3} L${x+6} ${ey-5}" stroke="${K}" stroke-width="2.4" stroke-linecap="round"/>`
+    :eye(x,k);
+  const ekind=(x,k)=>['sipit','almond','lentik','ngantuk','tajam'].includes(k)?eyeX(x,k):eye(x,k);
+  s+=a.eyes==='kedip'?eye(49,'bulat')+eye(71,'senyum'):ekind(49,a.eyes)+ekind(71,a.eyes);
+  /* alis */
+  {const bc=(a.hair==='hijab'||a.hair==='none'||a.hc==='h9')?'#3B2A20':shade(hc,-.1),by=ey-12;
+   const B={tipis:x=>`<path d="M${x-6} ${by+1} Q${x} ${by-2} ${x+6} ${by+1}" fill="none" stroke="${bc}" stroke-width="2.2" stroke-linecap="round"/>`,
+    tebal:x=>`<path d="M${x-7} ${by+2} Q${x} ${by-3} ${x+7} ${by+1}" fill="none" stroke="${bc}" stroke-width="4.2" stroke-linecap="round"/>`,
+    lengkung:x=>`<path d="M${x-7} ${by+2} Q${x} ${by-6} ${x+7} ${by+2}" fill="none" stroke="${bc}" stroke-width="2.6" stroke-linecap="round"/>`,
+    lurus:x=>`<path d="M${x-6} ${by} L${x+6} ${by}" fill="none" stroke="${bc}" stroke-width="3" stroke-linecap="round"/>`};
+   if(B[a.brow])s+=B[a.brow](49)+B[a.brow](71);
+   else if(a.brow==='tegas')s+=`<path d="M43 ${by-2} L55 ${by+2}" stroke="${bc}" stroke-width="3.4" stroke-linecap="round"/><path d="M77 ${by-2} L65 ${by+2}" stroke="${bc}" stroke-width="3.4" stroke-linecap="round"/>`;
+   else if(a.brow==='ramah')s+=`<path d="M43 ${by+2} L55 ${by-2}" stroke="${bc}" stroke-width="3" stroke-linecap="round"/><path d="M77 ${by+2} L65 ${by-2}" stroke="${bc}" stroke-width="3" stroke-linecap="round"/>`}
   /* mulut */
   const my=ey+13;
   s+={senyum:`<path d="M52 ${my-2} Q60 ${my+6} 68 ${my-2}" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/>`,
@@ -5155,19 +5185,21 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
   const toBuy=()=>AV_ORDER.filter(c=>!hiddenCat(c)&&!owned(c,draft[c]));
   const cost=()=>toBuy().reduce((t,c)=>t+avItem(c,draft[c])[2],0);
   const gem=`<span style="width:18px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
-  const render=()=>{const c=cost(),can=c<=P.gems,cat=AV_PARTS[tab];
+  const render=()=>{const tb0=el.querySelector('.aved-tabs'),tabX=tb0?tb0.scrollLeft:0,elY=el.scrollTop,first=!tb0;const c=cost(),can=c<=P.gems,cat=AV_PARTS[tab];
     el.innerHTML=`<div class="onbin" style="max-width:720px;gap:12px">
       <div class="aved-top"><button class="back" id="avX" aria-label="Tutup">✕</button><h2 style="flex:1">Ubah avatar</h2><span class="aved-gems">${gem} ${P.gems}</span></div>
       <div class="aved-prev" style="--av:${avBgColor(draft)}">${avatarSVG(draft)}</div>
-      <div class="aved-tabs" role="tablist">${AV_ORDER.map(k=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${AV_PARTS[k].label}</button>`).join('')}</div>
+      <div class="aved-tabs" role="tablist">${AV_TABS.map(k=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${AV_PARTS[k].label}</button>`).join('')}</div>
+      ${tab==='hair'&&draft.hair!=='hijab'&&draft.hair!=='none'||tab==='hair'?`<div class="aved-colors"><b>Warna ${draft.hair==='hijab'?'hijab':'rambut'}</b><div>${AV_PARTS.hc.items.map(it=>{const own=owned('hc',it[0]),on=draft.hc===it[0];return `<button class="aved-col ${on?'on':''}" data-hc="${it[0]}" style="--c:${it[3]}" aria-pressed="${on}" title="${esc(it[1])}${own?'':' · '+it[2]+' permata'}">${own?'':`<small>${it[2]}</small>`}</button>`}).join('')}</div></div>`:''}
       <div class="aved-grid">${cat.items.map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id});
         const vis=it[3]&&tab!=='shirt'&&tab!=='bg'&&tab!=='adat'&&tab!=='dunia'?`<span class="aved-sw" style="background:${it[3]}"></span>`:`<span class="aved-mini">${avatarSVG(prev,{nobg:tab!=='bg'})}</span>`;
         return `<button class="aved-it ${on?'on':''}" data-id="${id}" aria-pressed="${on}">${vis}<b>${esc(it[1])}</b><small>${own?(on?'Dipakai':it[2]?'Dimiliki':'Gratis'):`${gem} ${it[2]}`}</small></button>`}).join('')}</div>
       <div class="onbfoot aved-foot">${c?`<div class="aved-cart">${toBuy().map(k=>{const it=avItem(k,draft[k]);return `<button class="aved-chip" data-undo="${k}" title="Batalkan">${esc(it[1])} · ${it[2]} <span aria-hidden="true">✕</span></button>`}).join('')}</div><p class="note" style="text-align:center;margin:0 0 8px;${can?'':'color:var(--bad);font-weight:800'}">${can?`Akan dibeli seharga ${c} permata.`:`Permatamu kurang ${c-P.gems}. Ketuk ✕ untuk membatalkan barang yang tidak jadi dibeli.`}</p>`:''}
         <button class="primary press" id="avSave" ${can?'':'disabled'}>${c?`Beli dan pakai · ${c} permata`:'Simpan avatar'}</button></div></div>`;
-    hydrate(el);
+    hydrate(el);{const tb=el.querySelector('.aved-tabs');tb.scrollLeft=tabX;el.scrollTop=elY;const on=tb.querySelector('[aria-selected="true"]');if(on&&!first){const l=on.offsetLeft-tb.offsetLeft,r=l+on.offsetWidth;if(l<tb.scrollLeft)tb.scrollTo({left:l-12,behavior:'smooth'});else if(r>tb.scrollLeft+tb.clientWidth)tb.scrollTo({left:r-tb.clientWidth+12,behavior:'smooth'})}}
     $('#avX').onclick=()=>{el.hidden=true};
     el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+    el.querySelectorAll('[data-hc]').forEach(b=>b.onclick=()=>{draft.hc=b.dataset.hc;tone([660],.03);render()});
     el.querySelectorAll('[data-undo]').forEach(b=>b.onclick=()=>{const k=b.dataset.undo;draft[k]=P.avatar[k];if(!owned(k,draft[k]))draft[k]=AV_DEFAULT[k];render()});
     el.querySelectorAll('.aved-it').forEach(b=>b.onclick=()=>{draft[tab]=b.dataset.id;if(tab==='shirt'){draft.adat='none';draft.dunia='none'}if(tab==='adat')draft.dunia='none';if(tab==='dunia')draft.adat='none';tone([660],.03);render()});
     $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;const buy=toBuy();AV_ORDER.forEach(k=>{if(!owned(k,draft[k])&&!buy.includes(k))draft[k]=P.avatar[k]});buy.forEach(k=>P.avOwned.push(k+':'+draft[k]));P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
