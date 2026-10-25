@@ -1232,6 +1232,9 @@ body.has-invite .nav[data-tab=team] i::before{content:'';position:absolute;right
 .notifbar{display:flex;align-items:center;gap:12px;padding:12px 14px;border-color:var(--bad);background:#FFF1F1}
 .notifbar .nb-ic{font-size:28px}.notifbar .grow{flex:1;min-width:0;display:flex;flex-direction:column}.notifbar small{color:var(--muted);font-weight:600}
 .notifbar .primary{flex:none;padding:8px 14px;font-size:15px}
+body.fb-student #vTeam>*:not(.pagehead):not(.roomcard):not(.friendcard){display:none!important}
+.roomcard .roomcard-h{display:none}
+.friendcard{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3827,12 +3830,12 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
-window.fbAfterSignup=function(){FBX.busy=false;fbHideAuth();afterLogin();fbListenStudent();window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
@@ -3951,7 +3954,7 @@ enterTeacher=function(){showLogin()};
 const _logout=logout;
 logout=function(){fbStop();clearTimeout(FBX.t);const fl=Promise.all([SESSION?fbFlush():Promise.resolve(),typeof fbPushUnregister==='function'?fbPushUnregister():null]);setSession(null);
   APP={profiles:[],cur:null,sessions:[],deleted:[],bank:[]};store.set('app',APP);FBX.me=null;FBX.admin=false;FBX.classDoc=null;FBX.remote=[];FBX.members={};
-  document.body.classList.remove('fb-free');_logout();timeout(fl,3000).finally(()=>FB.auth.signOut())};
+  document.body.classList.remove('fb-free','fb-student');_logout();timeout(fl,3000).finally(()=>FB.auth.signOut())};
 
 /* ---------- paket Pro ---------- */
 const PRO_LIST=[['cal','Absensi dan jadwal mengajar'],['tv','Evaluasi harian di TV sentuh'],['quiz','Bank soal buatan sendiri'],['report','Rapor otomatis dan salin ke Excel'],['team',`Murid tanpa batas (gratis maksimal ${FREE_MAX})`]];
@@ -4317,6 +4320,14 @@ function openAjak(){if(!P)return;const s=SUBJ(),done=progOf().done,open=Math.max
   drawGames();const uSel=$('#ajUnit'),oldU=uSel.onchange;uSel.onchange=e=>{oldU&&oldU(e);drawGames()};
   $('#ajShare').onclick=ajakShare;$('#ajGo').onclick=()=>ajakSearch($('#ajQ').value);$('#ajQ').onkeydown=e=>{if(e.key==='Enter')ajakSearch($('#ajQ').value)};
   ajakFoot();ajakLoadFriends()}
+async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
+  (P.friends||[]).forEach(f=>map.set(f.uid,{uid:f.uid,name:f.name,av:f.av,sub:'Lawan tanding'}));
+  if(m.classId){try{const q=await FB.db.collection('classes/'+m.classId+'/board').get();q.docs.forEach(d=>{if(d.id===me)return;const x=d.data();const o=map.get(d.id)||{uid:d.id};map.set(d.id,Object.assign(o,{name:x.name,av:x.av||o.av||null,sub:'Teman sekelas'}))})}catch(e){}}
+  return [...map.values()].filter(f=>f.name)}
+async function friendsCard(){const v=$('#vTeam');if(!v||!FBX.user||isT())return;let el=$('#friendCard');if(!el){const rc=v.querySelector('.roomcard');(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card friendcard" id="friendCard"></div>');el=$('#friendCard')}
+  el.innerHTML='<h4 class="ajsec" style="margin:0">TEMANMU</h4><p class="note">Memuat teman…</p>';const list=await friendsData(),m=FBX.me||{};
+  el.innerHTML=`<h4 class="ajsec" style="margin:0">TEMANMU</h4>${list.length?list.map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(f.sub)}</small></span><button class="ajinv" data-fr="${esc(f.uid)}">TANTANG</button></div>`).join(''):`<p class="note" style="margin:0">${m.classId?'Teman sekelasmu akan muncul di sini setelah mereka belajar minggu ini.':'Gabung kelas lewat menu Profil supaya teman sekelasmu muncul di sini.'} Kamu juga bisa menekan <b>Ajak tanding</b> lalu mencari nama pengguna teman.</p>`}`;
+  el.querySelectorAll('[data-fr]').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.fr);openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(f.uid)}"]`);ajakInvite(f,ab||null)},350)})}
 async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
   (P.friends||[]).forEach(f=>map.set(f.uid,{uid:f.uid,name:f.name,av:f.av,sub:'Lawan tanding'}));
   if(m.classId){try{const q=await FB.db.collection('classes/'+m.classId+'/board').get();q.docs.forEach(d=>{if(d.id===me)return;const x=d.data();const o=map.get(d.id)||{uid:d.id};map.set(d.id,Object.assign(o,{name:x.name,av:x.av||o.av||null,sub:'Teman sekelas'}))})}catch(e){}}
@@ -4370,7 +4381,8 @@ function inviteBox(){let el=$('#invBox');const card=$('#vTeam .roomcard');if(!ca
   el.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const x=AJAK.inv.find(i=>i.id===b.dataset.dec);if(x)inviteAnswer(x,false)})}
 
 const _renderTeamR=renderTeam;
-renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox();setTimeout(notifGate,600)};
+{const ph=document.querySelector('#vTeam .pagehead p');if(ph)ph.dataset.tv=ph.textContent}
+renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;{const ph=document.querySelector('#vTeam .pagehead p');if(ph)ph.textContent='Tantang teman dari HP masing-masing, soalnya sama, peringkatnya langsung terlihat.'}if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox();friendsCard();setTimeout(notifGate,600)};
 const _finishRunR=finishRun;
 finishRun=function(){const o=game&&game.lesson;if(o&&o.room&&FBX.user){if(o.segN>1&&o.seg<o.segN-1){ROOM.acc.correct+=game.correct||0;ROOM.acc.done+=o.target;clearInterval(timerId);if(arc.running)arcStop();roomSeg(o.seg+1);toast('game',`Game berikutnya: ${gameName(ROOM.segs[o.seg+1].mode)}`);return}ROOM.pendingShow=true;roomFinish(o)}_finishRunR()};
 const _goR=go;
