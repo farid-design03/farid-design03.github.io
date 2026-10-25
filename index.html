@@ -1173,6 +1173,7 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
 .aved-sw{width:52px;height:52px;margin:7px 0;border-radius:50%;border:3px solid var(--ink);display:block}
 .aved-foot{position:sticky;bottom:0;background:linear-gradient(transparent,rgba(255,255,255,.9) 30%);padding-top:14px}
 .aved-foot .primary{width:100%;font-size:20px;padding:12px}
+@media (max-width:999px){body:not([data-tab="learn"]) #statsBar{display:none}body:not([data-tab="learn"]) .main.wrap{padding-top:calc(14px + env(safe-area-inset-top, 0px))}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2918,7 +2919,7 @@ function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-
 /* ---------- navigation ---------- */
 let curTab='learn';
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){curTab=tab;closePop();setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){curTab=tab;closePop();document.body.dataset.tab=tab;setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
