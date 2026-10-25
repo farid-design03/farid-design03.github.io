@@ -1297,6 +1297,20 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
 .petit .petpic{width:74px;display:block}
 .petit b{font-size:13px;line-height:1.15}.petit small{font-size:11px;color:var(--muted)}.petit em{font-style:normal;font-size:12px;font-weight:800;color:#1899D6}
 .pban{position:relative}.pban-pet{position:absolute;left:12px;bottom:8px;width:64px;padding:0;border:0;background:transparent;cursor:pointer}
+.pban-set{position:absolute;top:12px;right:12px;width:46px;height:46px;border-radius:50%;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--line2);display:grid;place-items:center;color:#4B4B4B;padding:0;cursor:pointer}
+.pban .pban-edit{top:auto;bottom:12px}
+.setsheet .sethead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.setsheet .settings{box-shadow:none;margin:0}
+.popover{box-sizing:border-box}
+.popover h4{font-weight:900}
+.popover p i[data-icon]{display:inline-block;width:18px;height:18px;vertical-align:-3px}
+.popover p i[data-icon] svg{width:100%;height:100%}
+.week{box-sizing:border-box;max-width:100%;justify-content:space-between;gap:2px;padding:10px 8px}
+.week div{flex:1;min-width:0}
+.week span{width:min(32px,8vw);height:min(32px,8vw)}
+.ptop .pinfo{min-width:0;box-sizing:border-box}
+.ptop .pinfo input{box-sizing:border-box;width:100%;max-width:100%}
+.ps{min-width:0}.ps small{overflow-wrap:anywhere}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -1403,8 +1417,6 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
       <div class="card badges" id="badgeList"></div>
       <h3 class="sect" id="myEvalH" hidden>Nilai dari guru</h3>
       <div class="card badges" id="myEval" hidden></div>
-      <h3 class="sect">Pengaturan</h3>
-      <div class="card settings" id="settings"></div>
       <h3 class="sect">Akun</h3>
       <div class="card profiles" id="profileList"></div>
     </section>
@@ -2058,7 +2070,8 @@ let soundOn=store.get('sound',true);
 let actx=null;
 function tone(freqs,dur=.12){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();freqs.forEach((f,i)=>{const o=actx.createOscillator(),gn=actx.createGain();o.type='triangle';o.frequency.value=f;const t=actx.currentTime+i*dur;gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(.18,t+.02);gn.gain.exponentialRampToValueAtTime(.0001,t+dur*1.6);o.connect(gn).connect(actx.destination);o.start(t);o.stop(t+dur*1.8)})}catch(e){}}
 const sfx={ok:()=>tone([660,880]),bad:()=>tone([300,220],.15),win:()=>tone([523,659,784,1047],.12)};
-const MUS={on:store.get('music',true),t:null,step:0,next:0,gain:null};
+if(!store.get('music2',false)){store.set('music',false);store.set('music2',true)}
+const MUS={on:store.get('music',false),t:null,step:0,next:0,gain:null};
 const MEL=[72,0,76,79,0,76,72,0, 77,0,81,84,0,81,77,0, 79,0,83,86,0,83,79,0, 76,79,84,0,83,0,79,0, 72,74,76,0,79,0,76,0, 77,76,74,0,72,0,0,0, 74,76,77,0,81,0,79,0, 76,74,72,0,67,0,72,0];
 const BAS=[48,0,55,0,48,0,55,0, 53,0,60,0,53,0,60,0, 55,0,62,0,55,0,62,0, 48,0,55,0,48,0,55,0, 48,0,55,0,48,0,55,0, 53,0,60,0,53,0,60,0, 55,0,62,0,55,0,62,0, 48,0,55,0,43,0,48,0];
 const mf=m=>440*Math.pow(2,(m-69)/12);
@@ -3495,25 +3508,29 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
 
 /* ---------- profile ---------- */
 function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done/NODES.length);return n}
+function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class="sethead"><h3 style="margin:0;flex:1">Pengaturan</h3><button class="back" id="setX" aria-label="Tutup">✕</button></div><div class="card settings" id="setBody"></div></div>`);
+  $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
+  const rs=()=>{
+  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
+   `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
+    <div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
+  $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();(rs(),renderProfile())};
+  $('#sMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();(rs(),renderProfile())};
+  $('#sUnl').onclick=()=>{P.unlimited=!P.unlimited;save();renderTop();(rs(),renderProfile())};
+  $('#sTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();(rs(),renderProfile())};
+  $('#sGoal').querySelectorAll('button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;if(P.quests)P.quests.list.forEach(q=>{if(q.id==='xp')q.goal=P.goal});save();(rs(),renderProfile());renderTop()});
+  $('#sFull').onclick=()=>{try{if(!document.fullscreenElement){const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{$('#sFull').textContent='Tidak tersedia'})}else document.exitFullscreen()}catch(e){}};
+  };rs()}
 function renderProfile(){const t=tierOf(P);
   if(!P.avatar){P.avatar=avNorm(null);P.color=avBgColor(P.avatar)}
-  $('#profileTop').innerHTML=`<div class="pban" style="--av:${avBgColor(P.avatar)}"><div class="pban-av">${avatarSVG(P.avatar,{nobg:true})}</div><button class="pban-edit press" id="avEdit" aria-label="Ubah avatar" title="Ubah avatar"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20 L5 15 L16 4 L20 8 L9 19Z M14 6 L18 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></button><button class="pban-pet mascot press" id="petEdit" aria-label="Ganti teman belajar" title="Ganti teman belajar">${mascotSVG()}</button></div>
+  $('#profileTop').innerHTML=`<div class="pban" style="--av:${avBgColor(P.avatar)}"><div class="pban-av">${avatarSVG(P.avatar,{nobg:true})}</div><button class="pban-edit press" id="avEdit" aria-label="Ubah avatar" title="Ubah avatar"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20 L5 15 L16 4 L20 8 L9 19Z M14 6 L18 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></button><button class="pban-set press" id="setOpen" aria-label="Pengaturan" title="Pengaturan"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 1 0 0-7Z M10.3 2.5h3.4l.5 2.6 1.9.8 2.2-1.5 2.4 2.4-1.5 2.2.8 1.9 2.6.5v3.4l-2.6.5-.8 1.9 1.5 2.2-2.4 2.4-2.2-1.5-1.9.8-.5 2.6h-3.4l-.5-2.6-1.9-.8-2.2 1.5-2.4-2.4 1.5-2.2-.8-1.9-2.6-.5v-3.4l2.6-.5.8-1.9-1.5-2.2 2.4-2.4 2.2 1.5 1.9-.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button><button class="pban-pet mascot press" id="petEdit" aria-label="Ganti teman belajar" title="Ganti teman belajar">${mascotSVG()}</button></div>
    <div class="pinfo"><input id="pName" maxlength="20" value="${esc(P.name)}" aria-label="Nama"><p>${P.user?'@'+esc(P.user)+' · ':''}Bergabung ${new Date(P.created).toLocaleDateString('id-ID',{month:'long',year:'numeric'})} · ${CLS().full}</p></div>`;
-  $('#avEdit').onclick=openAvatarEditor;$('#petEdit').onclick=openPets;
+  $('#avEdit').onclick=openAvatarEditor;$('#petEdit').onclick=openPets;$('#setOpen').onclick=openSettings;
   $('#pName').onchange=e=>{const v=e.target.value.trim();if(v){P.name=v;save();renderProfile()}};
   $('#profileTop').querySelectorAll('.avcolors button').forEach(b=>b.onclick=()=>{P.color=b.dataset.c;save();renderProfile()});
   $('#pStats').innerHTML=[[`<span style="color:#FF8A00;width:34px">${ICONS.flame}</span>`,shownStreak(),'Hari beruntun'],[ico('bolt'),P.xp,'Total XP'],[`<i>${shield(t[2])}</i>`,t[0],'Liga sekarang'],[ico('check'),unitsDone(P),'Unit selesai']].map(x=>`<div class="ps">${x[0]}<span><b>${x[1]}</b><small>${x[2]}</small></span></div>`).join('');
   $('#badgeList').innerHTML=BADGES.map(b=>{const l=blevel(b),nx=b.lv[Math.min(l,b.lv.length-1)],v=b.val(P);return `<div class="badge ${l?'':'none'}"><span class="bdg">${badgeSVG(b,l)}<span class="lv">${l?'Level '+l:'Belum'}</span></span><span class="bt"><b>${b.name}</b><small>${l>=b.lv.length?'Level tertinggi tercapai!':b.d(nx)}</small><div class="qbar"><i style="width:${Math.min(100,v/nx*100)}%"></i><span>${Math.min(v,nx)} / ${nx}</span></div></span></div>`}).join('');
   const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
-  $('#settings').innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
-   `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
-    <div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
-  $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();renderProfile()};
-  $('#sMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();renderProfile()};
-  $('#sUnl').onclick=()=>{P.unlimited=!P.unlimited;save();renderTop();renderProfile()};
-  $('#sTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();renderProfile()};
-  $('#sGoal').querySelectorAll('button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;if(P.quests)P.quests.list.forEach(q=>{if(q.id==='xp')q.goal=P.goal});save();renderProfile();renderTop()});
-  $('#sFull').onclick=()=>{try{if(!document.fullscreenElement){const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{$('#sFull').textContent='Tidak tersedia'})}else document.exitFullscreen()}catch(e){}};
   $('#profileList').innerHTML=APP.profiles.map(p=>`<div class="prow">${avSpan(p)}<span class="grow"><b>${esc(p.name)}</b><small>${(COURSE.find(c=>c.id===p.cls)||{}).full||''} · ${p.xp} XP</small></span>${p.id===P.id?'<small><b>Sedang dipakai</b></small>':`${T()?'':`<button class="smallbtn" data-use="${p.id}">Pakai</button><button class="smallbtn danger" data-del="${p.id}">Hapus</button>`}`}</div>`).join('')+`${T()?'<div class="prow"><button class="primary" id="toPicker" style="width:100%">Ganti murid</button></div>':'<div class="prow"><button class="primary" id="addProfile" style="width:100%">+ Tambah profil teman</button></div>'}`;
   $('#profileList').querySelectorAll('[data-use]').forEach(b=>b.onclick=()=>{P=APP.profiles.find(p=>p.id===b.dataset.use);afterLogin();toast('user',`Halo, ${P.name}!`)});
   $('#profileList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const p=APP.profiles.find(x=>x.id===b.dataset.del);openModal(`<h3>Hapus profil ${esc(p.name)}?</h3><p>Semua XP, beruntun, dan kemajuan belajar profil ini akan dihapus dari perangkat ini.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);
