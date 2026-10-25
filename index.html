@@ -1311,6 +1311,25 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
 .ptop .pinfo{min-width:0;box-sizing:border-box}
 .ptop .pinfo input{box-sizing:border-box;width:100%;max-width:100%}
 .ps{min-width:0}.ps small{overflow-wrap:anywhere}
+.lrow.tap{cursor:pointer}.lrow.tap:hover{background:#F7F7F7}
+.tapprof{cursor:pointer}.ajrow .grow.tapprof b{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.uprof{display:flex;flex-direction:column;gap:6px}
+.upban{position:relative;background:var(--av);border-radius:18px;height:150px;display:flex;justify-content:center;align-items:flex-end;overflow:hidden;margin:-4px -4px 0}
+.upban .back{position:absolute;top:10px;right:10px;z-index:2}
+.upav{width:150px;margin-bottom:-6px}.upav svg{display:block;width:100%}
+.uppet{position:absolute;left:10px;bottom:6px;width:62px}
+.upvs{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px 0 4px}
+.upvs>div{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;max-width:40%}.upvs b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.upmini{width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid var(--line);display:block}.upmini svg{width:100%;height:100%;display:block}
+.upvs .ajv{font-family:var(--title);font-weight:900;font-size:22px;color:#FF9600}
+.cmpwrap{display:flex;flex-direction:column;gap:10px;border:2px solid var(--line);border-radius:16px;padding:12px}
+.cmp-h{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);justify-content:center}.cmp-h i[data-icon]{width:16px;height:16px;display:inline-block}.cmp-h i svg{width:100%;height:100%}
+.cmp-b{display:grid;grid-template-columns:44px 1fr 1fr 44px;align-items:center;gap:4px}
+.cv{font-weight:900;font-size:15px;text-align:center;color:var(--muted)}.cv.win{color:#58A700}
+.cbar{height:12px;background:#E5E5E5;border-radius:8px;overflow:hidden;display:flex}
+.cbar.me{justify-content:flex-end}.cbar.me i{background:#1CB0F6}.cbar.th i{background:#FF9600}
+.cbar i{display:block;height:100%;border-radius:8px}
+.upmsg{text-align:center;font-weight:700;margin:8px 0 2px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4132,7 +4151,7 @@ function fbQueue(){if(!FBX.user||FBX.busy||!SESSION)return;clearTimeout(FBX.t);i
 function fbClassData(){return {teacher:APP.teacher,sessions:APP.sessions||[],bank:APP.bank||[],deleted:APP.deleted||[],roster:(APP.profiles||[]).filter(p=>!p._remote)}}
 function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let pr;
   if(SESSION.role==='student'&&P){const p=Object.assign({},P);delete p._remote;delete p._uid;delete p._pin;
-    pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}try{fbHandleSync()}catch(e){}}
+    pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}try{fbHandleSync()}catch(e){}try{fbPubSync()}catch(e){}}
   else if(SESSION.role==='teacher'&&APP.teacher){const t=APP.teacher;
     pr=FB.db.doc('classes/'+u.uid).set({teacherUid:u.uid,name:t.name||'',school:t.school||'',cls:t.cls||'',data:JSON.stringify(fbClassData()),upd:Date.now()},{merge:true})}
   else return Promise.resolve();
@@ -4422,7 +4441,7 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
   await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,st?uPass(pw):pw));
   FBX.busy=true;fbStop();clearTimeout(FBX.t);
   const del=p=>FB.db.doc(p).delete().catch(()=>{});const list=p=>FB.db.collection(p).get().then(q=>q.docs.map(d=>d.id)).catch(()=>[]);
-  try{if(st){if(me.classId){try{await fbLeave()}catch(e){}}if(me.username){await del('recovery/'+me.username);await del('handles/'+me.username)}}
+  try{if(st){if(me.classId){try{await fbLeave()}catch(e){}}if(me.username){await del('recovery/'+me.username);await del('handles/'+me.username)}await del('pub/'+u.uid)}
     else{const cid=u.uid;for(const t of await list('classes/'+cid+'/tasks')){await del('reminders/'+t);for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
       for(const d of await list('classes/'+cid+'/board'))await del('classes/'+cid+'/board/'+d);
       const code=FBX.classDoc&&FBX.classDoc.code;if(code)await del('classCodes/'+code);await FB.db.doc('classes/'+cid).delete().catch(()=>{})}
@@ -4526,7 +4545,8 @@ renderLeague=function(){_rL();if(isT()||!FBX.user||!P)return;const m=FBX.me||{},
   box.innerHTML='<p class="note">Memuat peringkat kelas…</p>';
   FB.db.collection('classes/'+m.classId+'/board').where('week','==',weekKey()).get().then(q=>{const me=FBX.user.uid;const rows=q.docs.map(d=>Object.assign({uid:d.id},d.data())).filter(r=>r.uid!==me);
     rows.push({uid:me,name:P.name,color:P.color,av:P.avatar,wxp:P.week.xp});rows.sort((a,b)=>(b.wxp||0)-(a.wxp||0));
-    box.innerHTML=rows.map((r,i)=>`<div class="lrow ${r.uid===me?'me':''}"><span class="rk ${i<3?'top':''}">${i+1}</span>${avSpan({name:r.name,color:r.color,avatar:r.av||null})}<span class="nm">${esc(r.name||'')}</span><span class="xp">${r.wxp||0} XP</span></div>`).join('')+(rows.length<2?'<p class="note">Belum ada teman sekelas yang belajar minggu ini. Ayo jadi yang pertama!</p>':'')})
+    box.innerHTML=rows.map((r,i)=>`<div class="lrow ${r.uid===me?'me':'tap'}" data-u="${esc(r.uid)}" ${r.uid===me?'':'role="button" tabindex="0" title="Lihat profil"'}><span class="rk ${i<3?'top':''}">${i+1}</span>${avSpan({name:r.name,color:r.color,avatar:r.av||null})}<span class="nm">${esc(r.name||'')}</span><span class="xp">${r.wxp||0} XP</span></div>`).join('')+(rows.length<2?'<p class="note">Belum ada teman sekelas yang belajar minggu ini. Ayo jadi yang pertama!</p>':'');
+    box.querySelectorAll('.lrow.tap').forEach(el=>el.onclick=()=>{const r=rows.find(x=>x.uid===el.dataset.u);openUserProfile(r.uid,{name:r.name,av:r.av})})})
    .catch(e=>{box.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`})};
 function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT())return;ensureDay(P);const key=m.classId+':'+P.week.id+':'+P.week.xp+':'+P.name+':'+JSON.stringify(P.avatar||'');if(key===FBX.boardKey)return;FBX.boardKey=key;
   FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,av:P.avatar||null,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
@@ -4601,6 +4621,36 @@ function roomFinish(o){const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0,st
   clearInterval(ROOM.timer);ROOM.timer=null;ROOM.playing=false;const lv=$('#roomLive');if(lv)lv.hidden=true;
   FB.db.doc('rooms/'+o.room).update({['players.'+uid]:Object.assign({},(ROOM.doc&&ROOM.doc.players[uid])||roomMe(),{score,c:ok,i:total,done:true,t})}).catch(e=>toast('lock','Nilai tantangan belum terkirim: '+fbErr(e)))}
 
+/* ---------- PROFIL TEMAN: kunjungi profil orang lain + perbandingan statistik ---------- */
+function myPub(){ensureDay(P);const s=P.stats||{};return {name:P.name,user:(FBX.me||{}).username||'',av:P.avatar||null,pet:P.pet||'uli',cls:P.cls,xp:P.xp||0,wxp:(P.week&&P.week.xp)||0,week:(P.week&&P.week.id)||'',
+  streak:shownStreak(P),best:P.bestStreak||0,lessons:s.lessons||0,perfect:s.perfect||0,units:unitsDone(P),matches:s.matches||0,correct:s.correct||0,
+  badges:BADGES.reduce((t,b)=>t+blevel(b,P),0),created:P.created||0,lastDay:P.lastDay||''}}
+function fbPubSync(){if(!FBX.user||isT()||!P)return;const d=myPub();const key=JSON.stringify(d);if(FBX.pubKey===key)return;FBX.pubKey=key;
+  FB.db.doc('pub/'+FBX.user.uid).set(Object.assign(d,{upd:Date.now()})).catch(()=>{FBX.pubKey=null})}
+window.fbPubSync=fbPubSync;
+const CMP=[['xp','Total XP','bolt'],['wxp','XP minggu ini','bolt'],['streak','Hari beruntun','flame'],['lessons','Pelajaran selesai','check'],['units','Unit selesai','target'],['perfect','Level sempurna','star'],['badges','Level pencapaian','trophy'],['matches','Tanding dimainkan','team']];
+function cmpLine(me,th,name){const lead=CMP.filter(([k])=>me[k]>th[k]).length,lose=CMP.filter(([k])=>me[k]<th[k]);
+  if(!lose.length)return `Kamu unggul atau seri di semua statistik. Pertahankan, ya!`;
+  const [k,l]=lose.sort((a,b)=>(th[a[0]]-me[a[0]])-(th[b[0]]-me[b[0]]))[0];const gap=th[k]-me[k];
+  return `Kamu unggul di <b>${lead}</b> dari ${CMP.length} statistik. Kurang <b>${gap} ${l.toLowerCase()}</b> lagi untuk menyalip ${esc(name)}. Ayo kejar!`}
+async function openUserProfile(uid,fb){if(!P||!FBX.user)return;fb=fb||{};
+  if(uid===FBX.user.uid){go('profile');return}
+  openModal(`<div class="uprof"><p class="note" style="text-align:center;padding:30px 0">Membuka profil ${esc(fb.name||'')}…</p></div>`);
+  let th=null;try{const s=await FB.db.doc('pub/'+uid).get();if(s.exists)th=s.data()}catch(e){}
+  const box=document.querySelector('#mbox .uprof');if(!box)return;
+  if(!th){box.innerHTML=`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({name:fb.name,avatar:fb.av||null}).replace('class="avatar','class="avatar big')}</div><h3>${esc(fb.name||'Teman')}</h3><p class="note">${esc(fb.name||'Temanmu')} belum membuka JELAS versi terbaru, jadi statistiknya belum bisa dibandingkan.</p></div><div class="acts"><button class="primary" id="upX">Oke</button></div>`;$('#upX').onclick=closeModal;return}
+  const me=myPub();if(th.week!==me.week)th.wxp=0;const gap=dayNum(dayKey())-dayNum(th.lastDay||'2000-01-01');if(gap>2)th.streak=0;
+  const cls=(COURSE.find(c=>c.id===th.cls)||{}).full||'';const cap=(CAPS[0]||[])[2]||INK;
+  const rows=CMP.map(([k,l,ic])=>{const a=me[k]||0,b=th[k]||0,mx=Math.max(a,b,1);return `<div class="cmp"><div class="cmp-h">${ico(ic)}<b>${l}</b></div>
+    <div class="cmp-b"><span class="cv ${a>b?'win':''}">${a}</span><div class="cbar me"><i style="width:${a/mx*100}%"></i></div><div class="cbar th"><i style="width:${b/mx*100}%"></i></div><span class="cv ${b>a?'win':''}">${b}</span></div></div>`}).join('');
+  box.innerHTML=`<div class="upban" style="--av:${avBgColor(th.av)}"><button class="back" id="upX" aria-label="Tutup">✕</button><div class="upav">${avatarSVG(th.av||null,{nobg:true})}</div><div class="uppet mascot">${th.pet&&th.pet!=='uli'?petSVG(th.pet,cap):mascotSVG('uli')}</div></div>
+    <h3 style="margin:10px 0 0">${esc(th.name)}</h3><p class="note" style="margin:0">${th.user?'@'+esc(th.user)+' · ':''}${esc(cls)}${th.created?' · Bergabung '+new Date(th.created).toLocaleDateString('id-ID',{month:'long',year:'numeric'}):''}</p>
+    <div class="upvs"><div><span class="upmini">${avatarSVG(P.avatar||null)}</span><b>Kamu</b></div><span class="ajv">VS</span><div><span class="upmini">${avatarSVG(th.av||null)}</span><b>${esc(th.name)}</b></div></div>
+    <div class="cmpwrap">${rows}</div><p class="upmsg">${cmpLine(me,th,th.name)}</p>
+    <div class="acts"><button class="ghost" id="upClose">Tutup</button><button class="primary" id="upDuel">Tantang</button></div>`;
+  hydrate(box);$('#upX').onclick=closeModal;$('#upClose').onclick=closeModal;
+  $('#upDuel').onclick=()=>{closeModal();const f={uid,name:th.name,av:th.av||null};openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(uid)}"]`);ajakInvite(f,ab||null)},350)}}
+window.openUserProfile=openUserProfile;
 /* ---------- AJAK TANDING (seperti Duolingo): bagikan, cari nama pengguna, undang teman ---------- */
 const AJAK={ui:null,n:5,mode:'acak',sent:{},found:null,inv:[],unsubInv:null};window.AJAK=AJAK;
 function silhouetteSVG(){return `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="#0E8F63"/><rect x="52" y="70" width="16" height="20" fill="#0E8F63"/><circle cx="60" cy="52" r="29" fill="#0E8F63"/><circle cx="33" cy="54" r="7" fill="#0E8F63"/><circle cx="87" cy="54" r="7" fill="#0E8F63"/><ellipse cx="50" cy="50" rx="7" ry="9" fill="#fff"/><ellipse cx="70" cy="50" rx="7" ry="9" fill="#fff"/><circle cx="52" cy="52" r="4" fill="${AVK}"/><circle cx="72" cy="52" r="4" fill="${AVK}"/><path d="M55 66 Q60 70 66 65" stroke="${AVK}" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`}
@@ -4626,7 +4676,9 @@ async function ajakSearch(u){u=String(u||'').trim().toLowerCase().replace(/^@/,'
     if(!s.exists||s.data().uid===FBX.user.uid){out.innerHTML=`<p class="note">${s.exists?'Itu nama penggunamu sendiri.':'Nama pengguna <b>'+esc(u)+'</b> tidak ditemukan.'}</p>`;return}
     const f=Object.assign({uid:s.data().uid,username:u},s.data());out.innerHTML=ajakRow(f,'@'+u);ajakBindRows(out,[f])}catch(e){out.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`}}
 function ajakRow(f,sub){const sent=AJAK.sent[f.uid];return `<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(sub||'')}</small></span><button class="ajinv ${sent?'sent':''}" data-uid="${esc(f.uid)}" ${sent?'disabled':''}>${sent?'TERKIRIM':'UNDANG'}</button></div>`}
-function ajakBindRows(root,list){root.querySelectorAll('.ajinv').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.uid);if(f)ajakInvite(f,b)})}
+function bindProfTap(root,list){root.querySelectorAll('.ajrow').forEach(r=>{const b=r.querySelector('[data-uid],[data-fr]');if(!b)return;const id=b.dataset.uid||b.dataset.fr;const f=list.find(x=>x.uid===id);if(!f)return;
+  r.querySelectorAll('.avatar,.grow').forEach(t=>{t.classList.add('tapprof');t.title='Lihat profil';t.onclick=()=>{const a=$('#ajak');if(a)a.hidden=true;openUserProfile(f.uid,f)}})})}
+function ajakBindRows(root,list){bindProfTap(root,list);root.querySelectorAll('.ajinv').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.uid);if(f)ajakInvite(f,b)})}
 function ajakFoot(){const el=$('#ajFoot');if(!el)return;if(!ROOM.code){el.innerHTML='';return}const n=Object.keys((ROOM.doc&&ROOM.doc.players)||{}).length;
   el.innerHTML=`<button class="primary press" id="ajOpen">Buka ruang tanding · ${n} pemain</button>`;$('#ajOpen').onclick=()=>{$('#ajak').hidden=true;ROOM.bg=false;$('#room').hidden=false;roomRender()}}
 function openAjak(){if(!P)return;const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.min(s.units.length,Math.floor(done/NODES.length)+1));if(AJAK.ui==null||AJAK.ui>=open)AJAK.ui=open-1;AJAK.sent={};
@@ -4658,7 +4710,7 @@ async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Ma
 async function friendsCard(){const v=$('#vTeam');if(!v||!FBX.user||isT())return;let el=$('#friendCard');if(!el){const rc=v.querySelector('.roomcard');(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card friendcard" id="friendCard"></div>');el=$('#friendCard')}
   el.innerHTML='<h4 class="ajsec" style="margin:0">TEMANMU</h4><p class="note">Memuat teman…</p>';const list=await friendsData(),m=FBX.me||{};
   el.innerHTML=`<h4 class="ajsec" style="margin:0">TEMANMU</h4>${list.length?list.map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(f.sub)}</small></span><button class="ajinv" data-fr="${esc(f.uid)}">TANTANG</button></div>`).join(''):`<p class="note" style="margin:0">${m.classId?'Teman sekelasmu akan muncul di sini setelah mereka belajar minggu ini.':'Gabung kelas lewat menu Profil supaya teman sekelasmu muncul di sini.'} Kamu juga bisa menekan <b>Ajak tanding</b> lalu mencari nama pengguna teman.</p>`}`;
-  el.querySelectorAll('[data-fr]').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.fr);openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(f.uid)}"]`);ajakInvite(f,ab||null)},350)})}
+  bindProfTap(el,list);el.querySelectorAll('[data-fr]').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.fr);openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(f.uid)}"]`);ajakInvite(f,ab||null)},350)})}
 async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
   (P.friends||[]).forEach(f=>map.set(f.uid,{uid:f.uid,name:f.name,av:f.av,sub:'Lawan tanding'}));
   if(m.classId){try{const q=await FB.db.collection('classes/'+m.classId+'/board').get();q.docs.forEach(d=>{if(d.id===me)return;const x=d.data();const o=map.get(d.id)||{uid:d.id};map.set(d.id,Object.assign(o,{name:x.name,av:x.av||o.av||null,sub:'Teman sekelas'}))})}catch(e){}}

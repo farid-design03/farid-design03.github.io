@@ -141,6 +141,13 @@ service cloud.firestore {
       allow update, delete: if signedIn() && resource.data.classId == request.auth.uid;
     }
 
+    // Profil umum murid (untuk dikunjungi dan dibandingkan teman). Hanya pemiliknya yang boleh menulis.
+    match /pub/{uid} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow write: if signedIn() && request.auth.uid == uid;
+    }
+
     match /classCodes/{code} {
       allow get: if signedIn();
       allow list: if false;
