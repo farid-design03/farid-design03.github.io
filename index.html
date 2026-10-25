@@ -629,8 +629,9 @@ body.lessonmode #vPlay{padding-bottom:150px}
 .node.k-test{width:86px;height:80px;border-radius:26px}
 .starttip{position:absolute;bottom:calc(100% + 18px);left:50%;transform:translateX(-50%);background:#fff;color:var(--uc);border:3px solid var(--ink);border-radius:14px;padding:3px 14px 4px;font-family:var(--title);font-size:18px;white-space:nowrap;box-shadow:0 4px 0 var(--ink);animation:tipBob 1.3s ease-in-out infinite;pointer-events:none;z-index:3}
 .starttip::after{content:"";position:absolute;left:50%;bottom:-10px;width:14px;height:14px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
-.npop{position:absolute;top:calc(100% + 18px);left:50%;transform:translateX(-50%);width:min(290px,80vw);background:var(--uc);color:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink);padding:14px;z-index:20;display:flex;flex-direction:column;gap:6px;animation:popIn .2s;text-align:left}
-.npop::before{content:"";position:absolute;left:50%;top:-11px;width:18px;height:18px;background:var(--uc);border-left:3px solid var(--ink);border-top:3px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
+.npop{position:absolute;top:calc(100% + 18px);left:50%;transform:translateX(calc(-50% + var(--dx,0px)));width:min(290px,80vw);background:var(--uc);color:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink);padding:14px;z-index:20;display:flex;flex-direction:column;gap:6px;animation:npopIn .2s;text-align:left}
+@keyframes npopIn{0%{scale:.6;opacity:.3}65%{scale:1.08;opacity:1}100%{scale:1}}
+.npop::before{content:"";position:absolute;left:calc(50% - var(--dx,0px));top:-11px;width:18px;height:18px;background:var(--uc);border-left:3px solid var(--ink);border-top:3px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
 .npop b{font-family:var(--title);font-weight:400;font-size:21px;line-height:1.1}
 .npop p{margin:0;font-size:13px;font-weight:500}
 .npop .primary{background:#fff;color:var(--uc);text-shadow:none;margin-top:6px;width:100%}
@@ -1099,7 +1100,7 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
 .tcard.evsel{position:sticky;top:8px;z-index:5}
 /* ---- navigasi laptop ---- */
 .kbhint,.sfoot{display:none}
-.nodes{padding-top:52px}
+.nodes{padding-top:72px}
 @media (min-width:1000px){
  .side{overflow-y:auto;scrollbar-width:thin}
  .nav{transition:background .15s,transform .1s}
@@ -2892,6 +2893,7 @@ function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NOD
   row.insertAdjacentHTML('beforeend',`<div class="npop ${st==='lock'?'lock':''}"><b>${esc(t)}</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:''}</div>`);row.classList.add('popopen');
   const g=$('#nodeGo');if(g)g.onclick=e=>{e.stopPropagation();closePop();startNode(ui,ni)};
   row.querySelector('.npop').onclick=e=>e.stopPropagation();
+  {const np=row.querySelector('.npop');const rr=row.getBoundingClientRect(),w=np.offsetWidth,cx=rr.left+rr.width/2,W=document.documentElement.clientWidth,m=12;const r={left:cx-w/2,right:cx+w/2};let dx=0;if(r.left<m)dx=m-r.left;else if(r.right>W-m)dx=W-m-r.right;if(dx)np.style.setProperty('--dx',Math.round(dx)+'px')}
   const pop=row.querySelector('.npop').getBoundingClientRect();if(pop.bottom>window.innerHeight-90)window.scrollBy({top:pop.bottom-window.innerHeight+110,behavior:'smooth'})}
 function openGuide(ui){const s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);
   openModal(`<span class="eyebrow">Panduan · Unit ${ui+1}</span><h3>${esc(u.t)}</h3><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><b>Contoh soal</b>`+
