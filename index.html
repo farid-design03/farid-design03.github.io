@@ -1427,6 +1427,15 @@ body.playing .jumpcur,body.teacher .jumpcur{display:none!important}
 .duos{display:flex;align-items:center;gap:8px;text-align:left;border:2px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 4px 0 var(--line);padding:8px;font:inherit;font-weight:800;font-size:14px;color:var(--ink);cursor:pointer;transition:transform .07s,box-shadow .07s}
 .duos:active{transform:translateY(4px);box-shadow:none}
 .duos span{flex:none;min-width:34px;height:34px;border-radius:10px;background:var(--sc);color:#fff;display:grid;place-items:center;font-size:12px;padding:0 4px}
+/* game penuh tanpa kartu */
+body.arcfs #vPlay{padding:0 0 env(safe-area-inset-bottom,0px)!important;gap:0!important;background:#fff}
+body.arcfs .playbar{border:0!important;border-radius:0!important;box-shadow:none!important;padding:6px 10px!important;background:#fff}
+body.arcfs .qcard{border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;gap:0!important;background:#fff}
+body.arcfs .qcard>.timer{border-radius:0!important;margin:0!important;height:5px}
+body.arcfs .qcard>#qtext{padding:6px 12px!important;margin:0!important}
+body.arcfs .stage{border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important}
+body.arcfs .qwrap{padding:0!important}
+body.arcfs{padding:0!important;margin:0!important}body.arcfs .app,body.arcfs .main{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;box-sizing:border-box}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3274,7 +3283,7 @@ function gameFSOff(){if(!GFS.on)return;GFS.on=false;document.body.classList.remo
   try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}
   if(GFS.mine){GFS.mine=false;try{if(document.fullscreenElement&&document.exitFullscreen){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}
 function gameFit(){if(!GFS.on||!arc.running||!M)return;const w=$('#stage').clientWidth;if(Math.abs(w-arc.lastW)>2||Math.abs(arc.H-gameH())>4){arcSize();M.setup()}}
-function gameH(){const st=$('#stage');const z=arc.z||1;return Math.max(200,Math.floor((window.innerHeight-st.getBoundingClientRect().top-8)/z))}
+function gameH(){const st=$('#stage');const z=arc.z||1;return Math.max(200,Math.floor((window.innerHeight-st.getBoundingClientRect().top-1)/z))}
 window.addEventListener('orientationchange',()=>setTimeout(gameFit,400));
 document.addEventListener('fullscreenchange',()=>setTimeout(gameFit,300));
 function arcSize(){
