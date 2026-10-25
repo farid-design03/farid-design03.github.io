@@ -1485,6 +1485,17 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .spanim{width:100%;aspect-ratio:1/1}.spanim svg{width:100%;height:100%;display:block}
 .spitem .spanim{width:56px;flex:none;border-radius:10px;overflow:hidden;background:#F7FFF0}
 .spfigbig{padding:0!important;overflow:hidden;width:min(280px,72vw)!important}.spfigbig.small{width:150px!important}
+.spduo{display:grid;grid-template-columns:1.5fr 1fr;gap:10px;align-items:start}
+.spok,.spbad{position:relative;display:flex;flex-direction:column;gap:4px}
+.spok .spanim{border-radius:20px;overflow:hidden;border:3px solid #58CC02}
+.spbad .spanim{border-radius:16px;overflow:hidden;border:3px solid #FF4B4B}
+.spbad small{font-size:12px;font-weight:800;color:#EA2B2B;line-height:1.25;text-align:left}
+.sptag{position:absolute;top:6px;left:6px;z-index:2;font-size:11px;font-weight:900;border-radius:999px;padding:2px 8px;color:#fff}.sptag.ok{background:#58CC02}.sptag.no{background:#FF4B4B}
+.spcues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;text-align:left}
+.spcues li{background:#F2FCE8;border-radius:12px;padding:7px 10px 7px 32px;position:relative;font-size:14px;font-weight:700;color:#3C3C3C}
+.spcues li::before{content:"✓";position:absolute;left:10px;top:6px;color:#58CC02;font-weight:900}
+.spname{font-size:24px!important}.spamt{font-size:28px!important}
+.sptag{position:static!important;align-self:flex-start}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4845,13 +4856,13 @@ const SPK={
   [{H:[49,14],N:[48,27],P:[48,52],E1:[54,40],W1:[50,51],E2:[54,40],W2:[50,51],K1:[49,71],A1:[48,90],T1:[55,91],K2:[48,71],A2:[47,90],T2:[54,91]},.9]]},
  br:{face:[0.2,-1],view:'side',floor:true,keys:[
   [{H:[13,83],N:[23,86],P:[51,87],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
-  [{H:[13,83],N:[24,85],P:[50,73],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,68],A1:[75,89],T1:[82,91],K2:[68,69],A2:[76,89],T2:[83,91]},.9],
-  [{H:[13,83],N:[24,85],P:[50,73],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,68],A1:[75,89],T1:[82,91],K2:[68,69],A2:[76,89],T2:[83,91]},.6],
+  [{H:[13,83],N:[24,85],P:[50,74.6],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,68],A1:[75,89],T1:[82,91],K2:[68,69],A2:[76,89],T2:[83,91]},.9],
+  [{H:[13,83],N:[24,85],P:[50,74.6],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,68],A1:[75,89],T1:[82,91],K2:[68,69],A2:[76,89],T2:[83,91]},.6],
   [{H:[13,83],N:[23,86],P:[51,87],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.9]]},
  pu:{face:[-1,0.4],view:'side',floor:true,keys:[
-  [{H:[15,62],N:[24,68],P:[55,77],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,82],A1:[86,86],T1:[89,91],K2:[71,82],A2:[86,86],T2:[89,91]},.4],
+  [{H:[15,65.5],N:[24,68],P:[55,77],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,82],A1:[86,86],T1:[89,91],K2:[71,82],A2:[86,86],T2:[89,91]},.4],
   [{H:[17,77],N:[26,82],P:[56,84],E1:[35,77],W1:[24,90],E2:[36,77],W2:[25,90],K1:[71,85],A1:[86,87],T1:[89,91],K2:[71,85],A2:[86,87],T2:[89,91]},1.0],
-  [{H:[15,62],N:[24,68],P:[55,77],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,82],A1:[86,86],T1:[89,91],K2:[71,82],A2:[86,86],T2:[89,91]},.8]]},
+  [{H:[15,65.5],N:[24,68],P:[55,77],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,82],A1:[86,86],T1:[89,91],K2:[71,82],A2:[86,86],T2:[89,91]},.8]]},
  pu_knee:{face:[-1,0.4],view:'side',floor:true,keys:[
   [{H:[15,62],N:[24,68],P:[49,78],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[66,89],A1:[78,79],T1:[83,75],K2:[66,89],A2:[78,79],T2:[83,75]},.4],
   [{H:[17,77],N:[26,82],P:[49,85],E1:[35,77],W1:[24,90],E2:[36,77],W2:[25,90],K1:[66,89],A1:[78,79],T1:[83,75],K2:[66,89],A2:[78,79],T2:[83,75]},1.0],
@@ -4877,11 +4888,58 @@ const SPK={
   [{H:[66,64],N:[61,55],P:[44,52],E1:[63,67],W1:[61,79],E2:[64,67],W2:[62,79],K1:[46,71],A1:[46,90],T1:[53,91],K2:[46,71],A2:[46,90],T2:[53,91]},2.0],
   [{H:[66,64],N:[61,55],P:[44,52],E1:[63,67],W1:[61,79],E2:[64,67],W2:[62,79],K1:[46,71],A1:[46,90],T1:[53,91],K2:[46,71],A2:[46,90],T2:[53,91]},1.6]]}};
 const SPC={skin:'#F6C9A0',shirt:'#1CB0F6',shirt2:'#1590CC',pants:'#3C4A6B',pants2:'#2B3550',shoe:'#FF9600',hair:'#2B1D14'};
+/* ===== Teknik benar vs salah (rujukan: NFPT "12 Common Exercise Form Mistakes", Garage Gym Reviews "Push-up mistakes",
+   Philadelphia Inquirer "Fix your form: plank, glute bridge") ===== */
+const SP_FORM={
+ sq:{guide:'kneeToe',cues:['Kaki selebar bahu, tumit tetap menempel lantai','Pinggul mundur seperti mau duduk, dada tetap tegak','Lutut searah jari kaki, tidak jauh melewati ujung kaki'],bad:'Tumit terangkat, lutut maju terlalu jauh, punggung membungkuk',
+  badKeys:[[{H:[47,14],N:[46,27],P:[45,52],E1:[55,30],W1:[65,31],E2:[55,30],W2:[65,31],K1:[47,71],A1:[45,90],T1:[53,91],K2:[48,71],A2:[46,90],T2:[54,91]},.5],
+   [{H:[64,46],N:[56,52],P:[41,70],E1:[62,58],W1:[68,66],E2:[62,58],W2:[68,66],K1:[64,72],A1:[46,86],T1:[54,91],K2:[65,72],A2:[47,86],T2:[55,91]},.9]]},
+ lg:{guide:'shin',cues:['Langkahkan satu kaki cukup lebar ke depan','Lutut depan tepat di atas pergelangan kaki, menekuk sekitar 90°','Lutut belakang turun mendekati lantai, badan tetap tegak'],bad:'Lutut depan maju melewati ujung kaki dan badan membungkuk',
+  badKeys:[[{H:[49,14],N:[48,27],P:[48,52],E1:[54,40],W1:[50,51],E2:[54,40],W2:[50,51],K1:[49,71],A1:[48,90],T1:[55,91],K2:[48,71],A2:[47,90],T2:[54,91]},.6],
+   [{H:[60,36],N:[55,45],P:[47,66],E1:[58,56],W1:[60,66],E2:[58,56],W2:[60,66],K1:[71,70],A1:[59,90],T1:[66,91],K2:[40,80],A2:[30,87],T2:[27,91]},.9]]},
+ pu:{guide:'bodyNA',cues:['Tangan tepat di bawah bahu, selebar bahu','Badan lurus dari kepala sampai tumit, perut dikencangkan','Siku menekuk serong ke belakang (±45°), dada turun mendekati lantai'],bad:'Pinggul turun sehingga punggung melengkung',
+  badKeys:[[{H:[15,62],N:[24,68],P:[55,84],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,85],A1:[86,87],T1:[89,91],K2:[71,85],A2:[86,87],T2:[89,91]},.4],
+   [{H:[17,74],N:[26,79],P:[56,89],E1:[35,75],W1:[24,90],E2:[36,75],W2:[25,90],K1:[71,88],A1:[86,88],T1:[89,91],K2:[71,88],A2:[86,88],T2:[89,91]},.9]]},
+ pu_knee:{guide:'bodyNK',cues:['Lutut di lantai, tangan tepat di bawah bahu','Badan lurus dari kepala sampai lutut','Turunkan dada pelan-pelan, lalu dorong lagi'],bad:'Pinggul menungging ke atas, badan tidak lurus',
+  badKeys:[[{H:[15,62],N:[24,68],P:[46,66],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[62,89],A1:[76,79],T1:[81,75],K2:[62,89],A2:[76,79],T2:[81,75]},.4],
+   [{H:[17,74],N:[26,79],P:[46,70],E1:[35,75],W1:[24,90],E2:[36,75],W2:[25,90],K1:[62,89],A1:[76,79],T1:[81,75],K2:[62,89],A2:[76,79],T2:[81,75]},.9]]},
+ pu_wall:{guide:'bodyNA',cues:['Tangan di dinding setinggi dan selebar bahu','Badan lurus seperti papan, tumit tetap di lantai','Tekuk siku sampai dada mendekati dinding'],bad:'Pinggul menekuk ke belakang, hanya kepala yang maju',
+  badKeys:[[{H:[33,23],N:[39,33],P:[60,50],E1:[30,37],W1:[21,40],E2:[31,37],W2:[21,41],K1:[63,70],A1:[67,90],T1:[73,91],K2:[63,70],A2:[67,90],T2:[73,91]},.4],
+   [{H:[25,33],N:[33,38],P:[60,52],E1:[31,45],W1:[21,40],E2:[32,45],W2:[21,41],K1:[63,71],A1:[67,90],T1:[73,91],K2:[63,71],A2:[67,90],T2:[73,91]},.9]]},
+ pl:{guide:'bodyNA',cues:['Siku tepat di bawah bahu, lengan bawah ke depan','Badan lurus seperti papan, pinggul tidak turun atau naik','Pandangan ke lantai sedikit di depan tangan, tetap bernapas'],bad:'Pinggul turun dan punggung melengkung',
+  badKeys:[[{H:[15,70],N:[26,77],P:[56,87],E1:[26,89],W1:[13,90],E2:[27,89],W2:[14,90],K1:[71,87],A1:[86,88],T1:[89,91],K2:[71,87],A2:[86,88],T2:[89,91]},1.2],
+   [{H:[15,70],N:[26,77],P:[56,88],E1:[26,89],W1:[13,90],E2:[27,89],W2:[14,90],K1:[71,88],A1:[86,88],T1:[89,91],K2:[71,88],A2:[86,88],T2:[89,91]},1.2]]},
+ br:{guide:'bodyNK',cues:['Berbaring, lutut ditekuk, telapak kaki selebar pinggul','Dorong lewat tumit sambil mengencangkan bokong','Angkat sampai bahu, pinggul, dan lutut segaris'],bad:'Panggul terlalu tinggi sampai punggung melengkung',
+  badKeys:[[{H:[13,83],N:[23,86],P:[51,87],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
+   [{H:[13,83],N:[24,85],P:[48,62],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,66],A1:[75,89],T1:[82,91],K2:[68,67],A2:[76,89],T2:[83,91]},.9]]},
+ cr:{guide:null,cues:['Lutut ditekuk, punggung bawah menempel lantai','Tangan disilangkan di dada','Angkat kepala dan bahu sedikit saja, dagu tidak menempel dada'],bad:'Menarik kepala dengan tangan sampai leher tertekuk',
+  badKeys:[[{H:[13,83],N:[23,86],P:[51,87],E1:[16,74],W1:[8,80],E2:[17,74],W2:[9,80],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
+   [{H:[31,76],N:[27,74],P:[51,87],E1:[22,62],W1:[30,68],E2:[23,62],W2:[31,68],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.7]]},
+ mc:{guide:'bodyNA',cues:['Mulai dari posisi push-up, tangan di bawah bahu','Pinggul tetap rendah dan sejajar badan','Tarik lutut ke arah dada bergantian'],bad:'Pinggul naik tinggi seperti segitiga',
+  badKeys:[[{H:[15,62],N:[24,68],P:[52,58],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[42,72],A1:[52,84],T1:[49,90],K2:[70,74],A2:[86,86],T2:[89,91]},.3],
+   [{H:[15,62],N:[24,68],P:[52,58],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[70,74],A1:[86,86],T1:[89,91],K2:[42,72],A2:[52,84],T2:[49,90]},.3]]},
+ jj:{guide:null,cues:['Mendarat pelan dengan ujung kaki','Lutut sedikit ditekuk saat mendarat','Tangan lurus sampai di atas kepala'],bad:'Mendarat keras dengan lutut terkunci lurus, tangan setengah',
+  badKeys:[[{H:[50,15],N:[50,27],P:[50,52],E1:[43,38],W1:[41,49],E2:[57,38],W2:[59,49],K1:[47,71],A1:[46,90],T1:[42,91],K2:[53,71],A2:[54,90],T2:[58,91]},.3],
+   [{H:[50,15],N:[50,27],P:[50,52],E1:[40,30],W1:[33,30],E2:[60,30],W2:[67,30],K1:[44,71],A1:[38,90],T1:[34,91],K2:[56,71],A2:[62,90],T2:[66,91]},.3]]},
+ skip:{guide:null,cues:['Lompat kecil, cukup sedikit dari lantai','Mendarat dengan ujung kaki dan lutut lentur','Siku dekat badan, yang berputar pergelangan tangan'],bad:'Lompat terlalu tinggi dan tangan diayun lebar',
+  badKeys:[[{H:[50,15],N:[50,27],P:[50,52],E1:[40,36],W1:[30,40],E2:[60,36],W2:[70,40],K1:[47,71],A1:[47,90],T1:[43,91],K2:[53,71],A2:[53,90],T2:[57,91]},.3],
+   [{H:[50,2],N:[50,13],P:[50,38],E1:[38,18],W1:[28,12],E2:[62,18],W2:[72,12],K1:[45,52],A1:[50,68],T1:[46,70],K2:[55,52],A2:[50,68],T2:[54,70]},.3]]},
+ hk:{guide:'hip',cues:['Badan tegak, jangan condong ke belakang','Lutut naik setinggi pinggang','Ayun tangan berlawanan dengan kaki'],bad:'Badan condong ke belakang dan lutut rendah',
+  badKeys:[[{H:[44,15],N:[46,27],P:[50,52],E1:[40,38],W1:[38,47],E2:[52,38],W2:[55,46],K1:[58,62],A1:[57,80],T1:[62,82],K2:[51,71],A2:[50,90],T2:[57,91]},.3],
+   [{H:[44,15],N:[46,27],P:[50,52],E1:[52,38],W1:[55,46],E2:[40,38],W2:[38,47],K1:[51,71],A1:[50,90],T1:[57,91],K2:[58,62],A2:[57,80],T2:[62,82]},.3]]},
+ st:{guide:null,cues:['Gerakkan pelan, jangan menghentak','Lutut boleh sedikit ditekuk','Tahan sambil bernapas, berhenti kalau terasa sakit'],bad:'Menghentak-hentak sambil memaksa badan turun',
+  badKeys:[[{H:[66,64],N:[61,55],P:[44,52],E1:[63,67],W1:[61,79],E2:[64,67],W2:[62,79],K1:[46,71],A1:[46,90],T1:[53,91],K2:[46,71],A2:[46,90],T2:[53,91]},.18],
+   [{H:[62,82],N:[58,68],P:[44,52],E1:[60,80],W1:[56,92],E2:[61,80],W2:[57,92],K1:[46,71],A1:[46,90],T1:[53,91],K2:[46,71],A2:[46,90],T2:[53,91]},.18]]}};
+function spGuides(type,p){if(type==='kneeToe')return [[p.T1[0],91,p.T1[0],p.K1[1]-8]];if(type==='shin')return [[p.A1[0],91,p.A1[0],p.K1[1]-8]];
+  if(type==='bodyNA'){const dx=p.A1[0]-p.N[0],dy=p.A1[1]-p.N[1];return [[p.N[0]-dx*.08,p.N[1]-dy*.08-4,p.A1[0]+dx*.04,p.A1[1]+dy*.04-4]]}
+  if(type==='bodyNK'){const dx=p.K1[0]-p.N[0],dy=p.K1[1]-p.N[1];return [[p.N[0]-dx*.08,p.N[1]-dy*.08-4,p.K1[0]+dx*.06,p.K1[1]+dy*.06-4]]}
+  if(type==='hip')return [[30,p.P[1],80,p.P[1]]];return []}
+
 function spAnimKey(id,v){if(id==='pu'&&v==='wall')return 'pu_wall';if(id==='pu'&&v==='knee')return 'pu_knee';return SPK[id]?id:'jj'}
-function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),def=SPK[id];const NS='http://www.w3.org/2000/svg';
+function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[id],bad=box.dataset.bad==='1',form=SP_FORM[id]||{};const def=bad&&form.badKeys?Object.assign({},base,{keys:form.badKeys}):base;const NS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('class','spsvg');
   const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
-  mk('rect',{x:0,y:91,width:100,height:9,fill:'#E9F7DF'});mk('line',{x1:0,y1:91.5,x2:100,y2:91.5,stroke:'#C8E6B0','stroke-width':1.5});
+  if(bad)mk('rect',{x:0,y:0,width:100,height:100,fill:'#FFF3F3'});mk('rect',{x:0,y:91,width:100,height:9,fill:bad?'#FBE0E0':'#E9F7DF'});mk('line',{x1:0,y1:91.5,x2:100,y2:91.5,stroke:'#C8E6B0','stroke-width':1.5});
   if(def.floor)mk('rect',{x:8,y:89.5,width:84,height:2.5,rx:1.2,fill:'#9B6BFF',opacity:.55});
   if(def.wall){mk('rect',{x:12,y:4,width:8,height:87,fill:'#E5D3B3'});mk('line',{x1:20,y1:4,x2:20,y2:91,stroke:'#C9B48F','stroke-width':1})}
   const L=(c,w)=>mk('line',{stroke:c,'stroke-width':w,'stroke-linecap':'round'});
@@ -4891,6 +4949,7 @@ function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),def=SPK[i
   const hand1=mk('circle',{r:3,fill:SPC.skin}),hand2=mk('circle',{r:3,fill:'#E0AE85'});
   const hair=mk('circle',{r:7.6,fill:SPC.hair});const head=mk('circle',{r:7,fill:SPC.skin});const eye=mk('circle',{r:1.15,fill:'#1E1E24'}),eye2=mk('circle',{r:1.15,fill:'#1E1E24'}),mouth=mk('path',{fill:'none',stroke:'#B0563C','stroke-width':.9,'stroke-linecap':'round'});
   hand2.parentNode.insertBefore(hand2,torso);
+  const gl=[0,1].map(()=>mk('line',{stroke:bad?'#FF4B4B':'#58CC02','stroke-width':1.6,'stroke-dasharray':'3 2.5','stroke-linecap':'round',opacity:0}));
   box.innerHTML='';box.appendChild(svg);
   const keys=def.keys,tot=keys.reduce((s,k)=>s+k[1],0);const t0=performance.now();
   const ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
@@ -4902,6 +4961,7 @@ function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),def=SPK[i
    set(torso,p.N,p.P);const nx=p.N[0]+(p.H[0]-p.N[0])*.45,ny=p.N[1]+(p.H[1]-p.N[1])*.45;set(neck,p.N,[nx,ny]);
    set(near.th,p.P,p.K1);set(near.sh,p.K1,p.A1);set(near.ft,p.A1,p.T1);set(near.ua,p.N,p.E1);set(near.fa,p.E1,p.W1);hand1.setAttribute('cx',p.W1[0]);hand1.setAttribute('cy',p.W1[1]);
    head.setAttribute('cx',p.H[0]);head.setAttribute('cy',p.H[1]);
+   {const gs=form.guide?spGuides(form.guide,p):[];gl.forEach((g,k)=>{const L2=gs[k];if(!L2){g.setAttribute('opacity',0);return}g.setAttribute('opacity',.95);g.setAttribute('x1',L2[0]);g.setAttribute('y1',L2[1]);g.setAttribute('x2',L2[2]);g.setAttribute('y2',L2[3])});svg.appendChild(gl[0]);svg.appendChild(gl[1])}
    const ang=Math.atan2(p.H[1]-p.N[1],p.H[0]-p.N[0]),up=[Math.cos(ang),Math.sin(ang)];
    if(def.face==='front'){hair.setAttribute('cx',p.H[0]);hair.setAttribute('cy',p.H[1]-2);eye.setAttribute('cx',p.H[0]-2.6);eye.setAttribute('cy',p.H[1]);eye2.setAttribute('cx',p.H[0]+2.6);eye2.setAttribute('cy',p.H[1]);eye2.style.display='';mouth.setAttribute('d',`M${p.H[0]-2} ${p.H[1]+3} Q${p.H[0]} ${p.H[1]+4.6} ${p.H[0]+2} ${p.H[1]+3}`)}
    else{const f=def.face,fl=Math.hypot(f[0],f[1]),fx=f[0]/fl,fy=f[1]/fl;hair.setAttribute('cx',p.H[0]+up[0]*1.4-fx*1.8);hair.setAttribute('cy',p.H[1]+up[1]*1.4-fy*1.8);
@@ -4912,7 +4972,7 @@ function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),def=SPK[i
 function spVar(x){return x.id==='pu'?(/dinding/.test(x.name)?'wall':/lutut/.test(x.name)?'knee':''):''}
 function spAnimAll(root){root.querySelectorAll('.spanim:not([data-on])').forEach(b=>{b.dataset.on='1';spMount(b)})}
 
-function spFigure(id,v){return `<div class="spanim" data-ex="${id}" data-v="${v||''}"></div>`}
+function spFigure(id,v,bad){return `<div class="spanim" data-ex="${id}" data-v="${v||''}" ${bad?'data-bad="1"':''}></div>`}
 function spFigureOld(id){const ps=SP_POSE[id]||SP_POSE.jj;const L=(p,a,b)=>`<line x1="${p[a][0]}" y1="${p[a][1]}" x2="${p[b][0]}" y2="${p[b][1]}"/>`;
   const fr=(p,k)=>`<g class="spf f${k}">${L(p,'n','p')}${L(p,'n','le')}${L(p,'le','lh')}${L(p,'n','re')}${L(p,'re','rh')}${L(p,'p','lk')}${L(p,'lk','lf')}${L(p,'p','rk')}${L(p,'rk','rf')}<circle cx="${p.h[0]}" cy="${p.h[1]}" r="7" fill="#FFC800" stroke="#3C3C3C" stroke-width="3"/></g>`;
   const floor=['pu','pl','br','cr','mc'].includes(id)?'<line x1="4" y1="90" x2="96" y2="90" stroke="#E5E5E5" stroke-width="3"/>':'<line x1="20" y1="91" x2="80" y2="91" stroke="#E5E5E5" stroke-width="3"/>';
@@ -4940,10 +5000,10 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
      <button class="primary press" id="spGo">Mulai</button><button class="ghost" id="spMini">Lagi kurang semangat? Versi mini (setengahnya)</button>`}
    else if(st.phase==='ex'||st.phase==='ready'){const timeEx=ex.t==='time';const pct=timeEx?Math.max(0,st.left/ex.amt):0;
      body=`<div class="spprog">${st.plan.map((x,i)=>`<i class="${i<st.k?'d':i===st.k?'c':''}"></i>`).join('')}</div>
-     <div class="spfigbig">${spFigure(ex.id,spVar(ex))}</div><h2 class="spname">${esc(ex.name)}</h2>
+     ${(()=>{const fm=SP_FORM[spAnimKey(ex.id,spVar(ex))]||{};return `<div class="spduo"><div class="spok"><span class="sptag ok">✓ Gerakan benar</span>${spFigure(ex.id,spVar(ex))}</div>${fm.badKeys?`<div class="spbad"><span class="sptag no">✗ Hindari</span>${spFigure(ex.id,spVar(ex),true)}<small>${esc(fm.bad||'')}</small></div>`:''}</div>`})()}<h2 class="spname">${esc(ex.name)}</h2>
      <div class="spamt">${timeEx?(st.phase==='ready'?ex.amt+' detik':`<span class="sptime">${st.left}</span> detik`):ex.amt+' kali'+(ex.per?` <small>${ex.per}</small>`:'')}</div>
      ${timeEx&&st.phase==='ex'?`<div class="spbar"><i style="width:${pct*100}%"></i></div>`:''}
-     <p class="sptip">${esc(ex.tip)}</p>
+     ${(()=>{const fm=SP_FORM[spAnimKey(ex.id,spVar(ex))]||{};return fm.cues?`<ul class="spcues">${fm.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:`<p class="sptip">${esc(ex.tip)}</p>`})()}
      ${timeEx?(st.phase==='ready'?`<button class="primary press" id="spStart">Mulai ${ex.amt} detik</button>`:`<button class="ghost" id="spSkip">Lewati gerakan ini</button>`):`<button class="primary press" id="spDone">Selesai ✓</button><button class="ghost" id="spSkip">Lewati gerakan ini</button>`}`}
    else if(st.phase==='rest'){const nx=st.plan[st.k];body=`<div class="sphead"><span class="spbadge">Istirahat</span><h2 class="sptime big">${st.left}</h2><p class="note">Tarik napas dalam. Berikutnya: <b>${esc(nx.name)}</b> ${nx.t==='time'?nx.amt+' detik':nx.amt+' kali'}</p></div><div class="spfigbig small">${spFigure(nx.id,spVar(nx))}</div><button class="primary press" id="spNext">Lanjut sekarang</button>`}
    else if(st.phase==='feel'){body=`<div class="sphead"><span class="spbadge">🎉 Selesai!</span><h2>Bagaimana rasanya?</h2><p class="note">Jawabanmu dipakai untuk mengatur jumlah gerakan berikutnya.</p></div>
