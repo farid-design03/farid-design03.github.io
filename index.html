@@ -1379,6 +1379,24 @@ button{touch-action:manipulation}
 .opt.right{animation:optRight .35s}
 @keyframes optRight{50%{transform:scale(1.04)}}
 @media (prefers-reduced-motion:reduce){.starttip,.view:not([hidden]),.modal .mbox,.nav i[data-icon]{animation:none!important}}
+/* layar penuh game di HP */
+body.arcfs .main.wrap{padding:0!important;max-width:none!important;margin:0!important}
+body.arcfs #vPlay{height:100dvh;box-sizing:border-box;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px!important;overflow:hidden}
+body.arcfs .playbar{flex:none;padding:4px 8px;border-radius:14px;box-shadow:none}
+body.arcfs .qwrap{flex:1;min-height:0;display:flex;margin:0!important}
+body.arcfs #mascotPlay,body.arcfs #mBubble,body.arcfs #arcHint{display:none!important}
+body.arcfs .qcard{flex:1;min-height:0;padding:8px;gap:6px;border-radius:16px;box-shadow:none}
+body.arcfs .qcard .q{font-size:clamp(16px,4.6vw,22px);line-height:1.25;margin:0}
+body.arcfs .stage{flex:1;min-height:0;border-radius:14px}
+@media (orientation:landscape){
+ body.arcfs .qcard{display:grid;grid-template-columns:minmax(160px,30%) 1fr;grid-template-rows:auto auto 1fr;column-gap:10px;row-gap:6px}
+ body.arcfs .qcard>*{grid-column:1}
+ body.arcfs .qcard>.qmeta{grid-row:1}body.arcfs .qcard>.timer{grid-row:2}
+ body.arcfs .qcard>#qtext{grid-row:3;overflow:auto;align-self:start;max-height:100%}
+ body.arcfs .qcard>.stage{grid-column:2;grid-row:1/4;height:100%}
+ body.arcfs .qcard .q{font-size:clamp(15px,2.4vw,20px)}
+ body.arcfs .playbar .dots{flex:1}
+}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2420,18 +2438,35 @@ function drawParts(c){arc.parts.forEach(p=>{c.globalAlpha=Math.min(1,p.life*1.5)
 function drawBanner(c){const b=arc.banner;if(!b)return;const{W,H}=arc;c.save();c.globalAlpha=b.t>1.4?Math.max(0,1-(b.t-1.4)*3):Math.min(1,b.t*6);c.translate(W/2,H*.42);const sc=.7+.3*Math.min(1,b.t*5);c.scale(sc,sc);c.font=`800 30px ${FONT}`;const w=c.measureText(b.text).width+40;rr(c,-w/2,-30,w,60,18);c.fillStyle=b.color;c.fill();c.lineWidth=4;c.strokeStyle='#fff';c.stroke();c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText(b.text,0,2);c.restore()}
 const lvHex=()=>CUR?CUR.color:getComputedStyle(document.documentElement).getPropertyValue(L.color).trim()||'#C8102E';
 
+/* ---------- layar penuh saat main game di HP + posisi layar sesuai game ---------- */
+const GAME_ORI={lari:'landscape',ular:'landscape',pancing:'landscape'};
+const GFS={on:false,mine:false};
+function isTouchDev(){try{return matchMedia('(pointer:coarse)').matches}catch(e){return false}}
+function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'portrait';
+  document.body.classList.add('arcfs');document.body.dataset.ori=ori;GFS.on=true;
+  const lock=()=>{try{const so=screen.orientation;if(so&&so.lock){const r=so.lock(ori);r&&r.catch&&r.catch(()=>{})}}catch(e){}};
+  try{const d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen({navigationUI:'hide'});GFS.mine=true;if(r&&r.then)r.then(lock).catch(()=>{GFS.mine=false;lock()});else lock()}else lock()}catch(e){lock()}
+  setTimeout(gameFit,350);setTimeout(gameFit,900)}
+function gameFSOff(){if(!GFS.on)return;GFS.on=false;document.body.classList.remove('arcfs');delete document.body.dataset.ori;
+  try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}
+  if(GFS.mine){GFS.mine=false;try{if(document.fullscreenElement&&document.exitFullscreen){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}
+function gameFit(){if(!GFS.on||!arc.running||!M)return;const w=$('#stage').clientWidth;if(Math.abs(w-arc.lastW)>2||Math.abs(arc.H-gameH())>4){arcSize();M.setup()}}
+function gameH(){const st=$('#stage');const z=arc.z||1;return Math.max(200,Math.floor((window.innerHeight-st.getBoundingClientRect().top-8)/z))}
+window.addEventListener('orientationchange',()=>setTimeout(gameFit,400));
+document.addEventListener('fullscreenchange',()=>setTimeout(gameFit,300));
 function arcSize(){
   const st=$('#stage');const z=document.body.classList.contains('tv')?1.35:1;arc.z=z;const W=st.clientWidth/z;
   const top=st.getBoundingClientRect().top+window.scrollY;const avail=window.innerHeight-top-(isPhone()?26:24);
   let H=Math.round(clamp(Math.min(avail/z,W*(isPhone()?1.5:.8)),isPhone()?280:330,560));
   if(MODE==='tikus'&&W<520)H=Math.max(H,isPhone()?340:430);
+  if(GFS.on)H=gameH();
   arc.W=W;arc.H=H;arc.lastW=st.clientWidth;const dpr=Math.min(2,window.devicePixelRatio||1)*z;const cv=$('#cv');
   cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.height=(H*z)+'px';
   arc.ctx=cv.getContext('2d');arc.ctx.setTransform(dpr,0,0,dpr,0,0);
   arc.stars=Array.from({length:70},()=>({x:Math.random()*W,y:Math.random()*H*.85,r:Math.random()*1.8+.5,p:Math.random()*6}));
 }
 function arcBegin(){
-  M=MODES[MODE];
+  M=MODES[MODE];gameFS(MODE);
   $('#opts').hidden=true;$('#feedback').hidden=true;$('#stage').hidden=false;$('#qcard').classList.add('arcade');
   $('#arcHint').hidden=false;$('#arcHint').textContent=modeInfo().help;
   $('#arcFb').hidden=true;
@@ -3435,7 +3470,7 @@ function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-
 /* ---------- navigation ---------- */
 let curTab='learn';
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){curTab=tab;closePop();document.body.dataset.tab=tab;setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
@@ -4941,9 +4976,10 @@ const AV_PARTS={
  acc:{label:'Aksesori',items:[['none','Tanpa',0],['kacamata','Kacamata',30],['peci','Peci',30],['topi','Topi',40],['kacahitam','Kacamata hitam',60],['toga','Topi toga',80],['headphone','Headphone',100],['mahkota','Mahkota',150]]},
  shirt:{label:'Baju',items:[['merah','Kaos merah',0,'#F2394B'],['biru','Kaos biru',0,'#3D8BFF'],['hijau','Kaos hijau',0,'#26BF66'],['kuning','Kaos kuning',0,'#FFC23D'],['seragam','Seragam sekolah',20],['pramuka','Pramuka',40],['jaket','Jaket',60],['batik','Batik',80],['super','Kostum super',150]]},
  adat:{label:'Baju adat',items:[['none','Tanpa baju adat',0,'—'],['bima','Rimpu · NTB (Bima)',0],['betawi','Sadariah · Jakarta',0],['maluku','Baju Cele · Maluku',0],['madura',"Pesa'an · Jawa Timur",30],['sunda','Pangsi · Jawa Barat',30],['jawa','Beskap · Jawa Tengah',40],['bali','Payas · Bali',40],['sasak','Pegon · Lombok',40],['batak','Ulos · Sumatra Utara',50],['melayu','Teluk Belanga · Riau',50],['banjar','Bagajah · Kalsel',50],['bugis','Baju Bodo · Sulsel',50],['ntt','Tenun Ikat · NTT',60],['toraja',"Pokko' · Toraja",60],['aceh','Ulee Balang · Aceh',70],['dayak','King Baba · Dayak',80],['lampung','Tulang Bawang · Lampung',90],['minang','Bundo Kanduang · Sumbar',100],['palembang','Aesan Gede · Sumsel',110],['papua','Rumbai & Mahkota · Papua',120]]},
+ dunia:{label:'Baju dunia',items:[['none','Tanpa baju dunia',0,'—'],['prancis','Prancis · marinière',0],['hawaii','Hawaii · kemeja aloha',0],['brasil','Brasil · kaus bola',0],['jepang','Jepang · kimono',40],['korea','Korea · hanbok',40],['tiongkok','Tiongkok · changshan',40],['india','India · sari',40],['vietnam','Vietnam · ao dai',50],['thailand','Thailand · chut thai',60],['arab','Arab · gamis & syal',50],['turki','Turki · fez',50],['belanda','Belanda · topi renda',50],['jerman','Jerman · lederhosen',50],['skotlandia','Skotlandia · tartan',60],['koboi','Amerika · koboi',60],['meksiko','Meksiko · sombrero',60],['peru','Peru · chullo',60],['rusia','Rusia · ushanka',70],['kenya','Kenya · Maasai',70],['inggris','Inggris · pengawal raja',90],['mesir','Mesir · firaun',120]]},
  bg:{label:'Latar',items:[['b1','Ungu',0,'#C9B6FF'],['b2','Biru',0,'#A9DEFF'],['b3','Hijau',0,'#B5EBAE'],['b4','Merah muda',0,'#FFC9DF'],['b5','Kuning',20,'#FFE596'],['bintang','Malam berbintang',60],['pelangi','Pelangi',100]]}};
-const AV_ORDER=['skin','hair','hc','eyes','mouth','acc','shirt','adat','bg'];
-const AV_DEFAULT={skin:'s2',hair:'pendek',hc:'h1',eyes:'bulat',mouth:'senyum',acc:'none',shirt:'biru',adat:'none',bg:'b1'};
+const AV_ORDER=['skin','hair','hc','eyes','mouth','acc','shirt','adat','dunia','bg'];
+const AV_DEFAULT={skin:'s2',hair:'pendek',hc:'h1',eyes:'bulat',mouth:'senyum',acc:'none',shirt:'biru',adat:'none',dunia:'none',bg:'b1'};
 /* baju adat daerah: menggantikan baju, sebagian membawa penutup kepala sendiri */
 const ADAT_B='M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z';
 const GOLD='#E9B93C';
@@ -4987,11 +5023,54 @@ const ADAT={
    head:sw=>`<path d="M31 44 C33 30 46 24 60 24 C74 24 87 30 89 44 C78 38 42 38 31 44Z" fill="#7A4A26" ${sw}/><path d="M54 28 C56 18 64 18 66 28Z" fill="#7A4A26" ${sw}/>${[[44,34],[54,31],[66,31],[76,34]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.8" fill="#fff"/>`).join('')}`},
  sasak:{c:'#1E1E24',clip:`<rect x="0" y="108" width="120" height="15" fill="#3D6BFF"/>${[10,26,42,58,74,90,106].map(x=>`<path d="M${x} 115 l5 -5 l5 5 l-5 5z" fill="${GOLD}"/>`).join('')}`,on:sw=>`<path d="M60 89 L60 106" stroke="${GOLD}" stroke-width="2.5"/>`,
    head:sw=>`<path d="M31 44 C32 30 46 24 60 24 C74 24 88 30 89 44 C76 38 44 38 31 44Z" fill="#1E1E24" ${sw}/><path d="M60 32 L48 14 L66 20Z" fill="#1E1E24" ${sw}/><path d="M36 38 C48 33 72 33 84 38" stroke="${GOLD}" stroke-width="2.2" fill="none"/>`}};
+Object.assign(ADAT,{
+ jepang:{c:'#E2574C',clip:`<path d="M36 86 L60 121 L84 86" fill="#fff"/><path d="M42 86 L60 112 L78 86" fill="#E2574C"/><rect x="0" y="104" width="120" height="10" fill="#2F3E9E"/>${[20,40,80,100].map(x=>`<circle cx="${x}" cy="96" r="3" fill="#FFC8D2"/>`).join('')}`,on:sw=>`<path d="M44 88 L60 112 L76 88" fill="none" ${sw}/>`,
+   head:sw=>`<path d="M52 22 C50 14 56 10 60 10 C64 10 70 14 68 22" fill="#2B1D14" ${sw}/><path d="M66 16 L80 8 M68 18 L82 14" stroke="#E2574C" stroke-width="2.5"/><circle cx="81" cy="8" r="2.5" fill="#FFC23D"/>`,keepAcc:1,hairOnly:1},
+ korea:{c:'#FFFFFF',clip:`<rect x="0" y="86" width="120" height="40" fill="#F7A8C4"/><path d="M14 121 C16 97 36 87 60 87 L60 121Z" fill="#FFF3B0"/><path d="M60 92 L84 104 M60 92 L80 112" stroke="#E2574C" stroke-width="4"/>`,on:sw=>`<path d="M48 88 L60 100 L72 88" fill="#fff" ${sw}/>`},
+ tiongkok:{c:'#C8102E',clip:`${[[26,100],[46,110],[74,110],[94,100],[60,118]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="none" stroke="#F2C94C" stroke-width="2"/>`).join('')}<path d="M60 88 C66 96 76 98 86 98" stroke="#F2C94C" stroke-width="2.5" fill="none"/>`,on:sw=>`<rect x="50" y="84" width="20" height="7" rx="3" fill="#C8102E" ${sw}/>${[94,100,106].map(y=>`<path d="M${66+(y-94)} ${y} h8" stroke="#F2C94C" stroke-width="2.5"/>`).join('')}`,
+   head:sw=>`<path d="M36 34 C38 22 48 18 60 18 C72 18 82 22 84 34 C70 30 50 30 36 34Z" fill="#1E1E24" ${sw}/><circle cx="60" cy="16" r="3.5" fill="#C8102E" ${sw}/>`},
+ india:{c:'#FF8A00',clip:`<path d="M20 90 L104 121 L84 121 L14 100Z" fill="#B3122E"/><path d="M18 94 L100 121" stroke="#F2C94C" stroke-width="3"/>`,on:sw=>`<path d="M46 89 C50 96 70 96 74 89" stroke="#F2C94C" stroke-width="3" fill="none"/>`,
+   head:sw=>`<circle cx="60" cy="44" r="2.6" fill="#E2574C" stroke="none"/><path d="M60 26 L60 36" stroke="#F2C94C" stroke-width="2"/><circle cx="60" cy="25" r="2.4" fill="#F2C94C" stroke="none"/>`,keepAcc:1},
+ arab:{c:'#FFFFFF',on:sw=>`<path d="M54 88 L60 96 L66 88" fill="none" ${sw}/><path d="M60 96 V112" stroke="#BFC4D6" stroke-width="2"/>`,
+   back:sw=>`<path d="M26 40 C24 70 26 92 34 104 L44 100 C40 80 38 60 40 44Z" fill="#fff" ${sw}/><path d="M94 40 C96 70 94 92 86 104 L76 100 C80 80 82 60 80 44Z" fill="#fff" ${sw}/>`,
+   head:sw=>`<path d="M30 46 C30 24 44 16 60 16 C76 16 90 24 90 46 C80 38 70 36 60 36 C50 36 40 38 30 46Z" fill="#fff" ${sw}/><clipPath id="ARb"><path d="M30 46 C30 24 44 16 60 16 C76 16 90 24 90 46 C80 38 70 36 60 36 C50 36 40 38 30 46Z"/></clipPath><g clip-path="url(#ARb)">${[20,30,40,50,60,70,80,90,100].map(x=>`<path d="M${x} 10 v40" stroke="#E2574C" stroke-width="2"/>`).join('')}${[20,26,32,38].map(y=>`<path d="M20 ${y} h80" stroke="#E2574C" stroke-width="2"/>`).join('')}</g><path d="M32 34 C44 28 76 28 88 34" stroke="#1E1E24" stroke-width="5" fill="none"/>`},
+ meksiko:{c:'#FFFFFF',clip:`${['#E2574C','#FFC23D','#26BF66','#3D8BFF','#9B6BFF','#E2574C'].map((c,i)=>`<rect x="0" y="${92+i*5}" width="120" height="5" fill="${c}"/>`).join('')}`,on:sw=>`<path d="M50 88 L60 98 L70 88" fill="#fff" ${sw}/>`,
+   head:sw=>`<ellipse cx="60" cy="34" rx="44" ry="8" fill="#E8C27A" ${sw}/><path d="M42 33 C42 14 78 14 78 33Z" fill="#E8C27A" ${sw}/><path d="M42 28 C52 31 68 31 78 28" stroke="#E2574C" stroke-width="3" fill="none"/>`},
+ koboi:{c:'#4F7CFF',clip:`<path d="M60 88 V121" stroke="#2F3E9E" stroke-width="2"/><rect x="30" y="98" width="12" height="8" fill="none" stroke="#2F3E9E" stroke-width="2"/><rect x="78" y="98" width="12" height="8" fill="none" stroke="#2F3E9E" stroke-width="2"/>`,on:sw=>`<path d="M44 88 L60 102 L76 88Z" fill="#E2574C" ${sw}/>`,
+   head:sw=>`<path d="M20 38 C30 44 90 44 100 38 C96 46 24 46 20 38Z" fill="#8B5A2B" ${sw}/><path d="M38 40 C36 22 44 14 52 18 C56 14 64 14 68 18 C76 14 84 22 82 40Z" fill="#A0693A" ${sw}/><path d="M38 34 C50 37 70 37 82 34" stroke="#5A3820" stroke-width="3" fill="none"/>`},
+ mesir:{c:'#FFFFFF',on:sw=>`<path d="M34 92 C40 104 80 104 86 92 C80 98 40 98 34 92Z" fill="#2F7DE1" ${sw}/><path d="M40 98 C46 108 74 108 80 98" stroke="#F2C94C" stroke-width="4" fill="none"/>`,
+   back:sw=>`<path d="M28 40 L22 92 L40 86 L40 50Z M92 40 L98 92 L80 86 L80 50Z" fill="#F2C94C" ${sw}/><path d="M24 60 h16 M23 72 h17 M96 60 h-16 M97 72 h-17" stroke="#2F7DE1" stroke-width="4"/>`,
+   head:sw=>`<path d="M30 46 C30 22 44 14 60 14 C76 14 90 22 90 46 C80 38 70 36 60 36 C50 36 40 38 30 46Z" fill="#F2C94C" ${sw}/><path d="M34 34 C46 26 74 26 86 34 M38 24 C48 18 72 18 82 24" stroke="#2F7DE1" stroke-width="4" fill="none"/><path d="M56 28 C56 22 64 22 64 28 L60 32Z" fill="#26BF66" ${sw}/>`},
+ rusia:{c:'#7A2E2E',clip:`<rect x="54" y="86" width="12" height="40" fill="#F2EADB"/><rect x="0" y="112" width="120" height="10" fill="#F2EADB"/>`,on:sw=>`<path d="M60 86 V121" ${sw}/>`,
+   head:sw=>`<path d="M26 60 C22 50 26 40 32 38 L36 66Z M94 60 C98 50 94 40 88 38 L84 66Z" fill="#8A6A4A" ${sw}/><path d="M32 44 C30 22 44 12 60 12 C76 12 90 22 88 44 C80 38 70 36 60 36 C50 36 40 38 32 44Z" fill="#8A6A4A" ${sw}/><path d="M32 44 C44 34 76 34 88 44 L88 34 C76 26 44 26 32 34Z" fill="#B9946C" ${sw}/>`},
+ thailand:{c:'#F2C94C',clip:`<path d="M14 100 L106 100 L106 108 L14 108Z" fill="#B3122E"/>${[20,36,52,68,84,100].map(x=>`<path d="M${x} 112 l4 4 l-4 4 l-4 -4z" fill="#B3122E"/>`).join('')}`,on:sw=>`<path d="M40 89 C48 102 72 102 80 89" stroke="#B3122E" stroke-width="4" fill="none"/>`,
+   head:sw=>`<path d="M40 40 C40 30 48 26 60 26 C72 26 80 30 80 40Z" fill="#F2C94C" ${sw}/><path d="M48 30 L60 -2 L72 30Z" fill="#F2C94C" ${sw}/><path d="M52 20 h16 M54 12 h12" stroke="#B3122E" stroke-width="2.5"/>`},
+ vietnam:{c:'#FFFFFF',clip:`<path d="M60 86 L60 126" stroke="#E2E2E2" stroke-width="2"/>${[[30,104],[44,114],[78,100],[92,112]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.5" fill="#F2B8C6"/>`).join('')}`,on:sw=>`<rect x="52" y="84" width="16" height="7" rx="3" fill="#fff" ${sw}/><path d="M60 91 C66 96 74 98 84 98" stroke="#BFC4D6" stroke-width="2" fill="none"/>`,
+   head:sw=>`<path d="M20 40 L60 6 L100 40Z" fill="#E8C27A" ${sw}/><path d="M34 30 h52 M46 20 h28" stroke="#C9A050" stroke-width="2"/>`},
+ skotlandia:{c:'#2F5E3A',clip:`${[20,40,60,80,100].map(x=>`<rect x="${x}" y="86" width="6" height="40" fill="#C8102E" opacity=".7"/>`).join('')}${[96,110].map(y=>`<rect x="0" y="${y}" width="120" height="5" fill="#1E1E24" opacity=".5"/>`).join('')}`,on:sw=>`<path d="M50 88 L60 98 L70 88" fill="#fff" ${sw}/>`,
+   head:sw=>`<path d="M30 40 C26 22 48 14 64 18 C82 20 94 30 88 40 C70 34 48 34 30 40Z" fill="#2F3E9E" ${sw}/><path d="M32 38 C48 34 72 34 86 38" stroke="#C8102E" stroke-width="3" fill="none"/><circle cx="64" cy="16" r="4" fill="#C8102E" ${sw}/>`},
+ jerman:{c:'#FFFFFF',clip:`<path d="M40 86 L46 126 M80 86 L74 126" stroke="#5A3820" stroke-width="7"/><path d="M42 104 h36" stroke="#5A3820" stroke-width="5"/><rect x="0" y="114" width="120" height="10" fill="#7A5230"/>`,on:sw=>`<path d="M52 88 L60 96 L68 88" fill="#fff" ${sw}/>`,
+   head:sw=>`<path d="M34 38 C34 22 46 16 60 16 C74 16 86 22 86 38Z" fill="#3E6B3E" ${sw}/><ellipse cx="60" cy="38" rx="32" ry="5" fill="#3E6B3E" ${sw}/><path d="M78 30 C84 18 90 10 96 8" stroke="#E2574C" stroke-width="3" fill="none"/>`},
+ inggris:{c:'#C8102E',on:sw=>`<path d="M60 86 V121" stroke="#F2C94C" stroke-width="2"/>${[94,102,110,118].map(y=>`<circle cx="60" cy="${y}" r="2" fill="#F2C94C"/>`).join('')}<path d="M14 112 L106 112" stroke="#fff" stroke-width="4"/>`,
+   head:sw=>`<path d="M34 46 C30 20 36 -4 60 -4 C84 -4 90 20 86 46 C76 40 44 40 34 46Z" fill="#1E1E24" ${sw}/><path d="M38 40 C50 54 70 54 82 40" stroke="#F2C94C" stroke-width="2" fill="none"/>`},
+ kenya:{c:'#C8102E',clip:`${[92,102,112].map(y=>`<path d="M0 ${y} h120" stroke="#1E1E24" stroke-width="2.5"/>`).join('')}${[20,50,80,110].map(x=>`<path d="M${x} 86 v40" stroke="#3D8BFF" stroke-width="2.5"/>`).join('')}`,on:sw=>`<path d="M40 88 C46 104 74 104 80 88" fill="none" stroke="#fff" stroke-width="5"/><path d="M40 88 C46 104 74 104 80 88" fill="none" stroke="#FFC23D" stroke-width="5" stroke-dasharray="4 4"/><path d="M44 96 C50 110 70 110 76 96" fill="none" stroke="#3D8BFF" stroke-width="4" stroke-dasharray="3 3"/>`,
+   head:sw=>`<path d="M32 40 C46 34 74 34 88 40 L88 46 C74 40 46 40 32 46Z" fill="#fff" ${sw}/>${[40,50,60,70,80].map((x,i)=>`<circle cx="${x}" cy="42" r="2" fill="${['#C8102E','#3D8BFF','#FFC23D'][i%3]}"/>`).join('')}`,keepAcc:1},
+ hawaii:{c:'#22C5B5',clip:`${[[24,100],[46,94],[76,96],[96,104],[36,116],[64,112],[90,118]].map(([x,y])=>`<g transform="translate(${x} ${y})"><circle r="4" fill="#FFF3B0"/><circle cx="-4" r="2.5" fill="#FF6F91"/><circle cx="4" r="2.5" fill="#FF6F91"/><circle cy="-4" r="2.5" fill="#FF6F91"/><circle cy="4" r="2.5" fill="#FF6F91"/></g>`).join('')}`,on:sw=>`${[[40,90],[46,96],[53,100],[60,102],[67,100],[74,96],[80,90]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="4.5" fill="${i%2?'#FFC23D':'#FF6F91'}" ${sw.replace('2.5','1.5')}/>`).join('')}`},
+ peru:{c:'#B3122E',clip:`${[96,106,116].map((y,i)=>`<path d="M0 ${y} l8 -5 l8 5 l8 -5 l8 5 l8 -5 l8 5 l8 -5 l8 5 l8 -5 l8 5 l8 -5 l8 5 l8 -5 l8 5 l8 -5" stroke="${['#FFC23D','#26BF66','#fff'][i]}" stroke-width="3" fill="none"/>`).join('')}`,on:sw=>`<path d="M48 88 L60 98 L72 88" fill="none" ${sw}/>`,
+   head:sw=>`<path d="M30 46 C30 22 44 14 60 14 C76 14 90 22 90 46 C80 40 40 40 30 46Z" fill="#FFC23D" ${sw}/><path d="M30 46 L28 62 L36 58Z M90 46 L92 62 L84 58Z" fill="#FFC23D" ${sw}/><path d="M34 34 l6 -4 l6 4 l6 -4 l6 4 l6 -4 l6 4 l6 -4 l6 4 l6 -4" stroke="#B3122E" stroke-width="3" fill="none"/><circle cx="60" cy="12" r="4" fill="#B3122E" ${sw}/>`},
+ prancis:{c:'#FFFFFF',clip:`${[92,100,108,116].map(y=>`<rect x="0" y="${y}" width="120" height="4" fill="#2F3E9E"/>`).join('')}`,on:sw=>`<path d="M48 88 C52 94 68 94 72 88" fill="none" ${sw}/>`,
+   head:sw=>`<path d="M30 36 C28 22 46 16 62 18 C80 20 92 28 88 38 C72 32 48 32 30 36Z" fill="#1E1E24" ${sw}/><path d="M62 18 l2 -6" stroke="#1E1E24" stroke-width="3"/>`},
+ turki:{c:'#1E1E24',on:sw=>`<path d="M44 89 C50 98 70 98 76 89" stroke="#F2C94C" stroke-width="3" fill="none"/><path d="M50 100 h20 M50 106 h20 M50 112 h20" stroke="#F2C94C" stroke-width="2"/>`,
+   head:sw=>`<path d="M40 38 L44 16 C52 13 68 13 76 16 L80 38 C68 35 52 35 40 38Z" fill="#C8102E" ${sw}/><path d="M60 15 C64 22 70 28 74 36" stroke="#1E1E24" stroke-width="2.5" fill="none"/><circle cx="74" cy="37" r="2.5" fill="#1E1E24"/>`},
+ belanda:{c:'#2F5BEA',clip:`<rect x="0" y="108" width="120" height="16" fill="#fff"/><path d="M0 112 h120" stroke="#E2574C" stroke-width="2"/>`,on:sw=>`<path d="M44 88 L60 100 L76 88" fill="#fff" ${sw}/>`,
+   head:sw=>`<path d="M30 50 C28 28 42 16 60 16 C78 16 92 28 90 50 C80 44 70 40 60 40 C50 40 40 44 30 50Z" fill="#fff" ${sw}/><path d="M30 40 L18 30 L30 48Z M90 40 L102 30 L90 48Z" fill="#fff" ${sw}/>`},
+ brasil:{c:'#FFD43B',clip:`<path d="M14 100 L106 100 L106 104 L14 104Z" fill="#26BF66"/><rect x="0" y="114" width="120" height="10" fill="#26BF66"/>`,on:sw=>`<path d="M48 88 L60 96 L72 88" fill="#26BF66" ${sw}/><circle cx="60" cy="108" r="5" fill="#2F5BEA" ${sw.replace('2.5','1.5')}/>`}
+});
 const avItem=(cat,id)=>AV_PARTS[cat].items.find(x=>x[0]===id)||AV_PARTS[cat].items[0];
 const avFree=(cat,id)=>avItem(cat,id)[2]===0;
 function avNorm(a){const o=Object.assign({},AV_DEFAULT,a||{});AV_ORDER.forEach(c=>{if(!AV_PARTS[c].items.some(x=>x[0]===o[c]))o[c]=AV_DEFAULT[c]});return o}
 function avBgColor(a){a=avNorm(a);return a.bg==='bintang'?'#2A2F6B':a.bg==='pelangi'?'#FFE596':avItem('bg',a.bg)[3]}
-function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[a.adat]:null;if(AD&&AD.hood){a.hair='hijab';a.hc='h1'}const skin=avItem('skin',a.skin)[3],hc=(AD&&AD.hood)||avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
+function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[a.adat]:a.dunia!=='none'?ADAT[a.dunia]:null;if(AD&&AD.hood){a.hair='hijab';a.hc='h1'}const skin=avItem('skin',a.skin)[3],hc=(AD&&AD.hood)||avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
   let s=`<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
   /* latar */
   if(!opt.nobg){if(a.bg==='bintang')s+=`<rect width="120" height="120" fill="#2A2F6B"/>${[[14,18],[98,14],[106,48],[18,62],[30,34],[88,30]].map(([x,y])=>`<path d="M${x} ${y-4} L${x+1.2} ${y-1.2} L${x+4} ${y} L${x+1.2} ${y+1.2} L${x} ${y+4} L${x-1.2} ${y+1.2} L${x-4} ${y} L${x-1.2} ${y-1.2}Z" fill="#FFE596"/>`).join('')}`;
@@ -5005,6 +5084,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
   if(a.hair==='hijab'){s+=`<path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="${hc}" ${sw}/>`;
     if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}h"><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z"/></clipPath><g clip-path="url(#${uid}h)">${AD.hoodPat}</g><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="none" ${sw}/>`}
   /* baju adat */
+  if(AD&&AD.back)s+=AD.back(sw);
   if(AD){s+=`<path d="${ADAT_B}" fill="${AD.c}" ${sw}/>`;if(AD.clip)s+=`<clipPath id="${uid}d"><path d="${ADAT_B}"/></clipPath><g clip-path="url(#${uid}d)">${AD.clip}</g><path d="${ADAT_B}" fill="none" ${sw}/>`;if(AD.on)s+=AD.on(sw)}else{
   /* baju */
   const sc={seragam:'#FFFFFF',pramuka:'#A9763F',jaket:'#34405F',batik:'#8B4A2B',super:'#3D6BFF'}[a.shirt]||avItem('shirt',a.shirt)[3];
@@ -5015,7 +5095,12 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
   if(a.shirt==='batik'){s+=`<clipPath id="${uid}c"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z"/></clipPath><g clip-path="url(#${uid}c)">`;for(let y=92;y<122;y+=10)for(let x=18+(y%20?5:0);x<106;x+=12)s+=`<path d="M${x} ${y-3} L${x+3} ${y} L${x} ${y+3} L${x-3} ${y}Z" fill="#F5C26B"/><circle cx="${x+6}" cy="${y+5}" r="1.4" fill="#F5C26B"/>`;s+=`</g><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="none" ${sw}/>`}
   if(a.shirt==='super')s+=`<path d="M60 96 L63 103 L71 103 L65 108 L67 116 L60 111 L53 116 L55 108 L49 103 L57 103Z" fill="#FFC23D" ${sw}/>`;}
   /* leher, telinga, kepala */
-  s+=`<rect x="52" y="72" width="16" height="17" fill="${skin}" ${sw}/>`;
+  if(a.hair==='hijab'){const DR='M22 64 C20 30 40 14 60 14 C80 14 100 30 98 64 C98 80 102 92 110 102 C98 114 80 118 60 118 C40 118 22 114 10 102 C18 92 22 80 22 64Z';
+    s+=`<path d="${DR}" fill="${hc}" ${sw}/>`;
+    if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}r"><path d="${DR}"/></clipPath><g clip-path="url(#${uid}r)">${AD.hoodPat}</g><path d="${DR}" fill="none" ${sw}/>`;
+    const fold=shade(hc,-.16);s+=`<path d="M42 84 C36 94 28 100 18 104 M78 84 C84 94 92 100 102 104 M60 92 C58 100 58 108 60 116" fill="none" stroke="${fold}" stroke-width="2.5" stroke-linecap="round"/>`;
+    s+=`<ellipse cx="60" cy="58" rx="28" ry="31" fill="${fold}" stroke="none"/>`}
+  else s+=`<rect x="52" y="72" width="16" height="17" fill="${skin}" ${sw}/>`;
   if(a.hair!=='hijab')s+=`<circle cx="33" cy="56" r="7" fill="${skin}" ${sw}/><circle cx="87" cy="56" r="7" fill="${skin}" ${sw}/>`;
   s+=a.hair==='hijab'?`<ellipse cx="60" cy="58" rx="24" ry="27" fill="${skin}" ${sw}/>`:`<circle cx="60" cy="53" r="28" fill="${skin}" ${sw}/>`;
   /* rambut depan */
@@ -5053,7 +5138,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     toga:`<path d="M42 30 L42 40 C52 44 68 44 78 40 L78 30Z" fill="${K}"/><path d="M22 26 L60 13 L98 26 L60 39Z" fill="${K}" stroke="${K}" stroke-width="2" stroke-linejoin="round"/><path d="M60 26 L90 32 L90 44" stroke="#FFC23D" stroke-width="2.5" fill="none"/><circle cx="90" cy="46" r="3" fill="#FFC23D"/>`,
     headphone:`<path d="M30 54 C28 18 92 18 90 54" fill="none" stroke="${K}" stroke-width="6" stroke-linecap="round"/><rect x="22" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/><rect x="86" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/>`,
     mahkota:`<path d="M39 32 L42 12 L51 23 L60 8 L69 23 L78 12 L81 32Z" fill="#FFC23D" ${sw}/><circle cx="60" cy="25" r="3" fill="#F2394B"/><circle cx="47" cy="27" r="2" fill="#3D8BFF"/><circle cx="73" cy="27" r="2" fill="#3D8BFF"/>`}[a.acc]||'';
-  if(AD&&AD.head)s+=AD.head(sw);
+  if(AD&&AD.head&&!(AD.hairOnly&&a.hair==='hijab'))s+=AD.head(sw);
   return s+'</svg>'}
 function avSpan(p){if(p&&p.avatar)return `<span class="avatar avimg" style="--av:${avBgColor(p.avatar)}">${avatarSVG(p.avatar)}</span>`;return `<span class="avatar" style="--av:${(p&&p.color)||'#9B6BFF'}">${esc(String((p&&p.name)||'?')[0].toUpperCase())}</span>`}
 
@@ -5069,14 +5154,14 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
       <div class="aved-prev" style="--av:${avBgColor(draft)}">${avatarSVG(draft)}</div>
       <div class="aved-tabs" role="tablist">${AV_ORDER.map(k=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${AV_PARTS[k].label}</button>`).join('')}</div>
       <div class="aved-grid">${cat.items.map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id});
-        const vis=it[3]&&tab!=='shirt'&&tab!=='bg'&&tab!=='adat'?`<span class="aved-sw" style="background:${it[3]}"></span>`:`<span class="aved-mini">${avatarSVG(prev,{nobg:tab!=='bg'})}</span>`;
+        const vis=it[3]&&tab!=='shirt'&&tab!=='bg'&&tab!=='adat'&&tab!=='dunia'?`<span class="aved-sw" style="background:${it[3]}"></span>`:`<span class="aved-mini">${avatarSVG(prev,{nobg:tab!=='bg'})}</span>`;
         return `<button class="aved-it ${on?'on':''}" data-id="${id}" aria-pressed="${on}">${vis}<b>${esc(it[1])}</b><small>${own?(on?'Dipakai':it[2]?'Dimiliki':'Gratis'):`${gem} ${it[2]}`}</small></button>`}).join('')}</div>
       <div class="onbfoot aved-foot">${c?`<p class="note" style="text-align:center;margin:0 0 8px;${can?'':'color:var(--bad);font-weight:800'}">${can?`Barang baru seharga ${c} permata akan dibeli.`:`Permatamu kurang ${c-P.gems}. Kumpulkan dari pelajaran sempurna, peti hadiah, dan misi.`}</p>`:''}
         <button class="primary press" id="avSave" ${can?'':'disabled'}>${c?`Beli dan pakai · ${c} permata`:'Simpan avatar'}</button></div></div>`;
     hydrate(el);
     $('#avX').onclick=()=>{el.hidden=true};
     el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
-    el.querySelectorAll('.aved-it').forEach(b=>b.onclick=()=>{draft[tab]=b.dataset.id;if(tab==='shirt')draft.adat='none';tone([660],.03);render()});
+    el.querySelectorAll('.aved-it').forEach(b=>b.onclick=()=>{draft[tab]=b.dataset.id;if(tab==='shirt'){draft.adat='none';draft.dunia='none'}if(tab==='adat')draft.dunia='none';if(tab==='dunia')draft.adat='none';tone([660],.03);render()});
     $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;AV_ORDER.forEach(k=>{if(!owned(k,draft[k]))P.avOwned.push(k+':'+draft[k])});P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
       if(c2){sfx.win&&sfx.win();toast('gem',`Avatar baru dipakai! −${c2} permata`)}else toast('check','Avatar disimpan.');renderTop();if(curTab==='profile')renderProfile();if(curTab==='shop')renderShop()}};
   render();el.hidden=false;el.scrollTop=0}
