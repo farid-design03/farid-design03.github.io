@@ -1101,6 +1101,7 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
 /* ---- navigasi laptop ---- */
 .kbhint,.sfoot{display:none}
 .nodes{padding-top:72px}
+#path{padding-bottom:240px}
 @media (min-width:1000px){
  .side{overflow-y:auto;scrollbar-width:thin}
  .nav{transition:background .15s,transform .1s}
@@ -2894,7 +2895,7 @@ function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NOD
   const g=$('#nodeGo');if(g)g.onclick=e=>{e.stopPropagation();closePop();startNode(ui,ni)};
   row.querySelector('.npop').onclick=e=>e.stopPropagation();
   {const np=row.querySelector('.npop');const rr=row.getBoundingClientRect(),w=np.offsetWidth,cx=rr.left+rr.width/2,W=document.documentElement.clientWidth,m=12;const r={left:cx-w/2,right:cx+w/2};let dx=0;if(r.left<m)dx=m-r.left;else if(r.right>W-m)dx=W-m-r.right;if(dx)np.style.setProperty('--dx',Math.round(dx)+'px')}
-  const pop=row.querySelector('.npop').getBoundingClientRect();if(pop.bottom>window.innerHeight-90)window.scrollBy({top:pop.bottom-window.innerHeight+110,behavior:'smooth'})}
+  {const np=row.querySelector('.npop'),rr=row.getBoundingClientRect(),bottom=rr.bottom+18+np.offsetHeight,limit=window.innerHeight-(innerWidth<1000?120:30);if(bottom>limit)window.scrollBy({top:bottom-limit+10,behavior:'smooth'})}}
 function openGuide(ui){const s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);
   openModal(`<span class="eyebrow">Panduan · Unit ${ui+1}</span><h3>${esc(u.t)}</h3><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><b>Contoh soal</b>`+
    ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal}
