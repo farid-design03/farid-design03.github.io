@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v3';
+const CACHE = 'jelajah-kelas-v4';
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
@@ -28,6 +28,21 @@ self.addEventListener('notificationclick', e => {
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
     const msg = { inv: d.inv, code: d.code, action };
     if (list.length) { const c = list[0]; c.postMessage(msg); return c.focus && c.focus(); }
-    return self.clients.openWindow('./?tantang=' + encodeURIComponent(d.code || ''));
+    if (!d.code && !d.inv) return self.clients.openWindow('./');
+    return self.clients.openWindow('./?tantang=' + encodeURIComponent(d.code || '') + (d.inv ? '&inv=' + encodeURIComponent(d.inv) + '&act=' + (action === 'decline' ? 'decline' : 'accept') : ''));
+  }));
+});
+
+// Notifikasi dari server (Firebase Cloud Messaging) tetap muncul walaupun aplikasi tertutup.
+self.addEventListener('push', e => {
+  let d = {};
+  try { const j = e.data ? e.data.json() : {}; d = j.data || j; } catch (_) {}
+  const opt = { body: d.body || '', icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.inv ? 'inv-' + d.inv : (d.type || 'jelas'),
+    renotify: true, vibrate: [200, 100, 200], data: d };
+  if (d.type === 'invite') { opt.requireInteraction = true; opt.actions = [{ action: 'accept', title: 'Terima' }, { action: 'decline', title: 'Tolak' }]; }
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    const open = list.find(c => c.visibilityState === 'visible');
+    if (open) { open.postMessage({ push: d }); return; }
+    return self.registration.showNotification(d.title || 'JELAS', opt);
   }));
 });

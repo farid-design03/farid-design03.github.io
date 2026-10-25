@@ -11,6 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 <script src="config.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -3759,7 +3760,7 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
@@ -3881,7 +3882,7 @@ enterTeacher=function(){showLogin()};
 
 /* ---------- keluar ---------- */
 const _logout=logout;
-logout=function(){fbStop();clearTimeout(FBX.t);const fl=SESSION?fbFlush():Promise.resolve();setSession(null);
+logout=function(){fbStop();clearTimeout(FBX.t);const fl=Promise.all([SESSION?fbFlush():Promise.resolve(),typeof fbPushUnregister==='function'?fbPushUnregister():null]);setSession(null);
   APP={profiles:[],cur:null,sessions:[],deleted:[],bank:[]};store.set('app',APP);FBX.me=null;FBX.admin=false;FBX.classDoc=null;FBX.remote=[];FBX.members={};
   document.body.classList.remove('fb-free');_logout();timeout(fl,3000).finally(()=>FB.auth.signOut())};
 
@@ -4248,11 +4249,11 @@ function inviteAlert(x){inviteMark(x.id);
   openModal(`<div style="text-align:center" class="invpop"><div class="invpop-av">${avSpan({name:x.fromName,avatar:x.fromAv})}</div><h3>${esc(x.fromName)} menantangmu!</h3><p>${esc(x.subjName)}${x.title?' · '+esc(x.title):''}</p></div><div class="acts"><button class="ghost" id="mNo" style="color:var(--bad)">Tolak</button><button class="primary" id="mYes">Terima</button></div>`);
   $('#mNo').onclick=()=>{closeModal();inviteAnswer(x,false)};$('#mYes').onclick=()=>{closeModal();inviteAnswer(x,true)}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AJAK.pendingAlert){const x=AJAK.pendingAlert;AJAK.pendingAlert=null;if(AJAK.inv.some(i=>i.id===x.id)){AJAK.inv=AJAK.inv;inviteAlert(Object.assign({},x,{_again:1}))}}});
-if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
+if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(m.push){const d=m.push;if(d.type==='accepted')toast('team',d.title);return}if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
   if(m.action==='accept')inviteAnswer(x,true);else if(m.action==='decline')inviteAnswer(x,false);else if(AJAK.inv.some(i=>i.id===m.inv))inviteAlert(Object.assign({},x))});
 function notifAsk(){try{if(!('Notification' in window)||Notification.permission!=='default'||localStorage.getItem('jk_notif_asked'))return;localStorage.setItem('jk_notif_asked','1');
   openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3>Nyalakan pemberitahuan?</h3><p>Supaya kamu tahu saat teman menantangmu bertanding.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
-  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();try{Notification.requestPermission()}catch(e){}}}catch(e){}}
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();try{Notification.requestPermission().then(r=>{if(r==='granted')fbPushRegister()})}catch(e){}}}catch(e){}}
 function inviteBox(){let el=$('#invBox');const card=$('#vTeam .roomcard');if(!card)return;if(!el){card.insertAdjacentHTML('beforeend','<div id="invBox"></div>');el=$('#invBox')}
   el.innerHTML=AJAK.inv.length?`<h4 class="ajsec" style="margin:4px 0 0">TANTANGAN MASUK</h4>${AJAK.inv.map(x=>`<div class="ajrow">${avSpan({name:x.fromName,avatar:x.fromAv})}<span class="grow"><b>${esc(x.fromName)}</b><small>${esc(x.subjName)}${x.title?' · '+esc(x.title):''}</small></span><button class="ajinv" data-acc="${esc(x.id)}">TERIMA</button><button class="smallbtn" data-dec="${esc(x.id)}" aria-label="Tolak">✕</button></div>`).join('')}`:'';
   el.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{const x=AJAK.inv.find(i=>i.id===b.dataset.acc);if(x)inviteAnswer(x,true)});
@@ -4266,9 +4267,18 @@ const _goR=go;
 go=function(tab){_goR(tab);if(!ROOM.code)return;
   if(ROOM.playing&&!game){ROOM.playing=false;clearInterval(ROOM.timer);ROOM.timer=null;const lv=$('#roomLive');if(lv)lv.hidden=true;ROOM.pendingShow=true}
   if(ROOM.pendingShow&&!document.body.classList.contains('playing')){ROOM.pendingShow=false;$('#room').hidden=false;if(ROOM.doc)roomRender()}};
-window.fbCheckRoomLink=function(){let c=null;try{c=new URLSearchParams(location.search).get('tantang')||sessionStorage.getItem('jk_tantang')}catch(e){}
+window.fbCheckRoomLink=function(){let c=null,act=null,inv=null;try{const q=new URLSearchParams(location.search);act=q.get('act');inv=q.get('inv');c=q.get('tantang')||sessionStorage.getItem('jk_tantang')}catch(e){}
+  if(inv&&act&&FBX.user&&P&&!isT()){try{history.replaceState(history.state,'',location.pathname)}catch(e){}try{sessionStorage.removeItem('jk_tantang')}catch(e){}setTimeout(()=>inviteAnswer({id:inv,code:c},act!=='decline'),600);return}
   if(!c)return;try{sessionStorage.removeItem('jk_tantang')}catch(e){}if(FBX.user&&P&&!isT())setTimeout(()=>roomJoin(c),600)};
 try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStorage.setItem('jk_tantang',c)}catch(e){}
+
+/* ---------- notifikasi gelembung (Firebase Cloud Messaging) ---------- */
+async function fbPushRegister(){try{if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
+  const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg});
+  if(!tok)return;FBX.pushTok=tok;const have=(FBX.me&&FBX.me.push)||[];if(have.includes(tok))return;
+  await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true})}catch(e){console.warn('push',e)}}
+async function fbPushUnregister(){try{if(FBX.pushTok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(FBX.pushTok)},{merge:true})}catch(e){}}
+window.fbPushRegister=fbPushRegister;
 
 /* ---------- panel admin (penjual) ---------- */
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');

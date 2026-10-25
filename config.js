@@ -11,5 +11,7 @@ window.FB_CONFIG = {
   /* jumlah murid maksimal untuk guru paket Gratis (samakan dengan angka di firestore.rules) */
   freeStudents: 10,
   /* lama masa coba gratis semua fitur Pro untuk guru baru (samakan dengan angka di firestore.rules) */
-  trialDays: 14
+  trialDays: 14,
+  /* kunci notifikasi web (Setelan proyek → Cloud Messaging → Web Push certificates) */
+  vapidKey: ""
 };
