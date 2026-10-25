@@ -4818,7 +4818,7 @@ const SP_EX={
  br:{n:'Angkat panggul',g:'kaki',t:'rep',b:4,s:1,m:20,tip:'Berbaring telentang, lutut ditekuk. Angkat panggul sampai badan lurus dari bahu ke lutut, tahan sebentar, turunkan.'},
  pu:{n:'Push-up',g:'atas',t:'rep',b:4,s:1,m:20,tip:'Badan lurus seperti papan. Tekuk siku untuk menurunkan dada, lalu dorong kembali ke atas.'},
  pl:{n:'Plank',g:'inti',t:'time',b:8,s:2,m:60,tip:'Bertumpu pada siku dan ujung kaki. Badan lurus, perut dikencangkan, jangan menahan napas.'},
- cr:{n:'Crunch',g:'inti',t:'rep',b:3,s:1,m:20,tip:'Berbaring, lutut ditekuk. Angkat kepala dan bahu sedikit sambil mengencangkan perut, lalu turunkan pelan.'},
+ cr:{n:'Sit-up',g:'inti',t:'rep',b:3,s:1,m:20,tip:'Berbaring, lutut ditekuk, telapak kaki menapak. Bangun pelan sampai duduk sambil mengencangkan perut, lalu turunkan pelan.'},
  mc:{n:'Mountain climber',g:'inti',t:'time',b:8,s:2,m:40,tip:'Posisi push-up, lalu tarik lutut ke dada bergantian dengan cepat tapi terkendali.'},
  st:{n:'Peregangan',g:'pendinginan',t:'time',b:20,s:0,m:20,tip:'Angkat tangan tinggi-tinggi, lalu bungkukkan badan pelan-pelan dan sentuh lutut atau ujung kaki. Tarik napas dalam.'}};
 function spFit(){P.fit=P.fit||{lv:{},days:{},n:0,last:0,intro:false};P.fit.lv=P.fit.lv||{};P.fit.days=P.fit.days||{};return P.fit}
@@ -4917,7 +4917,7 @@ const SP_FORM={
  br:{guide:'bodyNK',cues:['Berbaring, lutut ditekuk, telapak kaki selebar pinggul','Dorong lewat tumit sambil mengencangkan bokong','Angkat sampai bahu, pinggul, dan lutut segaris'],bad:'Panggul terlalu tinggi sampai punggung melengkung',
   badKeys:[[{H:[13,83],N:[23,86],P:[51,87],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
    [{H:[13,83],N:[24,85],P:[48,62],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,66],A1:[75,89],T1:[82,91],K2:[68,67],A2:[76,89],T2:[83,91]},.9]]},
- cr:{guide:null,cues:['Lutut ditekuk, punggung bawah menempel lantai','Tangan disilangkan di dada','Angkat kepala dan bahu sedikit saja, dagu tidak menempel dada'],bad:'Menarik kepala dengan tangan sampai leher tertekuk',
+ cr:{guide:null,cues:['Lutut ditekuk, telapak kaki menapak di lantai','Tangan disilangkan di dada, jangan menarik leher','Bangun dan turun pelan-pelan, perut tetap kencang'],bad:'Menarik kepala dengan tangan sampai leher tertekuk',
   badKeys:[[{H:[13,83],N:[23,86],P:[51,87],E1:[16,74],W1:[8,80],E2:[17,74],W2:[9,80],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
    [{H:[31,76],N:[27,74],P:[51,87],E1:[22,62],W1:[30,68],E2:[23,62],W2:[31,68],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.7]]},
  mc:{guide:'bodyNA',cues:['Mulai dari posisi push-up, tangan di bawah bahu','Pinggul tetap rendah dan sejajar badan','Tarik lutut ke arah dada bergantian'],bad:'Pinggul naik tinggi seperti segitiga',
@@ -4942,7 +4942,7 @@ function spGuides(type,p){if(type==='kneeToe')return [[p.T1[0],91,p.T1[0],p.K1[1
 
 function spAnimKey(id,v){if(id==='pu'&&v==='wall')return 'pu_wall';if(id==='pu'&&v==='knee')return 'pu_knee';return SPK[id]?id:'jj'}
 /* animasi hasil rekaman gerak (Mixamo) untuk gerakan yang tersedia */
-const SP_SPR={"jj": {"n": 21, "cols": 8, "fps": 19.69, "floor": 203}, "skip": {"n": 40, "cols": 8, "fps": 15.58, "floor": 202}, "sq": {"n": 37, "cols": 8, "fps": 19.82, "floor": 203}, "pu": {"n": 31, "cols": 8, "fps": 20.22, "floor": 146}, "pl": {"n": 40, "cols": 8, "fps": 13.33, "floor": 144}};
+const SP_SPR={"jj": {"n": 21, "cols": 8, "fps": 19.69, "floor": 203}, "skip": {"n": 40, "cols": 8, "fps": 15.58, "floor": 202}, "sq": {"n": 37, "cols": 8, "fps": 19.82, "floor": 203}, "pu": {"n": 31, "cols": 8, "fps": 20.22, "floor": 146}, "pl": {"n": 40, "cols": 8, "fps": 13.33, "floor": 144}, "cr": {"n": 40, "cols": 8, "fps": 17.91, "floor": 162}};
 function spMountSprite(box,id){const m=SP_SPR[id],rows=Math.ceil(m.n/m.cols),fl=(m.floor/220*100).toFixed(1);
   box.innerHTML=`<div class="spspr" style="${id==='sq'?'transform:scaleX(-1);':''}background-image:url(sport/${id}.webp);background-size:${m.cols*100}% ${rows*100}%"></div><div class="spfloor" style="top:${fl}%"></div>`;
   const el=box.firstChild,t0=performance.now();let last=-1;
