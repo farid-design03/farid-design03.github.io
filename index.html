@@ -1057,6 +1057,21 @@ body.fb-free .nav.tnav[data-tab=tatt] span::after,body.fb-free .nav.tnav[data-ta
 .fbtask-h{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px}.fbtask-h b{flex:1}
 .fbtask-r{display:flex;align-items:center;gap:10px;border-top:2px dashed #E3E6F2;padding-top:10px}.fbtask-r .grow{flex:1;min-width:0;display:flex;flex-direction:column}.fbtask-r small{color:var(--muted);font-weight:600}
 .fbtask-b{padding:8px 16px!important;font-size:16px!important;flex:none}
+/* ---- perbaikan tampilan v18 ---- */
+html,body{overflow-x:hidden;overflow-x:clip}
+.stats{box-sizing:border-box}
+@media (max-width:999px){
+ body.teacher .side{justify-content:flex-start;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+ body.teacher .side::-webkit-scrollbar{display:none}
+ body.teacher .nav{flex:0 0 66px}
+ body.teacher .nav span{font-size:11px}
+ body.teacher .nav i{width:28px;height:28px}
+ body.fb-free .nav.tnav[data-tab=tatt] span::after,body.fb-free .nav.tnav[data-tab=teval] span::after,body.fb-free .nav.tnav[data-tab=tbank] span::after,body.fb-free .nav.tnav[data-tab=trapor] span::after{content:'';display:inline-block;width:7px;height:7px;padding:0;margin-left:3px;border-radius:50%;vertical-align:1px;background:var(--orange,#FF8A3D)}
+}
+#profileList .prow small b,#profileList .prow small strong{font-family:inherit;font-size:inherit;font-weight:800}
+#rcShow{white-space:nowrap}
+#profileList .prow>button.primary,#profileList .prow>button.ghost{font-size:16px;padding:10px 12px}
+.syncpill.fade{opacity:0;transition:opacity .6s;pointer-events:none}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3146,7 +3161,7 @@ function mergeApp(a,b){if(!a)return b;if(!b)return a;
 function normalizeApp(){setTimeout(()=>{try{ensureUsers()}catch(e){}},0);APP.sessions=APP.sessions||[];APP.deleted=APP.deleted||[];
   APP.profiles=(APP.profiles||[]).filter(p=>!APP.deleted.includes(p.id)).map(p=>{if(p.stats&&p.today&&p.week&&p.prog)return p;const c=(APP.teacher&&APP.teacher.cls)||'sd2';const base=newProfile({name:p.name||'Murid',cls:c,subj:(COURSE.find(x=>x.id===c)||COURSE[2]).subjects[0].id,goal:20});base.unlimited=!!(APP.teacher&&APP.teacher.unlimited);return Object.assign(base,{id:p.id,no:p.no||null,upd:p.upd||Date.now()})});
   APP.profiles.forEach(p=>{p.stats=Object.assign({lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},p.stats||{})});normBank()}
-function syncPill(st,text){const el=document.getElementById('syncPill');if(!el)return;el.hidden=false;el.dataset.s=st;el.textContent=text}
+function syncPill(st,text){const el=document.getElementById('syncPill');if(!el)return;el.hidden=false;el.dataset.s=st;el.textContent=text;el.classList.remove('fade');clearTimeout(syncPill.t);if(st==='ok')syncPill.t=setTimeout(()=>el.classList.add('fade'),2500)}
 function queueSync(){if(!GAS)return;clearTimeout(SYNC.timer);syncPill('wait','Menunggu disimpan…');SYNC.timer=setTimeout(doSync,2500)}
 function doSync(){if(!GAS)return;if(SYNC.busy){SYNC.again=true;return}SYNC.busy=true;syncPill('busy','Menyimpan ke Google Sheet…');
   google.script.run.withSuccessHandler(res=>{SYNC.busy=false;try{applyRemote(JSON.parse(res))}catch(e){}syncPill('ok','Tersimpan di Google Sheet');if(SYNC.again){SYNC.again=false;queueSync()}})
@@ -3254,7 +3269,7 @@ function renderTBank(){normBank();const c=tCls();const b=BK.id&&APP.bank.find(x=
 function renderBankList(){const c=tCls();
   $('#vTBank').innerHTML=thead(['Bank Soal Guru','quiz'],'Buat soal sendiri untuk evaluasi harian. Game yang cocok dipilih otomatis dari panjang jawabannya.',`<button class="ghost" id="bkNew" style="color:var(--ink);background:#fff">+ Paket soal baru</button>`)+
    c.subjects.map(s=>{const list=bankOf(s.id);return `<div class="tcard"><h3>${esc(s.name)}</h3>${list.length?`<div class="sessions">${list.map(x=>`<button class="sess" data-bk="${x.id}"><span class="dt">${esc(x.title)}</span><span class="grow">${x.qs.length} soal · cocok untuk ${FIT[bankFit(x)].games.filter(g=>g!=='kuis').map(gameName).join(', ')||'Kuis Klasik'}</span><span class="pill mid">Ubah</span></button>`).join('')}</div>`:'<p class="note" style="margin:0">Belum ada paket soal.</p>'}</div>`}).join('')+
-   `<div class="tcard"><h3>Lewat Google Sheet atau Excel</h3><p class="sub" style="margin:0">Di dalam paket soal ada tombol <b>Impor dari Excel</b>. Salin baris dengan urutan kolom: Pertanyaan, A, B, C, D, Kunci (A/B/C/D), Pembahasan.${GAS?' Di Google Sheet juga ada tab <b>Impor Soal</b>: isi barisnya, lalu buka ulang aplikasi.':''}</p></div>`;
+   `<div class="tcard"><h3>${GAS?'Lewat Google Sheet atau Excel':'Salin dari Excel'}</h3><p class="sub" style="margin:0">Di dalam paket soal ada tombol <b>Impor dari Excel</b>. Salin baris dengan urutan kolom: Pertanyaan, A, B, C, D, Kunci (A/B/C/D), Pembahasan.${GAS?' Di Google Sheet juga ada tab <b>Impor Soal</b>: isi barisnya, lalu buka ulang aplikasi.':''}</p></div>`;
   hydrate($('#vTBank'));$('#vTBank').querySelectorAll('[data-bk]').forEach(x=>x.onclick=()=>{BK.id=x.dataset.bk;BK.edit=null;renderTBank();window.scrollTo(0,0)});
   $('#bkNew').onclick=()=>{openModal(`<h3>Paket soal baru</h3><div class="tfield"><label for="nbSubj">Mata pelajaran</label><select id="nbSubj">${c.subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div><div class="tfield"><label for="nbTitle">Judul paket (materi)</label><input id="nbTitle" maxlength="40" placeholder="Contoh: Ulangan Bab 3 Pecahan"></div><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat</button></div>`);
     $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{const t=$('#nbTitle').value.trim();if(!t){$('#nbTitle').focus();return}const s=c.subjects.find(x=>x.id===$('#nbSubj').value);const nb={id:'b'+Date.now().toString(36)+R(10,99),subj:s.id,subjName:s.name,title:t,qs:[],upd:Date.now()};APP.bank=APP.bank||[];APP.bank.push(nb);save();closeModal();BK.id=nb.id;renderTBank()}}}
@@ -3443,7 +3458,7 @@ function fbHideAuth(){$('#auth').hidden=true;$('#onb').hidden=true;$('#adminPane
 async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}catch(e){}
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
-  APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
+  p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
   setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
@@ -3580,7 +3595,7 @@ function proAsk(){const wa=String(FBX.cfg.wa||'').replace(/\D/g,'').replace(/^0/
    <div class="acts"><button class="ghost" id="mNo">Nanti saja</button>${wa?`<a class="primary" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">Hubungi admin</a>`:''}</div>`);
   $('#mNo').onclick=closeModal}
 const _go=go;
-go=function(tab){if(isT()&&PRO_TABS.includes(tab)&&!isPro()){proAsk();return}_go(tab)};
+go=function(tab){if(isT()&&PRO_TABS.includes(tab)&&!isPro()){proAsk();return}_go(tab);const n=document.querySelector('.nav[aria-current="page"]');if(n&&innerWidth<1000)try{n.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}};
 licCard=function(){const p=isPro();return `<div class="tcard" id="licCard"><h3>Paket</h3><div class="plist"><div class="pl"><span class="grow"><b>Paket sekarang</b></span>${p?'<span class="pill ok">Pro</span>':'<span class="pill mute">Gratis</span>'}</div>
   ${p?`<div class="pl"><span class="grow"><b>Berlaku sampai</b></span><span class="pill mute">${fmtTs(FBX.me.proUntil)}</span></div>`:`<div class="pl"><span class="grow"><b>Batas murid</b></span><span class="pill mute">${FREE_MAX} murid</span></div>`}</div>
   ${p?'':'<button class="primary" id="licGo" style="align-self:flex-start">Lihat paket Pro</button>'}</div>`};
@@ -3600,7 +3615,7 @@ licBanner=function(){const out=[];if(FBX.cfg.announce)out.push(`<div class="tcar
   const u=FBX.user;if(u&&u.email&&!u.emailVerified)out.push(`<div class="tcard annc warn"><b>Verifikasi emailmu</b><span>Kami mengirim tautan ke ${esc(u.email)}. Klik tautan itu supaya kamu bisa membuat sandi baru jika lupa. <button class="smallbtn" id="fbVerify">Kirim ulang</button></span></div>`);
   out.push(fbCodeCard(true));return out.join('')};
 const _rTD=renderTDash;
-renderTDash=function(){_rTD();fbBindCode($('#vTDash'))};TEACH_R.tdash=renderTDash;
+renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .sub').forEach(e=>{if(e.textContent.startsWith('Daftarkan nama murid'))e.textContent='Bagikan kode kelas di atas supaya murid mendaftar sendiri dari HP-nya. Murid yang belajar hanya di TV kelas bisa kamu tambahkan di menu Murid.'});fbBindCode(v)};TEACH_R.tdash=renderTDash;
 
 /* ---------- menu Murid versi online ---------- */
 renderTStud=function(){const list=students(),c=tCls();const online=list.filter(p=>p._remote).length;
@@ -3713,7 +3728,7 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
 
 /* ---------- profil murid: kode pemulihan & hapus akun ---------- */
 const _rP2=renderProfile;
-renderProfile=function(){_rP2();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
+renderProfile=function(){if(FBX.user&&P&&!isT())P.unlimited=false;_rP2();const su=$('#sUnl');if(su&&FBX.user&&!isT())su.closest('.set').remove();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
   host.insertAdjacentHTML('beforeend',`<div class="prow"><span style="width:44px;height:44px;flex:none">${ICONS.key}</span><span class="grow"><b>Kode pemulihan</b><small>${m.rc?`Dipakai jika lupa sandi. <b id="rcShow" style="font-family:var(--title);letter-spacing:.1em">••••-••••</b>`:'Belum ada. Buat kode supaya akunmu bisa dipulihkan jika lupa sandi.'}</small></span>${m.rc?'<button class="smallbtn" id="rcEye">Lihat</button>':'<button class="smallbtn" id="rcMake">Buat kode</button>'}</div>
    <div class="prow"><button class="linkbtn" id="fbDel" style="color:var(--bad);flex:1">Hapus akun</button></div>`);
   const ey=$('#rcEye');if(ey)ey.onclick=()=>{const s=$('#rcShow');const on=s.textContent.includes('•');s.textContent=on?m.rc:'••••-••••';ey.textContent=on?'Sembunyikan':'Lihat'};
