@@ -4945,7 +4945,8 @@ function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[
   if(def.wall){mk('rect',{x:12,y:4,width:8,height:87,fill:'#E5D3B3'});mk('line',{x1:20,y1:4,x2:20,y2:91,stroke:'#C9B48F','stroke-width':1})}
   const L=(c,w)=>mk('line',{stroke:c,'stroke-width':w,'stroke-linecap':'round'});
   const far={th:L(SPC.pants2,8.5),sh:L(SPC.pants2,7),ft:L('#D27800',4.5),ua:L(SPC.shirt2,6.5),fa:L('#E0AE85',5.5)};
-  const torso=L(SPC.shirt,13),neck=L(SPC.skin,5);
+  const FR=def.face==='front';const torso=L(SPC.shirt,13),neck=L(SPC.skin,5);const tpoly=mk('path',{fill:SPC.shirt,stroke:SPC.shirt,'stroke-width':2,'stroke-linejoin':'round'}),shorts=mk('path',{fill:SPC.pants,stroke:SPC.pants,'stroke-width':2,'stroke-linejoin':'round'});if(!FR){tpoly.style.display='none';shorts.style.display='none'}else torso.style.display='none';
+  if(FR){[far.th,far.sh].forEach(l=>l.setAttribute('stroke',SPC.pants));far.ft.setAttribute('stroke',SPC.shoe);far.ua.setAttribute('stroke',SPC.shirt);far.fa.setAttribute('stroke',SPC.skin)}
   const near={th:L(SPC.pants,8.5),sh:L(SPC.pants,7),ft:L(SPC.shoe,4.5),ua:L(SPC.shirt,6.5),fa:L(SPC.skin,5.5)};
   const hand1=mk('circle',{r:3,fill:SPC.skin}),hand2=mk('circle',{r:3,fill:'#E0AE85'});
   const hair=mk('circle',{r:7.6,fill:SPC.hair});const head=mk('circle',{r:7,fill:SPC.skin});const eye=mk('circle',{r:1.15,fill:'#1E1E24'}),eye2=mk('circle',{r:1.15,fill:'#1E1E24'}),mouth=mk('path',{fill:'none',stroke:'#B0563C','stroke-width':.9,'stroke-linecap':'round'});
@@ -4958,9 +4959,11 @@ function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[
   const fix=box.dataset.fix;const frame=now=>{if(!box.isConnected)return;let t=((now-t0)/1000)%tot,i=0;while(t>keys[i][1]){t-=keys[i][1];i++}
    if(fix!=null&&fix!==''){i=+fix;t=keys[i][1]}
    const A=keys[(i-1+keys.length)%keys.length][0],B=keys[i][0],u=ease(Math.min(1,t/keys[i][1]));const p={};for(const k in B)p[k]=[A[k][0]+(B[k][0]-A[k][0])*u,A[k][1]+(B[k][1]-A[k][1])*u];
-   set(far.th,p.P,p.K2);set(far.sh,p.K2,p.A2);set(far.ft,p.A2,p.T2);set(far.ua,p.N,p.E2);set(far.fa,p.E2,p.W2);hand2.setAttribute('cx',p.W2[0]);hand2.setAttribute('cy',p.W2[1]);
+   const S1=FR?[p.N[0]-7,p.N[1]+1.5]:p.N,S2=FR?[p.N[0]+7,p.N[1]+1.5]:p.N,Q1=FR?[p.P[0]-4.5,p.P[1]]:p.P,Q2=FR?[p.P[0]+4.5,p.P[1]]:p.P;
+   set(far.th,Q2,p.K2);set(far.sh,p.K2,p.A2);set(far.ft,p.A2,p.T2);set(far.ua,S2,p.E2);set(far.fa,p.E2,p.W2);hand2.setAttribute('cx',p.W2[0]);hand2.setAttribute('cy',p.W2[1]);
    set(torso,p.N,p.P);const nx=p.N[0]+(p.H[0]-p.N[0])*.45,ny=p.N[1]+(p.H[1]-p.N[1])*.45;set(neck,p.N,[nx,ny]);
-   set(near.th,p.P,p.K1);set(near.sh,p.K1,p.A1);set(near.ft,p.A1,p.T1);set(near.ua,p.N,p.E1);set(near.fa,p.E1,p.W1);hand1.setAttribute('cx',p.W1[0]);hand1.setAttribute('cy',p.W1[1]);
+   if(FR){tpoly.setAttribute('d',`M${S1[0]} ${S1[1]-2} L${S2[0]} ${S2[1]-2} L${Q2[0]+1} ${Q2[1]-3} L${Q1[0]-1} ${Q1[1]-3}Z`);shorts.setAttribute('d',`M${Q1[0]-1.5} ${Q1[1]-4} L${Q2[0]+1.5} ${Q2[1]-4} L${Q2[0]+2.5} ${Q2[1]+6} L${p.P[0]+.8} ${p.P[1]+6} L${p.P[0]} ${p.P[1]+2} L${p.P[0]-.8} ${p.P[1]+6} L${Q1[0]-2.5} ${Q1[1]+6}Z`)}
+   set(near.th,Q1,p.K1);set(near.sh,p.K1,p.A1);set(near.ft,p.A1,p.T1);set(near.ua,S1,p.E1);set(near.fa,p.E1,p.W1);hand1.setAttribute('cx',p.W1[0]);hand1.setAttribute('cy',p.W1[1]);
    head.setAttribute('cx',p.H[0]);head.setAttribute('cy',p.H[1]);
    {const gs=form.guide?spGuides(form.guide,p):[];gl.forEach((g,k)=>{const L2=gs[k];if(!L2){g.setAttribute('opacity',0);return}g.setAttribute('opacity',.95);g.setAttribute('x1',L2[0]);g.setAttribute('y1',L2[1]);g.setAttribute('x2',L2[2]);g.setAttribute('y2',L2[3])});svg.appendChild(gl[0]);svg.appendChild(gl[1])}
    const ang=Math.atan2(p.H[1]-p.N[1],p.H[0]-p.N[0]),up=[Math.cos(ang),Math.sin(ang)];
