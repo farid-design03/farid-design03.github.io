@@ -1224,6 +1224,9 @@ body.has-invite .nav[data-tab=team] i{position:relative}
 body.has-invite .nav[data-tab=team] i::before{content:'';position:absolute;right:-3px;top:-3px;width:11px;height:11px;border-radius:50%;background:#F2394B;border:2px solid #fff;z-index:1}
 .invpop-av{width:96px;margin:0 auto 6px}.invpop-av .avatar{width:96px;height:96px;border-width:4px;font-size:40px;animation:npopIn .4s}
 .avatar.big{width:96px;height:96px;font-size:40px}
+.ajgames{display:flex;gap:6px;flex-wrap:wrap}
+.ajg{border:3px solid var(--ink);border-radius:999px;padding:5px 12px;background:#fff;font-family:var(--display);font-weight:800;font-size:14px;color:var(--ink)}
+.ajg[aria-pressed="true"]{background:var(--mc,#9B6BFF);color:#fff;box-shadow:0 3px 0 var(--ink)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2042,7 +2045,7 @@ const MODE_LIST=[
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v16a5 5 0 0 0 10 0"/><path d="M20 34c6-7 15-7 22 0-7 7-16 7-22 0z"/><path d="M20 34l-7-5v10z"/></svg>'},
  {id:'katak',name:'Lompat Katak',desc:'Lompat ke daun teratai yang benar',help:'Ketuk daun teratai dengan jawaban benar supaya katak melompat ke sana. Daun yang salah akan tenggelam! Keyboard: tekan angka pada daun.',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><ellipse cx="24" cy="34" rx="19" ry="9"/><circle cx="17" cy="15" r="5"/><circle cx="31" cy="15" r="5"/><path d="M15 25c5 4 13 4 18 0"/></svg>'},
- {id:'ular',name:'Ular Lapar',desc:'Arahkan ular memakan buah jawaban',help:'Setiap buah berhuruf A–D sesuai daftar jawaban di atas. Arahkan ular dengan tombol panah atau ketuk sisi kepala ular untuk berbelok. Makan buah yang benar!',
+ {id:'ular',name:'Cacing Lapar',desc:'Kendalikan cacing memakan bola jawaban',help:'Tangan kiri: sentuh dan geser di sisi kiri layar untuk mengarahkan cacing. Tangan kanan: tahan tombol NOS untuk ngebut. Di laptop: cacing mengikuti mouse, klik atau Spasi untuk ngebut. Makan bola berhuruf jawaban yang benar!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 38h15a6 6 0 0 0 0-12h-8a6 6 0 0 1 0-12h22"/><circle cx="40" cy="14" r="4" fill="currentColor"/></svg>'},
  {id:'kuis',name:'Kuis Klasik',desc:'Pilih jawaban, lengkap dengan pembahasan',help:'',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><rect x="6" y="6" width="15" height="15" rx="3"/><rect x="27" y="6" width="15" height="15" rx="3"/><rect x="6" y="27" width="15" height="15" rx="3"/><rect x="27" y="27" width="15" height="15" rx="3" fill="currentColor"/></svg>'}];
@@ -2658,37 +2661,96 @@ const Katak={
 /* ---- game 8: Ular Lapar ---- */
 const UCOL=['#FF5A5F','#3DA5D9','#FFB627','#B57EDC'];
 const Ular={
+ /* Cacing Lapar ala Worm Zone: tangan kiri mengarahkan (joystick), tangan kanan menahan NOS untuk ngebut.
+    Di laptop: cacing mengikuti mouse, klik/Spasi untuk ngebut, panah kiri/kanan untuk berbelok. */
  setup(){const{W,H,ctx}=arc,n=arc.labels.length;const bw=(W-24)/2;
   this.leg=arc.labels.map((l,k)=>({k,f:fit(ctx,l,bw-40,36,16,10)}));
-  const rowsL=Math.ceil(n/2);this.bh=Math.max(32,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+4;
-  const target=W<520?13:20;this.cell=Math.floor(W/target);this.cols=Math.floor(W/this.cell);this.rows=Math.floor((H-this.top-4)/this.cell);this.ox=(W-this.cols*this.cell)/2;
-  const len=3+game.correct;const r0=Math.floor(this.rows/2),c0=Math.floor(this.cols/2);
-  this.body=Array.from({length:len},(_,k)=>({c:(c0-k+this.cols*4)%this.cols,r:r0}));this.dir=[1,0];this.nd=[1,0];this.acc=0;this.stepT=.2/arc.speed;
-  const free=[];for(let r=0;r<this.rows;r++)for(let c=0;c<this.cols;c++){if(Math.abs(r-r0)+Math.abs(c-c0)>3&&!(r===r0&&Math.abs(c-c0)<len+2))free.push({c,r})}
-  const spots=shuffle(free);this.fruits=arc.labels.map((l,k)=>({i:k,...spots[k]}))},
- setDir(dx,dy){if(dx===-this.dir[0]&&dy===-this.dir[1])return;this.nd=[dx,dy]},
- key(k){const m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[k];if(m)this.setDir(...m)},
- down(x,y){const h=this.body[0],hx=this.ox+(h.c+.5)*this.cell,hy=this.top+(h.r+.5)*this.cell,dx=x-hx,dy=y-hy;
-  if(this.dir[0]!==0){if(Math.abs(dy)>this.cell*.5)this.setDir(0,Math.sign(dy))}else{if(Math.abs(dx)>this.cell*.5)this.setDir(Math.sign(dx),0)}},
- update(dt){this.acc+=dt;while(this.acc>=this.stepT&&arc.state==='play'){this.acc-=this.stepT;this.dir=this.nd;const h=this.body[0];
-   const nh={c:(h.c+this.dir[0]+this.cols)%this.cols,r:(h.r+this.dir[1]+this.rows)%this.rows};this.body.unshift(nh);this.body.pop();
-   const f=this.fruits.find(f=>!f.eaten&&f.c===nh.c&&f.r===nh.r);
-   if(f){f.eaten=true;const x=this.ox+(f.c+.5)*this.cell,y=this.top+(f.r+.5)*this.cell;burst(x,y,UCOL[f.i],20);tone([880,1100],.05);if(f.i===arc.ci)this.body.push({...this.body[this.body.length-1]});arcResolve(f.i)}}},
- draw(c){const{W,H}=arc;c.fillStyle='#1F3B2D';c.fillRect(0,0,W,H);
-  const done=arc.state==='resolved';const bw=(W-24)/2;
-  this.leg.forEach(g=>{const col=g.k%2,row=Math.floor(g.k/2),x=8+col*(bw+8),y=8+row*(this.bh+6);
-   let fill='#F4F7FB',txt='#14213D';if(done&&g.k===arc.ci){fill='#1C8A57';txt='#fff'}
-   rr(c,x,y,bw,this.bh,8);c.fillStyle=fill;c.fill();c.fillStyle=UCOL[g.k];c.beginPath();c.arc(x+16,y+this.bh/2,11,0,7);c.fill();
-   c.fillStyle='#fff';c.font=`800 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[g.k],x+16,y+this.bh/2+1);
-   drawFit(c,g.f,x+14+bw/2,y+this.bh/2,txt)});
-  for(let r=0;r<this.rows;r++)for(let k=0;k<this.cols;k++){c.fillStyle=(r+k)%2?'#2E6B45':'#337A4E';c.fillRect(this.ox+k*this.cell,this.top+r*this.cell,this.cell,this.cell)}
-  const cs=this.cell;
-  for(const f of this.fruits){if(f.eaten)continue;const x=this.ox+(f.c+.5)*cs,y=this.top+(f.r+.5)*cs;const pulse=1+Math.sin(performance.now()/200+f.i)*.06;
-   c.fillStyle=UCOL[f.i];c.beginPath();c.arc(x,y,cs*.44*pulse,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke();
-   c.fillStyle='#fff';c.font=`800 ${Math.round(cs*.5)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[f.i],x,y+1)}
-  const lc=lvHex();this.body.forEach((b,k)=>{const x=this.ox+b.c*cs,y=this.top+b.r*cs;rr(c,x+1.5,y+1.5,cs-3,cs-3,cs*.3);c.fillStyle=k===0?lc:(k%2?'#F4F7FB':'#DCE3EC');c.fill();if(k===0){c.strokeStyle='#fff';c.lineWidth=2;c.stroke()}});
-  const h=this.body[0],hx=this.ox+(h.c+.5)*cs,hy=this.top+(h.r+.5)*cs,[dx,dy]=this.dir;
-  [-1,1].forEach(s=>{const ex=hx+dx*cs*.15-dy*s*cs*.2,ey=hy+dy*cs*.15+dx*s*cs*.2;c.fillStyle='#fff';c.beginPath();c.arc(ex,ey,cs*.13,0,7);c.fill();c.fillStyle='#1A2233';c.beginPath();c.arc(ex+dx*2,ey+dy*2,cs*.06,0,7);c.fill()})}
+  const rowsL=Math.ceil(n/2);this.bh=Math.max(32,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
+  this.r=Math.max(9,Math.min(16,W/42));this.orbR=Math.max(20,Math.min(34,W/17));this.space=this.r*.62;
+  const ax0=8,ay0=this.top,ax1=W-8,ay1=H-8;this.box=[ax0,ay0,ax1,ay1];
+  if(!this.w||this.wW!==W||this.wH!==H){this.w={x:W/2,y:(ay0+ay1)/2,a:-Math.PI/2,len:12,path:[]};this.wW=W;this.wH=H;this.energy=1;this.pellets=[]}
+  const w=this.w;w.len=12+game.correct*4;w.x=Math.min(Math.max(w.x,ax0+this.r),ax1-this.r);w.y=Math.min(Math.max(w.y,ay0+this.r),ay1-this.r);
+  if(!w.path.length)for(let k=0;k<w.len*3;k++)w.path.push({x:w.x-Math.cos(w.a)*k*this.space*.5,y:w.y-Math.sin(w.a)*k*this.space*.5});
+  this.joy=null;this.boostId=null;this.mouseDown=false;this.mouse=null;this.touch=this.touch||isPhone();this.fx=[];
+  /* buah jawaban: jauh dari kepala dan tidak saling menempel */
+  const R=this.orbR,spots=[];let tries=0;
+  while(spots.length<n&&tries<600){tries++;const x=ax0+R+Math.random()*(ax1-ax0-2*R),y=ay0+R+Math.random()*(ay1-ay0-2*R);
+    const far=tries<300?Math.min(110,(ay1-ay0)*.35):R*2;if(Math.hypot(x-w.x,y-w.y)<Math.max(far,R*2.2))continue;if(spots.some(s=>Math.hypot(s.x-x,s.y-y)<R*(tries<400?2.8:2.1)))continue;
+    if(this.touch&&(Math.hypot(x-(ax0+70),y-(ay1-70))<R+58||Math.hypot(x-(ax1-70),y-(ay1-70))<R+58))continue;spots.push({x,y})}
+  while(spots.length<n)spots.push({x:ax0+R+Math.random()*(ax1-ax0-2*R),y:ay0+R+Math.random()*((ay1-ay0)*.6)});
+  this.fruits=arc.labels.map((l,k)=>({i:k,x:spots[k].x,y:spots[k].y,ph:Math.random()*6}));
+  while(this.pellets.length<10)this.pellets.push(this.newPellet())},
+ newPellet(){const[a0,b0,a1,b1]=this.box;return {x:a0+10+Math.random()*(a1-a0-20),y:b0+10+Math.random()*(b1-b0-20),c:['#FFD84D','#7CF2C9','#FF9AC8','#9FD3FF'][Math.floor(Math.random()*4)]}},
+ key(k){if(k===' '||k==='Shift')this.kboost=true},
+ pdown(id,x,y,type){if(type==='mouse'){this.mouseDown=true;this.mouse={x,y};return}this.touch=true;
+  if(x<arc.W/2){if(!this.joy)this.joy={id,ax:x,ay:y,x,y}}else this.boostId=id},
+ pmove(id,x,y,type){if(type==='mouse'){this.mouse={x,y};return}if(this.joy&&this.joy.id===id){this.joy.x=x;this.joy.y=y}},
+ pup(id,type){if(type==='mouse'){this.mouseDown=false;return}if(this.joy&&this.joy.id===id)this.joy=null;if(this.boostId===id)this.boostId=null},
+ down(){},move(){},
+ update(dt){if(arc.state!=='play')return;const w=this.w,[a0,b0,a1,b1]=this.box;dt=Math.min(isFinite(dt)&&dt>0?dt:.016,.05);
+  /* arah tujuan */
+  let ta=null;
+  if(this.joy){const dx=this.joy.x-this.joy.ax,dy=this.joy.y-this.joy.ay;if(Math.hypot(dx,dy)>8)ta=Math.atan2(dy,dx)}
+  else if(this.mouse&&!this.touch){const dx=this.mouse.x-w.x,dy=this.mouse.y-w.y;if(Math.hypot(dx,dy)>this.r)ta=Math.atan2(dy,dx)}
+  const K=arc.keys||{};if(K.ArrowLeft)w.a-=3.2*dt;if(K.ArrowRight)w.a+=3.2*dt;
+  if(K.ArrowUp&&!K.ArrowLeft&&!K.ArrowRight)ta=-Math.PI/2;if(K.ArrowDown&&!K.ArrowLeft&&!K.ArrowRight)ta=Math.PI/2;
+  if(ta!=null){let d=ta-w.a;d=Math.atan2(Math.sin(d),Math.cos(d));const turn=4.6*dt;w.a+=Math.max(-turn,Math.min(turn,d))}
+  /* NOS */
+  const want=this.boostId!=null||this.mouseDown||K[' ']||K.Shift;const boost=want&&this.energy>.04;
+  this.energy=Math.max(0,Math.min(1,this.energy+(boost?-.55:.22)*dt));this.boosting=boost;
+  const base=Math.max(70,arc.W*.17)*(.85+.25*arc.speed),v=base*(boost?2:1);
+  w.x+=Math.cos(w.a)*v*dt;w.y+=Math.sin(w.a)*v*dt;
+  const r=this.r;
+  if(w.x<a0+r){w.x=a0+r;w.a=Math.PI-w.a}if(w.x>a1-r){w.x=a1-r;w.a=Math.PI-w.a}
+  if(w.y<b0+r){w.y=b0+r;w.a=-w.a}if(w.y>b1-r){w.y=b1-r;w.a=-w.a}
+  w.path.unshift({x:w.x,y:w.y});const keep=Math.min(4000,Math.ceil(Math.max(w.len*this.space/Math.max(1,v*dt)+4,w.len*3)));if(w.path.length>keep)w.path.length=keep;
+  if(boost&&Math.random()<.6){const t=w.path[Math.min(w.path.length-1,6)];this.fx.push({x:t.x,y:t.y,life:.4,c:'#FFE27A'})}
+  this.fx.forEach(p=>p.life-=dt);this.fx=this.fx.filter(p=>p.life>0);
+  /* makan butir kecil */
+  this.pellets.forEach((p,k)=>{if(Math.hypot(p.x-w.x,p.y-w.y)<r+6){w.len+=.35;this.energy=Math.min(1,this.energy+.08);this.pellets[k]=this.newPellet();tone([1320],.02)}});
+  /* makan buah jawaban */
+  const f=this.fruits.find(f=>!f.eaten&&Math.hypot(f.x-w.x,f.y-w.y)<r+this.orbR*.85);
+  if(f){f.eaten=true;burst(f.x,f.y,UCOL[f.i],24);tone([880,1100],.05);if(f.i===arc.ci)w.len+=4;arcResolve(f.i)}},
+ body(){const w=this.w,out=[];let acc=0,need=0,prev=w.path[0];out.push(prev);
+  for(let k=1;k<w.path.length&&out.length<Math.round(w.len);k++){const p=w.path[k],d=Math.hypot(p.x-prev.x,p.y-prev.y);acc+=d;need+=0;prev=p;if(acc>=this.space){out.push(p);acc=0}}
+  return out},
+ draw(c){const{W,H}=arc;const done=arc.state==='resolved';const bw=(W-24)/2;
+  const g=c.createRadialGradient(W/2,H/2,20,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'#2B2F6E');g.addColorStop(1,'#151838');c.fillStyle=g;c.fillRect(0,0,W,H);
+  const[a0,b0,a1,b1]=this.box;c.save();c.beginPath();c.rect(a0,b0,a1-a0,b1-b0);c.clip();
+  c.fillStyle='rgba(255,255,255,.06)';for(let y=b0+12;y<b1;y+=26)for(let x=a0+12+((y/26|0)%2)*13;x<a1;x+=26){c.beginPath();c.arc(x,y,2,0,7);c.fill()}
+  c.restore();rr(c,a0,b0,a1-a0,b1-b0,14);c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=2;c.stroke();
+  this.leg.forEach(gg=>{const col=gg.k%2,row=Math.floor(gg.k/2),x=8+col*(bw+8),y=8+row*(this.bh+6);
+   let fill='#F4F7FB',txt='#14213D';if(done&&gg.k===arc.ci){fill='#1C8A57';txt='#fff'}
+   rr(c,x,y,bw,this.bh,8);c.fillStyle=fill;c.fill();c.fillStyle=UCOL[gg.k];c.beginPath();c.arc(x+16,y+this.bh/2,11,0,7);c.fill();
+   c.fillStyle='#fff';c.font=`800 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[gg.k],x+16,y+this.bh/2+1);drawFit(c,gg.f,x+14+bw/2,y+this.bh/2,txt)});
+  /* butir kecil */
+  this.pellets.forEach(p=>{c.fillStyle=p.c;c.globalAlpha=.85;c.beginPath();c.arc(p.x,p.y,4,0,7);c.fill();c.globalAlpha=1});
+  /* buah jawaban */
+  const t=performance.now()/1000,R=this.orbR;
+  for(const f of this.fruits){if(f.eaten)continue;const pr=R*(1+Math.sin(t*3+f.ph)*.05);
+   c.fillStyle=UCOL[f.i];c.globalAlpha=.25;c.beginPath();c.arc(f.x,f.y,pr*1.35,0,7);c.fill();c.globalAlpha=1;
+   c.beginPath();c.arc(f.x,f.y,pr,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=3;c.stroke();
+   c.fillStyle='#fff';c.font=`800 ${Math.round(pr*.9)}px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('ABCD'[f.i],f.x,f.y+1)}
+  /* jejak NOS */
+  this.fx.forEach(p=>{c.globalAlpha=p.life*1.6;c.fillStyle=p.c;c.beginPath();c.arc(p.x,p.y,this.r*.55*p.life*2,0,7);c.fill()});c.globalAlpha=1;
+  /* cacing */
+  const w=this.w,pts=this.body(),base=lvHex(),alt=shade(base,.38),r=this.r;
+  for(let k=pts.length-1;k>=0;k--){const p=pts[k],rad=r*(k===0?1.12:Math.max(.62,1-k/(pts.length*2.2)));
+   c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.arc(p.x+2,p.y+3,rad,0,7);c.fill();
+   c.fillStyle=Math.floor(k/2)%2?alt:base;c.beginPath();c.arc(p.x,p.y,rad,0,7);c.fill()}
+  if(this.boosting){c.strokeStyle='#FFE27A';c.lineWidth=3;c.beginPath();c.arc(w.x,w.y,r*1.35,0,7);c.stroke()}
+  const ca=Math.cos(w.a),sa=Math.sin(w.a);
+  [-1,1].forEach(s=>{const ex=w.x+ca*r*.35-sa*s*r*.48,ey=w.y+sa*r*.35+ca*s*r*.48;c.fillStyle='#fff';c.beginPath();c.arc(ex,ey,r*.38,0,7);c.fill();c.fillStyle='#14213D';c.beginPath();c.arc(ex+ca*r*.14,ey+sa*r*.14,r*.19,0,7);c.fill()});
+  /* kendali layar sentuh */
+  if(this.touch){const jx=this.joy?this.joy.ax:a0+70,jy=this.joy?this.joy.ay:b1-70;
+   c.globalAlpha=this.joy?.55:.28;c.strokeStyle='#fff';c.lineWidth=3;c.beginPath();c.arc(jx,jy,46,0,7);c.stroke();
+   let kx=jx,ky=jy;if(this.joy){const dx=this.joy.x-jx,dy=this.joy.y-jy,d=Math.hypot(dx,dy)||1,m=Math.min(d,40);kx=jx+dx/d*m;ky=jy+dy/d*m}
+   c.fillStyle='#fff';c.beginPath();c.arc(kx,ky,20,0,7);c.fill();c.globalAlpha=1;
+   const bx=a1-70,by=b1-70;c.globalAlpha=this.boostId!=null?.95:.6;c.fillStyle='#FF8A3D';c.beginPath();c.arc(bx,by,40,0,7);c.fill();
+   c.strokeStyle='#FFE27A';c.lineWidth=6;c.beginPath();c.arc(bx,by,46,-Math.PI/2,-Math.PI/2+Math.PI*2*this.energy);c.stroke();
+   c.fillStyle='#fff';c.font=`800 18px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText('NOS',bx,by+1);c.globalAlpha=1}
+  else{const bx=a1-14,by=b1-14,bw2=120;rr(c,bx-bw2,by-12,bw2,12,6);c.fillStyle='rgba(255,255,255,.2)';c.fill();rr(c,bx-bw2,by-12,bw2*this.energy,12,6);c.fillStyle='#FFB547';c.fill();
+   c.fillStyle='#fff';c.font=`800 12px ${FONT}`;c.textAlign='right';c.textBaseline='bottom';c.fillText('NOS · klik / Spasi',bx,by-16)}}
 };
 const MODES={tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular};
 
@@ -2726,9 +2788,9 @@ function duelSize(sd){const z=document.body.classList.contains('tv')?1.3:1;arc.z
   cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.height=(H*z)+'px';arc.ctx=cv.getContext('2d');arc.ctx.setTransform(dpr,0,0,dpr,0,0);
   arc.stars=Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H*.85,r:Math.random()*1.8+.5,p:Math.random()*6}))}
 function bindDuelCanvas(sd){const cv=sd.el.cv;const P=e=>{const r=cv.getBoundingClientRect(),z=sd.arc.z||1;return sd.root.classList.contains('flip')?[(r.right-e.clientX)/z,(r.bottom-e.clientY)/z]:[(e.clientX-r.left)/z,(e.clientY-r.top)/z]};
-  cv.addEventListener('pointerdown',e=>{if(!DUEL||sd.arc.state!=='play')return;e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}sd.arc.pdown=true;const [x,y]=P(e);withSide(sd,()=>M.down&&M.down(x,y))});
-  cv.addEventListener('pointermove',e=>{if(!DUEL||sd.arc.state!=='play')return;const [x,y]=P(e);withSide(sd,()=>M.move&&M.move(x,y,e.pointerType==='mouse'||sd.arc.pdown))});
-  ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,()=>{sd.arc.pdown=false}));
+  cv.addEventListener('pointerdown',e=>{if(!DUEL||sd.arc.state!=='play')return;e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}sd.arc.pdown=true;const [x,y]=P(e);withSide(sd,()=>{M.pdown&&M.pdown(e.pointerId,x,y,e.pointerType);M.down&&M.down(x,y)})});
+  cv.addEventListener('pointermove',e=>{if(!DUEL||sd.arc.state!=='play')return;const [x,y]=P(e);withSide(sd,()=>{M.pmove&&M.pmove(e.pointerId,x,y,e.pointerType);M.move&&M.move(x,y,e.pointerType==='mouse'||sd.arc.pdown)})});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,e=>{sd.arc.pdown=false;if(DUEL)withSide(sd,()=>{if(M&&M.pup)M.pup(e.pointerId,e.pointerType)})}));
   cv.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});cv.addEventListener('contextmenu',e=>e.preventDefault())}
 function duelHUD(sd){const g=sd.game;sd.el.score.textContent=g.score;sd.el.prog.textContent=`Soal ${Math.min(g.i+1,g.qs.length)}/${g.qs.length}`}
 function duelShowQ(sd,first){
@@ -3020,7 +3082,7 @@ function startPractice(){const s=SUBJ(),doneUnits=Math.max(1,Math.floor(progOf()
 function beginRun(o){PLAY='solo';L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.id===o.cls).lv):lvOf();const s=o.subj||SUBJ();S={id:s.id,name:o.title||s.name,make:()=>o.qs};MODE=o.mode;setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
   const usesHearts=o.kind==='lesson'||o.kind==='test';
   game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?3:(usesHearts&&!P.unlimited?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
-    lesson:Object.assign({},o,{target:o.qs.length,reask:o.kind==='lesson'||o.kind==='practice',answers:0,wrong:0,start:Date.now(),usesHearts})};
+    lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
   show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');
   $('#turn').hidden=true;$('#buzz').hidden=true;$('#teamBar').hidden=true;$('#feedback').hidden=true;
   if(o.mode==='kuis'){$('#stage').hidden=true;$('#arcHint').hidden=true;$('#qcard').classList.remove('arcade');$('#opts').hidden=false;renderQ()}
@@ -3606,7 +3668,7 @@ function setTeacherPass(pw){const t=T();t.pinHash=tHash(pw);delete t.pin;t.upd=D
 function migrateTeacher(){const t=T();if(!t)return;if(!t.user)t.user='guru';if(t.pin&&!t.pinHash){t.pinHash=tHash(t.pin);delete t.pin}}
 const slugBase=n=>String(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'').slice(0,12)||'murid';
 function userTaken(u,exceptId){u=String(u).toLowerCase();return u==='admin'||(T()&&String(T().user||'guru').toLowerCase()===u)||APP.profiles.some(p=>p.id!==exceptId&&String(p.user||'').toLowerCase()===u)}
-function suggestUser(name,exceptId){const b=slugBase(name);if(!userTaken(b,exceptId))return b;for(let i=2;i<999;i++)if(!userTaken(b+i,exceptId))return b+i;return b+R(1000,9999)}
+function suggestUser(name,exceptId){let b=slugBase(name);if(b.length<3)b=(b+'murid').slice(0,Math.max(3,b.length))+String(R(10,99));if(!userTaken(b,exceptId))return b;for(let i=2;i<999;i++)if(!userTaken(b+i,exceptId))return b+i;return b+R(1000,9999)}
 function ensureUsers(){const sorted=APP.profiles.slice().sort((a,b)=>(a.created||0)-(b.created||0));sorted.forEach(p=>{if(!p.user){const b=slugBase(p.name);p.user=userTaken(b,p.id)?b+String(p.id).slice(-3):b}})}
 function closeAuth(){$('#auth').hidden=true}
 function logout(){setSession(null);P=null;ADMIN_TOKEN=null;game=null;document.body.classList.remove('teacher','playing','lessonmode');$('#adminPanel').hidden=true;closeModal();closePop();showWelcome()}
@@ -4129,9 +4191,13 @@ function roomCreateAsk(){const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.
   let n=5;$('#rmUnit').value=String(open-1);$('#rmN').querySelectorAll('button').forEach(b=>b.onclick=()=>{n=+b.dataset.n;$('#rmN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;roomCreate(s,+$('#rmUnit').value,n).then(closeModal).catch(e=>{$('#mYes').disabled=false;$('#rmErr').textContent=window.fbErr?fbErr(e):String(e.message||e)})}}
 const roomMe=()=>({name:P.name,av:P.avatar||null,score:0,c:0,i:0,done:false,t:0,joined:Date.now()});
-async function roomCreate(s,ui,n,bg){const u=s.units[ui];const qs=unitQs(u,n).map(q=>({q:q.q,ans:q.ans,opts:q.opts,exp:q.exp||'',html:q.html||null,say:q.say||null}));
+function roomGames(s,ui){const u=s.units[ui]||s.units[0];return (FIT[u.fit||s.fit]||FIT.long).games}
+async function roomCreate(s,ui,n,bg){const u=s.units[ui];let mode=AJAK.mode||'kuis';const games=roomGames(s,ui);if(mode!=='acak'&&!games.includes(mode))mode=games[0];
+  let raw=mode==='kuis'?unitQs(u,n):unitQs(u,n*3).filter(q=>!q.html).slice(0,n);if(raw.length<n){raw=unitQs(u,n);mode='kuis'}
+  const modes=mode==='acak'?(()=>{const pool=games.slice(),out=[];let bag=[];for(let k=0;k<Math.ceil(n/2);k++){if(!bag.length)bag=shuffle(pool.slice());out.push(bag.pop())}return out})():null;
+  const qs=raw.map(q=>({q:q.q,ans:q.ans,opts:q.opts,exp:q.exp||'',html:q.html||null,say:q.say||null}));
   const uid=FBX.user.uid;let code=null,last=null;
-  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set({host:uid,hostName:P.name,cls:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),status:'lobby',players:{[uid]:roomMe()},created:Date.now()});code=c}catch(e){last=e}}
+  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set({host:uid,hostName:P.name,cls:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),mode,modes,status:'lobby',players:{[uid]:roomMe()},created:Date.now()});code=c}catch(e){last=e}}
   if(!code)throw last;roomOpen(code,bg)}
 async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<6){toast('lock','Kode tantangan 6 huruf.');return}
   let snap;try{snap=await FB.db.doc('rooms/'+code).get()}catch(e){toast('lock',fbErr(e));return}
@@ -4152,7 +4218,7 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
   const link=`${location.origin}${location.pathname}?tantang=${ROOM.code}`;
   el.hidden=false;el.innerHTML=`<div class="onbin" style="max-width:560px;gap:14px">
    <div class="aved-top"><button class="back" id="rmX" aria-label="Tutup">✕</button><h2 style="flex:1">${lobby?'Ruang tantangan':'Hasil tantangan'}</h2></div>
-   <div class="tcard" style="align-items:center;text-align:center;gap:8px"><small style="font-weight:800;color:var(--muted)">${esc(d.subjName)} · ${esc(d.title)} · ${d.n} soal</small><div class="fbcode-big">${ROOM.code}</div>
+   <div class="tcard" style="align-items:center;text-align:center;gap:8px"><small style="font-weight:800;color:var(--muted)">${esc(d.subjName)} · ${esc(d.title)} · ${d.n} soal · ${d.mode==='acak'?'Acak semua game':gameName(d.mode||'kuis')}</small><div class="fbcode-big">${ROOM.code}</div>
      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><a class="primary" style="text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Aku menantangmu di JELAS! ${d.subjName}: ${d.title}. Buka ${link} atau masukkan kode ${ROOM.code} di menu Main Bareng.`)}">Kirim lewat WhatsApp</a><button class="ghost" id="rmCopy">Salin kode</button></div></div>
    <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/8)`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
      ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':`<p class="note" style="margin:0">Peringkat berubah otomatis saat teman selesai bermain.</p>`}</div>
@@ -4167,19 +4233,22 @@ const fmtSec=t=>t?`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`:'';
 function roomStart(){const d=ROOM.doc;let qs=[];try{qs=JSON.parse(d.qs)}catch(e){}if(!qs.length){toast('lock','Soal tantangan tidak bisa dibuka.');return}
   const c=COURSE.find(x=>x.id===d.cls)||CLS(),s=c.subjects.find(x=>x.id===d.subj)||SUBJ();
   ROOM.playing=true;$('#room').hidden=true;closeModal();
-  beginRun({kind:'practice',qs,mode:'kuis',title:`Tantangan · ${d.title}`,subj:s,cls:c.id,room:ROOM.code});
+  ROOM.segs=d.mode==='acak'&&d.modes?d.modes.map((m,k)=>({mode:m,qs:qs.slice(k*2,k*2+2)})).filter(x=>x.qs.length):[{mode:d.mode||'kuis',qs}];
+  ROOM.acc={correct:0,done:0,start:Date.now()};ROOM.ctx={s,c,title:d.title};roomSeg(0);
   clearInterval(ROOM.timer);ROOM.timer=setInterval(roomPush,1500);roomLive()}
-function roomPush(){if(!ROOM.playing||!game||!game.lesson||!game.lesson.room)return;const o=game.lesson,uid=FBX.user.uid,c=Math.max(0,(o.answers||0)-(o.wrong||0)),k=game.i+':'+c;if(k===ROOM.lastPush)return;ROOM.lastPush=k;
-  FB.db.doc('rooms/'+ROOM.code).update({['players.'+uid+'.i']:Math.min(game.i,o.target),['players.'+uid+'.c']:c}).catch(()=>{})}
+function roomSeg(k){const sg=ROOM.segs[k],x=ROOM.ctx;ROOM.seg=k;
+  beginRun({kind:'practice',qs:sg.qs.map(q=>Object.assign({},q)),mode:sg.mode,title:`Tantangan · ${x.title}${ROOM.segs.length>1?` (${k+1}/${ROOM.segs.length})`:''}`,subj:x.s,cls:x.c.id,room:ROOM.code,noReask:true,seg:k,segN:ROOM.segs.length})}
+function roomPush(){if(!ROOM.playing||!game||!game.lesson||!game.lesson.room)return;const o=game.lesson,uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0},c=acc.correct+(game.correct||0),k=(acc.done+game.i)+':'+c;if(k===ROOM.lastPush)return;ROOM.lastPush=k;
+  FB.db.doc('rooms/'+ROOM.code).update({['players.'+uid+'.i']:Math.min(acc.done+game.i,ROOM.doc?ROOM.doc.n:99),['players.'+uid+'.c']:c}).catch(()=>{})}
 function roomLive(){let el=$('#roomLive');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="roomlive" id="roomLive" hidden></div>');el=$('#roomLive')}
   const d=ROOM.doc;if(!d||!ROOM.playing){el.hidden=true;return}const uid=FBX.user.uid;const others=roomRows(d).filter(r=>r.uid!==uid).slice(0,4);
   el.hidden=!others.length;el.innerHTML=others.map(r=>`<span>${avSpan({name:r.name,avatar:r.av})}<b>${esc(r.name.split(' ')[0])}</b><small>${r.done?`selesai ${r.score}`:`${r.i||0}/${d.n}`}</small></span>`).join('')}
-function roomFinish(o){const uid=FBX.user.uid,ok=Math.max(0,o.target-Math.min(o.target,o.wrong)),score=Math.round(ok/o.target*100),t=Math.round((Date.now()-o.start)/1000);
+function roomFinish(o){const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0,start:o.start},total=acc.done+o.target,ok=Math.min(total,acc.correct+(game.correct||0)),score=Math.round(ok/Math.max(1,total)*100),t=Math.round((Date.now()-(acc.start||o.start))/1000);
   clearInterval(ROOM.timer);ROOM.timer=null;ROOM.playing=false;const lv=$('#roomLive');if(lv)lv.hidden=true;
-  FB.db.doc('rooms/'+o.room).update({['players.'+uid]:Object.assign({},(ROOM.doc&&ROOM.doc.players[uid])||roomMe(),{score,c:ok,i:o.target,done:true,t})}).catch(e=>toast('lock','Nilai tantangan belum terkirim: '+fbErr(e)))}
+  FB.db.doc('rooms/'+o.room).update({['players.'+uid]:Object.assign({},(ROOM.doc&&ROOM.doc.players[uid])||roomMe(),{score,c:ok,i:total,done:true,t})}).catch(e=>toast('lock','Nilai tantangan belum terkirim: '+fbErr(e)))}
 
 /* ---------- AJAK TANDING (seperti Duolingo): bagikan, cari nama pengguna, undang teman ---------- */
-const AJAK={ui:null,n:5,sent:{},found:null,inv:[],unsubInv:null};window.AJAK=AJAK;
+const AJAK={ui:null,n:5,mode:'acak',sent:{},found:null,inv:[],unsubInv:null};window.AJAK=AJAK;
 function silhouetteSVG(){return `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="#0E8F63"/><rect x="52" y="70" width="16" height="20" fill="#0E8F63"/><circle cx="60" cy="52" r="29" fill="#0E8F63"/><circle cx="33" cy="54" r="7" fill="#0E8F63"/><circle cx="87" cy="54" r="7" fill="#0E8F63"/><ellipse cx="50" cy="50" rx="7" ry="9" fill="#fff"/><ellipse cx="70" cy="50" rx="7" ry="9" fill="#fff"/><circle cx="52" cy="52" r="4" fill="${AVK}"/><circle cx="72" cy="52" r="4" fill="${AVK}"/><path d="M55 66 Q60 70 66 65" stroke="${AVK}" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`}
 function fbHandleSync(){const m=FBX.me||{};if(!FBX.user||isT()||!P||!m.username)return;const key=JSON.stringify([P.name,P.avatar,P.cls]);if(AJAK.hk===key)return;AJAK.hk=key;
   FB.db.doc('handles/'+m.username).set({uid:FBX.user.uid,name:P.name,av:P.avatar||null,cls:P.cls,upd:Date.now()}).catch(()=>{AJAK.hk=null})}
@@ -4213,6 +4282,7 @@ function openAjak(){if(!P)return;const s=SUBJ(),done=progOf().done,open=Math.max
     <div class="ajhead"><div class="ajbar"><button class="back" id="ajX" aria-label="Tutup">✕</button><h2>Ajak tanding</h2><span style="width:44px"></span></div>
       <div class="ajvs"><div class="ajme">${avatarSVG(P.avatar||null,{nobg:true})}</div><span class="ajv">VS</span><div class="ajyou">${silhouetteSVG()}</div></div></div>
     <div class="ajmat"><select id="ajUnit" aria-label="Materi">${s.units.map((u,i)=>`<option value="${i}" ${i>=open?'disabled':''}>${esc(s.name)} · Unit ${i+1}: ${esc(u.t)}${i>=open?' (terkunci)':''}</option>`).join('')}</select><div class="seg small" id="ajN"><button data-n="5" aria-pressed="${AJAK.n===5}">5 soal</button><button data-n="10" aria-pressed="${AJAK.n===10}">10 soal</button></div></div>
+    <div class="ajgames" id="ajGames"></div>
     <button class="ajopt" id="ajShare"><span class="ajic" style="background:#DDF0FF;color:#1C9BE8"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Bagikan undangan</b></button>
     <div class="ajopt ajsearch"><span class="ajic" style="background:#FFF4D6;color:#E8A100"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><input id="ajQ" placeholder="Cari nama pengguna teman" autocapitalize="none" autocomplete="off" spellcheck="false"><button class="ghost" id="ajGo">Cari</button></div>
     <div id="ajFound"></div>
@@ -4221,6 +4291,10 @@ function openAjak(){if(!P)return;const s=SUBJ(),done=progOf().done,open=Math.max
   el.hidden=false;el.scrollTop=0;hydrate(el);
   $('#ajX').onclick=()=>{el.hidden=true};$('#ajUnit').value=String(AJAK.ui);$('#ajUnit').onchange=e=>{AJAK.ui=+e.target.value;if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2){roomClose(true)}};
   $('#ajN').querySelectorAll('button').forEach(b=>b.onclick=()=>{AJAK.n=+b.dataset.n;$('#ajN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+  const drawGames=()=>{const gs=roomGames(s,AJAK.ui);if(AJAK.mode!=='acak'&&!gs.includes(AJAK.mode))AJAK.mode='acak';
+    $('#ajGames').innerHTML=[['acak','Acak semua game']].concat(gs.map(g=>[g,gameName(g)])).map(([id,nm])=>`<button class="ajg" data-g="${id}" aria-pressed="${AJAK.mode===id}" ${id!=='acak'?`style="--mc:${MCOL[id]||'#9B6BFF'}"`:''}>${id==='acak'?'🎲 ':''}${esc(nm)}</button>`).join('');
+    $('#ajGames').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{AJAK.mode=b.dataset.g;if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2)roomClose(true);drawGames()})};
+  drawGames();const uSel=$('#ajUnit'),oldU=uSel.onchange;uSel.onchange=e=>{oldU&&oldU(e);drawGames()};
   $('#ajShare').onclick=ajakShare;$('#ajGo').onclick=()=>ajakSearch($('#ajQ').value);$('#ajQ').onkeydown=e=>{if(e.key==='Enter')ajakSearch($('#ajQ').value)};
   ajakFoot();ajakLoadFriends()}
 async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
@@ -4262,7 +4336,7 @@ function inviteBox(){let el=$('#invBox');const card=$('#vTeam .roomcard');if(!ca
 const _renderTeamR=renderTeam;
 renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox();setTimeout(notifAsk,600)};
 const _finishRunR=finishRun;
-finishRun=function(){const o=game&&game.lesson;if(o&&o.room&&FBX.user){ROOM.pendingShow=true;roomFinish(o)}_finishRunR()};
+finishRun=function(){const o=game&&game.lesson;if(o&&o.room&&FBX.user){if(o.segN>1&&o.seg<o.segN-1){ROOM.acc.correct+=game.correct||0;ROOM.acc.done+=o.target;clearInterval(timerId);if(arc.running)arcStop();roomSeg(o.seg+1);toast('game',`Game berikutnya: ${gameName(ROOM.segs[o.seg+1].mode)}`);return}ROOM.pendingShow=true;roomFinish(o)}_finishRunR()};
 const _goR=go;
 go=function(tab){_goR(tab);if(!ROOM.code)return;
   if(ROOM.playing&&!game){ROOM.playing=false;clearInterval(ROOM.timer);ROOM.timer=null;const lv=$('#roomLive');if(lv)lv.hidden=true;ROOM.pendingShow=true}
@@ -4465,9 +4539,9 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
 /* ---------- wiring ---------- */
 const cvEl=$('#cv');
 function ptr(e){const r=cvEl.getBoundingClientRect(),z=arc.z||1;return [(e.clientX-r.left)/z,(e.clientY-r.top)/z]}
-cvEl.addEventListener('pointerdown',e=>{if(!arc.running||arc.state!=='play'||!M)return;e.preventDefault();try{cvEl.setPointerCapture(e.pointerId)}catch(_){}arc.pdown=true;const [x,y]=ptr(e);M.down&&M.down(x,y)});
-cvEl.addEventListener('pointermove',e=>{if(!arc.running||arc.state!=='play'||!M)return;const [x,y]=ptr(e);M.move&&M.move(x,y,e.pointerType==='mouse'||arc.pdown)});
-['pointerup','pointercancel','lostpointercapture'].forEach(t=>cvEl.addEventListener(t,()=>{arc.pdown=false}));
+cvEl.addEventListener('pointerdown',e=>{if(!arc.running||arc.state!=='play'||!M)return;e.preventDefault();try{cvEl.setPointerCapture(e.pointerId)}catch(_){}arc.pdown=true;const [x,y]=ptr(e);M.pdown&&M.pdown(e.pointerId,x,y,e.pointerType);M.down&&M.down(x,y)});
+cvEl.addEventListener('pointermove',e=>{if(!arc.running||arc.state!=='play'||!M)return;const [x,y]=ptr(e);M.pmove&&M.pmove(e.pointerId,x,y,e.pointerType);M.move&&M.move(x,y,e.pointerType==='mouse'||arc.pdown)});
+['pointerup','pointercancel','lostpointercapture'].forEach(t=>cvEl.addEventListener(t,e=>{arc.pdown=false;if(M&&M.pup)M.pup(e.pointerId,e.pointerType)}));
 cvEl.addEventListener('touchstart',e=>{if(arc.running)e.preventDefault()},{passive:false});
 cvEl.addEventListener('contextmenu',e=>e.preventDefault());
 window.addEventListener('pointerup',()=>arc.pdown=false);
