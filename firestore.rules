@@ -47,8 +47,8 @@ service cloud.firestore {
         && request.resource.data.get('proUntil', 0) == 0
         && request.resource.data.keys().hasAll(['teacherUid', 'created'])
         && request.resource.data.created is number
-        && request.resource.data.created > request.time.toMillis() - 600000
-        && request.resource.data.created < request.time.toMillis() + 600000
+        && request.resource.data.created > request.time.toMillis() - 86400000
+        && request.resource.data.created < request.time.toMillis() + 86400000
         && request.resource.data.teacherUid == null;
       allow update: if isAdmin()
         || (signedIn() && request.auth.uid == uid
