@@ -1452,6 +1452,30 @@ body.arcfs #quitBtn{min-width:44px;min-height:40px;touch-action:manipulation}
 .buybox{background:#fff;border-radius:22px;border:2px solid var(--line);box-shadow:0 6px 0 var(--line);padding:20px;width:min(380px,100%);display:flex;flex-direction:column;gap:8px;text-align:center;animation:sheetIn .3s cubic-bezier(.2,1.25,.4,1)}
 .buybox h3{margin:0;font-size:22px}.buyprice{margin:0;font-size:22px;font-weight:900;color:#1899D6}
 .buybox .acts{display:flex;gap:10px;margin-top:8px}.buybox .acts>*{flex:1}
+.node.k-sport{background:#FF9600!important;color:#fff}.node.k-sport.done{background:#FFC870!important}.node.k-sport.lock{background:#E5E5E5!important;color:#AFAFAF}
+.node.k-sport.cur{animation:spPulse 1.6s ease-in-out infinite}@keyframes spPulse{50%{transform:scale(1.07)}}
+.sportov{background:#fff!important;z-index:110}
+.spin{max-width:560px;gap:12px;align-items:stretch;text-align:center}
+.sphead h2{margin:6px 0 4px;font-size:26px}.spbadge{display:inline-block;background:#FFF0D6;color:#E57A00;font-weight:900;border-radius:999px;padding:4px 12px;font-size:13px}
+.spsafe{text-align:left;background:#F2F9FF;border:2px solid #CDEBFF;border-radius:16px;padding:10px 14px;font-size:14px}.spsafe ul{margin:4px 0 0;padding-left:18px}
+.spnote{background:#FFF7E2;border:2px solid #FFE3A0;border-radius:14px;padding:8px 12px;font-size:14px;font-weight:700}
+.spweek{display:flex;justify-content:space-between;gap:4px}.spday{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:800;color:#AFAFAF}
+.spday i{width:30px;height:30px;border-radius:50%;background:#F2F2F2;display:grid;place-items:center;font-style:normal;color:#fff;font-weight:900}.spday.on{color:#E57A00}.spday.on i{background:#FF9600}
+.splist{display:grid;grid-template-columns:1fr 1fr;gap:8px}.spitem{display:flex;align-items:center;gap:8px;border:2px solid var(--line);border-radius:14px;padding:6px;text-align:left}
+.spitem .spfig{width:52px;height:52px;flex:none}.spitem b{display:block;font-size:14px}.spitem small{color:var(--muted);font-weight:800}
+.spfig .f1{animation:spB 1s steps(1) infinite}.spfig .f0{animation:spA 1s steps(1) infinite}
+@keyframes spA{0%{opacity:1}50%{opacity:0}}@keyframes spB{0%{opacity:0}50%{opacity:1}}
+.spfig.sp-pl .f1,.spfig.sp-st .f1{animation-duration:3s}.spfig.sp-pl .f0,.spfig.sp-st .f0{animation-duration:3s}
+.spfigbig{width:min(240px,60vw);margin:0 auto;background:#F7FFF0;border-radius:24px;padding:10px}.spfigbig.small{width:140px}
+.spname{margin:4px 0 0;font-size:28px}.spamt{font-size:34px;font-weight:900;color:#FF9600}.spamt small{font-size:16px;color:var(--muted)}
+.sptime{font-variant-numeric:tabular-nums}.sptime.big{font-size:64px;color:#1CB0F6;margin:6px 0}
+.spbar{height:12px;background:#F2F2F2;border-radius:8px;overflow:hidden}.spbar i{display:block;height:100%;background:#FF9600;transition:width 1s linear}
+.sptip{font-size:15px;color:var(--muted);margin:0}
+.spprog{display:flex;gap:6px}.spprog i{flex:1;height:8px;border-radius:6px;background:#F2F2F2}.spprog i.d{background:#58CC02}.spprog i.c{background:#FF9600}
+.spfeel{display:grid;gap:10px}.spfeel button{display:grid;grid-template-columns:44px 1fr;align-items:center;text-align:left;gap:2px 10px;border:2px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 4px 0 var(--line);padding:10px 14px;font:inherit;font-size:28px;cursor:pointer}
+.spfeel button b{font-size:17px}.spfeel button small{grid-column:2;font-size:13px;color:var(--muted);font-weight:700}.spfeel button:active{transform:translateY(4px);box-shadow:none}
+.sprew{display:flex;justify-content:center;gap:10px}.sprew span{background:#FFF0D6;color:#E57A00;font-weight:900;border-radius:999px;padding:6px 14px}
+body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4741,25 +4765,129 @@ function go(tab){curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body
 /* ---------- learning path ---------- */
 const OFFS=[0,-58,-88,-58,0];
 function nodeTitle(s,ui,ni){const nd=NODES[ni];return nd.k==='lesson'?`Pelajaran ${nd.n}`:nd.k==='game'?(MODE_LIST.find(m=>m.id===gameFor(s,ui))||{name:'Game'}).name:nd.k==='chest'?'Peti hadiah':'Ujian unit'}
+/* =========================================================
+   LEVEL OLAHRAGA: diselipkan di setiap unit jalur belajar.
+   Prinsip Atomic Habits: mulai sangat kecil, naik sedikit demi sedikit (1% lebih baik),
+   mudah dilakukan (versi mini 2 menit), memuaskan (hadiah + catatan kebiasaan),
+   jangan berlebihan (jeda antarsesi, batas harian), jangan bolos dua kali.
+   Jumlah gerakan mengikuti kemampuan anak sendiri, bukan kelasnya.
+   ========================================================= */
+const SP_POSE={
+ jj:[{h:[50,13],n:[50,24],p:[50,52],le:[42,35],lh:[36,46],re:[58,35],rh:[64,46],lk:[46,70],lf:[45,88],rk:[54,70],rf:[55,88]},{h:[50,13],n:[50,24],p:[50,52],le:[39,15],lh:[33,5],re:[61,15],rh:[67,5],lk:[41,70],lf:[33,88],rk:[59,70],rf:[67,88]}],
+ hk:[{h:[50,13],n:[50,24],p:[50,52],le:[42,36],lh:[44,46],re:[58,34],rh:[56,24],lk:[42,58],lf:[46,72],rk:[54,70],rf:[54,88]},{h:[50,13],n:[50,24],p:[50,52],le:[42,34],lh:[44,24],re:[58,36],rh:[56,46],lk:[46,70],lf:[46,88],rk:[58,58],rf:[54,72]}],
+ sq:[{h:[50,13],n:[50,24],p:[50,52],le:[58,32],lh:[68,32],re:[58,32],rh:[68,32],lk:[50,70],lf:[50,88],rk:[50,70],rf:[50,88]},{h:[56,32],n:[54,42],p:[42,66],le:[64,46],lh:[74,46],re:[64,46],rh:[74,46],lk:[60,68],lf:[54,88],rk:[60,68],rf:[54,88]}],
+ pu:[{h:[18,44],n:[24,48],p:[58,56],le:[26,58],lh:[26,68],re:[26,58],rh:[26,68],lk:[74,62],lf:[88,68],rk:[74,62],rf:[88,68]},{h:[18,58],n:[24,61],p:[58,63],le:[36,62],lh:[26,68],re:[36,62],rh:[26,68],lk:[74,66],lf:[88,68],rk:[74,66],rf:[88,68]}],
+ pl:[{h:[18,50],n:[24,54],p:[58,57],le:[26,66],lh:[40,68],re:[26,66],rh:[40,68],lk:[74,62],lf:[88,68],rk:[74,62],rf:[88,68]},{h:[18,51],n:[24,55],p:[58,56],le:[26,66],lh:[40,68],re:[26,66],rh:[40,68],lk:[74,62],lf:[88,68],rk:[74,62],rf:[88,68]}],
+ lg:[{h:[50,13],n:[50,24],p:[50,52],le:[46,38],lh:[46,50],re:[54,38],rh:[54,50],lk:[50,70],lf:[50,88],rk:[50,70],rf:[50,88]},{h:[50,26],n:[50,37],p:[50,62],le:[46,50],lh:[46,62],re:[54,50],rh:[54,62],lk:[66,66],lf:[66,88],rk:[40,82],rf:[26,88]}],
+ br:[{h:[12,80],n:[22,82],p:[52,84],le:[34,86],lh:[44,86],re:[34,86],rh:[44,86],lk:[68,66],lf:[78,86],rk:[68,66],rf:[78,86]},{h:[12,80],n:[22,80],p:[52,66],le:[34,86],lh:[44,86],re:[34,86],rh:[44,86],lk:[70,60],lf:[78,86],rk:[70,60],rf:[78,86]}],
+ cr:[{h:[14,80],n:[24,82],p:[52,84],le:[20,72],lh:[16,64],re:[20,72],rh:[16,64],lk:[66,66],lf:[78,86],rk:[66,66],rf:[78,86]},{h:[26,66],n:[32,72],p:[52,84],le:[30,62],lh:[26,56],re:[30,62],rh:[26,56],lk:[66,66],lf:[78,86],rk:[66,66],rf:[78,86]}],
+ mc:[{h:[18,44],n:[24,48],p:[56,56],le:[26,58],lh:[26,68],re:[26,58],rh:[26,68],lk:[44,64],lf:[38,70],rk:[72,62],rf:[88,68]},{h:[18,44],n:[24,48],p:[56,56],le:[26,58],lh:[26,68],re:[26,58],rh:[26,68],lk:[72,62],lf:[88,68],rk:[44,64],rf:[38,70]}],
+ st:[{h:[50,13],n:[50,24],p:[50,52],le:[44,14],lh:[42,4],re:[56,14],rh:[58,4],lk:[48,70],lf:[47,88],rk:[52,70],rf:[53,88]},{h:[62,64],n:[60,54],p:[46,52],le:[60,66],lh:[56,80],re:[60,66],rh:[56,80],lk:[48,70],lf:[47,88],rk:[52,70],rf:[53,88]}]};
+const SP_EX={
+ jj:{n:'Jumping jack',g:'pemanasan',t:'time',b:10,s:2,m:60,tip:'Lompat sambil membuka kaki dan mengangkat tangan ke atas, lalu kembali rapat. Mendarat pelan dengan ujung kaki.'},
+ hk:{n:'Lari di tempat',g:'pemanasan',t:'time',b:10,s:2,m:60,tip:'Angkat lutut bergantian setinggi pinggang sambil mengayun tangan, seperti berlari di tempat.'},
+ sq:{n:'Squat',g:'kaki',t:'rep',b:3,s:1,m:25,tip:'Kaki selebar bahu. Turunkan pinggul seperti mau duduk di kursi, punggung tetap lurus, lalu berdiri lagi.'},
+ lg:{n:'Lunges',g:'kaki',t:'rep',b:2,s:1,m:12,per:'per kaki',tip:'Langkahkan satu kaki ke depan, tekuk kedua lutut pelan-pelan, lalu kembali berdiri. Ganti kaki.'},
+ br:{n:'Angkat panggul',g:'kaki',t:'rep',b:4,s:1,m:20,tip:'Berbaring telentang, lutut ditekuk. Angkat panggul sampai badan lurus dari bahu ke lutut, tahan sebentar, turunkan.'},
+ pu:{n:'Push-up',g:'atas',t:'rep',b:4,s:1,m:20,tip:'Badan lurus seperti papan. Tekuk siku untuk menurunkan dada, lalu dorong kembali ke atas.'},
+ pl:{n:'Plank',g:'inti',t:'time',b:8,s:2,m:60,tip:'Bertumpu pada siku dan ujung kaki. Badan lurus, perut dikencangkan, jangan menahan napas.'},
+ cr:{n:'Crunch',g:'inti',t:'rep',b:3,s:1,m:20,tip:'Berbaring, lutut ditekuk. Angkat kepala dan bahu sedikit sambil mengencangkan perut, lalu turunkan pelan.'},
+ mc:{n:'Mountain climber',g:'inti',t:'time',b:8,s:2,m:40,tip:'Posisi push-up, lalu tarik lutut ke dada bergantian dengan cepat tapi terkendali.'},
+ st:{n:'Peregangan',g:'pendinginan',t:'time',b:20,s:0,m:20,tip:'Angkat tangan tinggi-tinggi, lalu bungkukkan badan pelan-pelan dan sentuh lutut atau ujung kaki. Tarik napas dalam.'}};
+function spFit(){P.fit=P.fit||{lv:{},days:{},n:0,last:0,intro:false};P.fit.lv=P.fit.lv||{};P.fit.days=P.fit.days||{};return P.fit}
+function spAmount(id,mini){const e=SP_EX[id],lv=spFit().lv[id]||0;let name=e.n,amt;
+  if(id==='pu'){if(lv<6){name='Push-up dinding';amt=4+lv*2}else if(lv<12){name='Push-up lutut';amt=3+(lv-6)}else{amt=Math.min(e.m,2+(lv-12))}}
+  else amt=Math.min(e.m,e.b+e.s*lv);
+  if(mini)amt=Math.max(e.t==='time'?5:1,Math.round(amt/2));return {id,name,amt,t:e.t,per:e.per||'',tip:e.tip}}
+function spPlan(mini){const f=spFit(),n=f.n||0;const warm=n%2?'hk':'jj';const groups=[['sq','lg','br'],['pu','pl'],['cr','mc','pl']];
+  const a=groups[n%3],b=groups[(n+1)%3];const x=a[Math.floor(n/3)%a.length],y=b.filter(k=>k!==x)[Math.floor(n/2)%b.filter(k=>k!==x).length];
+  return [warm,x,y,'st'].map(id=>spAmount(id,mini))}
+function spKey(ui){return `${P.cls}/${SUBJ().id}/${ui}`}
+function spDone(ui){const pr=progOf(),base=ui*NODES.length;return !!((P.sportDone||{})[spKey(ui)])||pr.done>base+2}
+function spPending(ui){const pr=progOf(),base=ui*NODES.length;return pr.done===base+2&&!spDone(ui)}
+function spToday(){const d=spFit().days[dayKey()];return typeof d==='number'?d:(d?1:0)}
+function spRestLeft(){const f=spFit();return Math.max(0,90*60e3-(Date.now()-(f.last||0)))}
+function spFigure(id){const ps=SP_POSE[id]||SP_POSE.jj;const L=(p,a,b)=>`<line x1="${p[a][0]}" y1="${p[a][1]}" x2="${p[b][0]}" y2="${p[b][1]}"/>`;
+  const fr=(p,k)=>`<g class="spf f${k}">${L(p,'n','p')}${L(p,'n','le')}${L(p,'le','lh')}${L(p,'n','re')}${L(p,'re','rh')}${L(p,'p','lk')}${L(p,'lk','lf')}${L(p,'p','rk')}${L(p,'rk','rf')}<circle cx="${p.h[0]}" cy="${p.h[1]}" r="7" fill="#FFC800" stroke="#3C3C3C" stroke-width="3"/></g>`;
+  const floor=['pu','pl','br','cr','mc'].includes(id)?'<line x1="4" y1="90" x2="96" y2="90" stroke="#E5E5E5" stroke-width="3"/>':'<line x1="20" y1="91" x2="80" y2="91" stroke="#E5E5E5" stroke-width="3"/>';
+  return `<svg viewBox="0 0 100 100" class="spfig sp-${id}" stroke="#58CC02" stroke-width="5.5" stroke-linecap="round" fill="none" aria-hidden="true">${floor}${fr(ps[0],0)}${fr(ps[1],1)}</svg>`}
+function sportPop(ui,row){const pend=spPending(ui),done=spDone(ui),rest=spRestLeft(),cap=spToday()>=3;let p,btn='';
+  if(!pend&&!done){p='Selesaikan level di atasnya untuk membuka level olahraga.'}
+  else{const plan=spPlan(false);p=`Gerak badan sebentar, kira-kira 2 menit: ${plan.map(x=>x.name).join(', ')}.`;btn=done?'Olahraga lagi':'Mulai olahraga +10 XP'}
+  if(pend&&(rest>0&&spFit().last||cap)){p=cap?'Kamu sudah olahraga 3 kali hari ini. Hebat! Badan juga butuh istirahat, jadi lanjut belajar saja.':`Kamu sudah olahraga ${Math.round((90*60e3-rest)/60e3)} menit lalu. Istirahat dulu, nanti olahraga lagi di level berikutnya.`;btn='Lanjut belajar'}
+  row.insertAdjacentHTML('beforeend',`<div class="npop ${!pend&&!done?'lock':''}"><b>Level Olahraga</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:''}</div>`);row.classList.add('popopen');
+  const g=$('#nodeGo');if(g)g.onclick=e=>{e.stopPropagation();closePop();if(pend&&(cap||(rest>0&&spFit().last))){P.sportDone=P.sportDone||{};P.sportDone[spKey(ui)]=1;save();renderPath();toast('check','Level olahraga dilewati untuk istirahat.');return}openSport(ui)};
+  row.querySelector('.npop').onclick=e=>e.stopPropagation();
+  {const np=row.querySelector('.npop');const rr=row.getBoundingClientRect(),w=np.offsetWidth,cx=rr.left+rr.width/2,W=document.documentElement.clientWidth,m=12;let dx=0;if(cx-w/2<m)dx=m-(cx-w/2);else if(cx+w/2>W-m)dx=W-m-(cx+w/2);if(dx)np.style.setProperty('--dx',Math.round(dx)+'px')}}
+const SPT={timer:null};
+function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb sportov" id="sportOv" hidden></div>');el=$('#sportOv')}
+  const st={ui,mini:false,plan:null,k:0,phase:'intro',left:0};const stop=()=>{clearInterval(SPT.timer);SPT.timer=null};
+  const close=()=>{stop();el.hidden=true;document.body.classList.remove('sporting')};
+  const yest=dayKey(new Date(Date.now()-864e5)),missed=f.n>0&&!f.days[yest]&&!f.days[dayKey()];
+  const week=()=>{const out=[];for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*864e5),k=dayKey(d);out.push(`<span class="spday ${f.days[k]?'on':''}"><i>${f.days[k]?'✓':''}</i>${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</span>`)}return out.join('')};
+  const render=()=>{const ex=st.plan&&st.plan[st.k];let body='';
+   if(st.phase==='intro'){const plan=spPlan(false);body=`<div class="sphead"><span class="spbadge">🏃 Level Olahraga</span><h2>Waktunya gerak badan!</h2><p class="note">Sebentar saja, sekitar 2 menit. Jumlahnya disesuaikan dengan kemampuanmu dan naik sedikit demi sedikit.</p></div>
+     ${!f.intro?`<div class="spsafe"><b>Sebelum mulai</b><ul><li>Cari tempat lapang dan lantai yang tidak licin.</li><li>Berhenti kalau terasa sakit atau pusing.</li><li>Minum air putih setelahnya.</li></ul></div>`:''}
+     ${missed?`<div class="spnote">Kemarin kamu belum olahraga. Tidak apa-apa, yang penting jangan bolos dua kali. Ayo mulai lagi hari ini!</div>`:''}
+     <div class="spweek">${week()}</div>
+     <div class="splist">${plan.map((x,i)=>`<div class="spitem">${spFigure(x.id)}<span><b>${esc(x.name)}</b><small>${x.t==='time'?x.amt+' detik':x.amt+' kali'+(x.per?' '+x.per:'')}</small></span></div>`).join('')}</div>
+     <button class="primary press" id="spGo">Mulai</button><button class="ghost" id="spMini">Lagi kurang semangat? Versi mini (setengahnya)</button>`}
+   else if(st.phase==='ex'||st.phase==='ready'){const timeEx=ex.t==='time';const pct=timeEx?Math.max(0,st.left/ex.amt):0;
+     body=`<div class="spprog">${st.plan.map((x,i)=>`<i class="${i<st.k?'d':i===st.k?'c':''}"></i>`).join('')}</div>
+     <div class="spfigbig">${spFigure(ex.id)}</div><h2 class="spname">${esc(ex.name)}</h2>
+     <div class="spamt">${timeEx?(st.phase==='ready'?ex.amt+' detik':`<span class="sptime">${st.left}</span> detik`):ex.amt+' kali'+(ex.per?` <small>${ex.per}</small>`:'')}</div>
+     ${timeEx&&st.phase==='ex'?`<div class="spbar"><i style="width:${pct*100}%"></i></div>`:''}
+     <p class="sptip">${esc(ex.tip)}</p>
+     ${timeEx?(st.phase==='ready'?`<button class="primary press" id="spStart">Mulai ${ex.amt} detik</button>`:`<button class="ghost" id="spSkip">Lewati gerakan ini</button>`):`<button class="primary press" id="spDone">Selesai ✓</button><button class="ghost" id="spSkip">Lewati gerakan ini</button>`}`}
+   else if(st.phase==='rest'){const nx=st.plan[st.k];body=`<div class="sphead"><span class="spbadge">Istirahat</span><h2 class="sptime big">${st.left}</h2><p class="note">Tarik napas dalam. Berikutnya: <b>${esc(nx.name)}</b> ${nx.t==='time'?nx.amt+' detik':nx.amt+' kali'}</p></div><div class="spfigbig small">${spFigure(nx.id)}</div><button class="primary press" id="spNext">Lanjut sekarang</button>`}
+   else if(st.phase==='feel'){body=`<div class="sphead"><span class="spbadge">🎉 Selesai!</span><h2>Bagaimana rasanya?</h2><p class="note">Jawabanmu dipakai untuk mengatur jumlah gerakan berikutnya.</p></div>
+     <div class="spfeel"><button data-f="easy">😎<b>Terlalu mudah</b><small>Tambah lebih banyak</small></button><button data-f="ok">🙂<b>Pas</b><small>Naik sedikit</small></button><button data-f="hard">😮‍💨<b>Berat</b><small>Kurangi dulu</small></button></div>`}
+   else if(st.phase==='end'){body=`<div class="sphead"><div class="mascot" data-mascot data-mood="happy" style="width:120px;margin:0 auto"></div><h2>Kamu anak yang aktif!</h2><p class="note">Hari ini kamu sudah bergerak. Sedikit demi sedikit, badanmu makin kuat. Setiap hari 1% lebih baik.</p></div>
+     <div class="spweek">${week()}</div><div class="sprew"><span>+10 XP</span><span>+5 permata</span></div><button class="primary press" id="spEnd">Lanjut belajar</button>`}
+   el.innerHTML=`<div class="onbin spin"><div class="aved-top"><button class="back" id="spX" aria-label="Tutup">✕</button><span style="flex:1"></span></div>${body}</div>`;hydrate(el);
+   $('#spX').onclick=()=>{if(st.phase==='end'||st.phase==='intro'){close();return}openModal(`<h3>Berhenti olahraga?</h3><p>Sedikit lagi selesai. Kalau berhenti, level ini belum dihitung.</p><div class="acts"><button class="primary" id="mNo">Lanjut olahraga</button><button class="ghost" id="mYes">Berhenti</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();close()}};
+   const go=$('#spGo');if(go)go.onclick=()=>{st.plan=spPlan(false);st.k=0;begin()};const mi=$('#spMini');if(mi)mi.onclick=()=>{st.mini=true;st.plan=spPlan(true);st.k=0;begin()};
+   const sS=$('#spStart');if(sS)sS.onclick=()=>runTimer(ex.amt,()=>next());
+   const sD=$('#spDone');if(sD)sD.onclick=()=>{tone([660,990],.06);try{haptic([30,40,30])}catch(e){}next()};
+   const sK=$('#spSkip');if(sK)sK.onclick=()=>{stop();next()};
+   const sN=$('#spNext');if(sN)sN.onclick=()=>{stop();st.phase=st.plan[st.k].t==='time'?'ready':'ex';render();sayEx()};
+   el.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>feel(b.dataset.f));
+   const sE=$('#spEnd');if(sE)sE.onclick=()=>{close();renderPath();renderTop();setTimeout(scrollToCurrent,200)}};
+  const sayEx=()=>{const ex=st.plan[st.k];try{if(soundOn)say(`${ex.name}, ${ex.t==='time'?ex.amt+' detik':ex.amt+' kali'}`)}catch(e){}};
+  const begin=()=>{f.intro=true;st.phase=st.plan[0].t==='time'?'ready':'ex';render();sayEx()};
+  const runTimer=(sec,done)=>{stop();st.phase='ex';st.left=sec;render();let pre=3;const amt=el.querySelector('.spamt');amt.innerHTML=`<span class="sptime">Siap… 3</span>`;tone([520],.03);
+   SPT.timer=setInterval(()=>{if(pre>0){pre--;if(pre>0){amt.innerHTML=`<span class="sptime">Siap… ${pre}</span>`;tone([520],.03)}else{amt.innerHTML=`<span class="sptime">${st.left}</span> detik`;tone([880],.06)}return}
+    st.left--;const t=el.querySelector('.sptime'),bb=el.querySelector('.spbar i');if(t)t.textContent=Math.max(0,st.left);if(bb)bb.style.width=(Math.max(0,st.left)/sec*100)+'%';if(st.left<=3&&st.left>0)tone([600],.03);
+    if(st.left<=0){stop();tone([660,990,1320],.06);try{haptic([60,40,60])}catch(e){}done()}},1000)};
+  const next=()=>{st.k++;if(st.k>=st.plan.length){st.phase='feel';render();return}stop();st.phase='rest';st.left=10;render();SPT.timer=setInterval(()=>{st.left--;const t=el.querySelector('.sptime');if(t)t.textContent=Math.max(0,st.left);if(st.left<=0){stop();st.phase=st.plan[st.k].t==='time'?'ready':'ex';render();sayEx()}},1000)};
+  const feel=fx=>{const main=st.plan.slice(1,3).map(x=>x.id);const warm=st.plan[0].id;
+   main.concat(warm).forEach(id=>{const cur=f.lv[id]||0;let d=fx==='easy'?2:fx==='ok'?1:-1;if(st.mini&&d>0)d=0;f.lv[id]=Math.max(0,cur+d)});
+   f.n=(f.n||0)+1;f.last=Date.now();f.days[dayKey()]=spToday()+1;P.sportDone=P.sportDone||{};P.sportDone[spKey(st.ui)]=1;
+   addXp(10);P.gems=(P.gems||0)+5;save();try{sfx.win()}catch(e){}st.phase='end';render();setTimeout(()=>{try{burstConfetti()}catch(e){}},200)};
+  st.phase='intro';render();el.hidden=false;el.scrollTop=0;document.body.classList.add('sporting')}
+
 function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
   s.units.forEach((u,ui)=>{const base=ui*NODES.length,locked=done<base,sign=ui%2?-1:1;
     h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}">${ico('book')}Panduan</button></div><div class="nodes">`;
-    NODES.forEach((nd,ni)=>{const idx=base+ni,st=idx<done?'done':idx===done?'cur':'lock';
-      h+=`<div class="nrow" style="--x:${OFFS[ni]*sign}px" data-u="${ui}" data-n="${ni}">${st==='cur'?`<span class="starttip">${done===0?'MULAI':nd.k==='chest'?'BUKA':'LANJUT'}</span>`:''}<button class="node ${st} k-${nd.k}" aria-label="${esc(nodeTitle(s,ui,ni))}">${ico(nd.k==='chest'&&st==='done'?'chestOpen':NODE_ICON[nd.k])}</button></div>`});
+    const spP=spPending(ui),spD=spDone(ui);
+    NODES.forEach((nd,ni)=>{const idx=base+ni;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spP)st='lock';
+      h+=`<div class="nrow" style="--x:${OFFS[ni]*sign}px" data-u="${ui}" data-n="${ni}">${st==='cur'?`<span class="starttip">${done===0?'MULAI':nd.k==='chest'?'BUKA':'LANJUT'}</span>`:''}<button class="node ${st} k-${nd.k}" aria-label="${esc(nodeTitle(s,ui,ni))}">${ico(nd.k==='chest'&&st==='done'?'chestOpen':NODE_ICON[nd.k])}</button></div>`;
+      if(ni===1){const ss=spD?'done':spP?'cur':'lock';h+=`<div class="nrow sprow" style="--x:${-OFFS[ni]*sign*.3}px" data-u="${ui}" data-sport="1">${ss==='cur'?'<span class="starttip">OLAHRAGA</span>':''}<button class="node ${ss} k-sport" aria-label="Level olahraga"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="29" cy="8" r="4.5" fill="currentColor" stroke="none"/><path d="M16 22l8-6 6 4 6 6M24 16l-4 12 8 6-2 10M20 28l-6 10H8"/></svg></button></div>`}});
     h+=`<div class="deco ${sign>0?'r':'l'}" style="--dy:${24+ui%3*10}%"><div class="mascot" data-mascot data-mood="idle"></div></div></div></div>`});
   if(done>=totalNodes(s))h+=`<div class="pathend">Semua unit ${esc(s.name)} selesai! Pilih mata pelajaran lain di kiri atas.</div>`;
   $('#path').innerHTML=h;hydrate($('#path'));
-  $('#path').querySelectorAll('.node').forEach(b=>b.onclick=e=>{e.stopPropagation();const row=b.parentElement;const open=row.classList.contains('popopen');closePop();if(!open)nodePop(+row.dataset.u,+row.dataset.n,row)});
+  $('#path').querySelectorAll('.node').forEach(b=>b.onclick=e=>{e.stopPropagation();const row=b.parentElement;const open=row.classList.contains('popopen');closePop();if(open)return;if(row.dataset.sport)sportPop(+row.dataset.u,row);else nodePop(+row.dataset.u,+row.dataset.n,row)});
   $('#path').querySelectorAll('.guide').forEach(b=>b.onclick=()=>openGuide(+b.dataset.guide));
 }
 function scrollToCurrent(){const n=document.querySelector('.node.cur');if(n&&!$('#vLearn').hidden){const r=n.getBoundingClientRect();window.scrollTo({top:Math.max(0,window.scrollY+r.top-window.innerHeight*.45),behavior:'smooth'})}}
-function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,done=progOf().done,st=idx<done?'done':idx===done?'cur':'lock';
+function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,done=progOf().done;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spPending(ui))st='lock';
   let t='',p='',btn='';
   if(nd.k==='lesson'){t=`Pelajaran ${nd.n} dari 2`;p=nd.n===1?`${u.t} · 5 soal`:`${u.t} · 5 soal termasuk ulasan unit sebelumnya`;btn=st==='done'?'Ulangi +5 XP':'Mulai +10 XP'}
   if(nd.k==='game'){const m=MODE_LIST.find(x=>x.id===gameFor(s,ui));t=m.id==='kuis'?'Kuis bergambar':`Level game: ${m.name}`;p=`${m.desc}. 6 soal, lulus dengan 3 jawaban benar.`;btn=st==='done'?'Main lagi +5 XP':'Main +10 XP'}
   if(nd.k==='chest'){t='Peti hadiah';p=st==='done'?'Peti ini sudah kamu buka.':'Berisi permata untuk belanja di Toko.';btn=st==='cur'?'Buka peti':''}
   if(nd.k==='test'){t=`Ujian Unit ${ui+1}`;p='8 soal dari unit ini dan unit sebelumnya. Lulus dengan 70% benar.';btn=st==='done'?'Ulangi ujian +8 XP':'Mulai ujian +15 XP'}
   if(st==='lock'){p='Selesaikan semua level di atasnya untuk membuka level ini.';btn=''}
+  if(ni===2&&spPending(ui)&&st!=='done'){p='Selesaikan dulu level olahraga di atasnya, sebentar saja kok!';btn=''}
   row.insertAdjacentHTML('beforeend',`<div class="npop ${st==='lock'?'lock':''}"><b>${esc(t)}</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:''}</div>`);row.classList.add('popopen');
   const g=$('#nodeGo');if(g)g.onclick=e=>{e.stopPropagation();closePop();startNode(ui,ni)};
   row.querySelector('.npop').onclick=e=>e.stopPropagation();
@@ -4772,6 +4900,7 @@ function openGuide(ui){const s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);
 /* ---------- starting a level ---------- */
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
   if(idx>pr.done)return;
+  if(ni===2&&spPending(ui)){openSport(ui);return}
   if(nd.k==='chest'){openChest(idx);return}
   if(nd.k!=='game'&&!P.unlimited&&P.hearts<=0){openHearts();return}
   const prev=s.units.slice(0,ui);const review=k=>prev.length?Array.from({length:k},()=>unitQs(pick(prev),1)[0]):unitQs(u,k);
