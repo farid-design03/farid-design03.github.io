@@ -1174,6 +1174,30 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
 .aved-foot{position:sticky;bottom:0;background:linear-gradient(transparent,rgba(255,255,255,.9) 30%);padding-top:14px}
 .aved-foot .primary{width:100%;font-size:20px;padding:12px}
 @media (max-width:999px){body:not([data-tab="learn"]) #statsBar{display:none}body:not([data-tab="learn"]) .main.wrap{padding-top:calc(14px + env(safe-area-inset-top, 0px))}}
+/* ---- pensil avatar, navigasi HP ikon saja, main bareng online ---- */
+.pban-edit{width:46px;height:46px;padding:0;justify-content:center;border-radius:50%}.pban-edit svg{width:22px;height:22px}
+@media (max-width:999px){
+ .side .nav span{display:none}
+ .side .nav{padding:9px 2px;flex:1 1 0;min-width:0}
+ .side .nav i{width:34px;height:34px;position:relative}
+ body.teacher .side .nav{flex:1 1 0;min-width:0;padding:8px 0}
+ body.teacher .side .nav i{width:30px;height:30px}
+ body.teacher .side{justify-content:space-around;overflow-x:visible}
+ body.fb-free .nav.tnav[data-tab=tatt] i::after,body.fb-free .nav.tnav[data-tab=teval] i::after,body.fb-free .nav.tnav[data-tab=tbank] i::after,body.fb-free .nav.tnav[data-tab=trapor] i::after{content:'';position:absolute;right:-3px;top:-2px;width:9px;height:9px;border-radius:50%;background:var(--orange,#FF8A3D);border:2px solid #fff}
+}
+.roomcard{padding:16px;display:flex;flex-direction:column;gap:12px}
+.roomcard-h{display:flex;gap:12px;align-items:center}
+.roomcard-b{display:flex;gap:10px;flex-wrap:wrap}.roomcard-b .primary{flex:1 1 160px}
+.roomjoin{display:flex;gap:8px;flex:1 1 220px;min-width:0;max-width:100%}.roomjoin input{flex:1 1 auto;width:0;min-width:0}.roomjoin button{flex:none}
+.roomov{z-index:96}
+.roomrows{display:flex;flex-direction:column;gap:6px}
+.roomlive{position:fixed;z-index:70;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:94vw}
+.roomlive span{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:3px 10px 3px 3px;box-shadow:0 3px 0 var(--ink);font-size:13px}
+.roomlive .avatar{width:26px;height:26px;border-width:2px;font-size:12px}.roomlive small{color:var(--muted);font-weight:800}
+/* ---- layar evaluasi tanpa menu ---- */
+body[data-tab="trun"] .side,body[data-tab="trun"] #practiceFab{display:none!important}
+body.teacher[data-tab="trun"] .app{display:block;max-width:none}
+body[data-tab="trun"] .main.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:40px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3063,7 +3087,7 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
 function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done/NODES.length);return n}
 function renderProfile(){const t=tierOf(P);
   if(!P.avatar){P.avatar=avNorm(null);P.color=avBgColor(P.avatar)}
-  $('#profileTop').innerHTML=`<div class="pban" style="--av:${avBgColor(P.avatar)}"><div class="pban-av">${avatarSVG(P.avatar,{nobg:true})}</div><button class="pban-edit press" id="avEdit"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20 L5 15 L16 4 L20 8 L9 19Z M14 6 L18 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>Ubah avatar</button></div>
+  $('#profileTop').innerHTML=`<div class="pban" style="--av:${avBgColor(P.avatar)}"><div class="pban-av">${avatarSVG(P.avatar,{nobg:true})}</div><button class="pban-edit press" id="avEdit" aria-label="Ubah avatar" title="Ubah avatar"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20 L5 15 L16 4 L20 8 L9 19Z M14 6 L18 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg></button></div>
    <div class="pinfo"><input id="pName" maxlength="20" value="${esc(P.name)}" aria-label="Nama"><p>${P.user?'@'+esc(P.user)+' · ':''}Bergabung ${new Date(P.created).toLocaleDateString('id-ID',{month:'long',year:'numeric'})} · ${CLS().full}</p></div>`;
   $('#avEdit').onclick=openAvatarEditor;
   $('#pName').onchange=e=>{const v=e.target.value.trim();if(v){P.name=v;save();renderProfile()}};
@@ -3665,6 +3689,7 @@ const isPro=()=>isPaid()||inTrial();
 window.fbPlanLabel=()=>isPaid()?'Pro':inTrial()?`Coba Pro ${trialLeft()} hari`:'Gratis';
 const isT=()=>!!(SESSION&&SESSION.role==='teacher');
 const fbErr=e=>{const c=String((e&&e.code)||'');return /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(c)?'Nama pengguna atau sandi salah.':/too-many/.test(c)?'Terlalu banyak percobaan. Tunggu beberapa menit, lalu coba lagi.':/network|unavailable/.test(c)?'Tidak tersambung ke internet. Periksa koneksi, lalu coba lagi.':/email-already/.test(c)?'Email ini sudah terdaftar. Silakan masuk.':/weak-password/.test(c)?'Sandi minimal 6 karakter.':/requires-recent-login/.test(c)?'Demi keamanan, keluar lalu masuk lagi sebelum mengganti sandi.':/permission/.test(c)?'Akses ditolak.':(e&&e.message)||String(e)};
+window.fbErr=fbErr;
 const busy=(on,msg)=>{const l=$('#loading');if(!l)return;l.hidden=!on;if(on){const h=l.querySelector('h2'),p=l.querySelector('p');if(h)h.textContent=msg||'Memuat…';if(p)p.textContent='Menyambungkan akunmu'}};
 const timeout=(pr,ms)=>Promise.race([pr,new Promise(r=>setTimeout(r,ms))]);
 
@@ -3709,12 +3734,12 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
-window.fbAfterSignup=function(){FBX.busy=false;fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+window.fbAfterSignup=function(){FBX.busy=false;fbHideAuth();afterLogin();fbListenStudent();window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
@@ -4065,6 +4090,80 @@ function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT(
   FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,av:P.avatar||null,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
 
 
+/* ---------- MAIN BARENG ONLINE: tantang teman dari jarak jauh ---------- */
+const ROOM={code:null,doc:null,unsub:null,playing:false,timer:null,lastPush:'',shown:false};window.ROOM=ROOM;
+function roomCard(){return `<div class="card roomcard"><div class="roomcard-h"><span style="width:46px;flex:none">${ICONS.team}</span><div style="flex:1;min-width:180px"><h3>Main bareng online</h3><p class="note" style="margin:0">Tantang teman dari HP masing-masing. Semua pemain mendapat soal yang sama, peringkatnya terlihat langsung.</p></div></div>
+  <div class="roomcard-b"><button class="primary" id="rmNew">Buat tantangan</button><div class="roomjoin"><input id="rmCode" class="fbcodein" maxlength="6" placeholder="KODE" autocomplete="off" autocapitalize="characters"><button class="ghost" id="rmJoin">Gabung</button></div></div></div>`}
+function bindRoomCard(){const n=$('#rmNew');if(!n)return;n.onclick=roomCreateAsk;$('#rmJoin').onclick=()=>roomJoin($('#rmCode').value);$('#rmCode').onkeydown=e=>{if(e.key==='Enter')roomJoin($('#rmCode').value)}}
+function roomCreateAsk(){const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.min(s.units.length,Math.floor(done/NODES.length)+1));
+  openModal(`<h3>Buat tantangan</h3><p>Pelajaran: <b>${esc(s.name)}</b> (${esc(CLS().full)})</p>
+   <div class="tfield"><label for="rmUnit">Materi</label><select id="rmUnit">${s.units.map((u,i)=>`<option value="${i}" ${i>=open?'disabled':''}>Unit ${i+1}: ${esc(u.t)}${i>=open?' (terkunci)':''}</option>`).join('')}</select></div>
+   <div class="tfield"><label>Jumlah soal</label><div class="seg small" id="rmN"><button data-n="5" aria-pressed="true">5 soal</button><button data-n="10" aria-pressed="false">10 soal</button></div></div>
+   <p class="note" id="rmErr" style="color:var(--bad);font-weight:700"></p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat ruang</button></div>`);
+  let n=5;$('#rmUnit').value=String(open-1);$('#rmN').querySelectorAll('button').forEach(b=>b.onclick=()=>{n=+b.dataset.n;$('#rmN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;roomCreate(s,+$('#rmUnit').value,n).then(closeModal).catch(e=>{$('#mYes').disabled=false;$('#rmErr').textContent=window.fbErr?fbErr(e):String(e.message||e)})}}
+const roomMe=()=>({name:P.name,av:P.avatar||null,score:0,c:0,i:0,done:false,t:0,joined:Date.now()});
+async function roomCreate(s,ui,n){const u=s.units[ui];const qs=unitQs(u,n).map(q=>({q:q.q,ans:q.ans,opts:q.opts,exp:q.exp||'',html:q.html||null,say:q.say||null}));
+  const uid=FBX.user.uid;let code=null,last=null;
+  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set({host:uid,hostName:P.name,cls:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),status:'lobby',players:{[uid]:roomMe()},created:Date.now()});code=c}catch(e){last=e}}
+  if(!code)throw last;roomOpen(code)}
+async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<6){toast('lock','Kode tantangan 6 huruf.');return}
+  let snap;try{snap=await FB.db.doc('rooms/'+code).get()}catch(e){toast('lock',fbErr(e));return}
+  if(!snap.exists){toast('lock','Tantangan tidak ditemukan. Periksa lagi kodenya.');return}const d=snap.data(),uid=FBX.user.uid;
+  if(Date.now()-(d.created||0)>3*864e5){toast('lock','Tantangan ini sudah kedaluwarsa.');return}
+  if(!d.players[uid]){if(Object.keys(d.players).length>=8){toast('lock','Ruang ini sudah penuh (8 pemain).');return}
+    try{await FB.db.doc('rooms/'+code).update({['players.'+uid]:roomMe()})}catch(e){toast('lock',fbErr(e));return}}
+  roomOpen(code)}
+function roomOpen(code){roomClose(true);ROOM.code=code;ROOM.shown=false;try{history.replaceState(history.state,'',location.pathname)}catch(e){}
+  let el=$('#room');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb roomov" id="room" hidden></div>');el=$('#room')}el.hidden=false;el.innerHTML='<div class="onbin" style="justify-content:center;align-items:center"><p class="note">Membuka ruang…</p></div>';
+  ROOM.unsub=FB.db.doc('rooms/'+code).onSnapshot(s=>{if(!s.exists){roomClose();toast('lock','Ruang tantangan ditutup oleh pembuatnya.');return}ROOM.doc=s.data();roomRender()},e=>{roomClose();toast('lock',fbErr(e))})}
+function roomClose(silent){if(ROOM.unsub){try{ROOM.unsub()}catch(e){}}ROOM.unsub=null;clearInterval(ROOM.timer);ROOM.timer=null;ROOM.code=null;ROOM.doc=null;ROOM.playing=false;const el=$('#room');if(el)el.hidden=true;const lv=$('#roomLive');if(lv)lv.hidden=true}
+function roomRows(d){return Object.entries(d.players||{}).map(([uid,p])=>Object.assign({uid},p)).sort((a,b)=>(b.done-a.done)||(b.score-a.score)||(a.t||9e9)-(b.t||9e9)||(b.c-a.c))}
+function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.players[uid];if(!me){roomClose();return}const host=d.host===uid;if(ROOM.pendingShow&&!ROOM.playing)return;
+  if(d.status==='play'&&!me.done&&!ROOM.playing){roomStart();return}
+  if(ROOM.playing){roomLive();return}
+  const rows=roomRows(d),all=rows.every(r=>r.done),lobby=d.status==='lobby';
+  const link=`${location.origin}${location.pathname}?tantang=${ROOM.code}`;
+  el.hidden=false;el.innerHTML=`<div class="onbin" style="max-width:560px;gap:14px">
+   <div class="aved-top"><button class="back" id="rmX" aria-label="Tutup">✕</button><h2 style="flex:1">${lobby?'Ruang tantangan':'Hasil tantangan'}</h2></div>
+   <div class="tcard" style="align-items:center;text-align:center;gap:8px"><small style="font-weight:800;color:var(--muted)">${esc(d.subjName)} · ${esc(d.title)} · ${d.n} soal</small><div class="fbcode-big">${ROOM.code}</div>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><a class="primary" style="text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Aku menantangmu di JELAS! ${d.subjName}: ${d.title}. Buka ${link} atau masukkan kode ${ROOM.code} di menu Main Bareng.`)}">Kirim lewat WhatsApp</a><button class="ghost" id="rmCopy">Salin kode</button></div></div>
+   <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/8)`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
+     ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':`<p class="note" style="margin:0">Peringkat berubah otomatis saat teman selesai bermain.</p>`}</div>
+   ${lobby&&host?`<button class="primary press" id="rmGo" style="font-size:22px;padding:12px">Mulai sekarang</button>`:''}
+   ${!lobby&&!me.done?`<button class="primary press" id="rmPlay">Main sekarang</button>`:''}
+   </div>`;
+  hydrate(el);$('#rmX').onclick=()=>roomClose();$('#rmCopy').onclick=()=>copyText(ROOM.code);
+  const g=$('#rmGo');if(g)g.onclick=()=>{g.disabled=true;FB.db.doc('rooms/'+ROOM.code).update({status:'play',startAt:Date.now()}).catch(e=>{g.disabled=false;toast('lock',fbErr(e))})};
+  const pl=$('#rmPlay');if(pl)pl.onclick=roomStart;
+  if(!lobby&&all&&rows.length>1&&rows[0].uid===uid&&!(P.roomWins||[]).includes(ROOM.code)){P.roomWins=(P.roomWins||[]).concat(ROOM.code).slice(-50);P.gems+=10;save();renderTop();toast('gem','Juara tantangan! +10 permata');sfx.win&&sfx.win();burstConfetti&&burstConfetti()}}
+const fmtSec=t=>t?`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`:'';
+function roomStart(){const d=ROOM.doc;let qs=[];try{qs=JSON.parse(d.qs)}catch(e){}if(!qs.length){toast('lock','Soal tantangan tidak bisa dibuka.');return}
+  const c=COURSE.find(x=>x.id===d.cls)||CLS(),s=c.subjects.find(x=>x.id===d.subj)||SUBJ();
+  ROOM.playing=true;$('#room').hidden=true;closeModal();
+  beginRun({kind:'practice',qs,mode:'kuis',title:`Tantangan · ${d.title}`,subj:s,cls:c.id,room:ROOM.code});
+  clearInterval(ROOM.timer);ROOM.timer=setInterval(roomPush,1500);roomLive()}
+function roomPush(){if(!ROOM.playing||!game||!game.lesson||!game.lesson.room)return;const o=game.lesson,uid=FBX.user.uid,c=Math.max(0,(o.answers||0)-(o.wrong||0)),k=game.i+':'+c;if(k===ROOM.lastPush)return;ROOM.lastPush=k;
+  FB.db.doc('rooms/'+ROOM.code).update({['players.'+uid+'.i']:Math.min(game.i,o.target),['players.'+uid+'.c']:c}).catch(()=>{})}
+function roomLive(){let el=$('#roomLive');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="roomlive" id="roomLive" hidden></div>');el=$('#roomLive')}
+  const d=ROOM.doc;if(!d||!ROOM.playing){el.hidden=true;return}const uid=FBX.user.uid;const others=roomRows(d).filter(r=>r.uid!==uid).slice(0,4);
+  el.hidden=!others.length;el.innerHTML=others.map(r=>`<span>${avSpan({name:r.name,avatar:r.av})}<b>${esc(r.name.split(' ')[0])}</b><small>${r.done?`selesai ${r.score}`:`${r.i||0}/${d.n}`}</small></span>`).join('')}
+function roomFinish(o){const uid=FBX.user.uid,ok=Math.max(0,o.target-Math.min(o.target,o.wrong)),score=Math.round(ok/o.target*100),t=Math.round((Date.now()-o.start)/1000);
+  clearInterval(ROOM.timer);ROOM.timer=null;ROOM.playing=false;const lv=$('#roomLive');if(lv)lv.hidden=true;
+  FB.db.doc('rooms/'+o.room).update({['players.'+uid]:Object.assign({},(ROOM.doc&&ROOM.doc.players[uid])||roomMe(),{score,c:ok,i:o.target,done:true,t})}).catch(e=>toast('lock','Nilai tantangan belum terkirim: '+fbErr(e)))}
+
+const _renderTeamR=renderTeam;
+renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard()};
+const _finishRunR=finishRun;
+finishRun=function(){const o=game&&game.lesson;if(o&&o.room&&FBX.user){ROOM.pendingShow=true;roomFinish(o)}_finishRunR()};
+const _goR=go;
+go=function(tab){_goR(tab);if(!ROOM.code)return;
+  if(ROOM.playing&&!game){ROOM.playing=false;clearInterval(ROOM.timer);ROOM.timer=null;const lv=$('#roomLive');if(lv)lv.hidden=true;ROOM.pendingShow=true}
+  if(ROOM.pendingShow&&!document.body.classList.contains('playing')){ROOM.pendingShow=false;$('#room').hidden=false;if(ROOM.doc)roomRender()}};
+window.fbCheckRoomLink=function(){let c=null;try{c=new URLSearchParams(location.search).get('tantang')||sessionStorage.getItem('jk_tantang')}catch(e){}
+  if(!c)return;try{sessionStorage.removeItem('jk_tantang')}catch(e){}if(FBX.user&&P&&!isT())setTimeout(()=>roomJoin(c),600)};
+try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStorage.setItem('jk_tantang',c)}catch(e){}
+
 /* ---------- panel admin (penjual) ---------- */
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
@@ -4113,6 +4212,7 @@ function handleBack(){
   if(!$('#modal').hidden){closeModal();return true}
   if(!$('#pop').hidden){closePop();return true}
   {const ae=document.getElementById('avEd');if(ae&&!ae.hidden){ae.hidden=true;return true}}
+  {const ro=document.getElementById('room');if(ro&&!ro.hidden&&typeof roomClose==='function'){roomClose();return true}}
   if(typeof DUEL!=='undefined'&&DUEL&&DUEL.active&&!$('#vDuel').hidden){$('#duelQuit').click();return true}
   if(document.body.classList.contains('playing')){if(!$('#vDone').hidden){game=null;go(document.body.classList.contains('teacher')?'tdash':'learn')}else $('#quitBtn').click();return true}
   if(!$('#onb').hidden){const b=$('#onbBack')||$('#tsCancel');if(b){b.click();return true}}
@@ -4301,6 +4401,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('keyup',e=>{arc.keys[e.key]=false;if(DUEL){const raw=e.key.length===1?e.key.toLowerCase():e.key;DUEL.sides.forEach((sd,s)=>{const k=DKEYS[s][raw];if(k)sd.arc.keys[k]=false})}});
 try{document.fonts&&document.fonts.load(`700 20px "Baloo 2"`)}catch(e){}
 setSound();setMusic();applyTV();
+document.querySelectorAll('.nav').forEach(n=>{const sp=n.querySelector('span');if(sp){n.setAttribute('aria-label',sp.textContent.trim());if(!n.title)n.title=sp.textContent.trim()}});
 document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{const t=n.dataset.tab;if(t==='guru')return enterTeacher();if(t==='texit')return exitTeacher();if(TEACH_R[t])return go(t);if(P)go(t)});
 $('#subjBtn').onclick=e=>{e.stopPropagation();if(!$('#pop').hidden&&$('#pop').dataset.k==='s'){closePop();return}subjPop();$('#pop').dataset.k='s'};
 $('#clsBtn').onclick=e=>{e.stopPropagation();if(!$('#pop').hidden&&$('#pop').dataset.k==='c'){closePop();return}clsPop();$('#pop').dataset.k='c'};

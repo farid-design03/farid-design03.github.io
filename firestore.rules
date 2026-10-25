@@ -103,6 +103,19 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
+    // Main bareng online: ruang tantangan. Pemain hanya boleh mengubah datanya sendiri.
+    match /rooms/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.host == request.auth.uid
+        && request.resource.data.players.keys().hasOnly([request.auth.uid]);
+      allow update: if signedIn() && (resource.data.host == request.auth.uid
+        || (changedKeys().hasOnly(['players'])
+            && request.resource.data.players.diff(resource.data.players).affectedKeys().hasOnly([request.auth.uid])
+            && request.resource.data.players.size() <= 8));
+      allow delete: if signedIn() && resource.data.host == request.auth.uid;
+    }
+
     match /classCodes/{code} {
       allow get: if signedIn();
       allow list: if false;
