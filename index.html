@@ -1476,6 +1476,12 @@ body.arcfs #quitBtn{min-width:44px;min-height:40px;touch-action:manipulation}
 .spfeel button b{font-size:17px}.spfeel button small{grid-column:2;font-size:13px;color:var(--muted);font-weight:700}.spfeel button:active{transform:translateY(4px);box-shadow:none}
 .sprew{display:flex;justify-content:center;gap:10px}.sprew span{background:#FFF0D6;color:#E57A00;font-weight:900;border-radius:999px;padding:6px 14px}
 body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
+.onbglbl{font-weight:900;margin:14px 0 6px;text-align:center}
+.onbg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.onbgb{display:flex;flex-direction:column;align-items:center;gap:6px;border:2px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 4px 0 var(--line);padding:10px;font:inherit;cursor:pointer}
+.onbgb span{width:84px;height:84px;border-radius:50%;overflow:hidden;display:block}.onbgb span svg{width:100%;height:100%}
+.onbgb b{font-size:16px}.onbgb[aria-pressed="true"]{background:#DDF4FF;border-color:#84D8FF;box-shadow:0 4px 0 #84D8FF}
+.onbgb:active{transform:translateY(4px);box-shadow:none}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4664,7 +4670,8 @@ let P=null;
 function newProfile(o){return {id:'p'+Date.now().toString(36)+R(100,999),name:o.name,color:o.color||pick(AV_COLORS),created:Date.now(),cls:o.cls||'sd2',subj:o.subj?{[o.cls]:o.subj}:{},
   xp:0,gems:50,hearts:5,heartsAt:null,streak:0,bestStreak:0,lastDay:null,days:[],freeze:0,goal:o.goal||20,
   today:{day:dayKey(),xp:0,lessons:0,perfect:0,correct:0,games:0,best:0},week:{id:weekKey(),xp:0},prog:{},
-  stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{},avatar:Object.assign({},AV_DEFAULT,{shirt:pick(['merah','biru','hijau','kuning']),bg:pick(['b1','b2','b3','b4'])}),avOwned:[],pet:'uli',pets:['uli']}}
+  stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{},gender:o.gender||null,avatar:avDefaultFor(o.gender),avOwned:[],pet:'uli',pets:['uli']}}
+function avDefaultFor(g){const a=Object.assign({},AV_DEFAULT,{shirt:pick(['merah','biru','hijau','kuning']),bg:pick(['b1','b2','b3','b4'])});if(g==='P'){a.hair=pick(['panjang','hijab','kuncir','kepang']);a.hc=a.hair==='hijab'?pick(['h5','h6','h10','h11']):'h1';a.eyes=pick(['bulat','lentik']);a.brow='lengkung'}else if(g==='L'){a.hair=pick(['pendek','jabrik','poni']);a.brow='tebal'}return a}
 function save(){if(P){P.upd=Date.now();const i=APP.profiles.findIndex(x=>x.id===P.id);if(i>=0)APP.profiles[i]=P;else APP.profiles.push(P);APP.cur=P.id}if(APP.teacher&&document.body.classList.contains('teacher'))APP.teacher.upd=Date.now();store.set('app',APP);if(typeof queueSync==='function')queueSync()}
 function ensureDay(p){p=p||P;const t=dayKey();if(p.today.day!==t)p.today={day:t,xp:0,lessons:0,perfect:0,correct:0,games:0,best:0};if(p.week.id!==weekKey())p.week={id:weekKey(),xp:0}}
 function tickHearts(){if(!P)return;if(P.hearts>=5){P.heartsAt=null;return}if(!P.heartsAt)P.heartsAt=Date.now();const n=Math.floor((Date.now()-P.heartsAt)/HEART_MS);if(n>0){P.hearts=Math.min(5,P.hearts+n);P.heartsAt=P.hearts>=5?null:P.heartsAt+n*HEART_MS;save()}}
@@ -4773,6 +4780,7 @@ function nodeTitle(s,ui,ni){const nd=NODES[ni];return nd.k==='lesson'?`Pelajaran
    Jumlah gerakan mengikuti kemampuan anak sendiri, bukan kelasnya.
    ========================================================= */
 const SP_POSE={
+ skip:[{h:[50,13],n:[50,24],p:[50,52],le:[42,40],lh:[38,52],re:[58,40],rh:[62,52],lk:[48,70],lf:[48,88],rk:[52,70],rf:[52,88]},{h:[50,8],n:[50,19],p:[50,47],le:[41,34],lh:[36,44],re:[59,34],rh:[64,44],lk:[48,65],lf:[47,80],rk:[52,65],rf:[53,80]}],
  jj:[{h:[50,13],n:[50,24],p:[50,52],le:[42,35],lh:[36,46],re:[58,35],rh:[64,46],lk:[46,70],lf:[45,88],rk:[54,70],rf:[55,88]},{h:[50,13],n:[50,24],p:[50,52],le:[39,15],lh:[33,5],re:[61,15],rh:[67,5],lk:[41,70],lf:[33,88],rk:[59,70],rf:[67,88]}],
  hk:[{h:[50,13],n:[50,24],p:[50,52],le:[42,36],lh:[44,46],re:[58,34],rh:[56,24],lk:[42,58],lf:[46,72],rk:[54,70],rf:[54,88]},{h:[50,13],n:[50,24],p:[50,52],le:[42,34],lh:[44,24],re:[58,36],rh:[56,46],lk:[46,70],lf:[46,88],rk:[58,58],rf:[54,72]}],
  sq:[{h:[50,13],n:[50,24],p:[50,52],le:[58,32],lh:[68,32],re:[58,32],rh:[68,32],lk:[50,70],lf:[50,88],rk:[50,70],rf:[50,88]},{h:[56,32],n:[54,42],p:[42,66],le:[64,46],lh:[74,46],re:[64,46],rh:[74,46],lk:[60,68],lf:[54,88],rk:[60,68],rf:[54,88]}],
@@ -4784,6 +4792,7 @@ const SP_POSE={
  mc:[{h:[18,44],n:[24,48],p:[56,56],le:[26,58],lh:[26,68],re:[26,58],rh:[26,68],lk:[44,64],lf:[38,70],rk:[72,62],rf:[88,68]},{h:[18,44],n:[24,48],p:[56,56],le:[26,58],lh:[26,68],re:[26,58],rh:[26,68],lk:[72,62],lf:[88,68],rk:[44,64],rf:[38,70]}],
  st:[{h:[50,13],n:[50,24],p:[50,52],le:[44,14],lh:[42,4],re:[56,14],rh:[58,4],lk:[48,70],lf:[47,88],rk:[52,70],rf:[53,88]},{h:[62,64],n:[60,54],p:[46,52],le:[60,66],lh:[56,80],re:[60,66],rh:[56,80],lk:[48,70],lf:[47,88],rk:[52,70],rf:[53,88]}]};
 const SP_EX={
+ skip:{n:'Lompat tali (tanpa tali)',g:'pemanasan',t:'time',b:10,s:2,m:60,tip:'Lompat kecil-kecil dengan dua kaki sambil memutar pergelangan tangan seolah memegang tali. Mendarat pelan.'},
  jj:{n:'Jumping jack',g:'pemanasan',t:'time',b:10,s:2,m:60,tip:'Lompat sambil membuka kaki dan mengangkat tangan ke atas, lalu kembali rapat. Mendarat pelan dengan ujung kaki.'},
  hk:{n:'Lari di tempat',g:'pemanasan',t:'time',b:10,s:2,m:60,tip:'Angkat lutut bergantian setinggi pinggang sambil mengayun tangan, seperti berlari di tempat.'},
  sq:{n:'Squat',g:'kaki',t:'rep',b:3,s:1,m:25,tip:'Kaki selebar bahu. Turunkan pinggul seperti mau duduk di kursi, punggung tetap lurus, lalu berdiri lagi.'},
@@ -4796,10 +4805,10 @@ const SP_EX={
  st:{n:'Peregangan',g:'pendinginan',t:'time',b:20,s:0,m:20,tip:'Angkat tangan tinggi-tinggi, lalu bungkukkan badan pelan-pelan dan sentuh lutut atau ujung kaki. Tarik napas dalam.'}};
 function spFit(){P.fit=P.fit||{lv:{},days:{},n:0,last:0,intro:false};P.fit.lv=P.fit.lv||{};P.fit.days=P.fit.days||{};return P.fit}
 function spAmount(id,mini){const e=SP_EX[id],lv=spFit().lv[id]||0;let name=e.n,amt;
-  if(id==='pu'){if(lv<6){name='Push-up dinding';amt=4+lv*2}else if(lv<12){name='Push-up lutut';amt=3+(lv-6)}else{amt=Math.min(e.m,2+(lv-12))}}
+  if(id==='pu'){const g=P&&P.gender,w=g==='P'?8:g==='L'?4:6,k=g==='P'?16:g==='L'?9:12;if(lv<w){name='Push-up dinding';amt=4+lv*2}else if(lv<k){name='Push-up lutut';amt=3+(lv-w)}else{amt=Math.min(e.m,2+(lv-k))}}
   else amt=Math.min(e.m,e.b+e.s*lv);
   if(mini)amt=Math.max(e.t==='time'?5:1,Math.round(amt/2));return {id,name,amt,t:e.t,per:e.per||'',tip:e.tip}}
-function spPlan(mini){const f=spFit(),n=f.n||0;const warm=n%2?'hk':'jj';const groups=[['sq','lg','br'],['pu','pl'],['cr','mc','pl']];
+function spPlan(mini){const f=spFit(),n=f.n||0,g=P&&P.gender;const warm=g==='P'?(n%2?'skip':'jj'):(n%2?'hk':'jj');const groups=g==='P'?[['sq','br','lg'],['pl','pu','br'],['cr','pl']]:g==='L'?[['sq','lg'],['pu','pl'],['cr','mc']]:[['sq','lg','br'],['pu','pl'],['cr','mc','pl']];
   const a=groups[n%3],b=groups[(n+1)%3];const x=a[Math.floor(n/3)%a.length],y=b.filter(k=>k!==x)[Math.floor(n/2)%b.filter(k=>k!==x).length];
   return [warm,x,y,'st'].map(id=>spAmount(id,mini))}
 function spKey(ui){return `${P.cls}/${SUBJ().id}/${ui}`}
@@ -5050,7 +5059,10 @@ function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[
 
 /* ---------- onboarding (guided first steps) ---------- */
 /* ---------- boot ---------- */
-function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn')}
+function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');setTimeout(askGender,900)}
+function askGender(){if(!P||P.gender||document.body.classList.contains('teacher'))return;const o={gender:null};
+  openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px">Supaya pilihan avatar dan olahraganya pas untukmu.</p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`);
+  $('#mbox').querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{P.gender=b.dataset.gd;const a=avNorm(P.avatar);const bad=Object.keys(AV_G).some(c=>!avFor(c,a[c],P.gender));if(bad){const d=avDefaultFor(P.gender);['hair','hc','brow','eyes','acc','adat','dunia'].forEach(c=>{if(!avFor(c,a[c],P.gender)||c==='hair'||c==='hc')a[c]=d[c]});P.avatar=a;P.color=avBgColor(a)}save();closeModal();renderTop();if(curTab==='profile')renderProfile();toast('check','Tersimpan. Terima kasih!')})}
 
 /* =========================================================
    TEACHER MODE: dashboard, attendance, daily evaluation on TV,
@@ -5546,7 +5558,7 @@ function startOnboarding(first){const t=T();const o={step:0,name:'',cls:(t&&t.cl
   const steps=6;
   const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';if(s>=1)applyTheme(o.cls,s>=2?o.subj:null);
     const talk=(tt,sub)=>`<div class="onbtalk"><div class="mascot" data-mascot data-mood="${s===5?'happy':'idle'}"></div><div class="bubble"><b>${tt}</b>${sub?`<span>${sub}</span>`:''}</div></div>`;
-    if(s===0){body=talk('Halo! Siapa namamu?','Aku Uli. Aku akan menemanimu belajar setiap hari.')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`;ok=!!o.name.trim()}
+    if(s===0){body=talk('Halo! Siapa namamu?','Aku Uli. Aku akan menemanimu belajar setiap hari.')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`+`<p class="onbglbl">Kamu laki-laki atau perempuan?</p>`+`<div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="${o.gender===g}"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`;ok=!!o.name.trim()&&!!o.gender}
     if(s===1){body=talk('Kamu kelas berapa?','Materinya akan disesuaikan dengan kelasmu.')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.map(x=>x.name).join(' · ')}</small></span></button>`).join('')}</div>`}
     if(s===2){const c=COURSE.find(x=>x.id===o.cls);if(!o.subj||!c.subjects.some(x=>x.id===o.subj))o.subj=c.subjects[0].id;body=talk('Mau belajar apa dulu?','Pelajaran lain bisa dipilih nanti dari tombol di kiri atas.')+`<div class="onbopts">${c.subjects.map(x=>`<button class="onbopt" data-s="${x.id}" aria-pressed="${o.subj===x.id}"><span class="sg" style="background:${x.color}">${x.glyph}</span><span>${x.name}<small>${x.units.length} unit: ${x.units.map(u=>u.t).slice(0,3).join(', ')}${x.units.length>3?', …':''}</small></span></button>`).join('')}</div>`}
     if(s===3){body=talk('Berapa target harianmu?','Sedikit tapi rutin lebih baik daripada banyak tapi jarang.')+`<div class="onbopts">${[[10,'Santai','sekitar 1 level sehari'],[20,'Biasa','sekitar 2 level sehari'],[30,'Serius','sekitar 3 level sehari'],[50,'Hebat','5 level atau lebih']].map(g=>`<button class="onbopt" data-g="${g[0]}" aria-pressed="${o.goal===g[0]}"><span class="sg" style="background:var(--orange)">${g[0]}</span><span>${g[1]}<small>${g[0]} XP, ${g[2]}</small></span></button>`).join('')}</div>`}
@@ -5558,7 +5570,8 @@ function startOnboarding(first){const t=T();const o={step:0,name:'',cls:(t&&t.cl
       ok=!full;btn='Buat akun'}
     if(s===5){body=talk(`Siap, ${esc(o.name.trim())}!`,`Nama penggunamu <strong>${esc(o.user)}</strong>. Ikuti jalur dari atas ke bawah, setiap lingkaran adalah satu level.`)+(o.rc?`<div class="tcard" style="align-items:center;text-align:center;gap:6px"><b>Kode pemulihan</b><div class="fbcode-big" style="font-size:30px">${o.rc}</div><small style="color:var(--muted);font-weight:700">Foto layar ini atau minta orang tua mencatatnya. Kode ini dipakai jika kamu lupa sandi.</small></div>`:'')+`<div class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">${[['star','Pelajaran','5 soal singkat. Pilih jawaban, lalu tekan Periksa.'],['game','Level game','Jawab soal sambil menembak, balapan, atau memancing.'],['chest','Peti hadiah','Buka untuk mendapat permata.'],['trophy','Ujian unit','Lulus untuk membuka unit berikutnya.'],['flame','Hari beruntun','Belajar setiap hari supaya apimu terus menyala.']].map(x=>`<div style="display:flex;gap:12px;align-items:center"><span style="width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;background:${x[0]==='flame'?'#FFF0DC':'var(--blue)'};color:${x[0]==='flame'?'#FF8A00':'#fff'};border:${x[0]==='chest'||x[0]==='flame'?'0':'3px solid var(--ink)'}">${ICONS[x[0]]}</span><span><b style="font-family:var(--display)">${x[1]}</b><br><small style="color:var(--muted)">${x[2]}</small></span></div>`).join('')}</div>`;btn='Ayo mulai!'}
     el.innerHTML=`<div class="onbin"><div class="onbbar"><button class="back" id="onbBack" aria-label="Kembali">←</button><span class="lbar"><i style="width:${(s+1)/steps*100}%"></i></span></div>${body}<div class="onbfoot"><button class="primary press" id="onbNext" ${ok?'':'disabled'}>${btn}</button>${s===0?'<button class="linkbtn" id="onbHave" style="width:100%;margin-top:10px">Saya sudah punya akun</button>':''}</div></div>`;hydrate(el);
-    const nm=$('#onbName');if(nm){nm.oninput=()=>{o.name=nm.value;$('#onbNext').disabled=!o.name.trim()};setTimeout(()=>nm.focus(),60);nm.onkeydown=e=>{if(e.key==='Enter'&&o.name.trim())$('#onbNext').click()}}
+    el.querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{o.gender=b.dataset.gd;tone([660],.03);render()});
+    const nm=$('#onbName');if(nm){nm.oninput=()=>{o.name=nm.value;$('#onbNext').disabled=!o.name.trim()||!o.gender};setTimeout(()=>nm.focus(),60);nm.onkeydown=e=>{if(e.key==='Enter'&&o.name.trim()&&o.gender)$('#onbNext').click()}}
     const su=$('#suUser');if(su){su.oninput=()=>{o.user=su.value;o.userEdited=true};$('#suPass').oninput=e=>o.pass=e.target.value;$('#suPass2').oninput=e=>o.pass2=e.target.value;setTimeout(()=>$('#suPass').focus(),60)}
     el.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{o.cls=b.dataset.c;o.subj=null;render()});
     el.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{o.subj=b.dataset.s;render()});
@@ -5572,7 +5585,7 @@ function startOnboarding(first){const t=T();const o={step:0,name:'',cls:(t&&t.cl
         if(FB){const sc=$('#suCode');o.code=sc?sc.value:'';window.fbSignupStudent(o,()=>{o.step++;render()},err);return}}
       if(o.step<steps-1){o.step++;render();return}
       if(o.fbDone){el.hidden=true;window.fbAfterSignup();setTimeout(()=>{const n=document.querySelector('.node.cur');if(n)n.click()},700);return}
-      P=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color});P.user=o.user;P.pass=o.pass;if(T())P.unlimited=!!T().unlimited;
+      P=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color,gender:o.gender});P.user=o.user;P.pass=o.pass;if(T())P.unlimited=!!T().unlimited;
       APP.profiles.push(P);save();setSession({role:'student',id:P.id});el.hidden=true;afterLogin();setTimeout(()=>{const n=document.querySelector('.node.cur');if(n)n.click()},700)}};
   render()}
 
@@ -5741,7 +5754,7 @@ userTaken=function(u,ex){if(isT())return _userTaken(u,ex);return String(u).toLow
 /* ---------- daftar murid (dipanggil dari langkah "Buat akun") ---------- */
 window.fbSignupStudent=async function(o,next,err){if(o.fbDone){next();return}const b=$('#onbNext');b.disabled=true;b.textContent='Membuat akun…';FBX.busy=true;
   try{const c=await FB.auth.createUserWithEmailAndPassword(uMail(o.user),uPass(o.pass));const u=c.user;
-    const p=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color});p.user=o.user;p.pass=o.pass;
+    const p=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color,gender:o.gender});p.user=o.user;p.pass=o.pass;
     const me={role:'student',username:o.user,name:p.name,cls:p.cls,pin:o.pass,classId:null,teacherUid:null,joinCode:null,clsName:null,xp:0,lastDay:null,p:JSON.stringify(p),plan:'free',proUntil:0,created:Date.now(),upd:Date.now()};
     await FB.db.doc('users/'+u.uid).set(me);FBX.user=u;FBX.me=me;
     try{o.rc=await fbSetRecovery(o.user,o.pass)}catch(e){console.warn('recovery',e)}
@@ -6412,7 +6425,7 @@ const AV_PARTS={
  body:{label:'Tubuh',items:[['sedang','Sedang',0],['kurus','Ramping',0],['berisi','Berisi',0],['atletis','Atletis',0]]},
  brow:{label:'Alis',items:[['tipis','Tipis',0],['tebal','Tebal',0],['lengkung','Melengkung',0],['lurus','Lurus',0],['tegas','Tegas',20],['ramah','Ramah',20],['none','Tanpa alis',0]]},
  skin:{label:'Kulit',items:[['s1','Kuning langsat',0,'#FFE0C7'],['s2','Sawo terang',0,'#F6C9A0'],['s3','Sawo matang',0,'#E0A574'],['s4','Cokelat',0,'#B97A4E'],['s5','Cokelat tua',0,'#8A5533']]},
- hair:{label:'Rambut',items:[['pendek','Pendek',0],['poni','Poni',0],['panjang','Panjang',0],['hijab','Hijab',0],['none','Plontos',0],['jabrik','Jabrik',20],['kuncir','Sanggul',20],['keriting','Keriting',40],['mohawk','Mohawk',80]]},
+ hair:{label:'Rambut',items:[['pendek','Pendek',0],['poni','Poni',0],['panjang','Panjang',0],['hijab','Hijab',0],['none','Plontos',0],['jabrik','Jabrik',20],['kuncir','Sanggul',20],['kepang','Kepang dua',20],['keriting','Keriting',40],['mohawk','Mohawk',80]]},
  hc:{label:'Warna',items:[['h1','Hitam',0,'#2B1D14'],['h2','Cokelat',0,'#5A3820'],['h9','Putih',0,'#F4F4F4'],['h3','Karamel',20,'#A0612D'],['h4','Emas',30,'#E8B547'],['h5','Merah',40,'#E2574C'],['h10','Merah muda',40,'#FF8FC0'],['h6','Biru',60,'#4F7CFF'],['h7','Ungu',60,'#9B6BFF'],['h11','Hijau toska',60,'#22C5B5']]},
  eyes:{label:'Mata',items:[['bulat','Bulat',0],['senyum','Senyum',0],['sipit','Sipit',0],['almond','Almond',0],['lentik','Lentik',20],['ngantuk','Sayu',20],['tajam','Tajam',30],['besar','Berbinar',30],['kedip','Kedip',40],['bintang','Bintang',80]]},
  mouth:{label:'Mulut',items:[['senyum','Senyum',0],['tawa','Tertawa',0],['datar','Tenang',0],['o','Kagum',20],['lidah','Melet',30]]},
@@ -6421,6 +6434,10 @@ const AV_PARTS={
  adat:{label:'Baju adat',items:[['none','Tanpa baju adat',0,'—'],['bima','Rimpu · NTB (Bima)',0],['betawi','Sadariah · Jakarta',0],['maluku','Baju Cele · Maluku',0],['madura',"Pesa'an · Jawa Timur",30],['sunda','Pangsi · Jawa Barat',30],['jawa','Beskap · Jawa Tengah',40],['bali','Payas · Bali',40],['sasak','Pegon · Lombok',40],['batak','Ulos · Sumatra Utara',50],['melayu','Teluk Belanga · Riau',50],['banjar','Bagajah · Kalsel',50],['bugis','Baju Bodo · Sulsel',50],['ntt','Tenun Ikat · NTT',60],['toraja',"Pokko' · Toraja",60],['aceh','Ulee Balang · Aceh',70],['dayak','King Baba · Dayak',80],['lampung','Tulang Bawang · Lampung',90],['minang','Bundo Kanduang · Sumbar',100],['palembang','Aesan Gede · Sumsel',110],['papua','Rumbai & Mahkota · Papua',120]]},
  dunia:{label:'Baju dunia',items:[['none','Tanpa baju dunia',0,'—'],['prancis','Prancis · marinière',0],['hawaii','Hawaii · kemeja aloha',0],['brasil','Brasil · kaus bola',0],['jepang','Jepang · kimono',40],['korea','Korea · hanbok',40],['tiongkok','Tiongkok · changshan',40],['india','India · sari',40],['vietnam','Vietnam · ao dai',50],['thailand','Thailand · chut thai',60],['arab','Arab · gamis & syal',50],['turki','Turki · fez',50],['belanda','Belanda · topi renda',50],['jerman','Jerman · lederhosen',50],['skotlandia','Skotlandia · tartan',60],['koboi','Amerika · koboi',60],['meksiko','Meksiko · sombrero',60],['peru','Peru · chullo',60],['rusia','Rusia · ushanka',70],['kenya','Kenya · Maasai',70],['inggris','Inggris · pengawal raja',90],['mesir','Mesir · firaun',120]]},
  bg:{label:'Latar',items:[['b1','Ungu',0,'#C9B6FF'],['b2','Biru',0,'#A9DEFF'],['b3','Hijau',0,'#B5EBAE'],['b4','Merah muda',0,'#FFC9DF'],['b5','Kuning',20,'#FFE596'],['bintang','Malam berbintang',60],['pelangi','Pelangi',100]]}};
+const AV_G={hair:{pendek:'L',jabrik:'L',mohawk:'L',none:'L',panjang:'P',hijab:'P',kuncir:'P',kepang:'P'},acc:{peci:'L'},
+ adat:{jawa:'L',sunda:'L',betawi:'L',madura:'L',sasak:'L',batak:'L',melayu:'L',aceh:'L',dayak:'L',banjar:'L',minang:'P',bugis:'P',bima:'P',lampung:'P'},
+ dunia:{koboi:'L',arab:'L',turki:'L',jerman:'L',inggris:'L',skotlandia:'L',india:'P',vietnam:'P',belanda:'P'}};
+const avFor=(cat,id,g)=>!g||!AV_G[cat]||!AV_G[cat][id]||AV_G[cat][id]===g;
 const AV_ORDER=['face','skin','hair','hc','brow','eyes','mouth','body','acc','shirt','adat','dunia','bg'];
 const AV_TABS=['face','skin','hair','brow','eyes','mouth','body','acc','shirt','adat','dunia','bg'];
 const AV_DEFAULT={face:'bulat',body:'sedang',brow:'tipis',skin:'s2',hair:'pendek',hc:'h1',eyes:'bulat',mouth:'senyum',acc:'none',shirt:'biru',adat:'none',dunia:'none',bg:'b1'};
@@ -6556,6 +6573,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     poni:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L40 44 C36 44 34 47 32 54Z" fill="${hc}" ${sw}/>`,
     panjang:`<path d="M32 54 C30 28 46 21 60 21 C76 21 90 28 88 54 C81 39 66 34 53 38 C45 40 37 45 32 54Z" fill="${hc}" ${sw}/>`,
     kuncir:`<path d="M32 52 C31 30 45 23 60 23 C75 23 89 30 88 52 C83 40 72 35 60 35 C48 35 37 40 32 52Z" fill="${hc}" ${sw}/>`,
+    kepang:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L40 44 C36 44 34 47 32 54Z" fill="${hc}" ${sw}/>`+[30,90].map(x=>[54,64,74,84,94].map(y=>`<ellipse cx="${x}" cy="${y}" rx="6" ry="6.5" fill="${hc}" ${sw}/>`).join('')+`<path d="M${x-4} 101 l4 6 l4 -6" fill="#FF5C9E" ${sw}/>`).join(''),
     jabrik:`<path d="M33 50 L29 34 L40 38 L39 22 L50 31 L56 15 L62 29 L70 15 L74 31 L84 22 L82 38 L92 34 L87 50 C80 40 70 36 60 36 C50 36 40 40 33 50Z" fill="${hc}" ${sw}/>`,
     keriting:[[36,40],[42,30],[52,24],[63,22],[74,26],[83,34],[87,45],[33,50]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="${hc}" ${sw}/>`).join('')+`<path d="M38 44 C46 34 74 34 82 44" fill="${hc}"/>`,
     mohawk:`<path d="M53 33 L54 9 L60 15 L66 9 L67 33 C62 31 58 31 53 33Z" fill="${hc}" ${sw}/>`,
@@ -6621,7 +6639,7 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
       <div class="aved-prev" style="--av:${avBgColor(draft)}">${avatarSVG(draft)}</div>
       <div class="aved-tabs" role="tablist">${AV_TABS.map(k=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${AV_PARTS[k].label}</button>`).join('')}</div>
       ${tab==='hair'&&draft.hair!=='hijab'&&draft.hair!=='none'||tab==='hair'?`<div class="aved-colors"><b>Warna ${draft.hair==='hijab'?'hijab':'rambut'}</b><div>${AV_PARTS.hc.items.map(it=>{const own=owned('hc',it[0]),on=draft.hc===it[0];return `<button class="aved-col ${on?'on':''}" data-hc="${it[0]}" style="--c:${it[3]}" aria-pressed="${on}" title="${esc(it[1])}${own?'':' · '+it[2]+' permata'}">${own?'':`<small>${it[2]}</small>`}</button>`}).join('')}</div></div>`:''}
-      <div class="aved-grid">${cat.items.map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id});
+      <div class="aved-grid">${cat.items.filter(it=>avFor(tab,it[0],P.gender)||draft[tab]===it[0]).map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id});
         const vis=it[3]&&tab!=='shirt'&&tab!=='bg'&&tab!=='adat'&&tab!=='dunia'?`<span class="aved-sw" style="background:${it[3]}"></span>`:`<span class="aved-mini">${avatarSVG(prev,{nobg:tab!=='bg'})}</span>`;
         return `<button class="aved-it ${on?'on':''}" data-id="${id}" aria-pressed="${on}">${vis}<b>${esc(it[1])}</b><small>${own?(on?'Dipakai':it[2]?'Dimiliki':'Gratis'):`${gem} ${it[2]}`}</small></button>`}).join('')}</div>
       <div class="onbfoot aved-foot">${c?`<div class="aved-cart">${toBuy().map(k=>{const it=avItem(k,draft[k]);return `<button class="aved-chip" data-undo="${k}" title="Batalkan">${esc(it[1])} · ${it[2]} <span aria-hidden="true">✕</span></button>`}).join('')}</div><p class="note" style="text-align:center;margin:0 0 8px;${can?'':'color:var(--bad);font-weight:800'}">${can?`Akan dibeli seharga ${c} permata.`:`Permatamu kurang ${c-P.gems}. Ketuk ✕ untuk membatalkan barang yang tidak jadi dibeli.`}</p>`:''}
