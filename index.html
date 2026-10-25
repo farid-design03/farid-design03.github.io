@@ -1075,6 +1075,25 @@ html,body{overflow-x:hidden;overflow-x:clip}
 .wtitle{letter-spacing:.06em}
 .wtag{margin:-6px 0 2px;font-family:var(--title);font-size:clamp(20px,4.5vw,28px);color:#fff;text-shadow:var(--outline);letter-spacing:.04em}
 .sbname{display:flex;flex-direction:column;letter-spacing:.06em}.sbname small{font-family:var(--display);font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:2px}
+/* ---- tema dunia per kelas + warna per mata pelajaran ---- */
+body{background:radial-gradient(85% 55% at 85% -5%,color-mix(in srgb,var(--subj,#3D8BFF) 34%,transparent),transparent 70%) fixed,linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bot) 75%) fixed;background-color:var(--sky-bot);transition:background-color .6s}
+.onb{background:radial-gradient(85% 55% at 85% -5%,color-mix(in srgb,var(--subj,#3D8BFF) 34%,transparent),transparent 70%),linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bot) 75%)}
+.hills path:first-child{fill:var(--hill1,#9BE07F);transition:fill .6s}.hills path:last-child{fill:var(--hill2,#5CC24E);transition:fill .6s}
+.doodle{color:color-mix(in srgb,var(--subj,#ffffff) 30%,rgba(255,255,255,.78))}
+body[data-world="tk"]{--sky-top:#FFB3D6;--sky-bot:#FFF1C4;--hill1:#FFC7E1;--hill2:#FF94C4}
+body[data-world="tk"] .cloud,body[data-world="tk"] .cloud::before,body[data-world="tk"] .cloud::after{background:#FFF7FB}
+body[data-world="sd1"]{--sky-top:#47BDF5;--sky-bot:#CFF2FF;--hill1:#9BE07F;--hill2:#5CC24E}
+body[data-world="sd2"]{--sky-top:#2FC6B4;--sky-bot:#DDFFF0;--hill1:#6ACB6B;--hill2:#2C9A55}
+body[data-world="smp"]{--sky-top:#2C86EE;--sky-bot:#FFE2A6;--hill1:#45BCF2;--hill2:#1C7ED2}
+body[data-world="smp"] .sun::after{background:#FFB547;border-color:#EC8A1F}
+body[data-world="sma"]{--sky-top:#121A47;--sky-bot:#4A3A8E;--hill1:#2D2667;--hill2:#1A1540}
+body[data-world="sma"] .sun::before{display:none}
+body[data-world="sma"] .sun::after{background:#FFF5D6;border-color:#E3D29C;box-shadow:inset -16px -8px 0 rgba(190,178,140,.45),0 0 70px rgba(255,245,214,.45)}
+body[data-world="sma"] .cloud,body[data-world="sma"] .cloud::before,body[data-world="sma"] .cloud::after{background:rgba(255,255,255,.13)}
+body[data-world="sma"] .world::before{content:"";position:absolute;inset:0 0 30% 0;opacity:.85;background-image:radial-gradient(2px 2px at 8% 18%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 22% 6%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 37% 30%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 51% 12%,#fff 50%,transparent 51%),radial-gradient(2.5px 2.5px at 63% 40%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 74% 8%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 88% 33%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 95% 14%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 14% 48%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 44% 55%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 81% 58%,#fff 50%,transparent 51%);animation:twinkle 5s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.55}to{opacity:.95}}
+body[data-world="sma"] .wsub,body[data-world="sma"] .authp,body[data-world="sma"] .linkbtn,body[data-world="sma"] .wschool{color:#fff;opacity:.92}
+body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,rgba(255,255,255,.5))}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2650,7 +2669,14 @@ function progOf(c,s){const k=progKey(c,s);return P.prog[k]||(P.prog[k]={done:0})
 const totalNodes=s=>s.units.length*NODES.length;
 const lvOf=()=>LEVELS.find(l=>l.id===CLS().lv);
 function gameFor(subj,ui){const u=subj.units[ui];const list=FIT[u.fit||subj.fit].games.filter(g=>g!=='kuis');return list.length?list[ui%list.length]:'kuis'}
-const unitColor=ui=>UNIT_COLORS[ui%UNIT_COLORS.length];
+const UNIT_SHADES=[0,-.16,-.3,.1,-.08,-.22];
+const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:null;return c?shade(c,UNIT_SHADES[ui%UNIT_SHADES.length]):UNIT_COLORS[ui%UNIT_COLORS.length]};
+const WORLD_DOODLES={hitung:['1','2','3','+','5','★'],huruf:['A','b','C','d','E','?'],warna:['●','▲','■','★','◆','♥'],mtk:['+','×','÷','=','π','%'],bindo:['Aa','B','“','?','!','k'],umum:['☀','☁','♣','✿','☂','★'],
+  ipas:['☘','☀','H₂O','✿','°C','∿'],ipa:['H₂O','☘','°C','∿','O₂','g'],pancasila:['★','◆','✦','♥','✿','⚑'],eng:['Hi!','A','b','?','ok','C'],ips:['⌖','N','↗','⚑','$','✈'],
+  fisika:['F=ma','∿','λ','g','Ω','v'],kimbio:['DNA','H₂O','pH','✿','C','O₂'],sejarah:['1945','⚑','✦','★','IV','II'],tkj:['0101','</>','{ }','#','01','IP']};
+function applyTheme(cls,subj){const W=COURSE.some(c=>c.id===cls)?cls:'sd1';const c=COURSE.find(x=>x.id===W);const s=c.subjects.find(x=>x.id===subj)||null;
+  document.body.dataset.world=W;document.documentElement.style.setProperty('--subj',s?s.color:LEVEL_COL[c.lv]||'#3D8BFF');
+  const g=(s&&WORLD_DOODLES[s.id])||['A','+','★','7','÷','B'];document.querySelectorAll('.world .doodle').forEach((d,i)=>{const t=g[i%g.length];d.textContent=t+(/^[☀-➿]$/.test(t)?'︎':'')})}
 
 /* ---------- quests & badges ---------- */
 const QUEST_T=[
@@ -2681,7 +2707,7 @@ const tierOf=p=>{let t=TIERS[0];TIERS.forEach(x=>{if(p.xp>=x[1])t=x});return t};
 const shield=c=>`<svg viewBox="0 0 48 48"><path d="M24 4 L41 10 V22 C41 33 33 40 24 44 C15 40 7 33 7 22 V10Z" fill="${c}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M24 14 l3 6.5 7 .8 -5.2 4.8 1.4 7 -6.2-3.5 -6.2 3.5 1.4-7 -5.2-4.8 7-.8z" fill="#fff" stroke="${K}" stroke-width="2" stroke-linejoin="round"/></svg>`;
 
 /* ---------- top bar & popovers ---------- */
-function renderTop(){if(!P)return;const s=SUBJ();const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjGlyph').textContent=s.glyph;$('#subjName').textContent=s.name;
+function renderTop(){if(!P)return;const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjGlyph').textContent=s.glyph;$('#subjName').textContent=s.name;
   $('#clsName').textContent=CLS().name;const st=shownStreak();$('#streakN').textContent=st;$('#streakBtn').classList.toggle('off',P.lastDay!==dayKey());
   $('#gemN').textContent=P.gems;$('#heartN').textContent=P.unlimited?'∞':P.hearts;renderRail()}
 function closePop(){$('#pop').hidden=true;document.querySelectorAll('.nrow.popopen').forEach(r=>{r.classList.remove('popopen');const p=r.querySelector('.npop');if(p)p.remove()})}
@@ -2713,7 +2739,7 @@ function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-
 /* ---------- navigation ---------- */
 let curTab='learn';
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){curTab=tab;closePop();document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){curTab=tab;closePop();if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
@@ -3320,7 +3346,7 @@ function ensureUsers(){const sorted=APP.profiles.slice().sort((a,b)=>(a.created|
 function closeAuth(){$('#auth').hidden=true}
 function logout(){setSession(null);P=null;ADMIN_TOKEN=null;game=null;document.body.classList.remove('teacher','playing','lessonmode');$('#adminPanel').hidden=true;closeModal();closePop();showWelcome()}
 
-function showWelcome(){const el=$('#auth');el.hidden=false;$('#picker').hidden=true;$('#onb').hidden=true;const t=T();
+function showWelcome(){applyTheme(null,null);const el=$('#auth');el.hidden=false;$('#picker').hidden=true;$('#onb').hidden=true;const t=T();
   el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="happy"></div><h1 class="wtitle">JELAS</h1><p class="wtag">Jelajah Kelas</p><p class="wsub">Belajar seru sambil main, dari TK sampai SMA/SMK.</p>${t?`<p class="wschool">${esc(t.school||'')}${t.school?' · ':''}${tCls().full}</p>`:''}</div>
    <div class="wbtns"><button class="primary press" id="wStart">MULAI SEKARANG</button><button class="ghost press" id="wLogin">SAYA SUDAH PUNYA AKUN</button>${t?'':'<button class="linkbtn" id="wTeacher">Saya guru, siapkan kelas</button>'}</div></div>`;
   hydrate(el);$('#wStart').onclick=()=>{tone([660,880],.06);startOnboarding(true)};$('#wLogin').onclick=()=>showLogin();const wt=$('#wTeacher');if(wt)wt.onclick=()=>{closeAuth();teacherSetup()}}
@@ -3352,7 +3378,7 @@ function forgotTeacher(){openModal(`<h3>Pulihkan sandi guru</h3><p>Ketik nama gu
 /* ---------- sign-up questions (sets the student's module) ---------- */
 function startOnboarding(first){const t=T();const o={step:0,name:'',cls:(t&&t.cls)||'sd2',subj:null,goal:20,color:pick(AV_COLORS),user:'',pass:'',pass2:'',userEdited:false};const el=$('#onb');el.hidden=false;closeAuth();
   const steps=6;
-  const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';
+  const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';if(s>=1)applyTheme(o.cls,s>=2?o.subj:null);
     const talk=(tt,sub)=>`<div class="onbtalk"><div class="mascot" data-mascot data-mood="${s===5?'happy':'idle'}"></div><div class="bubble"><b>${tt}</b>${sub?`<span>${sub}</span>`:''}</div></div>`;
     if(s===0){body=talk('Halo! Siapa namamu?','Aku Uli. Aku akan menemanimu belajar setiap hari.')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`;ok=!!o.name.trim()}
     if(s===1){body=talk('Kamu kelas berapa?','Materinya akan disesuaikan dengan kelasmu.')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.map(x=>x.name).join(' · ')}</small></span></button>`).join('')}</div>`}
