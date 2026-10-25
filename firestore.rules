@@ -129,7 +129,8 @@ service cloud.firestore {
     match /invites/{id} {
       allow read: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
       allow create: if signedIn() && request.resource.data.from == request.auth.uid;
-      allow update: if false;
+      allow update: if signedIn() && resource.data.to == request.auth.uid
+        && changedKeys().hasOnly(['status', 'toName', 'toAv']);
       allow delete: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
     }
 

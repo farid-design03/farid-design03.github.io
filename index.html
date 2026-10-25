@@ -1221,6 +1221,8 @@ body[data-tab="trun"] .main.wrap{max-width:1200px;margin:0 auto;padding-left:max
 .ajfoot{position:sticky;bottom:0;padding-top:10px;background:linear-gradient(transparent,var(--sky-bot) 40%)}.ajfoot .primary{width:100%;font-size:19px;padding:12px}
 body.has-invite .nav[data-tab=team] i{position:relative}
 body.has-invite .nav[data-tab=team] i::before{content:'';position:absolute;right:-3px;top:-3px;width:11px;height:11px;border-radius:50%;background:#F2394B;border:2px solid #fff;z-index:1}
+.invpop-av{width:96px;margin:0 auto 6px}.invpop-av .avatar{width:96px;height:96px;border-width:4px;font-size:40px;animation:npopIn .4s}
+.avatar.big{width:96px;height:96px;font-size:40px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4183,11 +4185,12 @@ function fbHandleSync(){const m=FBX.me||{};if(!FBX.user||isT()||!P||!m.username)
 function rememberFriends(d){if(!d||!P)return;const me=FBX.user.uid;P.friends=P.friends||[];let ch=false;
   Object.entries(d.players||{}).forEach(([uid,p])=>{if(uid===me)return;const f=P.friends.find(x=>x.uid===uid);if(f){if(f.name!==p.name){f.name=p.name;ch=true}f.av=p.av||f.av;f.at=Date.now()}else{P.friends.unshift({uid,name:p.name,av:p.av||null,at:Date.now()});ch=true}});
   P.friends.sort((a,b)=>b.at-a.at);P.friends=P.friends.slice(0,20);if(ch)save()}
+window.ajakEnsureRoom=()=>ajakEnsureRoom();
 async function ajakEnsureRoom(){if(ROOM.code&&ROOM.doc&&ROOM.doc.host===FBX.user.uid&&ROOM.doc.status==='lobby')return ROOM.code;
   const s=SUBJ();await roomCreate(s,AJAK.ui,AJAK.n,true);return ROOM.code}
 async function ajakInvite(f,btn){if(btn){btn.disabled=true;btn.textContent='…'}
   try{const code=await ajakEnsureRoom();const d=ROOM.doc||{};
-    await FB.db.doc('invites/'+f.uid+'_'+code).set({to:f.uid,from:FBX.user.uid,fromName:P.name,fromAv:P.avatar||null,code,subjName:d.subjName||SUBJ().name,title:d.title||(SUBJ().units[AJAK.ui]||{}).t||'',created:Date.now()});
+    await FB.db.doc('invites/'+f.uid+'_'+code+'_'+Date.now().toString(36)).set({to:f.uid,from:FBX.user.uid,fromName:P.name,fromAv:P.avatar||null,code,subjName:d.subjName||SUBJ().name,title:d.title||(SUBJ().units[AJAK.ui]||{}).t||'',created:Date.now()});
     AJAK.sent[f.uid]=true;if(btn){btn.textContent='TERKIRIM';btn.classList.add('sent')}toast('team',`Tantangan terkirim ke ${f.name}.`);ajakFoot()}
   catch(e){if(btn){btn.disabled=false;btn.textContent='UNDANG'}toast('lock',fbErr(e))}}
 async function ajakShare(){try{const code=await ajakEnsureRoom();const d=ROOM.doc||{};const link=`${location.origin}${location.pathname}?tantang=${code}`;
@@ -4227,16 +4230,36 @@ async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=
   ajakBindRows(box,list)}
 /* tantangan masuk */
 function fbListenInvites(){if(AJAK.unsubInv||!FBX.user||isT())return;AJAK.first=true;
-  const un=FB.db.collection('invites').where('to','==',FBX.user.uid).onSnapshot(q=>{const now=Date.now();const list=q.docs.map(d=>Object.assign({id:d.id},d.data())).filter(x=>now-(x.created||0)<3*864e5).sort((a,b)=>b.created-a.created);
+  const un=FB.db.collection('invites').where('to','==',FBX.user.uid).onSnapshot(q=>{const now=Date.now();const list=q.docs.map(d=>Object.assign({id:d.id},d.data())).filter(x=>!x.status&&now-(x.created||0)<3*864e5).sort((a,b)=>b.created-a.created);
     const fresh=list.filter(x=>!AJAK.inv.some(y=>y.id===x.id));AJAK.inv=list;document.body.classList.toggle('has-invite',list.length>0);
-    if(!AJAK.first&&fresh.length)toast('team',`${fresh[0].fromName} menantangmu! Buka Main Bareng.`);AJAK.first=false;if(curTab==='team')inviteBox()},()=>{});AJAK.unsubInv=un;FBX.unsub.push(()=>{try{un()}catch(e){}AJAK.unsubInv=null;AJAK.inv=[];document.body.classList.remove('has-invite')})}
+    const unseen=list.filter(x=>!inviteSeen(x.id));if(unseen.length)inviteAlert(unseen[0]);AJAK.first=false;if(curTab==='team')inviteBox()},()=>{});
+  const un2=FB.db.collection('invites').where('from','==',FBX.user.uid).onSnapshot(q=>{q.docs.forEach(d=>{const x=d.data();if(!x.status)return;
+      AJAK.ans=AJAK.ans||new Set();if(AJAK.ans.has(d.id))return;AJAK.ans.add(d.id);FB.db.doc('invites/'+d.id).delete().catch(()=>{});
+      if(x.status==='declined')openModal(`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({name:x.toName||'Teman',avatar:x.toAv||null}).replace('class="avatar','class="avatar big')}</div><h3>${esc(x.toName||'Temanmu')} menolak tantanganmu</h3><p>Coba ajak teman lain, atau tantang lagi nanti.</p></div><div class="acts"><button class="primary" id="mNo">Oke</button></div>`)||($('#mNo').onclick=closeModal);
+      if(x.status==='accepted')toast('team',`${x.toName||'Temanmu'} menerima tantangan!`)})},()=>{});FBX.unsub.push(()=>{try{un2()}catch(e){}});AJAK.unsubInv=un;FBX.unsub.push(()=>{try{un()}catch(e){}AJAK.unsubInv=null;AJAK.inv=[];document.body.classList.remove('has-invite')})}
+function inviteSeen(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');return a.includes(id)}catch(e){return false}}
+function inviteMark(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');a.push(id);sessionStorage.setItem('jk_inv_seen',JSON.stringify(a.slice(-50)))}catch(e){}}
+function inviteAnswer(x,ok){inviteMark(x.id);FB.db.doc('invites/'+x.id).update({status:ok?'accepted':'declined',toName:P.name,toAv:P.avatar||null}).catch(()=>{});AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();if(ok)roomJoin(x.code);else toast('check','Tantangan ditolak.')}
+function inviteAlert(x){inviteMark(x.id);
+  if(document.hidden){try{if('Notification' in window&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(`${x.fromName} menantangmu!`,{body:`${x.subjName}${x.title?' · '+x.title:''}. Ketuk untuk menjawab.`,icon:'icons/icon-192.png',badge:'icons/icon-192.png',tag:'inv-'+x.id,renotify:true,requireInteraction:true,vibrate:[200,100,200],data:{inv:x.id,code:x.code},actions:[{action:'accept',title:'Terima'},{action:'decline',title:'Tolak'}]}))}catch(e){}
+    AJAK.pendingAlert=x;return}
+  if(document.body.classList.contains('playing')){toast('team',`${x.fromName} menantangmu! Lihat di Main Bareng.`);return}
+  tone&&tone([880,1175,1568],.08);
+  openModal(`<div style="text-align:center" class="invpop"><div class="invpop-av">${avSpan({name:x.fromName,avatar:x.fromAv})}</div><h3>${esc(x.fromName)} menantangmu!</h3><p>${esc(x.subjName)}${x.title?' · '+esc(x.title):''}</p></div><div class="acts"><button class="ghost" id="mNo" style="color:var(--bad)">Tolak</button><button class="primary" id="mYes">Terima</button></div>`);
+  $('#mNo').onclick=()=>{closeModal();inviteAnswer(x,false)};$('#mYes').onclick=()=>{closeModal();inviteAnswer(x,true)}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AJAK.pendingAlert){const x=AJAK.pendingAlert;AJAK.pendingAlert=null;if(AJAK.inv.some(i=>i.id===x.id)){AJAK.inv=AJAK.inv;inviteAlert(Object.assign({},x,{_again:1}))}}});
+if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
+  if(m.action==='accept')inviteAnswer(x,true);else if(m.action==='decline')inviteAnswer(x,false);else if(AJAK.inv.some(i=>i.id===m.inv))inviteAlert(Object.assign({},x))});
+function notifAsk(){try{if(!('Notification' in window)||Notification.permission!=='default'||localStorage.getItem('jk_notif_asked'))return;localStorage.setItem('jk_notif_asked','1');
+  openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3>Nyalakan pemberitahuan?</h3><p>Supaya kamu tahu saat teman menantangmu bertanding.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();try{Notification.requestPermission()}catch(e){}}}catch(e){}}
 function inviteBox(){let el=$('#invBox');const card=$('#vTeam .roomcard');if(!card)return;if(!el){card.insertAdjacentHTML('beforeend','<div id="invBox"></div>');el=$('#invBox')}
   el.innerHTML=AJAK.inv.length?`<h4 class="ajsec" style="margin:4px 0 0">TANTANGAN MASUK</h4>${AJAK.inv.map(x=>`<div class="ajrow">${avSpan({name:x.fromName,avatar:x.fromAv})}<span class="grow"><b>${esc(x.fromName)}</b><small>${esc(x.subjName)}${x.title?' · '+esc(x.title):''}</small></span><button class="ajinv" data-acc="${esc(x.id)}">TERIMA</button><button class="smallbtn" data-dec="${esc(x.id)}" aria-label="Tolak">✕</button></div>`).join('')}`:'';
-  el.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{const x=AJAK.inv.find(i=>i.id===b.dataset.acc);FB.db.doc('invites/'+x.id).delete().catch(()=>{});roomJoin(x.code)});
-  el.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>FB.db.doc('invites/'+b.dataset.dec).delete().catch(()=>{}))}
+  el.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{const x=AJAK.inv.find(i=>i.id===b.dataset.acc);if(x)inviteAnswer(x,true)});
+  el.querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const x=AJAK.inv.find(i=>i.id===b.dataset.dec);if(x)inviteAnswer(x,false)})}
 
 const _renderTeamR=renderTeam;
-renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox()};
+renderTeam=function(){_renderTeamR();if(!FBX.user||!P||isT())return;if(!$('#vTeam .roomcard')){const h=$('#vTeam .pagehead');h.insertAdjacentHTML('afterend',roomCard())}bindRoomCard();inviteBox();setTimeout(notifAsk,600)};
 const _finishRunR=finishRun;
 finishRun=function(){const o=game&&game.lesson;if(o&&o.room&&FBX.user){ROOM.pendingShow=true;roomFinish(o)}_finishRunR()};
 const _goR=go;
