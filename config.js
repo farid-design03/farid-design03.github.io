@@ -13,7 +13,7 @@ window.FB_CONFIG = {
   /* lama masa coba gratis semua fitur Pro untuk guru baru (samakan dengan angka di firestore.rules) */
   trialDays: 14,
   /* kunci notifikasi web (Setelan proyek → Cloud Messaging → Web Push certificates) */
-  vapidKey: "",
+  vapidKey: "BCWfN24rrbajJ8Eb58XEXL6-kHZNpJsiDhZjar5wwTiqmmRkqYsHRlswdYmhWRscsLdd2CEetNlU4Jeg0og7EZA",
   /* alamat pengirim notifikasi di Cloudflare Workers */
   pushUrl: ""
 };
