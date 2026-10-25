@@ -1496,6 +1496,9 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .spcues li::before{content:"✓";position:absolute;left:10px;top:6px;color:#58CC02;font-weight:900}
 .spname{font-size:24px!important}.spamt{font-size:28px!important}
 .sptag{position:static!important;align-self:flex-start}
+.spanim{position:relative;background:#F4FAFF}
+.spspr{position:absolute;inset:0;background-repeat:no-repeat;z-index:1}
+.spfloor{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#DDEFD0,#E9F7DF);border-top:2px solid #C8E6B0}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4937,7 +4940,14 @@ function spGuides(type,p){if(type==='kneeToe')return [[p.T1[0],91,p.T1[0],p.K1[1
   if(type==='hip')return [[30,p.P[1],80,p.P[1]]];return []}
 
 function spAnimKey(id,v){if(id==='pu'&&v==='wall')return 'pu_wall';if(id==='pu'&&v==='knee')return 'pu_knee';return SPK[id]?id:'jj'}
-function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[id],bad=box.dataset.bad==='1',form=SP_FORM[id]||{};const def=bad&&form.badKeys?Object.assign({},base,{keys:form.badKeys}):base;const NS='http://www.w3.org/2000/svg';
+/* animasi hasil rekaman gerak (Mixamo) untuk gerakan yang tersedia */
+const SP_SPR={"jj": {"n": 21, "cols": 8, "fps": 19.69, "floor": 203}, "skip": {"n": 40, "cols": 8, "fps": 15.58, "floor": 202}, "sq": {"n": 37, "cols": 8, "fps": 19.82, "floor": 203}, "pu": {"n": 31, "cols": 8, "fps": 20.22, "floor": 146}, "pl": {"n": 40, "cols": 8, "fps": 13.33, "floor": 144}};
+function spMountSprite(box,id){const m=SP_SPR[id],rows=Math.ceil(m.n/m.cols),fl=(m.floor/220*100).toFixed(1);
+  box.innerHTML=`<div class="spspr" style="${id==='sq'?'transform:scaleX(-1);':''}background-image:url(sport/${id}.webp);background-size:${m.cols*100}% ${rows*100}%"></div><div class="spfloor" style="top:${fl}%"></div>`;
+  const el=box.firstChild,t0=performance.now();let last=-1;
+  const frame=now=>{if(!box.isConnected)return;const k=Math.floor((now-t0)/1000*m.fps)%m.n;if(k!==last){last=k;const c=k%m.cols,r=Math.floor(k/m.cols);el.style.backgroundPosition=`${m.cols>1?c/(m.cols-1)*100:0}% ${rows>1?r/(rows-1)*100:0}%`}requestAnimationFrame(frame)};requestAnimationFrame(frame)}
+function spMount(box){if(box.dataset.bad!=='1'&&!box.dataset.fix){const sid=spAnimKey(box.dataset.ex,box.dataset.v);if(SP_SPR[sid]){spMountSprite(box,sid);return}}
+const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[id],bad=box.dataset.bad==='1',form=SP_FORM[id]||{};const def=bad&&form.badKeys?Object.assign({},base,{keys:form.badKeys}):base;const NS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('class','spsvg');
   const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
   if(bad)mk('rect',{x:0,y:0,width:100,height:100,fill:'#FFF3F3'});mk('rect',{x:0,y:91,width:100,height:9,fill:bad?'#FBE0E0':'#E9F7DF'});mk('line',{x1:0,y1:91.5,x2:100,y2:91.5,stroke:'#C8E6B0','stroke-width':1.5});
