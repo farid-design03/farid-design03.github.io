@@ -5671,15 +5671,22 @@ function ajakTriples(){const cls=AJAK.cls||P.cls,sid=AJAK.sid||'acak',ui=AJAK.ui
   cs.forEach(c=>c.subjects.forEach(sb=>{if(cls!=='acak'&&sid!=='acak'&&sb.id!==sid)return;sb.units.forEach((u,i)=>{if(cls!=='acak'&&sid!=='acak'&&ui!=='acak'&&i!==+ui)return;out.push({c,s:sb,u,i})})}));return out}
 function ajakSpec(){const c=COURSE.find(x=>x.id===AJAK.cls);const sb=c&&AJAK.sid!=='acak'?c.subjects.find(x=>x.id===AJAK.sid):null;const u=sb&&AJAK.ui!=='acak'?sb.units[+AJAK.ui]:null;return {c,s:sb,u,ui:u?+AJAK.ui:null}}
 function ajakGames(){const sp=ajakSpec();if(sp.s)return roomGames(sp.s,sp.ui==null?0:sp.ui);return ['ular','lari','katak','labirin','pancing','penalti','kuis']}
-async function roomCreate(s0,ui0,n,bg){const sp=ajakSpec(),tri=ajakTriples();let mode=AJAK.mode||'kuis';const games=ajakGames();if(mode!=='acak'&&!games.includes(mode))mode=games[0];
+function roomGen(n){const sp=ajakSpec(),tri=ajakTriples();let mode=AJAK.mode||'kuis';const games=ajakGames();if(mode!=='acak'&&!games.includes(mode))mode=games[0];
   const pickQs=arcade=>{const out=[],seen=new Set();let g=0;while(out.length<n&&g<n*25){g++;const t=pick(tri);const q=t&&unitQs(t.u,1)[0];if(!q||seen.has(q.q)||(arcade&&q.html))continue;seen.add(q.q);out.push(q)}return out};
   let raw=pickQs(mode!=='kuis');if(raw.length<n){raw=pickQs(false);mode='kuis'}
   const s={id:sp.s?sp.s.id:'__mix',name:sp.s?sp.s.name:(sp.c?'Semua pelajaran '+sp.c.name:'Semua pelajaran, kelas acak')};const ui=sp.ui==null?0:sp.ui;const u={t:sp.u?sp.u.t:(sp.s?'Semua materi':'Soal campuran')};
   const modes=mode==='acak'?(()=>{const pool=games.slice(),out=[];let bag=[];for(let k=0;k<Math.ceil(n/2);k++){if(!bag.length)bag=shuffle(pool.slice());out.push(bag.pop())}return out})():null;
   const qs=raw.map(q=>({q:q.q,ans:q.ans,opts:q.opts,exp:q.exp||'',html:q.html||null,say:q.say||null}));
+  return {cls:sp.c?sp.c.id:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),mode,modes,sel:{cls:AJAK.cls||P.cls,sid:AJAK.sid||'acak',ui:AJAK.ui==null?'acak':String(AJAK.ui),mode:AJAK.mode||'acak',n}}}
+async function roomCreate(s0,ui0,n,bg){const gen=roomGen(n);
   const uid=FBX.user.uid;let code=null,last=null;
-  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set({host:uid,hostName:P.name,cls:sp.c?sp.c.id:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),mode,modes,status:'lobby',players:{[uid]:roomMe()},created:Date.now()});code=c}catch(e){last=e}}
+  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set(Object.assign({host:uid,hostName:P.name},gen,{status:'lobby',round:1,players:{[uid]:roomMe()},created:Date.now()}));code=c}catch(e){last=e}}
   if(!code)throw last;roomOpen(code,bg)}
+/* main lagi dengan pemain yang sama, tanpa mengundang ulang */
+async function roomRematch(btn){const d=ROOM.doc;if(!d||d.host!==FBX.user.uid)return;if(btn){btn.disabled=true;btn.textContent='Menyiapkan soal baru…'}
+  if(d.sel){AJAK.cls=d.sel.cls;AJAK.sid=d.sel.sid;AJAK.ui=d.sel.ui;AJAK.mode=d.sel.mode}
+  const gen=roomGen((d.sel&&d.sel.n)||d.n);const players={};Object.entries(d.players||{}).forEach(([uid,p])=>{players[uid]={name:p.name,av:p.av||null,score:0,c:0,i:0,done:false,t:0,joined:p.joined||Date.now()}});
+  try{await FB.db.doc('rooms/'+ROOM.code).update(Object.assign({},gen,{status:'lobby',round:(d.round||1)+1,players,startAt:null,created:Date.now()}))}catch(e){if(btn){btn.disabled=false;btn.textContent='Main lagi'}toast('lock',fbErr(e))}}
 async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<6){toast('lock','Kode tantangan 6 huruf.');return}
   let snap;try{snap=await FB.db.doc('rooms/'+code).get()}catch(e){toast('lock',fbErr(e));return}
   if(!snap.exists){toast('lock','Tantangan tidak ditemukan. Periksa lagi kodenya.');return}const d=snap.data(),uid=FBX.user.uid;
@@ -5690,9 +5697,9 @@ async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[
 function roomOpen(code,bg){roomClose(true);ROOM.code=code;ROOM.shown=false;ROOM.bg=!!bg;try{history.replaceState(history.state,'',location.pathname)}catch(e){}
   let el=$('#room');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb roomov" id="room" hidden></div>');el=$('#room')}el.hidden=!!bg;el.innerHTML='<div class="onbin" style="justify-content:center;align-items:center"><p class="note">Membuka ruang…</p></div>';
   ROOM.unsub=FB.db.doc('rooms/'+code).onSnapshot(s=>{if(!s.exists){roomClose();toast('lock','Ruang tantangan ditutup oleh pembuatnya.');return}ROOM.doc=s.data();roomRender()},e=>{roomClose();toast('lock',fbErr(e))})}
-function roomClose(silent){if(ROOM.unsub){try{ROOM.unsub()}catch(e){}}ROOM.unsub=null;clearInterval(ROOM.timer);ROOM.timer=null;ROOM.code=null;ROOM.doc=null;ROOM.playing=false;const el=$('#room');if(el)el.hidden=true;const lv=$('#roomLive');if(lv)lv.hidden=true}
+function roomClose(silent){if(ROOM.unsub){try{ROOM.unsub()}catch(e){}}ROOM.unsub=null;ROOM.round=null;clearInterval(ROOM.timer);ROOM.timer=null;ROOM.code=null;ROOM.doc=null;ROOM.playing=false;const el=$('#room');if(el)el.hidden=true;const lv=$('#roomLive');if(lv)lv.hidden=true}
 function roomRows(d){return Object.entries(d.players||{}).map(([uid,p])=>Object.assign({uid},p)).sort((a,b)=>(b.done-a.done)||(b.score-a.score)||(a.t||9e9)-(b.t||9e9)||(b.c-a.c))}
-function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.players[uid];if(!me){roomClose();return}const host=d.host===uid;if(ROOM.pendingShow&&!ROOM.playing)return;if(d.status!=='lobby'||Object.keys(d.players||{}).length>1)rememberFriends(d);if(ROOM.bg&&d.status==='lobby'){ajakFoot();return}ROOM.bg=false;
+function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.players[uid];if(!me){roomClose();return}const host=d.host===uid;if(ROOM.round!=null&&d.round!==ROOM.round&&!ROOM.playing){ROOM.pendingShow=false;if(!document.body.classList.contains('playing')){el&&(el.hidden=false)}else{game=null;clearInterval(timerId);if(arc.running)arcStop();go('team');el&&(el.hidden=false)}}ROOM.round=d.round;if(ROOM.pendingShow&&!ROOM.playing)return;if(d.status!=='lobby'||Object.keys(d.players||{}).length>1)rememberFriends(d);if(ROOM.bg&&d.status==='lobby'){ajakFoot();return}ROOM.bg=false;
   if(d.status==='play'&&!me.done&&!ROOM.playing){roomStart();return}
   if(ROOM.playing){roomLive();return}
   const rows=roomRows(d),all=rows.every(r=>r.done),lobby=d.status==='lobby';
@@ -5705,10 +5712,12 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
      ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':`<p class="note" style="margin:0">Peringkat berubah otomatis saat teman selesai bermain.</p>`}</div>
    ${lobby&&host?`<button class="primary press" id="rmGo" style="font-size:22px;padding:12px">Mulai sekarang</button><button class="ghost" id="rmMore">Ajak teman lagi</button>`:''}
    ${!lobby&&!me.done?`<button class="primary press" id="rmPlay">Main sekarang</button>`:''}
+   ${!lobby&&me.done&&host?`<button class="primary press" id="rmAgain" style="font-size:20px;padding:12px">🔁 Main lagi</button><p class="note" style="margin:-6px 0 0;text-align:center">Soal baru, pemain tetap sama. Tidak perlu mengundang ulang.</p>`:''}
+   ${!lobby&&me.done&&!host?`<p class="note" style="text-align:center;margin:0">Mau main lagi? Tunggu ${esc(d.hostName||'pembuat')} menekan <b>Main lagi</b>, nanti ronde baru muncul otomatis.</p>`:''}
    </div>`;
   hydrate(el);$('#rmX').onclick=()=>roomClose();$('#rmCopy').onclick=()=>copyText(ROOM.code);
   const g=$('#rmGo');if(g)g.onclick=()=>{g.disabled=true;FB.db.doc('rooms/'+ROOM.code).update({status:'play',startAt:Date.now()}).catch(e=>{g.disabled=false;toast('lock',fbErr(e))})};
-  const pl=$('#rmPlay');if(pl)pl.onclick=roomStart;const mo=$('#rmMore');if(mo)mo.onclick=()=>{el.hidden=true;ROOM.bg=true;openAjak()};
+  const pl=$('#rmPlay');if(pl)pl.onclick=roomStart;const ag=$('#rmAgain');if(ag)ag.onclick=()=>{if(!all&&ag.dataset.c!=='1'){ag.dataset.c='1';ag.textContent='Ada yang belum selesai. Tekan lagi untuk mulai';return}roomRematch(ag)};const mo=$('#rmMore');if(mo)mo.onclick=()=>{el.hidden=true;ROOM.bg=true;openAjak()};
   if(!lobby&&all&&rows.length>1&&rows[0].uid===uid&&!(P.roomWins||[]).includes(ROOM.code)){P.roomWins=(P.roomWins||[]).concat(ROOM.code).slice(-50);P.gems+=10;save();renderTop();toast('gem','Juara tantangan! +10 permata');sfx.win&&sfx.win();burstConfetti&&burstConfetti()}}
 const fmtSec=t=>t?`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`:'';
 function roomStart(){const d=ROOM.doc;let qs=[];try{qs=JSON.parse(d.qs)}catch(e){}if(!qs.length){toast('lock','Soal tantangan tidak bisa dibuka.');return}
