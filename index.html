@@ -1337,6 +1337,48 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
 .ctr{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;padding:7px 0;border-bottom:1px solid #EFEFEF}.ctr:last-child{border-bottom:0}
 .ctr.ch{font-size:12px;font-weight:800;color:var(--muted)}.ctr.ch span{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ctr .cl{text-align:center;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px}.ctr .cl i[data-icon]{width:15px;height:15px;display:inline-block}.ctr .cl i svg{width:100%;height:100%}
+/* ===== Interaksi ala Duolingo: tombol 3D yang "tenggelam" saat dipencet ===== */
+*{-webkit-tap-highlight-color:transparent}
+button{touch-action:manipulation}
+.primary,.ghost,.smallbtn,.opt,.popover .row,.aved-it,.petit,.item .buy,.ajinv,.ajg,.ajopt,.stile,.back,.iconbtn,.pban-set,.pban-edit,.keypad button,.seg button,.lrow.tap,.pick,.tcard button{transition:transform .07s ease,box-shadow .07s ease,background-color .15s,filter .15s,border-color .15s}
+.primary:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 0 0 #58A700!important}
+.ghost:active:not(:disabled),.smallbtn:active:not(:disabled),.aved-it:active,.petit:active,.ajopt:active,.stile:active,.back:active,.iconbtn:active,.pban-set:active,.pban-edit:active,.keypad button:active,.item .buy:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 0 0 transparent!important}
+.opt:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 0 0 transparent!important}
+.popover .row{box-shadow:0 3px 0 var(--line)}.popover .row:active{transform:translateY(3px);box-shadow:none}
+.popover .row:hover{border-color:#84D8FF;background:#F4FBFF}
+.popover .row[aria-current="true"]{border-color:#84D8FF;background:#DDF4FF;box-shadow:0 3px 0 #84D8FF}
+@media (hover:hover){.ghost:hover:not(:disabled),.smallbtn:hover:not(:disabled),.aved-it:hover,.petit:hover,.ajopt:hover{background:#F7F7F7}.primary:hover:not(:disabled){filter:brightness(1.07)}}
+/* jalur belajar */
+.node{transition:transform .08s ease,box-shadow .08s ease,filter .15s}
+.node:not(.lock):active{transform:translateY(7px)!important;box-shadow:0 0 0 transparent!important}
+.node.cur:active{box-shadow:0 0 0 8px #fff,0 0 0 12px #E5E5E5!important}
+.node.lock:active{animation:nodeShake .3s}
+@keyframes nodeShake{25%{translate:-5px 0}50%{translate:5px 0}75%{translate:-3px 0}}
+.starttip{animation:tipBob 1.4s ease-in-out infinite}
+@keyframes tipBob{0%,100%{translate:0 0}50%{translate:0 -6px}}
+/* menu bawah */
+.nav{transition:transform .1s ease,background-color .15s,border-color .15s}
+.nav:active{transform:scale(.88)}
+.nav[aria-current="page"] i[data-icon]{animation:navPop .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes navPop{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+/* sakelar */
+.tgl{transition:background-color .2s}.tgl::after{transition:left .2s cubic-bezier(.3,1.5,.5,1)}
+.tgl:active::after{width:28px}
+/* jendela & halaman muncul lembut */
+.modal:not([hidden]) .mbox{animation:sheetIn .3s cubic-bezier(.2,1.25,.4,1)}
+@keyframes sheetIn{0%{transform:translateY(40px) scale(.96);opacity:0}100%{transform:none;opacity:1}}
+.view:not([hidden]){animation:viewIn .25s ease}
+@keyframes viewIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+.popover:not([hidden]){animation:popIn2 .25s cubic-bezier(.2,1.3,.4,1);transform-origin:top center}
+@keyframes popIn2{0%{transform:scale(.9) translateY(-6px);opacity:0}100%{transform:none;opacity:1}}
+/* pilihan jawaban: memantul saat dipilih */
+.opt.sel{animation:optPick .22s ease}
+@keyframes optPick{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+.opt.wrong{animation:optWrong .35s}
+@keyframes optWrong{20%{translate:-6px 0}40%{translate:6px 0}60%{translate:-4px 0}80%{translate:3px 0}}
+.opt.right{animation:optRight .35s}
+@keyframes optRight{50%{transform:scale(1.04)}}
+@media (prefers-reduced-motion:reduce){.starttip,.view:not([hidden]),.modal .mbox,.nav i[data-icon]{animation:none!important}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2095,7 +2137,9 @@ let soundOn=store.get('sound',true);
 /* ---------- audio & speech ---------- */
 let actx=null;
 function tone(freqs,dur=.12){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();freqs.forEach((f,i)=>{const o=actx.createOscillator(),gn=actx.createGain();o.type='triangle';o.frequency.value=f;const t=actx.currentTime+i*dur;gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(.18,t+.02);gn.gain.exponentialRampToValueAtTime(.0001,t+dur*1.6);o.connect(gn).connect(actx.destination);o.start(t);o.stop(t+dur*1.8)})}catch(e){}}
-const sfx={ok:()=>tone([660,880]),bad:()=>tone([300,220],.15),win:()=>tone([523,659,784,1047],.12)};
+let hapOn=store.get('haptic',true);
+function buzz(p){if(!hapOn)return;try{navigator.vibrate&&navigator.vibrate(p)}catch(_){}}
+const sfx={ok:()=>{tone([660,880]);buzz([12,40,12])},bad:()=>{tone([300,220],.15);buzz([60,50,60])},win:()=>{tone([523,659,784,1047],.12);buzz([20,60,20,60,40])}};
 if(!store.get('music2',false)){store.set('music',false);store.set('music2',true)}
 const MUS={on:store.get('music',false),t:null,step:0,next:0,gain:null};
 const MEL=[72,0,76,79,0,76,72,0, 77,0,81,84,0,81,77,0, 79,0,83,86,0,83,79,0, 76,79,84,0,83,0,79,0, 72,74,76,0,79,0,76,0, 77,76,74,0,72,0,0,0, 74,76,77,0,81,0,79,0, 76,74,72,0,67,0,72,0];
@@ -3537,11 +3581,12 @@ function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done
 function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class="sethead"><h3 style="margin:0;flex:1">Pengaturan</h3><button class="back" id="setX" aria-label="Tutup">✕</button></div><div class="card settings" id="setBody"></div></div>`);
   $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   const rs=()=>{
-  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
+  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
    `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
     <div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
   $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();(rs(),renderProfile())};
   $('#sMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();(rs(),renderProfile())};
+  $('#sHap').onclick=()=>{hapOn=!hapOn;store.set('haptic',hapOn);if(hapOn)buzz([15,40,15]);(rs(),renderProfile())};
   $('#sUnl').onclick=()=>{P.unlimited=!P.unlimited;save();renderTop();(rs(),renderProfile())};
   $('#sTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();(rs(),renderProfile())};
   $('#sGoal').querySelectorAll('button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;if(P.quests)P.quests.list.forEach(q=>{if(q.id==='xp')q.goal=P.goal});save();(rs(),renderProfile());renderTop()});
@@ -5114,6 +5159,9 @@ if(GAS){$('#loading').hidden=false;google.script.run.withSuccessHandler(res=>{tr
 else{normalizeApp();bootApp()}
 applyLic();setInterval(checkLock,60000);
 if(GAS)google.script.run.withSuccessHandler(licFromServer).getLicense();
+
+/* getar halus saat menekan tombol (seperti aplikasi Duolingo di HP) */
+document.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;const b=e.target.closest('button,.node,.lrow.tap,[role=button]');if(!b||b.disabled)return;buzz(b.classList.contains('lock')?[20,40,20]:10)},{passive:true});
 </script>
 
 <script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
