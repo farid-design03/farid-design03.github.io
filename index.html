@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Jelajah Kelas</title>
-<meta name="description" content="Belajar seru sambil main, dari TK sampai SMA/SMK. Guru bisa memantau perkembangan murid.">
+<title>JELAS · Jelajah Kelas</title>
+<meta name="description" content="JELAS (Jelajah Kelas): belajar seru sambil main, dari TK sampai SMA/SMK. Guru bisa memantau perkembangan murid.">
 <meta name="theme-color" content="#3D8BFF">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -1072,6 +1072,9 @@ html,body{overflow-x:hidden;overflow-x:clip}
 #rcShow{white-space:nowrap}
 #profileList .prow>button.primary,#profileList .prow>button.ghost{font-size:16px;padding:10px 12px}
 .syncpill.fade{opacity:0;transition:opacity .6s;pointer-events:none}
+.wtitle{letter-spacing:.06em}
+.wtag{margin:-6px 0 2px;font-family:var(--title);font-size:clamp(20px,4.5vw,28px);color:#fff;text-shadow:var(--outline);letter-spacing:.04em}
+.sbname{display:flex;flex-direction:column;letter-spacing:.06em}.sbname small{font-family:var(--display);font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:2px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -1087,7 +1090,7 @@ html,body{overflow-x:hidden;overflow-x:clip}
 
 <div class="app" id="app">
   <nav class="side" id="sideNav" aria-label="Menu utama">
-    <div class="sbrand"><span class="logo mascot" data-mascot></span><b>Jelajah Kelas</b></div>
+    <div class="sbrand"><span class="logo mascot" data-mascot></span><b class="sbname">JELAS<small>Jelajah Kelas</small></b></div>
     <button class="nav snav" data-tab="learn"><i data-icon="home"></i><span>Belajar</span></button>
     <button class="nav snav" data-tab="team"><i data-icon="team"></i><span>Main Bareng</span></button>
     <button class="nav snav" data-tab="league"><i data-icon="league"></i><span>Peringkat</span></button>
@@ -3205,7 +3208,7 @@ function readCode(code){const mt=String(code||'').toUpperCase().replace(/\s+/g,'
 function activate(code){const r=readCode(code);if(!r)return 'Kode aktivasi tidak valid. Periksa kembali huruf dan angkanya.';if(r.until<Date.now())return 'Kode ini sudah kedaluwarsa.';
   LIC.until=r.until;LIC.max=r.max;LIC.trial=false;LIC.codes=[...(LIC.codes||[]),code.toUpperCase()].slice(-20);saveLic();return ''}
 function checkLock(){const el=$('#lock');if(!el)return;if(licActive()){el.hidden=true;return}
-  el.hidden=false;el.innerHTML=`<div class="onbin" style="max-width:560px"><div class="onbtalk"><div class="mascot" data-mascot data-mood="sad"></div><div class="bubble"><b>Masa aktif sudah berakhir</b><span>${LIC.trial?'Masa uji coba':'Lisensi'} Jelajah Kelas di perangkat ini berakhir pada ${fmtTs(LIC.until)}. Semua data murid dan nilai tetap aman.</span></div></div>
+  el.hidden=false;el.innerHTML=`<div class="onbin" style="max-width:560px"><div class="onbtalk"><div class="mascot" data-mascot data-mood="sad"></div><div class="bubble"><b>Masa aktif sudah berakhir</b><span>${LIC.trial?'Masa uji coba':'Lisensi'} JELAS di perangkat ini berakhir pada ${fmtTs(LIC.until)}. Semua data murid dan nilai tetap aman.</span></div></div>
    <div class="tcard"><h3>Aktifkan kembali</h3><p class="sub">Masukkan kode aktivasi dari penjual.${LIC.contact?` Hubungi: <b>${esc(LIC.contact)}</b>`:''}</p><input class="onbname" id="lkCode" placeholder="JK-20271231-040-XXXXXX" autocomplete="off" style="font-size:20px"><p class="note" id="lkErr" style="color:var(--bad);font-weight:700"></p><button class="primary" id="lkGo">Aktifkan</button></div>
    <button class="ghost" id="lkAdmin" style="align-self:center">Masuk sebagai admin</button></div>`;
   hydrate(el);$('#lkGo').onclick=()=>activateAsync($('#lkCode').value,e=>{if(e){$('#lkErr').textContent=e;return}toast('check',`Aktif sampai ${fmtTs(LIC.until)}.`);checkLock()});$('#lkAdmin').onclick=adminLogin}
@@ -3318,7 +3321,7 @@ function closeAuth(){$('#auth').hidden=true}
 function logout(){setSession(null);P=null;ADMIN_TOKEN=null;game=null;document.body.classList.remove('teacher','playing','lessonmode');$('#adminPanel').hidden=true;closeModal();closePop();showWelcome()}
 
 function showWelcome(){const el=$('#auth');el.hidden=false;$('#picker').hidden=true;$('#onb').hidden=true;const t=T();
-  el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="happy"></div><h1 class="wtitle">Jelajah Kelas</h1><p class="wsub">Belajar seru sambil main, dari TK sampai SMA/SMK.</p>${t?`<p class="wschool">${esc(t.school||'')}${t.school?' · ':''}${tCls().full}</p>`:''}</div>
+  el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="happy"></div><h1 class="wtitle">JELAS</h1><p class="wtag">Jelajah Kelas</p><p class="wsub">Belajar seru sambil main, dari TK sampai SMA/SMK.</p>${t?`<p class="wschool">${esc(t.school||'')}${t.school?' · ':''}${tCls().full}</p>`:''}</div>
    <div class="wbtns"><button class="primary press" id="wStart">MULAI SEKARANG</button><button class="ghost press" id="wLogin">SAYA SUDAH PUNYA AKUN</button>${t?'':'<button class="linkbtn" id="wTeacher">Saya guru, siapkan kelas</button>'}</div></div>`;
   hydrate(el);$('#wStart').onclick=()=>{tone([660,880],.06);startOnboarding(true)};$('#wLogin').onclick=()=>showLogin();const wt=$('#wTeacher');if(wt)wt.onclick=()=>{closeAuth();teacherSetup()}}
 function showLogin(prefill){const el=$('#auth');el.hidden=false;
@@ -3588,8 +3591,8 @@ logout=function(){fbStop();clearTimeout(FBX.t);const fl=SESSION?fbFlush():Promis
 /* ---------- paket Pro ---------- */
 const PRO_LIST=[['cal','Absensi dan jadwal mengajar'],['tv','Evaluasi harian di TV sentuh'],['quiz','Bank soal buatan sendiri'],['report','Rapor otomatis dan salin ke Excel'],['team',`Murid tanpa batas (gratis maksimal ${FREE_MAX})`]];
 function proAsk(){const wa=String(FBX.cfg.wa||'').replace(/\D/g,'').replace(/^0/,'62');const mail=(FBX.user&&FBX.user.email)||'';
-  const msg=encodeURIComponent(`Halo Admin Jelajah Kelas, saya ingin berlangganan paket Pro.\nEmail guru: ${mail}`);
-  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.trophy||''}</span><h3>Jelajah Kelas Pro</h3><p>Buka semua fitur guru:</p></div>
+  const msg=encodeURIComponent(`Halo Admin JELAS (Jelajah Kelas), saya ingin berlangganan paket Pro.\nEmail guru: ${mail}`);
+  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.trophy||''}</span><h3>JELAS Pro</h3><p>Buka semua fitur guru:</p></div>
    <div class="plist">${PRO_LIST.map(x=>`<div class="pl"><span style="width:30px;flex:none">${ICONS[x[0]]||''}</span><span class="grow"><b>${x[1]}</b></span></div>`).join('')}</div>
    <p class="note">${FBX.cfg.price?`<b>${esc(FBX.cfg.price)}</b>. `:''}Setelah pembayaran, admin mengaktifkan Pro untuk email <b>${esc(mail)}</b>. Fitur langsung terbuka tanpa perlu keluar.</p>
    <div class="acts"><button class="ghost" id="mNo">Nanti saja</button>${wa?`<a class="primary" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">Hubungi admin</a>`:''}</div>`);
@@ -3606,7 +3609,7 @@ function fbCodeCard(compact){const code=(FBX.classDoc&&FBX.classDoc.code)||'··
   return `<div class="tcard fbcode"><div class="fbcode-row"><div class="grow"><h3>Kode kelas</h3><p class="sub" style="margin:0">Bagikan hanya ke muridmu. Murid memasukkan kode ini saat mendaftar atau di menu Profil, lalu latihannya di rumah langsung terlihat di sini.</p></div><div class="fbcode-big" aria-label="Kode kelas">${esc(code)}</div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" data-fb="copy">Salin pesan untuk murid</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}<span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPro()?'<span class="pill ok">PRO</span>':'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
 function fbBindCode(root){if(!root)return;root.querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{const k=b.dataset.fb,code=FBX.classDoc&&FBX.classDoc.code;
-    if(k==='copy')copyText(`Ayo belajar di Jelajah Kelas!\n1. Buka ${location.origin+location.pathname}\n2. Pilih MULAI SEKARANG, lalu buat akun\n3. Masukkan kode kelas: ${code}\nSudah punya akun? Masukkan kodenya di menu Profil.`);
+    if(k==='copy')copyText(`Ayo belajar di JELAS (Jelajah Kelas)!\n1. Buka ${location.origin+location.pathname}\n2. Pilih MULAI SEKARANG, lalu buat akun\n3. Masukkan kode kelas: ${code}\nSudah punya akun? Masukkan kodenya di menu Profil.`);
     if(k==='pro')proAsk();
     if(k==='new'){openModal(`<h3>Buat kode kelas baru?</h3><p>Kode lama <b>${esc(code||'')}</b> tidak bisa dipakai lagi. Murid yang sudah bergabung tetap ada di kelasmu.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat kode baru</button></div>`);
       $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;fbNewCode(FBX.user.uid,APP.teacher).then(c=>{closeModal();toast('key',`Kode kelas baru: ${c}`);TEACH_R[curTab]&&TEACH_R[curTab]()}).catch(e=>{closeModal();toast('lock',fbErr(e))})}}});

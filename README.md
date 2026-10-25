@@ -1,4 +1,4 @@
-# Jelajah Kelas (versi online)
+# JELAS · Jelajah Kelas (versi online)
 
 Aplikasi belajar TK–SMA/SMK. Situs ini diterbitkan otomatis oleh GitHub Pages setiap ada perubahan.
 

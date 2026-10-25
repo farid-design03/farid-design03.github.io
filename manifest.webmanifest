@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Jelajah Kelas",
-  "short_name": "Jelajah Kelas",
-  "description": "Belajar seru sambil main, dari TK sampai SMA/SMK.",
+  "name": "JELAS · Jelajah Kelas",
+  "short_name": "JELAS",
+  "description": "JELAS (Jelajah Kelas): belajar seru sambil main, dari TK sampai SMA/SMK.",
   "lang": "id",
   "start_url": "./",
   "scope": "./",
