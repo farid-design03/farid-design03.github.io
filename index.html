@@ -1736,6 +1736,105 @@ const COURSE=[
     U('Jaringan dasar','IP, topologi, router, konektor',[TKJ,[3,5,6,7]],{tip:'IPv4 = 32 bit, topologi star memakai switch pusat, kabel UTP memakai RJ-45.'}),
     U('Layanan jaringan','Port, DNS, DHCP, HTML',[TKJ,[4,8,9,12]],{tip:'DNS menerjemahkan nama domain, DHCP memberi alamat IP otomatis, HTTPS port 443.'}),
     U('Bilangan biner','Biner, desimal, dan logika',[binToDec,decToBin],{fit:'num',tip:'Nilai tiap posisi biner dari kanan: 1, 2, 4, 8, 16, 32.'})]}]}];
+/* ---------- Pendidikan Agama Islam dan Budi Pekerti ---------- */
+const PAI_TK=[
+ ['Salam umat Islam saat bertemu adalah …','Assalamu’alaikum','Selamat tinggal','Terima kasih','Sampai jumpa','Ucapkan salam dengan senyum, ya.'],
+ ['Sebelum makan, kita membaca …','Bismillah','Alhamdulillah','Astagfirullah','Amin','Bismillah artinya dengan menyebut nama Allah.'],
+ ['Sesudah makan, kita mengucapkan …','Alhamdulillah','Bismillah','Assalamu’alaikum','Insyaallah','Alhamdulillah artinya segala puji bagi Allah.'],
+ ['Jawaban salam Assalamu’alaikum adalah …','Wa’alaikumussalam','Alhamdulillah','Bismillah','Masyaallah'],
+ ['Kitab suci umat Islam adalah …','Al-Qur’an','Kamus','Buku cerita','Majalah'],
+ ['Tempat ibadah umat Islam adalah …','masjid','pasar','taman','kebun'],
+ ['Nabi terakhir adalah …','Nabi Muhammad','Nabi Adam','Nabi Nuh','Nabi Musa'],
+ ['Shalat wajib dalam sehari ada … kali','5','3','2','7','Subuh, Zuhur, Asar, Magrib, dan Isya.'],
+ ['Sebelum shalat, kita harus …','berwudu','makan','tidur','bermain'],
+ ['Huruf hijaiyah yang pertama adalah …','Alif','Ba','Ta','Jim'],
+ ['Kalau berbuat salah, kita mengucapkan …','Astagfirullah','Alhamdulillah','Bismillah','Assalamu’alaikum','Astagfirullah artinya aku memohon ampun kepada Allah.']];
+const PAI_SD13=[
+ ['Rukun Islam ada …','5','6','4','3','Syahadat, shalat, zakat, puasa, dan haji.'],
+ ['Rukun Iman ada …','6','5','4','7','Iman kepada Allah, malaikat, kitab, rasul, hari akhir, serta qada dan qadar.'],
+ ['Rukun Islam yang pertama adalah …','membaca dua kalimat syahadat','shalat','puasa','zakat'],
+ ['Shalat Subuh terdiri dari … rakaat','2','3','4','1'],
+ ['Shalat Magrib terdiri dari … rakaat','3','2','4','5'],
+ ['Puasa wajib dilaksanakan pada bulan …','Ramadan','Syawal','Muharam','Rajab'],
+ ['Hari raya setelah puasa Ramadan adalah …','Idulfitri','Iduladha','Maulid Nabi','Isra Mikraj'],
+ ['Surah pertama dalam Al-Qur’an adalah …','Al-Fatihah','An-Nas','Al-Ikhlas','Al-Baqarah'],
+ ['Surah Al-Ikhlas mengajarkan bahwa Allah itu …','Maha Esa','beranak','ada banyak','sama dengan makhluk'],
+ ['Malaikat yang menyampaikan wahyu kepada para nabi adalah …','Jibril','Mikail','Israfil','Izrail'],
+ ['Nabi Muhammad lahir di kota …','Mekah','Madinah','Kairo','Bagdad'],
+ ['Jujur artinya …','berkata dan berbuat sesuai kenyataan','suka berbohong','malas belajar','mudah marah'],
+ ['Sikap kita kepada orang tua seharusnya …','berbakti dan sopan','membantah','berteriak','tidak peduli'],
+ ['Air untuk berwudu harus …','suci dan menyucikan','berwarna','berbau','kotor']];
+const PAI_SD46=[
+ ['Ar-Rahman artinya …','Maha Pengasih','Maha Raja','Maha Suci','Maha Mengetahui'],
+ ['Al-Malik artinya …','Maha Merajai','Maha Pengasih','Maha Pemberi Rezeki','Maha Pemaaf'],
+ ['Al-‘Alim artinya …','Maha Mengetahui','Maha Melihat','Maha Mendengar','Maha Besar'],
+ ['Kitab Taurat diturunkan kepada Nabi …','Musa','Isa','Daud','Muhammad'],
+ ['Kitab Zabur diturunkan kepada Nabi …','Daud','Musa','Isa','Ibrahim'],
+ ['Kitab Injil diturunkan kepada Nabi …','Isa','Daud','Musa','Nuh'],
+ ['Jumlah nabi dan rasul yang wajib diketahui ada …','25','10','20','30'],
+ ['Nabi yang membuat kapal besar atas perintah Allah adalah Nabi …','Nuh','Yunus','Ibrahim','Sulaiman'],
+ ['Perintah shalat lima waktu diterima Nabi Muhammad saat peristiwa …','Isra Mikraj','Hijrah','Perang Badar','Fathu Makkah'],
+ ['Hijrah Nabi Muhammad adalah pindah dari Mekah ke …','Madinah','Taif','Yaman','Syam'],
+ ['Zakat fitrah dibayarkan paling lambat …','sebelum shalat Idulfitri','saat Iduladha','awal Muharam','kapan saja dalam setahun'],
+ ['Nun mati atau tanwin bertemu huruf ba dibaca …','iqlab','izhar','idgam','ikhfa','Bunyi nun berubah menjadi mim.'],
+ ['Shalat Jumat wajib bagi …','laki-laki muslim yang sudah balig','anak kecil','orang yang sakit parah','musafir'],
+ ['Menghormati teman yang berbeda agama adalah sikap …','toleransi','sombong','iri hati','egois']];
+const PAI_SMP=[
+ ['Mim mati bertemu huruf ba dibaca …','ikhfa syafawi','izhar syafawi','idgam mimi','iqlab'],
+ ['Mim mati bertemu huruf mim dibaca …','idgam mimi','ikhfa syafawi','izhar syafawi','iqlab'],
+ ['Sifat wajib rasul “siddiq” artinya …','benar atau jujur','dapat dipercaya','menyampaikan','cerdas'],
+ ['Sifat wajib rasul “amanah” artinya …','dapat dipercaya','cerdas','jujur','menyampaikan'],
+ ['Sifat wajib rasul “fatanah” artinya …','cerdas','dapat dipercaya','jujur','menyampaikan'],
+ ['Iman kepada qada dan qadar adalah rukun iman ke …','6','5','4','3'],
+ ['Shalat jamak artinya …','menggabungkan dua shalat dalam satu waktu','meringkas shalat empat rakaat menjadi dua','shalat sambil duduk','shalat berjamaah'],
+ ['Shalat qasar artinya …','meringkas shalat empat rakaat menjadi dua','menggabungkan dua shalat','mengganti shalat di hari lain','shalat di masjid'],
+ ['Sujud syukur dilakukan ketika …','mendapat nikmat atau terhindar dari bahaya','lupa jumlah rakaat','membaca ayat sajdah','akan tidur'],
+ ['Khulafaurrasyidin yang pertama adalah …','Abu Bakar as-Siddiq','Umar bin Khattab','Usman bin Affan','Ali bin Abi Thalib'],
+ ['Umar bin Khattab mendapat gelar …','al-Faruq','as-Siddiq','Zun Nurain','Babul ‘Ilmi'],
+ ['Khalifah yang membukukan Al-Qur’an menjadi satu mushaf standar adalah …','Usman bin Affan','Abu Bakar as-Siddiq','Ali bin Abi Thalib','Umar bin Khattab'],
+ ['Tawaduk artinya …','rendah hati','sombong','pemarah','kikir'],
+ ['Q.S. Al-Hujurat ayat 12 melarang kita …','berprasangka buruk dan bergunjing','bersedekah','menuntut ilmu','bermusyawarah']];
+const PAI_SMA=[
+ ['Sumber hukum Islam yang pertama adalah …','Al-Qur’an','hadis','ijmak','qiyas'],
+ ['Ijmak artinya …','kesepakatan para ulama tentang suatu hukum','pendapat satu orang','kebiasaan masyarakat','perintah raja'],
+ ['Qiyas artinya …','menyamakan hukum perkara baru dengan perkara yang sudah ada hukumnya karena sebabnya sama','kesepakatan ulama','hadis yang lemah','tafsir ayat'],
+ ['Hukum melaksanakan shalat jenazah adalah …','fardu kifayah','fardu ain','sunah','mubah'],
+ ['Ilmu tentang pembagian harta warisan disebut …','ilmu mawaris','ilmu tajwid','ilmu tafsir','ilmu falak'],
+ ['Q.S. Al-Isra ayat 32 melarang …','mendekati zina','bersedekah','bekerja keras','menuntut ilmu'],
+ ['Inti Q.S. Al-Kafirun tentang toleransi adalah …','untukmu agamamu, untukku agamaku','memaksa orang lain masuk Islam','tidak boleh bertetangga','semua agama sama'],
+ ['Jalur masuknya Islam ke Indonesia berikut benar, kecuali …','peperangan','perdagangan','perkawinan','pendidikan'],
+ ['Wali Songo yang berdakwah memakai wayang kulit adalah …','Sunan Kalijaga','Sunan Gresik','Sunan Ampel','Sunan Giri'],
+ ['Pendiri Muhammadiyah adalah …','K.H. Ahmad Dahlan','K.H. Hasyim Asy’ari','H.O.S. Tjokroaminoto','K.H. Wahid Hasyim'],
+ ['Pendiri Nahdlatul Ulama adalah …','K.H. Hasyim Asy’ari','K.H. Ahmad Dahlan','Buya Hamka','K.H. Agus Salim'],
+ ['Pusat ilmu pengetahuan di Bagdad pada masa Dinasti Abbasiyah bernama …','Baitul Hikmah','Al-Azhar','Nizamiyah','Darul Arqam'],
+ ['Husnuzan artinya …','berprasangka baik','berprasangka buruk','bergunjing','iri hati'],
+ ['Mujahadah an-nafs artinya …','bersungguh-sungguh mengendalikan hawa nafsu','mengikuti hawa nafsu','berlomba dalam kebaikan','menyendiri dari masyarakat']];
+const PAI_SUBJ={
+ tk:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'word',units:[
+   U('Doa dan salam','Ucapan baik sehari-hari',[PAI_TK,[0,1,2,3,10]],{tip:'Bismillah sebelum, Alhamdulillah sesudah. Jawab salam dengan Wa’alaikumussalam.'}),
+   U('Mengenal Islam','Kitab suci, masjid, nabi, dan shalat',[PAI_TK,[4,5,6,7,8,9]],{tip:'Kitab suci Al-Qur’an, tempat ibadah masjid, shalat wajib 5 kali sehari.'})]},
+ sd1:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'phrase',units:[
+   U('Rukun Islam dan iman','Lima rukun Islam dan enam rukun iman',[PAI_SD13,[0,1,2,9]],{tip:'Rukun Islam ada 5, rukun iman ada 6.'}),
+   U('Shalat dan puasa','Rakaat shalat, wudu, dan Ramadan',[PAI_SD13,[3,4,5,6,13]],{tip:'Subuh 2, Zuhur 4, Asar 4, Magrib 3, Isya 4 rakaat.'}),
+   U('Al-Qur’an dan nabi','Surah pendek dan kisah nabi',[PAI_SD13,[7,8,10]],{tip:'Al-Fatihah surah pertama. Al-Ikhlas mengajarkan Allah Maha Esa.'}),
+   U('Akhlak terpuji','Jujur dan berbakti',[PAI_SD13,[11,12]],{tip:'Jujur berarti berkata sesuai kenyataan. Hormati dan bantu orang tua.'})]},
+ sd2:{id:'pai',name:'Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'long',units:[
+   U('Asmaul Husna','Nama-nama baik Allah',[PAI_SD46,[0,1,2]],{tip:'Ar-Rahman Maha Pengasih, Al-Malik Maha Merajai, Al-‘Alim Maha Mengetahui.'}),
+   U('Kitab dan rasul','Kitab suci dan kisah para nabi',[PAI_SD46,[3,4,5,6,7]],{tip:'Taurat Nabi Musa, Zabur Nabi Daud, Injil Nabi Isa, Al-Qur’an Nabi Muhammad.'}),
+   U('Sejarah Nabi Muhammad','Isra Mikraj dan hijrah',[PAI_SD46,[8,9]],{tip:'Perintah shalat diterima saat Isra Mikraj. Hijrah dari Mekah ke Madinah.'}),
+   U('Fikih dan tajwid','Zakat, shalat Jumat, dan bacaan iqlab',[PAI_SD46,[10,11,12,13]],{tip:'Nun mati bertemu ba dibaca iqlab. Zakat fitrah dibayar sebelum shalat Idulfitri.'})]},
+ smp:{id:'pai',name:'Pendidikan Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'long',units:[
+   U('Tajwid mim mati','Ikhfa syafawi, idgam mimi, izhar syafawi',[PAI_SMP,[0,1]],{tip:'Mim mati bertemu ba: ikhfa syafawi. Bertemu mim: idgam mimi. Selain itu: izhar syafawi.'}),
+   U('Iman kepada rasul dan takdir','Sifat wajib rasul, qada dan qadar',[PAI_SMP,[2,3,4,5]],{tip:'Siddiq jujur, amanah dapat dipercaya, tablig menyampaikan, fatanah cerdas.'}),
+   U('Shalat dalam perjalanan','Jamak, qasar, dan sujud syukur',[PAI_SMP,[6,7,8]],{tip:'Jamak: menggabungkan. Qasar: meringkas yang 4 rakaat menjadi 2.'}),
+   U('Khulafaurrasyidin dan akhlak','Sejarah khalifah dan sikap terpuji',[PAI_SMP,[9,10,11,12,13]],{tip:'Abu Bakar, Umar, Usman, Ali. Usman membukukan mushaf Al-Qur’an.'})]},
+ sma:{id:'pai',name:'Pendidikan Agama Islam',glyph:'PAI',color:'#0E9F6E',fit:'long',units:[
+   U('Sumber hukum Islam','Al-Qur’an, hadis, dan ijtihad',[PAI_SMA,[0,1,2]],{tip:'Al-Qur’an, hadis, lalu ijtihad (ijmak dan qiyas).'}),
+   U('Fikih','Jenazah, mawaris, dan larangan',[PAI_SMA,[3,4,5]],{tip:'Shalat jenazah fardu kifayah. Mawaris adalah ilmu pembagian warisan.'}),
+   U('Islam di Indonesia','Jalur masuk, Wali Songo, organisasi Islam',[PAI_SMA,[7,8,9,10,11]],{tip:'Islam masuk lewat perdagangan, perkawinan, pendidikan, dan seni budaya.'}),
+   U('Akhlak dan toleransi','Husnuzan, kontrol diri, toleransi',[PAI_SMA,[6,12,13]],{tip:'Husnuzan berprasangka baik. Mujahadah an-nafs mengendalikan hawa nafsu.'})]}};
+COURSE.forEach(c=>{if(PAI_SUBJ[c.id]&&!c.subjects.some(s=>s.id==='pai'))c.subjects.push(PAI_SUBJ[c.id])});
+LEVELS.forEach(l=>{const bank={tk:PAI_TK,sd:[...PAI_SD13,...PAI_SD46],smp:PAI_SMP,sma:PAI_SMA}[l.id];if(bank&&!l.subjects.some(s=>s.id==='pai'))l.subjects.push({id:'pai',name:'Agama Islam',glyph:'PAI',make:b(bank)})});
 const UNIT_COLORS=['#3D8BFF','#26BF66','#FF8A3D','#9B6BFF','#FF5C9E','#14B8A6'];
 function unitQs(u,n){
   if(u.g)return fromGens(u.g,n);
@@ -1830,7 +1929,7 @@ const FIT={
 const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/warna':'kidSlow','tk/banyak':'picture','tk/__mix':'kidSlow',
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
- 'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long'};
+ 'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
 const WHY={tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
  pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Gerbang lebar muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
@@ -2673,7 +2772,7 @@ const UNIT_SHADES=[0,-.16,-.3,.1,-.08,-.22];
 const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:null;return c?shade(c,UNIT_SHADES[ui%UNIT_SHADES.length]):UNIT_COLORS[ui%UNIT_COLORS.length]};
 const WORLD_DOODLES={hitung:['1','2','3','+','5','★'],huruf:['A','b','C','d','E','?'],warna:['●','▲','■','★','◆','♥'],mtk:['+','×','÷','=','π','%'],bindo:['Aa','B','“','?','!','k'],umum:['☀','☁','♣','✿','☂','★'],
   ipas:['☘','☀','H₂O','✿','°C','∿'],ipa:['H₂O','☘','°C','∿','O₂','g'],pancasila:['★','◆','✦','♥','✿','⚑'],eng:['Hi!','A','b','?','ok','C'],ips:['⌖','N','↗','⚑','$','✈'],
-  fisika:['F=ma','∿','λ','g','Ω','v'],kimbio:['DNA','H₂O','pH','✿','C','O₂'],sejarah:['1945','⚑','✦','★','IV','II'],tkj:['0101','</>','{ }','#','01','IP']};
+  fisika:['F=ma','∿','λ','g','Ω','v'],kimbio:['DNA','H₂O','pH','✿','C','O₂'],sejarah:['1945','⚑','✦','★','IV','II'],tkj:['0101','</>','{ }','#','01','IP'],pai:['ا','ب','☪','✦','ت','★']};
 function applyTheme(cls,subj){const W=COURSE.some(c=>c.id===cls)?cls:'sd1';const c=COURSE.find(x=>x.id===W);const s=c.subjects.find(x=>x.id===subj)||null;
   document.body.dataset.world=W;document.documentElement.style.setProperty('--subj',s?s.color:LEVEL_COL[c.lv]||'#3D8BFF');
   const g=(s&&WORLD_DOODLES[s.id])||['A','+','★','7','÷','B'];document.querySelectorAll('.world .doodle').forEach((d,i)=>{const t=g[i%g.length];d.textContent=t+(/^[☀-➿]$/.test(t)?'︎':'')})}
@@ -3441,7 +3540,12 @@ const uMail=u=>`${String(u).toLowerCase()}@${MAIL_DOM}`;
 const uPass=pin=>`jk-${pin}-murid`;
 const PRO_TABS=['tatt','teval','trun','trapor','tbank'];
 const FV=()=>firebase.firestore.FieldValue;
-const isPro=()=>!!(FBX.me&&FBX.me.plan==='pro'&&(+FBX.me.proUntil||0)>Date.now());
+const TRIAL_DAYS=+(FB.cfg.trialDays||14);
+const isPaid=()=>!!(FBX.me&&FBX.me.plan==='pro'&&(+FBX.me.proUntil||0)>Date.now());
+const trialUntil=()=>FBX.me&&FBX.me.role==='teacher'&&+FBX.me.created?+FBX.me.created+TRIAL_DAYS*864e5:0;
+const inTrial=()=>!isPaid()&&trialUntil()>Date.now();
+const trialLeft=()=>Math.max(0,Math.ceil((trialUntil()-Date.now())/864e5));
+const isPro=()=>isPaid()||inTrial();
 const isT=()=>!!(SESSION&&SESSION.role==='teacher');
 const fbErr=e=>{const c=String((e&&e.code)||'');return /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(c)?'Nama pengguna atau sandi salah.':/too-many/.test(c)?'Terlalu banyak percobaan. Tunggu beberapa menit, lalu coba lagi.':/network|unavailable/.test(c)?'Tidak tersambung ke internet. Periksa koneksi, lalu coba lagi.':/email-already/.test(c)?'Email ini sudah terdaftar. Silakan masuk.':/weak-password/.test(c)?'Sandi minimal 6 karakter.':/requires-recent-login/.test(c)?'Demi keamanan, keluar lalu masuk lagi sebelum mengganti sandi.':/permission/.test(c)?'Akses ditolak.':(e&&e.message)||String(e)};
 const busy=(on,msg)=>{const l=$('#loading');if(!l)return;l.hidden=!on;if(on){const h=l.querySelector('h2'),p=l.querySelector('p');if(h)h.textContent=msg||'Memuat…';if(p)p.textContent='Menyambungkan akunmu'}};
@@ -3618,22 +3722,22 @@ logout=function(){fbStop();clearTimeout(FBX.t);const fl=SESSION?fbFlush():Promis
 const PRO_LIST=[['cal','Absensi dan jadwal mengajar'],['tv','Evaluasi harian di TV sentuh'],['quiz','Bank soal buatan sendiri'],['report','Rapor otomatis dan salin ke Excel'],['team',`Murid tanpa batas (gratis maksimal ${FREE_MAX})`]];
 function proAsk(){const wa=String(FBX.cfg.wa||'').replace(/\D/g,'').replace(/^0/,'62');const mail=(FBX.user&&FBX.user.email)||'';
   const msg=encodeURIComponent(`Halo Admin JELAS (Jelajah Kelas), saya ingin berlangganan paket Pro.\nEmail guru: ${mail}`);
-  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.trophy||''}</span><h3>JELAS Pro</h3><p>Buka semua fitur guru:</p></div>
+  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.trophy||''}</span><h3>JELAS Pro</h3><p>${trialUntil()&&!isPaid()&&!inTrial()?`Masa coba gratismu berakhir ${fmtTs(trialUntil())}. `:''}Buka semua fitur guru:</p></div>
    <div class="plist">${PRO_LIST.map(x=>`<div class="pl"><span style="width:30px;flex:none">${ICONS[x[0]]||''}</span><span class="grow"><b>${x[1]}</b></span></div>`).join('')}</div>
    <p class="note">${FBX.cfg.price?`<b>${esc(FBX.cfg.price)}</b>. `:''}Setelah pembayaran, admin mengaktifkan Pro untuk email <b>${esc(mail)}</b>. Fitur langsung terbuka tanpa perlu keluar.</p>
    <div class="acts"><button class="ghost" id="mNo">Nanti saja</button>${wa?`<a class="primary" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">Hubungi admin</a>`:''}</div>`);
   $('#mNo').onclick=closeModal}
 const _go=go;
 go=function(tab){if(isT()&&PRO_TABS.includes(tab)&&!isPro()){proAsk();return}_go(tab);const n=document.querySelector('.nav[aria-current="page"]');if(n&&innerWidth<1000)try{n.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}};
-licCard=function(){const p=isPro();return `<div class="tcard" id="licCard"><h3>Paket</h3><div class="plist"><div class="pl"><span class="grow"><b>Paket sekarang</b></span>${p?'<span class="pill ok">Pro</span>':'<span class="pill mute">Gratis</span>'}</div>
-  ${p?`<div class="pl"><span class="grow"><b>Berlaku sampai</b></span><span class="pill mute">${fmtTs(FBX.me.proUntil)}</span></div>`:`<div class="pl"><span class="grow"><b>Batas murid</b></span><span class="pill mute">${FREE_MAX} murid</span></div>`}</div>
-  ${p?'':'<button class="primary" id="licGo" style="align-self:flex-start">Lihat paket Pro</button>'}</div>`};
+licCard=function(){const p=isPro(),tr=inTrial();return `<div class="tcard" id="licCard"><h3>Paket</h3><div class="plist"><div class="pl"><span class="grow"><b>Paket sekarang</b></span>${tr?'<span class="pill ok">Coba gratis Pro</span>':p?'<span class="pill ok">Pro</span>':'<span class="pill mute">Gratis</span>'}</div>
+  ${p?`<div class="pl"><span class="grow"><b>${tr?'Masa coba berakhir':'Berlaku sampai'}</b></span><span class="pill mute">${fmtTs(tr?trialUntil():FBX.me.proUntil)}${tr?` (${trialLeft()} hari lagi)`:''}</span></div>`:`<div class="pl"><span class="grow"><b>Batas murid</b></span><span class="pill mute">${FREE_MAX} murid</span></div>`}</div>
+  ${p&&!tr?'':'<button class="primary" id="licGo" style="align-self:flex-start">Lihat paket Pro</button>'}</div>`};
 bindLicCard=function(){const b=$('#licGo');if(b)b.onclick=proAsk};
 
 /* ---------- kartu kode kelas ---------- */
 function fbCodeCard(compact){const code=(FBX.classDoc&&FBX.classDoc.code)||'······';const n=Object.keys(FBX.members||{}).length;
   return `<div class="tcard fbcode"><div class="fbcode-row"><div class="grow"><h3>Kode kelas</h3><p class="sub" style="margin:0">Bagikan hanya ke muridmu. Murid memasukkan kode ini saat mendaftar atau di menu Profil, lalu latihannya di rumah langsung terlihat di sini.</p></div><div class="fbcode-big" aria-label="Kode kelas">${esc(code)}</div></div>
-   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" data-fb="copy">Salin pesan untuk murid</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}<span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPro()?'<span class="pill ok">PRO</span>':'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
+   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" data-fb="copy">Salin pesan untuk murid</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}<span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPaid()?'<span class="pill ok">PRO</span>':inTrial()?`<span class="pill ok">Coba Pro · ${trialLeft()} hari lagi</span>`:'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
 function fbBindCode(root){if(!root)return;root.querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{const k=b.dataset.fb,code=FBX.classDoc&&FBX.classDoc.code;
     if(k==='copy')copyText(`Ayo belajar di JELAS (Jelajah Kelas)!\n1. Buka ${location.origin+location.pathname}\n2. Pilih MULAI SEKARANG, lalu buat akun\n3. Masukkan kode kelas: ${code}\nSudah punya akun? Masukkan kodenya di menu Profil.`);
     if(k==='pro')proAsk();
@@ -3642,6 +3746,8 @@ function fbBindCode(root){if(!root)return;root.querySelectorAll('[data-fb]').for
   const v=root.querySelector('#fbVerify');if(v)v.onclick=()=>FBX.user.sendEmailVerification().then(()=>toast('check','Tautan verifikasi dikirim. Periksa email.')).catch(e=>toast('lock',fbErr(e)))}
 licBanner=function(){const out=[];if(FBX.cfg.announce)out.push(`<div class="tcard annc"><b>Pengumuman</b><span>${esc(FBX.cfg.announce)}</span></div>`);
   const u=FBX.user;if(u&&u.email&&!u.emailVerified)out.push(`<div class="tcard annc warn"><b>Verifikasi emailmu</b><span>Kami mengirim tautan ke ${esc(u.email)}. Klik tautan itu supaya kamu bisa membuat sandi baru jika lupa. <button class="smallbtn" id="fbVerify">Kirim ulang</button></span></div>`);
+  if(inTrial())out.push(`<div class="tcard annc"><b>Selamat mencoba semua fitur Pro, gratis ${TRIAL_DAYS} hari!</b><span>Absensi, Evaluasi di TV, Soal, Rapor, tugas, dan murid tanpa batas bisa kamu pakai sampai ${fmtTs(trialUntil())} (${trialLeft()} hari lagi). Setelah itu akunmu kembali ke paket Gratis, dan semua data tetap aman. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></span></div>`);
+  else if(!isPaid()&&trialUntil())out.push(`<div class="tcard annc warn"><b>Masa coba gratis sudah berakhir</b><span>Menu Absensi, Evaluasi, Soal, dan Rapor kini terkunci. Datamu tetap tersimpan dan langsung terbuka lagi setelah berlangganan Pro. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></span></div>`);
   out.push(fbCodeCard(true));return out.join('')};
 const _rTD=renderTDash;
 renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .sub').forEach(e=>{if(e.textContent.startsWith('Daftarkan nama murid'))e.textContent='Bagikan kode kelas di atas supaya murid mendaftar sendiri dari HP-nya. Murid yang belajar hanya di TV kelas bisa kamu tambahkan di menu Murid.'});fbBindCode(v)};TEACH_R.tdash=renderTDash;
@@ -3865,7 +3971,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
   const draw=()=>{const q=$('#adFind').value.trim().toLowerCase();const now=Date.now();
     const list=rows.filter(r=>!q||[r.name,r.email,r.school].join(' ').toLowerCase().includes(q)).slice(0,200);
     $('#adList').innerHTML=list.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>Guru</th><th>Sekolah</th><th>Paket</th><th>Berlaku sampai</th><th></th></tr></thead><tbody>${list.map(r=>{const pro=r.plan==='pro'&&(+r.proUntil||0)>now;
-      return `<tr><td class="nm">${esc(r.name||'—')}<br><small style="color:var(--muted)">${esc(r.email||'')}</small></td><td>${esc(r.school||'—')}</td><td>${pro?'<span class="pill ok">Pro</span>':'<span class="pill mute">Gratis</span>'}</td><td>${pro?fmtTs(r.proUntil):'—'}</td>
+      const trial=!pro&&(+r.created||0)+TRIAL_DAYS*864e5>now;return `<tr><td class="nm">${esc(r.name||'—')}<br><small style="color:var(--muted)">${esc(r.email||'')}</small></td><td>${esc(r.school||'—')}</td><td>${pro?'<span class="pill ok">Pro</span>':trial?`<span class="pill mid">Uji coba s/d ${fmtDs(dayKey(new Date((+r.created)+TRIAL_DAYS*864e5)))}</span>`:'<span class="pill mute">Gratis</span>'}</td><td>${pro?fmtTs(r.proUntil):'—'}</td>
        <td style="white-space:nowrap"><button class="smallbtn" data-pro="${r.id}" data-d="31">+1 bulan</button> <button class="smallbtn" data-pro="${r.id}" data-d="366">+1 tahun</button> ${pro?`<button class="smallbtn" data-free="${r.id}" style="color:var(--bad)">Jadikan gratis</button>`:''}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada guru yang cocok.</p>';
     $('#adList').querySelectorAll('[data-pro]').forEach(b=>b.onclick=()=>{const r=rows.find(x=>x.id===b.dataset.pro);const base=Math.max(Date.now(),+r.proUntil||0);const until=base+(+b.dataset.d)*864e5;b.disabled=true;
       FB.db.doc('users/'+r.id).update({plan:'pro',proUntil:until}).then(()=>{r.plan='pro';r.proUntil=until;draw();toast('check',`${r.name||r.email} Pro sampai ${fmtTs(until)}.`)}).catch(e=>{b.disabled=false;toast('lock',fbErr(e))})});
@@ -3875,12 +3981,30 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
   FB.db.collection('users').where('role','==','teacher').limit(1000).get().then(q=>{rows=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(b.created||0)-(a.created||0));draw();
     const now=Date.now(),pro=rows.filter(r=>r.plan==='pro'&&(+r.proUntil||0)>now).length;
     const stat=(v,l)=>`<div class="fbstat"><b>${v}</b><small>${l}</small></div>`;
-    $('#adStats').innerHTML=stat(rows.length,'Guru terdaftar')+stat(pro,'Guru Pro aktif')+stat('…','Murid terdaftar')+stat(rows.filter(r=>(r.created||0)>now-7*864e5).length,'Guru baru 7 hari');
+    $('#adStats').innerHTML=stat(rows.length,'Guru terdaftar')+stat(pro,'Guru Pro aktif')+stat(rows.filter(r=>!(r.plan==='pro'&&(+r.proUntil||0)>now)&&(+r.created||0)+TRIAL_DAYS*864e5>now).length,'Guru masa coba')+stat('…','Murid terdaftar')+stat(rows.filter(r=>(r.created||0)>now-7*864e5).length,'Guru baru 7 hari');
     try{FB.db.collection('users').where('role','==','student').count().get().then(s=>{const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent=s.data().count}).catch(()=>{const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent='—'})}catch(e){const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent='—'}
   }).catch(e=>{$('#adList').innerHTML=`<p class="note" style="color:var(--bad)">${esc(/permission/.test(String(e.code||''))?'Akses admin ditolak. Pastikan email admin sudah diverifikasi (klik tautan di email), lalu muat ulang halaman.':fbErr(e))}</p>`;$('#adStats').innerHTML=''})};
 }
 
 if(window.__fbFail){bootApp=function(){const el=$('#auth');el.hidden=false;el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="sad"></div><h1 class="wtitle" style="font-size:34px">Belum tersambung</h1><p class="wsub">Aplikasi butuh internet saat pertama kali dibuka. Periksa koneksi, lalu coba lagi.</p></div><div class="wbtns"><button class="primary press" onclick="location.reload()">COBA LAGI</button></div></div>`;hydrate(el)}}
+/* ---------- tombol kembali HP: tidak langsung keluar ---------- */
+const BACK={armed:false};
+function backArm(){if(BACK.armed)return;try{history.pushState({jk:1},'');BACK.armed=true}catch(e){}}
+function exitAsk(){openModal(`<div id="exitAsk" style="text-align:center"><div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3>Mau keluar dari JELAS?</h3><p>Progresmu sudah tersimpan. Tekan tombol kembali sekali lagi untuk keluar.</p></div><div class="acts"><button class="primary" id="mNo">Tetap di sini</button><button class="ghost" id="mYes" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
+  $('#mNo').onclick=()=>{closeModal();backArm()};$('#mYes').onclick=()=>{history.back();setTimeout(()=>toast('lock','Tekan tombol kembali di HP sekali lagi untuk keluar.'),400)}}
+function handleBack(){
+  if(!$('#modal').hidden){closeModal();return true}
+  if(!$('#pop').hidden){closePop();return true}
+  if(typeof DUEL!=='undefined'&&DUEL&&DUEL.active&&!$('#vDuel').hidden){$('#duelQuit').click();return true}
+  if(document.body.classList.contains('playing')){if(!$('#vDone').hidden){game=null;go(document.body.classList.contains('teacher')?'tdash':'learn')}else $('#quitBtn').click();return true}
+  if(!$('#onb').hidden){const b=$('#onbBack')||$('#tsCancel');if(b){b.click();return true}}
+  if(!$('#auth').hidden){const b=$('#lgBack');if(b){b.click();return true}}
+  const t=document.body.classList.contains('teacher'),home=t?'tdash':'learn';
+  if((P||t)&&$('#adminPanel').hidden&&curTab!==home){go(home);return true}
+  return false}
+window.addEventListener('popstate',()=>{BACK.armed=false;if(handleBack())backArm();else exitAsk()});
+const _closeModalB=closeModal;closeModal=function(){const wasExit=!!document.getElementById('exitAsk');_closeModalB.apply(this,arguments);if(wasExit)backArm()};
+window.addEventListener('load',()=>setTimeout(backArm,300));document.addEventListener('pointerdown',backArm,{once:true,capture:true});
 /* ---------- wiring ---------- */
 const cvEl=$('#cv');
 function ptr(e){const r=cvEl.getBoundingClientRect(),z=arc.z||1;return [(e.clientX-r.left)/z,(e.clientY-r.top)/z]}

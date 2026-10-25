@@ -19,9 +19,11 @@ service cloud.firestore {
 
     function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
 
+    // Pro = berlangganan, atau guru baru dalam masa coba gratis 14 hari.
     function isProUid(uid) {
       let u = get(/databases/$(database)/documents/users/$(uid)).data;
-      return u.get('plan', 'free') == 'pro' && u.get('proUntil', 0) > request.time.toMillis();
+      return (u.get('plan', 'free') == 'pro' && u.get('proUntil', 0) > request.time.toMillis())
+        || (u.get('role', '') == 'teacher' && u.get('created', 0) + 14 * 86400000 > request.time.toMillis());
     }
 
     // Murid hanya boleh menautkan diri ke guru jika ia benar-benar tercatat sebagai anggota kelas itu.
@@ -43,11 +45,14 @@ service cloud.firestore {
         && request.resource.data.role in ['student', 'teacher']
         && request.resource.data.get('plan', 'free') == 'free'
         && request.resource.data.get('proUntil', 0) == 0
-        && request.resource.data.keys().hasAll(['teacherUid'])
+        && request.resource.data.keys().hasAll(['teacherUid', 'created'])
+        && request.resource.data.created is number
+        && request.resource.data.created > request.time.toMillis() - 600000
+        && request.resource.data.created < request.time.toMillis() + 600000
         && request.resource.data.teacherUid == null;
       allow update: if isAdmin()
         || (signedIn() && request.auth.uid == uid
-            && !changedKeys().hasAny(['role', 'plan', 'proUntil'])
+            && !changedKeys().hasAny(['role', 'plan', 'proUntil', 'created'])
             && (!changedKeys().hasAny(['teacherUid', 'classId']) || validJoin(uid)))
         || (signedIn() && resource.data.teacherUid == request.auth.uid
             && changedKeys().hasOnly(['classId', 'teacherUid', 'joinCode'])

@@ -9,5 +9,7 @@ window.FB_CONFIG = {
   messagingSenderId: "117968760505",
   appId: "1:117968760505:web:d8564b081664154779b568",
   /* jumlah murid maksimal untuk guru paket Gratis (samakan dengan angka di firestore.rules) */
-  freeStudents: 10
+  freeStudents: 10,
+  /* lama masa coba gratis semua fitur Pro untuk guru baru (samakan dengan angka di firestore.rules) */
+  trialDays: 14
 };
