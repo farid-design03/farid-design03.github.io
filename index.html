@@ -5087,7 +5087,7 @@ const avItem=(cat,id)=>AV_PARTS[cat].items.find(x=>x[0]===id)||AV_PARTS[cat].ite
 const avFree=(cat,id)=>avItem(cat,id)[2]===0;
 function avNorm(a){const o=Object.assign({},AV_DEFAULT,a||{});AV_ORDER.forEach(c=>{if(!AV_PARTS[c].items.some(x=>x[0]===o[c]))o[c]=AV_DEFAULT[c]});return o}
 function avBgColor(a){a=avNorm(a);return a.bg==='bintang'?'#2A2F6B':a.bg==='pelangi'?'#FFE596':avItem('bg',a.bg)[3]}
-function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[a.adat]:a.dunia!=='none'?ADAT[a.dunia]:null;if(AD&&AD.hood){a.hair='hijab';a.hc='h1'}const BP=BODY_P[a.body]||ADAT_B;const skin=avItem('skin',a.skin)[3],hc=(AD&&AD.hood)||avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
+function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[a.adat]:a.dunia!=='none'?ADAT[a.dunia]:null;if(AD&&AD.hood){a.hair='hijab';a.hc='h1'}const BP=BODY_P[a.body]||ADAT_B;const FX={oval:[50/56,-2],lebar:[62/56,1],hati:[58/56,0],kotak:[55/56,0]}[a.face]||[1,0];const HW=x=>(!x||(FX[0]===1&&!FX[1]))?(x||''):`<g transform="translate(60 0) scale(${FX[0]} 1) translate(-60 ${FX[1]})">${x}</g>`;const skin=avItem('skin',a.skin)[3],hc=(AD&&AD.hood)||avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
   let s=`<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
   /* latar */
   if(!opt.nobg){if(a.bg==='bintang')s+=`<rect width="120" height="120" fill="#2A2F6B"/>${[[14,18],[98,14],[106,48],[18,62],[30,34],[88,30]].map(([x,y])=>`<path d="M${x} ${y-4} L${x+1.2} ${y-1.2} L${x+4} ${y} L${x+1.2} ${y+1.2} L${x} ${y+4} L${x-1.2} ${y+1.2} L${x-4} ${y} L${x-1.2} ${y-1.2}Z" fill="#FFE596"/>`).join('')}`;
@@ -5096,8 +5096,8 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
   /* jubah kostum super di belakang */
   if(a.shirt==='super'&&!AD)s+=`<path d="M20 120 L34 86 L86 86 L100 120Z" fill="#F2394B" ${sw}/>`;
   /* rambut belakang */
-  if(a.hair==='panjang')s+=`<path d="M30 54 C28 24 46 18 60 18 C76 18 92 24 90 54 L93 96 C80 100 40 100 27 96Z" fill="${hc}" ${sw}/>`;
-  if(a.hair==='kuncir')s+=`<circle cx="60" cy="19" r="10" fill="${hc}" ${sw}/>`;
+  if(a.hair==='panjang')s+=HW(`<path d="M30 54 C28 24 46 18 60 18 C76 18 92 24 90 54 L93 96 C80 100 40 100 27 96Z" fill="${hc}" ${sw}/>`);
+  if(a.hair==='kuncir')s+=HW(`<circle cx="60" cy="19" r="10" fill="${hc}" ${sw}/>`);
   if(a.hair==='hijab'){s+=`<path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="${hc}" ${sw}/>`;
     if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}h"><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z"/></clipPath><g clip-path="url(#${uid}h)">${AD.hoodPat}</g><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="none" ${sw}/>`}
   /* baju adat */
@@ -5130,7 +5130,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     keriting:[[36,40],[42,30],[52,24],[63,22],[74,26],[83,34],[87,45],[33,50]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="${hc}" ${sw}/>`).join('')+`<path d="M38 44 C46 34 74 34 82 44" fill="${hc}"/>`,
     mohawk:`<path d="M53 33 L54 9 L60 15 L66 9 L67 33 C62 31 58 31 53 33Z" fill="${hc}" ${sw}/>`,
     hijab:`<path d="M34 50 C37 33 48 28 60 28 C72 28 83 33 86 50 C79 39 70 35 60 35 C50 35 41 39 34 50Z" fill="${hc}" ${sw}/>`};
-  s+=HF[a.hair]||'';
+  s+=a.hair==='hijab'?(HF.hijab||''):HW(HF[a.hair]);
   /* pipi */
   const ey=a.hair==='hijab'?58:55;
   s+=`<circle cx="44" cy="${ey+9}" r="4.5" fill="#FF8FA3" opacity=".55"/><circle cx="76" cy="${ey+9}" r="4.5" fill="#FF8FA3" opacity=".55"/>`;
@@ -5165,14 +5165,14 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     lidah:`<path d="M52 ${my-2} Q60 ${my+5} 68 ${my-2}" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/><path d="M60 ${my+1} q1 7 6 2 l-1 -4Z" fill="#FF6B81" stroke="${K}" stroke-width="1.6"/>`}[a.mouth]||'';
   /* aksesori */
   const headAcc=['peci','topi','toga','headphone','mahkota'];const accOn=!(AD&&(AD.head&&!AD.keepAcc||AD.hood)&&headAcc.includes(a.acc));
-  if(accOn)s+={kacamata:`<circle cx="49" cy="${ey}" r="8" fill="#fff" fill-opacity=".25" ${sw}/><circle cx="71" cy="${ey}" r="8" fill="#fff" fill-opacity=".25" ${sw}/><path d="M57 ${ey} L63 ${ey}" ${sw}/>`,
+  const HEADW=['peci','topi','toga','headphone','mahkota'];if(accOn)s+=(HEADW.includes(a.acc)?HW:(x=>x||''))({kacamata:`<circle cx="49" cy="${ey}" r="8" fill="#fff" fill-opacity=".25" ${sw}/><circle cx="71" cy="${ey}" r="8" fill="#fff" fill-opacity=".25" ${sw}/><path d="M57 ${ey} L63 ${ey}" ${sw}/>`,
     kacahitam:`<rect x="39" y="${ey-6}" width="19" height="12" rx="5" fill="${K}"/><rect x="62" y="${ey-6}" width="19" height="12" rx="5" fill="${K}"/><path d="M57 ${ey-2} L63 ${ey-2}" ${sw}/><path d="M43 ${ey-3} L48 ${ey-3}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".6"/>`,
     topi:`<path d="M31 42 C31 23 45 16 60 16 C75 16 89 23 89 42Z" fill="#F2394B" ${sw}/><path d="M60 40 L101 42 C101 47 92 48 60 46Z" fill="#C91F33" ${sw}/><circle cx="60" cy="17" r="3" fill="#C91F33" ${sw}/>`,
     peci:`<path d="M35 36 L37 17 C50 13 70 13 83 17 L85 36 C70 33 50 33 35 36Z" fill="${K}" stroke="${K}" stroke-width="2.5" stroke-linejoin="round"/><path d="M38 31 C52 28 68 28 82 31" stroke="#555A80" stroke-width="2" fill="none"/>`,
     toga:`<path d="M42 30 L42 40 C52 44 68 44 78 40 L78 30Z" fill="${K}"/><path d="M22 26 L60 13 L98 26 L60 39Z" fill="${K}" stroke="${K}" stroke-width="2" stroke-linejoin="round"/><path d="M60 26 L90 32 L90 44" stroke="#FFC23D" stroke-width="2.5" fill="none"/><circle cx="90" cy="46" r="3" fill="#FFC23D"/>`,
     headphone:`<path d="M30 54 C28 18 92 18 90 54" fill="none" stroke="${K}" stroke-width="6" stroke-linecap="round"/><rect x="22" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/><rect x="86" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/>`,
-    mahkota:`<path d="M39 32 L42 12 L51 23 L60 8 L69 23 L78 12 L81 32Z" fill="#FFC23D" ${sw}/><circle cx="60" cy="25" r="3" fill="#F2394B"/><circle cx="47" cy="27" r="2" fill="#3D8BFF"/><circle cx="73" cy="27" r="2" fill="#3D8BFF"/>`}[a.acc]||'';
-  if(AD&&AD.head&&!(AD.hairOnly&&a.hair==='hijab'))s+=AD.head(sw);
+    mahkota:`<path d="M39 32 L42 12 L51 23 L60 8 L69 23 L78 12 L81 32Z" fill="#FFC23D" ${sw}/><circle cx="60" cy="25" r="3" fill="#F2394B"/><circle cx="47" cy="27" r="2" fill="#3D8BFF"/><circle cx="73" cy="27" r="2" fill="#3D8BFF"/>`}[a.acc]||'');
+  if(AD&&AD.head&&!(AD.hairOnly&&a.hair==='hijab'))s+=a.hair==='hijab'?AD.head(sw):HW(AD.head(sw));
   return s+'</svg>'}
 function avSpan(p){if(p&&p.avatar)return `<span class="avatar avimg" style="--av:${avBgColor(p.avatar)}">${avatarSVG(p.avatar)}</span>`;return `<span class="avatar" style="--av:${(p&&p.color)||'#9B6BFF'}">${esc(String((p&&p.name)||'?')[0].toUpperCase())}</span>`}
 
