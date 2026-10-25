@@ -1330,6 +1330,13 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
 .cbar.me{justify-content:flex-end}.cbar.me i{background:#1CB0F6}.cbar.th i{background:#FF9600}
 .cbar i{display:block;height:100%;border-radius:8px}
 .upmsg{text-align:center;font-weight:700;margin:8px 0 2px}
+.xpchart{width:100%;height:auto;display:block;font-family:var(--body)}
+.chhead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:13px}.chhead b{flex:1 1 100%;font-size:15px}
+.chhead span{display:flex;align-items:center;gap:5px;font-weight:800;color:var(--muted)}.chhead .lg{width:14px;height:4px;border-radius:2px;display:inline-block}
+.ctable{border:2px solid var(--line);border-radius:16px;padding:4px 10px;margin-top:8px}
+.ctr{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;padding:7px 0;border-bottom:1px solid #EFEFEF}.ctr:last-child{border-bottom:0}
+.ctr.ch{font-size:12px;font-weight:800;color:var(--muted)}.ctr.ch span{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctr .cl{text-align:center;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px}.ctr .cl i[data-icon]{width:15px;height:15px;display:inline-block}.ctr .cl i svg{width:100%;height:100%}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3302,7 +3309,7 @@ function save(){if(P){P.upd=Date.now();const i=APP.profiles.findIndex(x=>x.id===
 function ensureDay(p){p=p||P;const t=dayKey();if(p.today.day!==t)p.today={day:t,xp:0,lessons:0,perfect:0,correct:0,games:0,best:0};if(p.week.id!==weekKey())p.week={id:weekKey(),xp:0}}
 function tickHearts(){if(!P)return;if(P.hearts>=5){P.heartsAt=null;return}if(!P.heartsAt)P.heartsAt=Date.now();const n=Math.floor((Date.now()-P.heartsAt)/HEART_MS);if(n>0){P.hearts=Math.min(5,P.hearts+n);P.heartsAt=P.hearts>=5?null:P.heartsAt+n*HEART_MS;save()}}
 function shownStreak(p){p=p||P;if(!p.lastDay)return 0;const gap=dayNum(dayKey())-dayNum(p.lastDay);if(gap<=1)return p.streak;if(gap===2&&p.freeze>0)return p.streak;return 0}
-function addXp(xp){P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;
+function addXp(xp){P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
   if(P.lastDay!==t){const gap=P.lastDay?dayNum(t)-dayNum(P.lastDay):99;if(gap===1)P.streak++;else if(gap===2&&P.freeze>0){P.freeze--;P.streak++}else P.streak=1;P.lastDay=t;P.days=[...P.days.filter(d=>dayNum(t)-dayNum(d)<14),t];up=true}
   P.bestStreak=Math.max(P.bestStreak||0,P.streak);return up}
 
@@ -4624,7 +4631,17 @@ function roomFinish(o){const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0,st
 /* ---------- PROFIL TEMAN: kunjungi profil orang lain + perbandingan statistik ---------- */
 function myPub(){ensureDay(P);const s=P.stats||{};return {name:P.name,user:(FBX.me||{}).username||'',av:P.avatar||null,pet:P.pet||'uli',cls:P.cls,xp:P.xp||0,wxp:(P.week&&P.week.xp)||0,week:(P.week&&P.week.id)||'',
   streak:shownStreak(P),best:P.bestStreak||0,lessons:s.lessons||0,perfect:s.perfect||0,units:unitsDone(P),matches:s.matches||0,correct:s.correct||0,
-  badges:BADGES.reduce((t,b)=>t+blevel(b,P),0),created:P.created||0,lastDay:P.lastDay||''}}
+  badges:BADGES.reduce((t,b)=>t+blevel(b,P),0),created:P.created||0,lastDay:P.lastDay||'',xpd:xpLast7(P)}}
+function xpLast7(p){const t=dayNum(dayKey()),d=p.xpd||{},o={};Object.keys(d).forEach(k=>{if(t-dayNum(k)<7)o[k]=d[k]});const tk=dayKey();if(o[tk]==null&&p.today&&p.today.day===tk&&p.today.xp)o[tk]=p.today.xp;return o}
+function xpChart(a,b,nb){const t=dayNum(dayKey()),DN=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];const days=[];for(let i=6;i>=0;i--){const dt=new Date(Date.now()-i*864e5);days.push({k:dayKeyOf(dt),n:i?DN[dt.getDay()]:'Hari ini'})}
+  const va=days.map(d=>(a||{})[d.k]||0),vb=days.map(d=>(b||{})[d.k]||0);const mx=Math.max(10,...va,...vb);const top=Math.ceil(mx/10)*10;
+  const W=320,H=190,L=34,R=26,T=14,B=30,x=i=>L+i*(W-L-R)/6,y=v=>T+(H-T-B)*(1-v/top);
+  const line=(v,c)=>`<path d="${v.map((n,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(n).toFixed(1)).join(' ')}" fill="none" stroke="${c}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`+v.map((n,i)=>`<circle cx="${x(i)}" cy="${y(n)}" r="4.5" fill="#fff" stroke="${c}" stroke-width="3"/>`).join('');
+  let g='';for(let k=0;k<=4;k++){const v=top*k/4,yy=y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#E5E5E5" stroke-width="1.5"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="#777">${Math.round(v)}</text>`}
+  g+=days.map((d,i)=>`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="11" font-weight="${i===6?800:600}" fill="${i===6?'#3C3C3C':'#777'}">${d.n}</text>`).join('');
+  const sa=va.reduce((p,c)=>p+c,0),sb=vb.reduce((p,c)=>p+c,0);
+  return {svg:`<svg viewBox="0 0 ${W} ${H}" class="xpchart" role="img" aria-label="Grafik XP 7 hari">${g}${line(vb,'#FF9600')}${line(va,'#1CB0F6')}</svg>`,sa,sb}}
+function dayKeyOf(dt){const o=new Date(dt.getTime());return o.getFullYear()+'-'+String(o.getMonth()+1).padStart(2,'0')+'-'+String(o.getDate()).padStart(2,'0')}
 function fbPubSync(){if(!FBX.user||isT()||!P)return;const d=myPub();const key=JSON.stringify(d);if(FBX.pubKey===key)return;FBX.pubKey=key;
   FB.db.doc('pub/'+FBX.user.uid).set(Object.assign(d,{upd:Date.now()})).catch(()=>{FBX.pubKey=null})}
 window.fbPubSync=fbPubSync;
@@ -4641,12 +4658,13 @@ async function openUserProfile(uid,fb){if(!P||!FBX.user)return;fb=fb||{};
   if(!th){box.innerHTML=`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({name:fb.name,avatar:fb.av||null}).replace('class="avatar','class="avatar big')}</div><h3>${esc(fb.name||'Teman')}</h3><p class="note">${esc(fb.name||'Temanmu')} belum membuka JELAS versi terbaru, jadi statistiknya belum bisa dibandingkan.</p></div><div class="acts"><button class="primary" id="upX">Oke</button></div>`;$('#upX').onclick=closeModal;return}
   const me=myPub();if(th.week!==me.week)th.wxp=0;const gap=dayNum(dayKey())-dayNum(th.lastDay||'2000-01-01');if(gap>2)th.streak=0;
   const cls=(COURSE.find(c=>c.id===th.cls)||{}).full||'';const cap=(CAPS[0]||[])[2]||INK;
-  const rows=CMP.map(([k,l,ic])=>{const a=me[k]||0,b=th[k]||0,mx=Math.max(a,b,1);return `<div class="cmp"><div class="cmp-h">${ico(ic)}<b>${l}</b></div>
-    <div class="cmp-b"><span class="cv ${a>b?'win':''}">${a}</span><div class="cbar me"><i style="width:${a/mx*100}%"></i></div><div class="cbar th"><i style="width:${b/mx*100}%"></i></div><span class="cv ${b>a?'win':''}">${b}</span></div></div>`}).join('');
+  const ch=xpChart(me.xpd,th.xpd||{},th.name);
+  const rows=CMP.map(([k,l,ic])=>{const a=me[k]||0,b=th[k]||0;return `<div class="ctr"><span class="cv ${a>b?'win':''}">${a}</span><span class="cl">${ico(ic)} ${l}</span><span class="cv ${b>a?'win':''}">${b}</span></div>`}).join('');
   box.innerHTML=`<div class="upban" style="--av:${avBgColor(th.av)}"><button class="back" id="upX" aria-label="Tutup">✕</button><div class="upav">${avatarSVG(th.av||null,{nobg:true})}</div><div class="uppet mascot">${th.pet&&th.pet!=='uli'?petSVG(th.pet,cap):mascotSVG('uli')}</div></div>
     <h3 style="margin:10px 0 0">${esc(th.name)}</h3><p class="note" style="margin:0">${th.user?'@'+esc(th.user)+' · ':''}${esc(cls)}${th.created?' · Bergabung '+new Date(th.created).toLocaleDateString('id-ID',{month:'long',year:'numeric'}):''}</p>
     <div class="upvs"><div><span class="upmini">${avatarSVG(P.avatar||null)}</span><b>Kamu</b></div><span class="ajv">VS</span><div><span class="upmini">${avatarSVG(th.av||null)}</span><b>${esc(th.name)}</b></div></div>
-    <div class="cmpwrap">${rows}</div><p class="upmsg">${cmpLine(me,th,th.name)}</p>
+    <div class="cmpwrap"><div class="chhead"><b>XP 7 hari terakhir</b><span><i class="lg" style="background:#1CB0F6"></i>Kamu ${ch.sa}</span><span><i class="lg" style="background:#FF9600"></i>${esc(th.name)} ${ch.sb}</span></div>${ch.svg}</div>
+    <div class="ctable"><div class="ctr ch"><span>Kamu</span><span></span><span>${esc(th.name)}</span></div>${rows}</div><p class="upmsg">${cmpLine(me,th,th.name)}</p>
     <div class="acts"><button class="ghost" id="upClose">Tutup</button><button class="primary" id="upDuel">Tantang</button></div>`;
   hydrate(box);$('#upX').onclick=closeModal;$('#upClose').onclick=closeModal;
   $('#upDuel').onclick=()=>{closeModal();const f={uid,name:th.name,av:th.av||null};openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(uid)}"]`);ajakInvite(f,ab||null)},350)}}
