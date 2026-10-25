@@ -1103,7 +1103,7 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
 .nodes{padding-top:72px}
 #path{padding-bottom:240px}
 @media (min-width:1000px){
- .side{overflow-y:auto;scrollbar-width:thin}
+ .side{overflow-y:auto;scrollbar-width:thin;box-sizing:border-box}
  .nav{transition:background .15s,transform .1s}
  .nav:hover:not([aria-current="page"]){background:#F1F5FF;color:var(--ink)}
  .nav:focus-visible{outline:4px solid var(--yellow);outline-offset:2px}
@@ -1120,6 +1120,31 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
  kbd{display:inline-block;border:2px solid var(--ink);border-bottom-width:3px;border-radius:6px;padding:0 6px;font-family:var(--display);font-size:12px;background:#fff;color:var(--ink)}
 }
 @media (min-width:1000px) and (max-height:820px){body.teacher .nav{padding:6px 14px}body.teacher .nav i{width:30px;height:30px}body.teacher .side .sbrand{padding-bottom:8px}}
+/* ---- laptop: muat di layar pendek ---- */
+@media (min-width:1000px){
+ .welcome{justify-content:center;gap:clamp(10px,3vh,26px)}
+ .wtop{margin-top:clamp(4px,3vh,40px);gap:clamp(2px,1vh,8px)}
+ .wm{width:clamp(90px,22vh,190px)}
+ .wtitle{font-size:clamp(40px,8vh,64px)}
+ .wbtns{margin-bottom:clamp(6px,3vh,40px)}
+ .sfoot .who span{flex:1}
+ .sfoot .sfout{flex:none;width:38px;height:38px;padding:6px;border:2px solid var(--ink);border-radius:12px;background:#fff;box-shadow:0 2px 0 var(--ink);display:grid;place-items:center}
+ .sfoot .sfout:hover{background:#FFF0F0}
+ .sfoot .sfout svg{width:24px;height:24px}
+ .side .sbrand{position:sticky;top:-22px;z-index:2;background:inherit}
+}
+@media (min-width:1000px) and (max-height:700px){body.teacher .nav{padding:3px 12px}body.teacher .nav i{width:26px;height:26px}body.teacher .side .sbrand .logo{width:34px}}
+@media (min-width:1000px) and (max-height:820px){
+ .side{padding:12px 12px;gap:3px}
+ .side .sbrand{padding:0 6px 6px}.side .sbrand .logo{width:40px}
+ .sbname{font-size:22px}
+ .nav{padding:5px 12px;font-size:15px;gap:12px}.nav i{width:28px;height:28px}
+ body.teacher .side .tbadge{margin:0 6px 6px}
+ .sfoot{padding:8px 10px;gap:4px}.sfoot .keys{display:none}
+ .sfoot .who .avatar{width:34px;height:34px;font-size:15px}
+ .rail{position:static}
+ .stats{top:8px}
+}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4069,8 +4094,8 @@ const navLabel=n=>((n.querySelector('span')||n).textContent||'').trim();
 function navItems(){return [...document.querySelectorAll('#sideNav .nav')].filter(n=>n.offsetParent!==null&&n.dataset.tab!=='texit')}
 function renderSideFoot(){const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
   if(t&&T()){const plan=typeof window.fbPlanLabel==='function'?window.fbPlanLabel():tCls().full;
-    el.innerHTML=`<div class="who"><span class="avatar" style="--av:#26BF66">${esc((T().name||'G')[0].toUpperCase())}</span><span><b>${esc(T().name||'Guru')}</b><small>Guru · ${esc(plan)}</small></span></div><div class="acts2"><button class="ghost" data-sf="tset">Atur</button><button class="ghost" data-sf="out" style="color:var(--bad)">Keluar</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
-  else if(P){el.innerHTML=`<div class="who"><span class="avatar" style="--av:${P.color}">${esc((P.name[0]||'?').toUpperCase())}</span><span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span></div><div class="acts2"><button class="ghost" data-sf="profile">Profil</button><button class="ghost" data-sf="out" style="color:var(--bad)">Keluar</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
+    el.innerHTML=`<div class="who"><span class="avatar" style="--av:#26BF66">${esc((T().name||'G')[0].toUpperCase())}</span><span><b>${esc(T().name||'Guru')}</b><small>Guru · ${esc(plan)}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
+  else if(P){el.innerHTML=`<div class="who"><span class="avatar" style="--av:${P.color}">${esc((P.name[0]||'?').toUpperCase())}</span><span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
   else{el.innerHTML='';return}
   el.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{const k=b.dataset.sf;if(k==='out')openModal(`<h3>Keluar dari akun?</h3><p>Datamu sudah tersimpan. Masuk lagi kapan saja dengan akun yang sama.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>{closeModal();logout()});else if(k==='keys')keysHelp();else go(k)});
   navItems().forEach((n,i)=>{if(i<9)n.title=`${navLabel(n)} (Alt+${i+1})`})}
