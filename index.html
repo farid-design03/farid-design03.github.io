@@ -1145,6 +1145,34 @@ body[data-world="sma"] .doodle{color:color-mix(in srgb,var(--subj,#ffffff) 40%,r
  .rail{position:static}
  .stats{top:8px}
 }
+/* ---- avatar ---- */
+.avatar.avimg{padding:0;overflow:hidden;background:var(--av)}
+.avatar.avimg svg{width:100%;height:100%;display:block}
+.ptop{padding:0;overflow:hidden;flex-direction:column;align-items:stretch;gap:0}
+.pban{position:relative;background:var(--av);height:clamp(170px,32vw,230px);display:flex;justify-content:center;align-items:flex-end;border-bottom:3px solid var(--ink);overflow:hidden}
+.pban-av{width:clamp(170px,32vw,230px);height:100%;}
+.pban-av svg{width:100%;height:100%;display:block}
+.pban-edit{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:6px;background:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);padding:6px 12px;font-family:var(--display);font-weight:800;font-size:15px;color:var(--ink)}
+.ptop .pinfo{padding:12px 16px 16px}
+.shopav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.shopav-av{width:84px;height:84px;border:3px solid var(--ink);border-radius:20px;overflow:hidden;flex:none;background:var(--av)}.shopav-av svg{width:100%;height:100%;display:block}
+.aved{z-index:95}
+.aved-top{display:flex;align-items:center;gap:12px}
+.aved-gems{display:flex;align-items:center;gap:4px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:4px 12px;font-family:var(--display);font-weight:800;color:#1C9BE8}
+.aved-prev{align-self:center;width:min(220px,56vw);aspect-ratio:1;border:4px solid var(--ink);border-radius:32px;overflow:hidden;box-shadow:0 7px 0 var(--ink);background:var(--av)}.aved-prev svg{width:100%;height:100%;display:block}
+.aved-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 6px}
+.aved-tabs::-webkit-scrollbar{display:none}
+.aved-tabs button{flex:none;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:6px 14px;font-family:var(--display);font-weight:800;font-size:15px;color:var(--ink)}
+.aved-tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
+.aved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px;padding-bottom:110px}
+.aved-it{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:0 4px 0 var(--ink);padding:8px 6px;color:var(--ink)}
+.aved-it.on{background:#E6F2FF;outline:4px solid var(--blue);outline-offset:1px}
+.aved-it b{font-size:12.5px;line-height:1.15;text-align:center}
+.aved-it small{display:flex;align-items:center;gap:2px;font-weight:800;font-size:12px;color:#1C9BE8}
+.aved-mini{width:66px;height:66px;border-radius:14px;overflow:hidden;background:#F1F3FA;display:block}.aved-mini svg{width:100%;height:100%;display:block}
+.aved-sw{width:52px;height:52px;margin:7px 0;border-radius:50%;border:3px solid var(--ink);display:block}
+.aved-foot{position:sticky;bottom:0;background:linear-gradient(transparent,rgba(255,255,255,.9) 30%);padding-top:14px}
+.aved-foot .primary{width:100%;font-size:20px;padding:12px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2803,7 +2831,7 @@ let P=null;
 function newProfile(o){return {id:'p'+Date.now().toString(36)+R(100,999),name:o.name,color:o.color||pick(AV_COLORS),created:Date.now(),cls:o.cls||'sd2',subj:o.subj?{[o.cls]:o.subj}:{},
   xp:0,gems:50,hearts:5,heartsAt:null,streak:0,bestStreak:0,lastDay:null,days:[],freeze:0,goal:o.goal||20,
   today:{day:dayKey(),xp:0,lessons:0,perfect:0,correct:0,games:0,best:0},week:{id:weekKey(),xp:0},prog:{},
-  stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{}}}
+  stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{},avatar:Object.assign({},AV_DEFAULT,{shirt:pick(['merah','biru','hijau','kuning']),bg:pick(['b1','b2','b3','b4'])}),avOwned:[]}}
 function save(){if(P){P.upd=Date.now();const i=APP.profiles.findIndex(x=>x.id===P.id);if(i>=0)APP.profiles[i]=P;else APP.profiles.push(P);APP.cur=P.id}if(APP.teacher&&document.body.classList.contains('teacher'))APP.teacher.upd=Date.now();store.set('app',APP);if(typeof queueSync==='function')queueSync()}
 function ensureDay(p){p=p||P;const t=dayKey();if(p.today.day!==t)p.today={day:t,xp:0,lessons:0,perfect:0,correct:0,games:0,best:0};if(p.week.id!==weekKey())p.week={id:weekKey(),xp:0}}
 function tickHearts(){if(!P)return;if(P.hearts>=5){P.heartsAt=null;return}if(!P.heartsAt)P.heartsAt=Date.now();const n=Math.floor((Date.now()-P.heartsAt)/HEART_MS);if(n>0){P.hearts=Math.min(5,P.hearts+n);P.heartsAt=P.hearts>=5?null:P.heartsAt+n*HEART_MS;save()}}
@@ -3002,7 +3030,7 @@ function renderTeam(){renderSetup();const c=CLS();$('#teamCls').textContent=c.na
 function renderLeague(){const t=tierOf(P);APP.profiles.forEach(p=>ensureDay(p));const list=[...APP.profiles].sort((a,b)=>b.week.xp-a.week.xp);
   $('#leagueCard').innerHTML=`<div class="lhead"><i>${shield(t[2])}</i><div><h2>Liga ${t[0]}</h2><p>Peringkat XP minggu ini untuk semua profil di perangkat ini. Minggu baru mulai setiap Senin.</p></div></div>
    <div class="tiers">${TIERS.map(x=>`<span class="tier ${x[0]===t[0]?'on':''}"><i>${shield(x[2])}</i>${x[0]}</span>`).join('')}</div>
-   <div>${list.map((p,i)=>`<div class="lrow ${p.id===P.id?'me':''}"><span class="rk ${i<3?'top':''}">${i+1}</span><span class="avatar" style="--av:${p.color}">${esc(p.name[0]||'?').toUpperCase()}</span><span class="nm">${esc(p.name)}</span><span class="xp">${p.week.xp} XP</span></div>`).join('')}</div>
+   <div>${list.map((p,i)=>`<div class="lrow ${p.id===P.id?'me':''}"><span class="rk ${i<3?'top':''}">${i+1}</span>${avSpan(p)}<span class="nm">${esc(p.name)}</span><span class="xp">${p.week.xp} XP</span></div>`).join('')}</div>
    ${list.length<2?`<p class="note">Tambahkan profil teman sekelas di menu Profil supaya bisa bersaing di liga ini.</p>`:''}`;
   renderBoard()}
 
@@ -3015,7 +3043,7 @@ function renderQuests(){ensureQuests();const h=24-new Date().getHours();$('#ques
 /* ---------- shop ---------- */
 function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICONS.gem}</span>${n}`;
   const outfit=(list,kind)=>list.map(([id,name,col,price])=>{const own=P.owned[kind].includes(id),on=P.outfit[kind]===id;return `<div class="item"><span class="ii"><span class="swatchdot" style="background:${col}"></span></span><span class="it"><b>${name}</b><small>${on?'Sedang dipakai':own?'Sudah dimiliki':'Gaya baru untuk Uli'}</small></span><button class="buy ${own?'owned':''}" data-kind="${kind}" data-id="${id}" data-price="${price}" ${on||(!own&&P.gems<price)?'disabled':''}>${on?'Dipakai':own?'Pakai':gem(price)}</button></div>`}).join('');
-  $('#shopList').innerHTML=`<div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3><p class="note" style="margin:0">Dapatkan lebih banyak dari peti hadiah, level sempurna, ujian unit, dan misi harian.</p></div>
+  $('#shopList').innerHTML=`<div class="card shopsec shopav"><div class="shopav-av" style="--av:${avBgColor(P.avatar)}">${avatarSVG(P.avatar||null)}</div><div style="flex:1;min-width:160px"><h3>Kostum avatar</h3><p class="note" style="margin:0">Rambut, kacamata, topi toga, batik, sampai mahkota. Sebagian gratis, sisanya dibeli dengan permata.</p></div><button class="primary" id="shopAv">Ubah avatar</button></div><div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3><p class="note" style="margin:0">Dapatkan lebih banyak dari peti hadiah, level sempurna, ujian unit, dan misi harian.</p></div>
    <div class="card shopsec"><h3>Nyawa</h3>
     <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${P.unlimited?'Mode kelas aktif: nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${P.unlimited||P.hearts>=5||P.gems<50?'disabled':''}>${gem(50)}</button></div>
     <div class="item"><span class="ii">${ico('target')}</span><span class="it"><b>Latihan</b><small>Ulangi materi yang sudah dipelajari, dapat +1 nyawa</small></span><button class="buy" id="buyPractice" style="color:var(--ok)">Gratis</button></div></div>
@@ -3026,13 +3054,17 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
   $('#buyHeart').onclick=()=>buy(50,()=>{P.hearts=5;P.heartsAt=null;toast('heartbig','Nyawa terisi penuh!')});
   $('#buyFreeze').onclick=()=>buy(80,()=>{P.freeze++;toast('ice','Pelindung api siap dipakai.')});
   $('#buyPractice').onclick=startPractice;
+  {const sa=$('#shopAv');if(sa)sa.onclick=openAvatarEditor}
   $('#shopList').querySelectorAll('.buy[data-kind]').forEach(b=>b.onclick=()=>{const k=b.dataset.kind,id=b.dataset.id;if(P.owned[k].includes(id)){P.outfit[k]=id;save();rerenderMascots();renderShop();return}
     buy(+b.dataset.price,()=>{P.owned[k].push(id);P.outfit[k]=id;rerenderMascots()})})}
 
 /* ---------- profile ---------- */
 function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done/NODES.length);return n}
 function renderProfile(){const t=tierOf(P);
-  $('#profileTop').innerHTML=`<span class="avatar" style="--av:${P.color}">${esc(P.name[0]||'?').toUpperCase()}</span><div class="pinfo"><input id="pName" maxlength="20" value="${esc(P.name)}" aria-label="Nama"><p>${CLS().full} · Bergabung ${new Date(P.created).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}</p><div class="avcolors">${AV_COLORS.map(c=>`<button style="background:${c}" data-c="${c}" aria-pressed="${c===P.color}" aria-label="Warna avatar"></button>`).join('')}</div></div>`;
+  if(!P.avatar){P.avatar=avNorm(null);P.color=avBgColor(P.avatar)}
+  $('#profileTop').innerHTML=`<div class="pban" style="--av:${avBgColor(P.avatar)}"><div class="pban-av">${avatarSVG(P.avatar,{nobg:true})}</div><button class="pban-edit press" id="avEdit"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20 L5 15 L16 4 L20 8 L9 19Z M14 6 L18 10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>Ubah avatar</button></div>
+   <div class="pinfo"><input id="pName" maxlength="20" value="${esc(P.name)}" aria-label="Nama"><p>${P.user?'@'+esc(P.user)+' · ':''}Bergabung ${new Date(P.created).toLocaleDateString('id-ID',{month:'long',year:'numeric'})} · ${CLS().full}</p></div>`;
+  $('#avEdit').onclick=openAvatarEditor;
   $('#pName').onchange=e=>{const v=e.target.value.trim();if(v){P.name=v;save();renderProfile()}};
   $('#profileTop').querySelectorAll('.avcolors button').forEach(b=>b.onclick=()=>{P.color=b.dataset.c;save();renderProfile()});
   $('#pStats').innerHTML=[[`<span style="color:#FF8A00;width:34px">${ICONS.flame}</span>`,shownStreak(),'Hari beruntun'],[ico('bolt'),P.xp,'Total XP'],[`<i>${shield(t[2])}</i>`,t[0],'Liga sekarang'],[ico('check'),unitsDone(P),'Unit selesai']].map(x=>`<div class="ps">${x[0]}<span><b>${x[1]}</b><small>${x[2]}</small></span></div>`).join('');
@@ -3047,7 +3079,7 @@ function renderProfile(){const t=tierOf(P);
   $('#sTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();renderProfile()};
   $('#sGoal').querySelectorAll('button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;if(P.quests)P.quests.list.forEach(q=>{if(q.id==='xp')q.goal=P.goal});save();renderProfile();renderTop()});
   $('#sFull').onclick=()=>{try{if(!document.fullscreenElement){const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{$('#sFull').textContent='Tidak tersedia'})}else document.exitFullscreen()}catch(e){}};
-  $('#profileList').innerHTML=APP.profiles.map(p=>`<div class="prow"><span class="avatar" style="--av:${p.color}">${esc(p.name[0]||'?').toUpperCase()}</span><span class="grow"><b>${esc(p.name)}</b><small>${(COURSE.find(c=>c.id===p.cls)||{}).full||''} · ${p.xp} XP</small></span>${p.id===P.id?'<small><b>Sedang dipakai</b></small>':`${T()?'':`<button class="smallbtn" data-use="${p.id}">Pakai</button><button class="smallbtn danger" data-del="${p.id}">Hapus</button>`}`}</div>`).join('')+`${T()?'<div class="prow"><button class="primary" id="toPicker" style="width:100%">Ganti murid</button></div>':'<div class="prow"><button class="primary" id="addProfile" style="width:100%">+ Tambah profil teman</button></div>'}`;
+  $('#profileList').innerHTML=APP.profiles.map(p=>`<div class="prow">${avSpan(p)}<span class="grow"><b>${esc(p.name)}</b><small>${(COURSE.find(c=>c.id===p.cls)||{}).full||''} · ${p.xp} XP</small></span>${p.id===P.id?'<small><b>Sedang dipakai</b></small>':`${T()?'':`<button class="smallbtn" data-use="${p.id}">Pakai</button><button class="smallbtn danger" data-del="${p.id}">Hapus</button>`}`}</div>`).join('')+`${T()?'<div class="prow"><button class="primary" id="toPicker" style="width:100%">Ganti murid</button></div>':'<div class="prow"><button class="primary" id="addProfile" style="width:100%">+ Tambah profil teman</button></div>'}`;
   $('#profileList').querySelectorAll('[data-use]').forEach(b=>b.onclick=()=>{P=APP.profiles.find(p=>p.id===b.dataset.use);afterLogin();toast('user',`Halo, ${P.name}!`)});
   $('#profileList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const p=APP.profiles.find(x=>x.id===b.dataset.del);openModal(`<h3>Hapus profil ${esc(p.name)}?</h3><p>Semua XP, beruntun, dan kemajuan belajar profil ini akan dihapus dari perangkat ini.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);
     $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{APP.profiles=APP.profiles.filter(x=>x.id!==p.id);save();closeModal();renderProfile()}});
@@ -3096,7 +3128,7 @@ function attOf(pid){const c={H:0,I:0,S:0,A:0,n:0};APP.sessions.forEach(s=>{const
 const studentAvg=(pid,subj)=>av(evalEntries(pid).filter(x=>!subj||x.subj===subj).map(x=>x.score));
 const predOf=v=>v==null?'—':v>=90?'A':v>=80?'B':v>=T().kkm?'C':'D';
 const statusPill=v=>v==null?'<span class="pill mute">Belum dinilai</span>':v>=T().kkm?'<span class="pill ok">Tuntas</span>':'<span class="pill bad">Belum tuntas</span>';
-const avatarOf=p=>`<span class="avatar" style="--av:${p.color}">${esc((p.name[0]||'?').toUpperCase())}</span>`;
+const avatarOf=p=>`${avSpan(p)}`;
 const gameName=id=>(MODE_LIST.find(m=>m.id===id)||{name:id}).name;
 function copyText(t){const fallback=()=>{openModal(`<h3>Salin manual</h3><p>Tekan Ctrl+C (atau tahan lalu Salin), kemudian tempel di Excel.</p><textarea class="note-area" style="min-height:220px">${esc(t)}</textarea><button class="primary" id="mClose">Tutup</button>`);$('#mClose').onclick=closeModal;const ta=$('#mbox textarea');ta.focus();ta.select()};
   try{navigator.clipboard.writeText(t).then(()=>toast('check','Tersalin. Tempel di Excel atau Word.')).catch(fallback)}catch(e){fallback()}}
@@ -3593,7 +3625,7 @@ function startOnboarding(first){const t=T();const o={step:0,name:'',cls:(t&&t.cl
   render()}
 
 /* ---------- account card in student profile ---------- */
-function accountCard(){return `<div class="prow"><span class="avatar" style="--av:${P.color}">${esc((P.name[0]||'?').toUpperCase())}</span><span class="grow"><b>${esc(P.name)}</b><small>Nama pengguna: <b>${esc(P.user||'')}</b> · ${P.pass?'bersandi':'belum ada sandi'}</small></span></div>
+function accountCard(){return `<div class="prow">${avSpan(P)}<span class="grow"><b>${esc(P.name)}</b><small>Nama pengguna: <b>${esc(P.user||'')}</b> · ${P.pass?'bersandi':'belum ada sandi'}</small></span></div>
   <div class="prow"><button class="ghost" id="acPass" style="flex:1">Ganti sandi</button><button class="primary" id="acOut" style="flex:1;background:var(--bad)">Keluar</button></div>`}
 function bindAccountCard(){$('#acOut').onclick=()=>openModal(`<h3>Keluar dari akun?</h3><p>Untuk masuk lagi, pakai nama pengguna <b>${esc(P.user||'')}</b> dan sandimu.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=logout);
   $('#acPass').onclick=()=>{openModal(`<h3>Ganti sandi</h3><div class="tfield"><label for="cpOld">Sandi lama</label><input id="cpOld" type="password" inputmode="numeric" maxlength="4"></div><div class="tfield"><label for="cpNew">Sandi baru (4 angka)</label><input id="cpNew" type="password" inputmode="numeric" maxlength="4"></div><p class="note" id="cpErr" style="color:var(--bad)"></p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Simpan</button></div>`);
@@ -4025,11 +4057,11 @@ renderLeague=function(){_rL();if(isT()||!FBX.user||!P)return;const m=FBX.me||{},
   if(p)p.textContent=`Peringkat XP minggu ini di ${m.clsName||'kelasmu'}. Minggu baru mulai setiap Senin.`;const n=card.children[3];if(n)n.remove();
   box.innerHTML='<p class="note">Memuat peringkat kelas…</p>';
   FB.db.collection('classes/'+m.classId+'/board').where('week','==',weekKey()).get().then(q=>{const me=FBX.user.uid;const rows=q.docs.map(d=>Object.assign({uid:d.id},d.data())).filter(r=>r.uid!==me);
-    rows.push({uid:me,name:P.name,color:P.color,wxp:P.week.xp});rows.sort((a,b)=>(b.wxp||0)-(a.wxp||0));
-    box.innerHTML=rows.map((r,i)=>`<div class="lrow ${r.uid===me?'me':''}"><span class="rk ${i<3?'top':''}">${i+1}</span><span class="avatar" style="--av:${esc(r.color||'#9B6BFF')}">${esc(String(r.name||'?')[0].toUpperCase())}</span><span class="nm">${esc(r.name||'')}</span><span class="xp">${r.wxp||0} XP</span></div>`).join('')+(rows.length<2?'<p class="note">Belum ada teman sekelas yang belajar minggu ini. Ayo jadi yang pertama!</p>':'')})
+    rows.push({uid:me,name:P.name,color:P.color,av:P.avatar,wxp:P.week.xp});rows.sort((a,b)=>(b.wxp||0)-(a.wxp||0));
+    box.innerHTML=rows.map((r,i)=>`<div class="lrow ${r.uid===me?'me':''}"><span class="rk ${i<3?'top':''}">${i+1}</span>${avSpan({name:r.name,color:r.color,avatar:r.av||null})}<span class="nm">${esc(r.name||'')}</span><span class="xp">${r.wxp||0} XP</span></div>`).join('')+(rows.length<2?'<p class="note">Belum ada teman sekelas yang belajar minggu ini. Ayo jadi yang pertama!</p>':'')})
    .catch(e=>{box.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`})};
-function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT())return;ensureDay(P);const key=m.classId+':'+P.week.id+':'+P.week.xp+':'+P.name;if(key===FBX.boardKey)return;FBX.boardKey=key;
-  FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
+function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT())return;ensureDay(P);const key=m.classId+':'+P.week.id+':'+P.week.xp+':'+P.name+':'+JSON.stringify(P.avatar||'');if(key===FBX.boardKey)return;FBX.boardKey=key;
+  FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,av:P.avatar||null,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
 
 
 /* ---------- panel admin (penjual) ---------- */
@@ -4079,6 +4111,7 @@ function exitAsk(){openModal(`<div id="exitAsk" style="text-align:center"><div c
 function handleBack(){
   if(!$('#modal').hidden){closeModal();return true}
   if(!$('#pop').hidden){closePop();return true}
+  {const ae=document.getElementById('avEd');if(ae&&!ae.hidden){ae.hidden=true;return true}}
   if(typeof DUEL!=='undefined'&&DUEL&&DUEL.active&&!$('#vDuel').hidden){$('#duelQuit').click();return true}
   if(document.body.classList.contains('playing')){if(!$('#vDone').hidden){game=null;go(document.body.classList.contains('teacher')?'tdash':'learn')}else $('#quitBtn').click();return true}
   if(!$('#onb').hidden){const b=$('#onbBack')||$('#tsCancel');if(b){b.click();return true}}
@@ -4095,7 +4128,7 @@ function navItems(){return [...document.querySelectorAll('#sideNav .nav')].filte
 function renderSideFoot(){const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
   if(t&&T()){const plan=typeof window.fbPlanLabel==='function'?window.fbPlanLabel():tCls().full;
     el.innerHTML=`<div class="who"><span class="avatar" style="--av:#26BF66">${esc((T().name||'G')[0].toUpperCase())}</span><span><b>${esc(T().name||'Guru')}</b><small>Guru · ${esc(plan)}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
-  else if(P){el.innerHTML=`<div class="who"><span class="avatar" style="--av:${P.color}">${esc((P.name[0]||'?').toUpperCase())}</span><span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
+  else if(P){el.innerHTML=`<div class="who">${avSpan(P)}<span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
   else{el.innerHTML='';return}
   el.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{const k=b.dataset.sf;if(k==='out')openModal(`<h3>Keluar dari akun?</h3><p>Datamu sudah tersimpan. Masuk lagi kapan saja dengan akun yang sama.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>{closeModal();logout()});else if(k==='keys')keysHelp();else go(k)});
   navItems().forEach((n,i)=>{if(i<9)n.title=`${navLabel(n)} (Alt+${i+1})`})}
@@ -4105,6 +4138,111 @@ function keysHelp(){const items=navItems().slice(0,9).map((n,i)=>`<tr><td><kbd>A
 document.addEventListener('keydown',e=>{const tag=(e.target&&e.target.tagName)||'';if(/INPUT|TEXTAREA|SELECT/.test(tag))return;
   if(e.altKey&&/^[1-9]$/.test(e.key)&&!document.body.classList.contains('playing')&&$('#modal').hidden){const n=navItems()[+e.key-1];if(n){e.preventDefault();n.click()}return}
   if(e.key==='?'&&!document.body.classList.contains('playing')&&$('#modal').hidden&&(P||document.body.classList.contains('teacher'))){e.preventDefault();keysHelp()}});
+/* =========================================================
+   AVATAR MURID (seperti Duolingo): bisa diubah, ada yang gratis
+   dan ada yang dibeli dengan permata
+   ========================================================= */
+const AVK='#1B1E3D';
+const AV_PARTS={
+ skin:{label:'Kulit',items:[['s1','Kuning langsat',0,'#FFE0C7'],['s2','Sawo terang',0,'#F6C9A0'],['s3','Sawo matang',0,'#E0A574'],['s4','Cokelat',0,'#B97A4E'],['s5','Cokelat tua',0,'#8A5533']]},
+ hair:{label:'Rambut',items:[['pendek','Pendek',0],['poni','Poni',0],['panjang','Panjang',0],['hijab','Hijab',0],['none','Plontos',0],['jabrik','Jabrik',20],['kuncir','Sanggul',20],['keriting','Keriting',40],['mohawk','Mohawk',80]]},
+ hc:{label:'Warna',items:[['h1','Hitam',0,'#2B1D14'],['h2','Cokelat',0,'#5A3820'],['h9','Putih',0,'#F4F4F4'],['h3','Karamel',20,'#A0612D'],['h4','Emas',30,'#E8B547'],['h5','Merah',40,'#E2574C'],['h10','Merah muda',40,'#FF8FC0'],['h6','Biru',60,'#4F7CFF'],['h7','Ungu',60,'#9B6BFF'],['h11','Hijau toska',60,'#22C5B5']]},
+ eyes:{label:'Mata',items:[['bulat','Bulat',0],['senyum','Senyum',0],['besar','Berbinar',30],['kedip','Kedip',40],['bintang','Bintang',80]]},
+ mouth:{label:'Mulut',items:[['senyum','Senyum',0],['tawa','Tertawa',0],['datar','Tenang',0],['o','Kagum',20],['lidah','Melet',30]]},
+ acc:{label:'Aksesori',items:[['none','Tanpa',0],['kacamata','Kacamata',30],['peci','Peci',30],['topi','Topi',40],['kacahitam','Kacamata hitam',60],['toga','Topi toga',80],['headphone','Headphone',100],['mahkota','Mahkota',150]]},
+ shirt:{label:'Baju',items:[['merah','Kaos merah',0,'#F2394B'],['biru','Kaos biru',0,'#3D8BFF'],['hijau','Kaos hijau',0,'#26BF66'],['kuning','Kaos kuning',0,'#FFC23D'],['seragam','Seragam sekolah',20],['pramuka','Pramuka',40],['jaket','Jaket',60],['batik','Batik',80],['super','Kostum super',150]]},
+ bg:{label:'Latar',items:[['b1','Ungu',0,'#C9B6FF'],['b2','Biru',0,'#A9DEFF'],['b3','Hijau',0,'#B5EBAE'],['b4','Merah muda',0,'#FFC9DF'],['b5','Kuning',20,'#FFE596'],['bintang','Malam berbintang',60],['pelangi','Pelangi',100]]}};
+const AV_ORDER=['skin','hair','hc','eyes','mouth','acc','shirt','bg'];
+const AV_DEFAULT={skin:'s2',hair:'pendek',hc:'h1',eyes:'bulat',mouth:'senyum',acc:'none',shirt:'biru',bg:'b1'};
+const avItem=(cat,id)=>AV_PARTS[cat].items.find(x=>x[0]===id)||AV_PARTS[cat].items[0];
+const avFree=(cat,id)=>avItem(cat,id)[2]===0;
+function avNorm(a){const o=Object.assign({},AV_DEFAULT,a||{});AV_ORDER.forEach(c=>{if(!AV_PARTS[c].items.some(x=>x[0]===o[c]))o[c]=AV_DEFAULT[c]});return o}
+function avBgColor(a){a=avNorm(a);return a.bg==='bintang'?'#2A2F6B':a.bg==='pelangi'?'#FFE596':avItem('bg',a.bg)[3]}
+function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const skin=avItem('skin',a.skin)[3],hc=avItem('hc',a.hc)[3],K=AVK,sw='stroke="'+K+'" stroke-width="2.5" stroke-linejoin="round"';const uid='a'+Math.random().toString(36).slice(2,8);
+  let s=`<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
+  /* latar */
+  if(!opt.nobg){if(a.bg==='bintang')s+=`<rect width="120" height="120" fill="#2A2F6B"/>${[[14,18],[98,14],[106,48],[18,62],[30,34],[88,30]].map(([x,y])=>`<path d="M${x} ${y-4} L${x+1.2} ${y-1.2} L${x+4} ${y} L${x+1.2} ${y+1.2} L${x} ${y+4} L${x-1.2} ${y+1.2} L${x-4} ${y} L${x-1.2} ${y-1.2}Z" fill="#FFE596"/>`).join('')}`;
+   else if(a.bg==='pelangi')s+=`<rect width="120" height="120" fill="#BFE8FF"/>${['#F2394B','#FF8A3D','#FFC23D','#26BF66','#3D8BFF','#9B6BFF'].map((c,i)=>`<circle cx="60" cy="128" r="${104-i*9}" fill="none" stroke="${c}" stroke-width="9"/>`).join('')}`;
+   else s+=`<rect width="120" height="120" fill="${avItem('bg',a.bg)[3]}"/>`}
+  /* jubah kostum super di belakang */
+  if(a.shirt==='super')s+=`<path d="M20 120 L34 86 L86 86 L100 120Z" fill="#F2394B" ${sw}/>`;
+  /* rambut belakang */
+  if(a.hair==='panjang')s+=`<path d="M30 54 C28 24 46 18 60 18 C76 18 92 24 90 54 L93 96 C80 100 40 100 27 96Z" fill="${hc}" ${sw}/>`;
+  if(a.hair==='kuncir')s+=`<circle cx="60" cy="19" r="10" fill="${hc}" ${sw}/>`;
+  if(a.hair==='hijab')s+=`<path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="${hc}" ${sw}/>`;
+  /* baju */
+  const sc={seragam:'#FFFFFF',pramuka:'#A9763F',jaket:'#34405F',batik:'#8B4A2B',super:'#3D6BFF'}[a.shirt]||avItem('shirt',a.shirt)[3];
+  s+=`<path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="${sc}" ${sw}/>`;
+  if(a.shirt==='seragam')s+=`<path d="M48 88 L60 100 L72 88" fill="#fff" ${sw}/><path d="M57 100 L63 100 L65 117 L60 121 L55 117Z" fill="#E5383B" ${sw}/>`;
+  if(a.shirt==='pramuka')s+=`<path d="M44 89 L60 108 L76 89" fill="#E5383B" ${sw}/><path d="M52 92 L60 102 L68 92" fill="#fff"/><rect x="28" y="102" width="12" height="10" rx="2" fill="none" ${sw}/><rect x="80" y="102" width="12" height="10" rx="2" fill="none" ${sw}/>`;
+  if(a.shirt==='jaket')s+=`<path d="M60 88 L60 121" ${sw}/><path d="M40 90 C46 98 52 100 60 100 C68 100 74 98 80 90" fill="none" stroke="#5A6A92" stroke-width="4"/><circle cx="60" cy="104" r="2" fill="#FFC23D"/>`;
+  if(a.shirt==='batik'){s+=`<clipPath id="${uid}c"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z"/></clipPath><g clip-path="url(#${uid}c)">`;for(let y=92;y<122;y+=10)for(let x=18+(y%20?5:0);x<106;x+=12)s+=`<path d="M${x} ${y-3} L${x+3} ${y} L${x} ${y+3} L${x-3} ${y}Z" fill="#F5C26B"/><circle cx="${x+6}" cy="${y+5}" r="1.4" fill="#F5C26B"/>`;s+=`</g><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="none" ${sw}/>`}
+  if(a.shirt==='super')s+=`<path d="M60 96 L63 103 L71 103 L65 108 L67 116 L60 111 L53 116 L55 108 L49 103 L57 103Z" fill="#FFC23D" ${sw}/>`;
+  /* leher, telinga, kepala */
+  s+=`<rect x="52" y="72" width="16" height="17" fill="${skin}" ${sw}/>`;
+  if(a.hair!=='hijab')s+=`<circle cx="33" cy="56" r="7" fill="${skin}" ${sw}/><circle cx="87" cy="56" r="7" fill="${skin}" ${sw}/>`;
+  s+=a.hair==='hijab'?`<ellipse cx="60" cy="58" rx="24" ry="27" fill="${skin}" ${sw}/>`:`<circle cx="60" cy="53" r="28" fill="${skin}" ${sw}/>`;
+  /* rambut depan */
+  const HF={pendek:`<path d="M32 54 C30 28 45 21 60 21 C76 21 91 28 88 54 C84 40 72 34 60 35 C48 34 36 40 32 54Z" fill="${hc}" ${sw}/>`,
+    poni:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L40 44 C36 44 34 47 32 54Z" fill="${hc}" ${sw}/>`,
+    panjang:`<path d="M32 54 C30 28 46 21 60 21 C76 21 90 28 88 54 C81 39 66 34 53 38 C45 40 37 45 32 54Z" fill="${hc}" ${sw}/>`,
+    kuncir:`<path d="M32 52 C31 30 45 23 60 23 C75 23 89 30 88 52 C83 40 72 35 60 35 C48 35 37 40 32 52Z" fill="${hc}" ${sw}/>`,
+    jabrik:`<path d="M33 50 L29 34 L40 38 L39 22 L50 31 L56 15 L62 29 L70 15 L74 31 L84 22 L82 38 L92 34 L87 50 C80 40 70 36 60 36 C50 36 40 40 33 50Z" fill="${hc}" ${sw}/>`,
+    keriting:[[36,40],[42,30],[52,24],[63,22],[74,26],[83,34],[87,45],[33,50]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="${hc}" ${sw}/>`).join('')+`<path d="M38 44 C46 34 74 34 82 44" fill="${hc}"/>`,
+    mohawk:`<path d="M53 33 L54 9 L60 15 L66 9 L67 33 C62 31 58 31 53 33Z" fill="${hc}" ${sw}/>`,
+    hijab:`<path d="M34 50 C37 33 48 28 60 28 C72 28 83 33 86 50 C79 39 70 35 60 35 C50 35 41 39 34 50Z" fill="${hc}" ${sw}/>`};
+  s+=HF[a.hair]||'';
+  /* pipi */
+  const ey=a.hair==='hijab'?58:55;
+  s+=`<circle cx="44" cy="${ey+9}" r="4.5" fill="#FF8FA3" opacity=".55"/><circle cx="76" cy="${ey+9}" r="4.5" fill="#FF8FA3" opacity=".55"/>`;
+  /* mata */
+  const eye=(x,kind)=>kind==='senyum'?`<path d="M${x-5} ${ey+1} Q${x} ${ey-5} ${x+5} ${ey+1}" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/>`
+    :kind==='besar'?`<circle cx="${x}" cy="${ey}" r="6.5" fill="#fff" ${sw}/><circle cx="${x}" cy="${ey+1}" r="3.8" fill="${K}"/><circle cx="${x+1.6}" cy="${ey-1}" r="1.5" fill="#fff"/>`
+    :kind==='bintang'?`<path d="M${x} ${ey-7} L${x+2.2} ${ey-2.2} L${x+7} ${ey-1.5} L${x+3.3} ${ey+2} L${x+4.4} ${ey+7} L${x} ${ey+4.4} L${x-4.4} ${ey+7} L${x-3.3} ${ey+2} L${x-7} ${ey-1.5} L${x-2.2} ${ey-2.2}Z" fill="#FFC23D" stroke="${K}" stroke-width="1.8" stroke-linejoin="round"/>`
+    :`<circle cx="${x}" cy="${ey}" r="4" fill="${K}"/><circle cx="${x+1.4}" cy="${ey-1.4}" r="1.3" fill="#fff"/>`;
+  s+=a.eyes==='kedip'?eye(49,'bulat')+eye(71,'senyum'):eye(49,a.eyes)+eye(71,a.eyes);
+  /* mulut */
+  const my=ey+13;
+  s+={senyum:`<path d="M52 ${my-2} Q60 ${my+6} 68 ${my-2}" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/>`,
+    tawa:`<path d="M51 ${my-3} Q60 ${my+10} 69 ${my-3}Z" fill="${K}" stroke="${K}" stroke-width="2" stroke-linejoin="round"/><path d="M55 ${my+2} Q60 ${my+6} 65 ${my+2}" fill="#FF6B81"/>`,
+    datar:`<path d="M54 ${my} L66 ${my}" stroke="${K}" stroke-width="3" stroke-linecap="round"/>`,
+    o:`<ellipse cx="60" cy="${my}" rx="3.6" ry="4.6" fill="${K}"/>`,
+    lidah:`<path d="M52 ${my-2} Q60 ${my+5} 68 ${my-2}" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/><path d="M60 ${my+1} q1 7 6 2 l-1 -4Z" fill="#FF6B81" stroke="${K}" stroke-width="1.6"/>`}[a.mouth]||'';
+  /* aksesori */
+  s+={kacamata:`<circle cx="49" cy="${ey}" r="8" fill="#fff" fill-opacity=".25" ${sw}/><circle cx="71" cy="${ey}" r="8" fill="#fff" fill-opacity=".25" ${sw}/><path d="M57 ${ey} L63 ${ey}" ${sw}/>`,
+    kacahitam:`<rect x="39" y="${ey-6}" width="19" height="12" rx="5" fill="${K}"/><rect x="62" y="${ey-6}" width="19" height="12" rx="5" fill="${K}"/><path d="M57 ${ey-2} L63 ${ey-2}" ${sw}/><path d="M43 ${ey-3} L48 ${ey-3}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".6"/>`,
+    topi:`<path d="M31 42 C31 23 45 16 60 16 C75 16 89 23 89 42Z" fill="#F2394B" ${sw}/><path d="M60 40 L101 42 C101 47 92 48 60 46Z" fill="#C91F33" ${sw}/><circle cx="60" cy="17" r="3" fill="#C91F33" ${sw}/>`,
+    peci:`<path d="M35 36 L37 17 C50 13 70 13 83 17 L85 36 C70 33 50 33 35 36Z" fill="${K}" stroke="${K}" stroke-width="2.5" stroke-linejoin="round"/><path d="M38 31 C52 28 68 28 82 31" stroke="#555A80" stroke-width="2" fill="none"/>`,
+    toga:`<path d="M42 30 L42 40 C52 44 68 44 78 40 L78 30Z" fill="${K}"/><path d="M22 26 L60 13 L98 26 L60 39Z" fill="${K}" stroke="${K}" stroke-width="2" stroke-linejoin="round"/><path d="M60 26 L90 32 L90 44" stroke="#FFC23D" stroke-width="2.5" fill="none"/><circle cx="90" cy="46" r="3" fill="#FFC23D"/>`,
+    headphone:`<path d="M30 54 C28 18 92 18 90 54" fill="none" stroke="${K}" stroke-width="6" stroke-linecap="round"/><rect x="22" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/><rect x="86" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/>`,
+    mahkota:`<path d="M39 32 L42 12 L51 23 L60 8 L69 23 L78 12 L81 32Z" fill="#FFC23D" ${sw}/><circle cx="60" cy="25" r="3" fill="#F2394B"/><circle cx="47" cy="27" r="2" fill="#3D8BFF"/><circle cx="73" cy="27" r="2" fill="#3D8BFF"/>`}[a.acc]||'';
+  return s+'</svg>'}
+function avSpan(p){if(p&&p.avatar)return `<span class="avatar avimg" style="--av:${avBgColor(p.avatar)}">${avatarSVG(p.avatar)}</span>`;return `<span class="avatar" style="--av:${(p&&p.color)||'#9B6BFF'}">${esc(String((p&&p.name)||'?')[0].toUpperCase())}</span>`}
+
+/* ---------- editor avatar ---------- */
+function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.avOwned||[];const draft=Object.assign({},P.avatar);let tab='hair';
+  let el=$('#avEd');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb aved" id="avEd" hidden></div>');el=$('#avEd')}
+  const owned=(c,id)=>avFree(c,id)||P.avOwned.includes(c+':'+id)||P.avatar[c]===id;
+  const cost=()=>AV_ORDER.reduce((t,c)=>t+(owned(c,draft[c])?0:avItem(c,draft[c])[2]),0);
+  const gem=`<span style="width:18px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
+  const render=()=>{const c=cost(),can=c<=P.gems,cat=AV_PARTS[tab];
+    el.innerHTML=`<div class="onbin" style="max-width:720px;gap:12px">
+      <div class="aved-top"><button class="back" id="avX" aria-label="Tutup">✕</button><h2 style="flex:1">Ubah avatar</h2><span class="aved-gems">${gem} ${P.gems}</span></div>
+      <div class="aved-prev" style="--av:${avBgColor(draft)}">${avatarSVG(draft)}</div>
+      <div class="aved-tabs" role="tablist">${AV_ORDER.map(k=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${AV_PARTS[k].label}</button>`).join('')}</div>
+      <div class="aved-grid">${cat.items.map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id});
+        const vis=it[3]&&tab!=='shirt'&&tab!=='bg'?`<span class="aved-sw" style="background:${it[3]}"></span>`:`<span class="aved-mini">${avatarSVG(prev,{nobg:tab!=='bg'})}</span>`;
+        return `<button class="aved-it ${on?'on':''}" data-id="${id}" aria-pressed="${on}">${vis}<b>${esc(it[1])}</b><small>${own?(on?'Dipakai':it[2]?'Dimiliki':'Gratis'):`${gem} ${it[2]}`}</small></button>`}).join('')}</div>
+      <div class="onbfoot aved-foot">${c?`<p class="note" style="text-align:center;margin:0 0 8px;${can?'':'color:var(--bad);font-weight:800'}">${can?`Barang baru seharga ${c} permata akan dibeli.`:`Permatamu kurang ${c-P.gems}. Kumpulkan dari pelajaran sempurna, peti hadiah, dan misi.`}</p>`:''}
+        <button class="primary press" id="avSave" ${can?'':'disabled'}>${c?`Beli dan pakai · ${c} permata`:'Simpan avatar'}</button></div></div>`;
+    hydrate(el);
+    $('#avX').onclick=()=>{el.hidden=true};
+    el.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+    el.querySelectorAll('.aved-it').forEach(b=>b.onclick=()=>{draft[tab]=b.dataset.id;tone([660],.03);render()});
+    $('#avSave').onclick=()=>{const c2=cost();if(c2>P.gems)return;AV_ORDER.forEach(k=>{if(!owned(k,draft[k]))P.avOwned.push(k+':'+draft[k])});P.gems-=c2;P.avatar=Object.assign({},draft);P.color=avBgColor(draft);save();el.hidden=true;
+      if(c2){sfx.win&&sfx.win();toast('gem',`Avatar baru dipakai! −${c2} permata`)}else toast('check','Avatar disimpan.');renderTop();if(curTab==='profile')renderProfile();if(curTab==='shop')renderShop()}};
+  render();el.hidden=false;el.scrollTop=0}
+
 /* ---------- wiring ---------- */
 const cvEl=$('#cv');
 function ptr(e){const r=cvEl.getBoundingClientRect(),z=arc.z||1;return [(e.clientX-r.left)/z,(e.clientY-r.top)/z]}
