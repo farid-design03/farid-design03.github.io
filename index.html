@@ -1482,6 +1482,9 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .onbgb span{width:84px;height:84px;border-radius:50%;overflow:hidden;display:block}.onbgb span svg{width:100%;height:100%}
 .onbgb b{font-size:16px}.onbgb[aria-pressed="true"]{background:#DDF4FF;border-color:#84D8FF;box-shadow:0 4px 0 #84D8FF}
 .onbgb:active{transform:translateY(4px);box-shadow:none}
+.spanim{width:100%;aspect-ratio:1/1}.spanim svg{width:100%;height:100%;display:block}
+.spitem .spanim{width:56px;flex:none;border-radius:10px;overflow:hidden;background:#F7FFF0}
+.spfigbig{padding:0!important;overflow:hidden;width:min(280px,72vw)!important}.spfigbig.small{width:150px!important}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -4816,7 +4819,101 @@ function spDone(ui){const pr=progOf(),base=ui*NODES.length;return !!((P.sportDon
 function spPending(ui){const pr=progOf(),base=ui*NODES.length;return pr.done===base+2&&!spDone(ui)}
 function spToday(){const d=spFit().days[dayKey()];return typeof d==='number'?d:(d?1:0)}
 function spRestLeft(){const f=spFit();return Math.max(0,90*60e3-(Date.now()-(f.last||0)))}
-function spFigure(id){const ps=SP_POSE[id]||SP_POSE.jj;const L=(p,a,b)=>`<line x1="${p[a][0]}" y1="${p[a][1]}" x2="${p[b][0]}" y2="${p[b][1]}"/>`;
+/* ===== Animasi olahraga: kerangka tubuh dengan gerakan halus sesuai teknik yang benar =====
+   Titik sendi: H kepala, N bahu, P pinggul, E/W siku & pergelangan (1 dekat, 2 jauh),
+   K/A/T lutut, pergelangan kaki, ujung kaki (1 dekat, 2 jauh). Lantai di y=91. */
+const SPK={
+ jj:{face:'front',view:'front',keys:[
+  [{H:[50,15],N:[50,27],P:[50,52],E1:[43,38],W1:[41,49],E2:[57,38],W2:[59,49],K1:[47,71],A1:[46,90],T1:[42,91],K2:[53,71],A2:[54,90],T2:[58,91]},.35],
+  [{H:[50,11],N:[50,23],P:[50,48],E1:[39,15],W1:[36,4],E2:[61,15],W2:[64,4],K1:[42,66],A1:[36,84],T1:[32,85],K2:[58,66],A2:[64,84],T2:[68,85]},.35],
+  [{H:[50,15],N:[50,27],P:[50,52],E1:[40,22],W1:[37,11],E2:[60,22],W2:[63,11],K1:[44,71],A1:[40,90],T1:[36,91],K2:[56,71],A2:[60,90],T2:[64,91]},.15]]},
+ skip:{face:'front',view:'front',keys:[
+  [{H:[50,15],N:[50,27],P:[50,52],E1:[42,39],W1:[37,47],E2:[58,39],W2:[63,47],K1:[47,71],A1:[47,90],T1:[43,91],K2:[53,71],A2:[53,90],T2:[57,91]},.25],
+  [{H:[50,10],N:[50,22],P:[50,47],E1:[42,34],W1:[36,40],E2:[58,34],W2:[64,40],K1:[47,66],A1:[47,84],T1:[43,86],K2:[53,66],A2:[53,84],T2:[57,86]},.25]]},
+ hk:{face:[1,0],view:'side',keys:[
+  [{H:[52,14],N:[50,27],P:[50,52],E1:[43,38],W1:[39,46],E2:[57,37],W2:[62,29],K1:[63,51],A1:[62,70],T1:[67,72],K2:[51,71],A2:[50,90],T2:[57,91]},.3],
+  [{H:[52,14],N:[50,27],P:[50,52],E1:[57,37],W1:[62,29],E2:[43,38],W2:[39,46],K1:[51,71],A1:[50,90],T1:[57,91],K2:[63,51],A2:[62,70],T2:[67,72]},.3]]},
+ sq:{face:[1,0],view:'side',arms:'forward',keys:[
+  [{H:[47,14],N:[46,27],P:[45,52],E1:[55,30],W1:[65,31],E2:[55,30],W2:[65,31],K1:[47,71],A1:[45,90],T1:[53,91],K2:[48,71],A2:[46,90],T2:[54,91]},.5],
+  [{H:[56,37],N:[51,47],P:[35,66],E1:[61,48],W1:[71,47],E2:[61,48],W2:[71,47],K1:[53,68],A1:[45,90],T1:[53,91],K2:[54,68],A2:[46,90],T2:[54,91]},1.1],
+  [{H:[56,37],N:[51,47],P:[35,66],E1:[61,48],W1:[71,47],E2:[61,48],W2:[71,47],K1:[53,68],A1:[45,90],T1:[53,91],K2:[54,68],A2:[46,90],T2:[54,91]},.3],
+  [{H:[47,14],N:[46,27],P:[45,52],E1:[55,30],W1:[65,31],E2:[55,30],W2:[65,31],K1:[47,71],A1:[45,90],T1:[53,91],K2:[48,71],A2:[46,90],T2:[54,91]},.9]]},
+ lg:{face:[1,0],view:'side',keys:[
+  [{H:[49,14],N:[48,27],P:[48,52],E1:[54,40],W1:[50,51],E2:[54,40],W2:[50,51],K1:[49,71],A1:[48,90],T1:[55,91],K2:[48,71],A2:[47,90],T2:[54,91]},.6],
+  [{H:[49,28],N:[48,41],P:[47,66],E1:[54,54],W1:[50,65],E2:[54,54],W2:[50,65],K1:[63,67],A1:[64,90],T1:[71,91],K2:[41,85],A2:[27,87],T2:[24,91]},1.1],
+  [{H:[49,28],N:[48,41],P:[47,66],E1:[54,54],W1:[50,65],E2:[54,54],W2:[50,65],K1:[63,67],A1:[64,90],T1:[71,91],K2:[41,85],A2:[27,87],T2:[24,91]},.3],
+  [{H:[49,14],N:[48,27],P:[48,52],E1:[54,40],W1:[50,51],E2:[54,40],W2:[50,51],K1:[49,71],A1:[48,90],T1:[55,91],K2:[48,71],A2:[47,90],T2:[54,91]},.9]]},
+ br:{face:[0.2,-1],view:'side',floor:true,keys:[
+  [{H:[13,83],N:[23,86],P:[51,87],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
+  [{H:[13,83],N:[24,85],P:[50,73],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,68],A1:[75,89],T1:[82,91],K2:[68,69],A2:[76,89],T2:[83,91]},.9],
+  [{H:[13,83],N:[24,85],P:[50,73],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[67,68],A1:[75,89],T1:[82,91],K2:[68,69],A2:[76,89],T2:[83,91]},.6],
+  [{H:[13,83],N:[23,86],P:[51,87],E1:[36,89],W1:[47,90],E2:[36,89],W2:[47,90],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.9]]},
+ pu:{face:[-1,0.4],view:'side',floor:true,keys:[
+  [{H:[15,62],N:[24,68],P:[55,77],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,82],A1:[86,86],T1:[89,91],K2:[71,82],A2:[86,86],T2:[89,91]},.4],
+  [{H:[17,77],N:[26,82],P:[56,84],E1:[35,77],W1:[24,90],E2:[36,77],W2:[25,90],K1:[71,85],A1:[86,87],T1:[89,91],K2:[71,85],A2:[86,87],T2:[89,91]},1.0],
+  [{H:[15,62],N:[24,68],P:[55,77],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[71,82],A1:[86,86],T1:[89,91],K2:[71,82],A2:[86,86],T2:[89,91]},.8]]},
+ pu_knee:{face:[-1,0.4],view:'side',floor:true,keys:[
+  [{H:[15,62],N:[24,68],P:[49,78],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[66,89],A1:[78,79],T1:[83,75],K2:[66,89],A2:[78,79],T2:[83,75]},.4],
+  [{H:[17,77],N:[26,82],P:[49,85],E1:[35,77],W1:[24,90],E2:[36,77],W2:[25,90],K1:[66,89],A1:[78,79],T1:[83,75],K2:[66,89],A2:[78,79],T2:[83,75]},1.0],
+  [{H:[15,62],N:[24,68],P:[49,78],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[66,89],A1:[78,79],T1:[83,75],K2:[66,89],A2:[78,79],T2:[83,75]},.8]]},
+ pu_wall:{face:[-1,0],view:'side',wall:true,keys:[
+  [{H:[33,23],N:[39,33],P:[54,56],E1:[30,37],W1:[21,40],E2:[31,37],W2:[21,41],K1:[61,73],A1:[67,90],T1:[73,91],K2:[61,73],A2:[67,90],T2:[73,91]},.4],
+  [{H:[26,27],N:[32,36],P:[50,58],E1:[33,46],W1:[21,40],E2:[34,46],W2:[21,41],K1:[59,74],A1:[67,90],T1:[73,91],K2:[59,74],A2:[67,90],T2:[73,91]},1.0],
+  [{H:[33,23],N:[39,33],P:[54,56],E1:[30,37],W1:[21,40],E2:[31,37],W2:[21,41],K1:[61,73],A1:[67,90],T1:[73,91],K2:[61,73],A2:[67,90],T2:[73,91]},.8]]},
+ pl:{face:[-1,0.4],view:'side',floor:true,keys:[
+  [{H:[17,72],N:[26,77],P:[56,81],E1:[26,89],W1:[13,90],E2:[27,89],W2:[14,90],K1:[71,84],A1:[86,87],T1:[89,91],K2:[71,84],A2:[86,87],T2:[89,91]},1.5],
+  [{H:[17,72],N:[26,77],P:[56,80.5],E1:[26,89],W1:[13,90],E2:[27,89],W2:[14,90],K1:[71,83.8],A1:[86,87],T1:[89,91],K2:[71,83.8],A2:[86,87],T2:[89,91]},1.5]]},
+ cr:{face:[0.6,-1],view:'side',floor:true,keys:[
+  [{H:[13,83],N:[23,86],P:[51,87],E1:[30,80],W1:[24,82],E2:[31,80],W2:[25,82],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.4],
+  [{H:[21,70],N:[29,77],P:[51,87],E1:[36,72],W1:[30,73],E2:[37,72],W2:[31,73],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.8],
+  [{H:[21,70],N:[29,77],P:[51,87],E1:[36,72],W1:[30,73],E2:[37,72],W2:[31,73],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.3],
+  [{H:[13,83],N:[23,86],P:[51,87],E1:[30,80],W1:[24,82],E2:[31,80],W2:[25,82],K1:[66,69],A1:[75,89],T1:[82,91],K2:[67,70],A2:[76,89],T2:[83,91]},.8]]},
+ mc:{face:[-1,0.4],view:'side',floor:true,keys:[
+  [{H:[15,62],N:[24,68],P:[54,76],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[42,79],A1:[55,85],T1:[51,90],K2:[70,81],A2:[86,86],T2:[89,91]},.3],
+  [{H:[15,62],N:[24,68],P:[54,76],E1:[24,79],W1:[24,90],E2:[25,79],W2:[25,90],K1:[70,81],A1:[86,86],T1:[89,91],K2:[42,79],A2:[55,85],T2:[51,90]},.3]]},
+ st:{face:[1,0.2],view:'side',keys:[
+  [{H:[48,14],N:[47,27],P:[46,52],E1:[49,15],W1:[51,3],E2:[48,15],W2:[50,3],K1:[47,71],A1:[46,90],T1:[53,91],K2:[47,71],A2:[46,90],T2:[53,91]},1.6],
+  [{H:[48,14],N:[47,27],P:[46,52],E1:[49,15],W1:[51,3],E2:[48,15],W2:[50,3],K1:[47,71],A1:[46,90],T1:[53,91],K2:[47,71],A2:[46,90],T2:[53,91]},.6],
+  [{H:[66,64],N:[61,55],P:[44,52],E1:[63,67],W1:[61,79],E2:[64,67],W2:[62,79],K1:[46,71],A1:[46,90],T1:[53,91],K2:[46,71],A2:[46,90],T2:[53,91]},2.0],
+  [{H:[66,64],N:[61,55],P:[44,52],E1:[63,67],W1:[61,79],E2:[64,67],W2:[62,79],K1:[46,71],A1:[46,90],T1:[53,91],K2:[46,71],A2:[46,90],T2:[53,91]},1.6]]}};
+const SPC={skin:'#F6C9A0',shirt:'#1CB0F6',shirt2:'#1590CC',pants:'#3C4A6B',pants2:'#2B3550',shoe:'#FF9600',hair:'#2B1D14'};
+function spAnimKey(id,v){if(id==='pu'&&v==='wall')return 'pu_wall';if(id==='pu'&&v==='knee')return 'pu_knee';return SPK[id]?id:'jj'}
+function spMount(box){const id=spAnimKey(box.dataset.ex,box.dataset.v),def=SPK[id];const NS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('class','spsvg');
+  const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
+  mk('rect',{x:0,y:91,width:100,height:9,fill:'#E9F7DF'});mk('line',{x1:0,y1:91.5,x2:100,y2:91.5,stroke:'#C8E6B0','stroke-width':1.5});
+  if(def.floor)mk('rect',{x:8,y:89.5,width:84,height:2.5,rx:1.2,fill:'#9B6BFF',opacity:.55});
+  if(def.wall){mk('rect',{x:12,y:4,width:8,height:87,fill:'#E5D3B3'});mk('line',{x1:20,y1:4,x2:20,y2:91,stroke:'#C9B48F','stroke-width':1})}
+  const L=(c,w)=>mk('line',{stroke:c,'stroke-width':w,'stroke-linecap':'round'});
+  const far={th:L(SPC.pants2,8.5),sh:L(SPC.pants2,7),ft:L('#D27800',4.5),ua:L(SPC.shirt2,6.5),fa:L('#E0AE85',5.5)};
+  const torso=L(SPC.shirt,13),neck=L(SPC.skin,5);
+  const near={th:L(SPC.pants,8.5),sh:L(SPC.pants,7),ft:L(SPC.shoe,4.5),ua:L(SPC.shirt,6.5),fa:L(SPC.skin,5.5)};
+  const hand1=mk('circle',{r:3,fill:SPC.skin}),hand2=mk('circle',{r:3,fill:'#E0AE85'});
+  const hair=mk('circle',{r:7.6,fill:SPC.hair});const head=mk('circle',{r:7,fill:SPC.skin});const eye=mk('circle',{r:1.15,fill:'#1E1E24'}),eye2=mk('circle',{r:1.15,fill:'#1E1E24'}),mouth=mk('path',{fill:'none',stroke:'#B0563C','stroke-width':.9,'stroke-linecap':'round'});
+  hand2.parentNode.insertBefore(hand2,torso);
+  box.innerHTML='';box.appendChild(svg);
+  const keys=def.keys,tot=keys.reduce((s,k)=>s+k[1],0);const t0=performance.now();
+  const ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+  const set=(ln,a,b)=>{ln.setAttribute('x1',a[0]);ln.setAttribute('y1',a[1]);ln.setAttribute('x2',b[0]);ln.setAttribute('y2',b[1])};
+  const fix=box.dataset.fix;const frame=now=>{if(!box.isConnected)return;let t=((now-t0)/1000)%tot,i=0;while(t>keys[i][1]){t-=keys[i][1];i++}
+   if(fix!=null&&fix!==''){i=+fix;t=keys[i][1]}
+   const A=keys[(i-1+keys.length)%keys.length][0],B=keys[i][0],u=ease(Math.min(1,t/keys[i][1]));const p={};for(const k in B)p[k]=[A[k][0]+(B[k][0]-A[k][0])*u,A[k][1]+(B[k][1]-A[k][1])*u];
+   set(far.th,p.P,p.K2);set(far.sh,p.K2,p.A2);set(far.ft,p.A2,p.T2);set(far.ua,p.N,p.E2);set(far.fa,p.E2,p.W2);hand2.setAttribute('cx',p.W2[0]);hand2.setAttribute('cy',p.W2[1]);
+   set(torso,p.N,p.P);const nx=p.N[0]+(p.H[0]-p.N[0])*.45,ny=p.N[1]+(p.H[1]-p.N[1])*.45;set(neck,p.N,[nx,ny]);
+   set(near.th,p.P,p.K1);set(near.sh,p.K1,p.A1);set(near.ft,p.A1,p.T1);set(near.ua,p.N,p.E1);set(near.fa,p.E1,p.W1);hand1.setAttribute('cx',p.W1[0]);hand1.setAttribute('cy',p.W1[1]);
+   head.setAttribute('cx',p.H[0]);head.setAttribute('cy',p.H[1]);
+   const ang=Math.atan2(p.H[1]-p.N[1],p.H[0]-p.N[0]),up=[Math.cos(ang),Math.sin(ang)];
+   if(def.face==='front'){hair.setAttribute('cx',p.H[0]);hair.setAttribute('cy',p.H[1]-2);eye.setAttribute('cx',p.H[0]-2.6);eye.setAttribute('cy',p.H[1]);eye2.setAttribute('cx',p.H[0]+2.6);eye2.setAttribute('cy',p.H[1]);eye2.style.display='';mouth.setAttribute('d',`M${p.H[0]-2} ${p.H[1]+3} Q${p.H[0]} ${p.H[1]+4.6} ${p.H[0]+2} ${p.H[1]+3}`)}
+   else{const f=def.face,fl=Math.hypot(f[0],f[1]),fx=f[0]/fl,fy=f[1]/fl;hair.setAttribute('cx',p.H[0]+up[0]*1.4-fx*1.8);hair.setAttribute('cy',p.H[1]+up[1]*1.4-fy*1.8);
+    eye.setAttribute('cx',p.H[0]+fx*3.6+up[0]*.8);eye.setAttribute('cy',p.H[1]+fy*3.6+up[1]*.8);eye2.style.display='none';
+    const mx=p.H[0]+fx*4.2-up[0]*2.6,my=p.H[1]+fy*4.2-up[1]*2.6;mouth.setAttribute('d',`M${mx-fx*1.4} ${my-fy*1.4} L${mx} ${my}`)}
+   if(fix!=null&&fix!=='')return;requestAnimationFrame(frame)};
+  requestAnimationFrame(frame)}
+function spVar(x){return x.id==='pu'?(/dinding/.test(x.name)?'wall':/lutut/.test(x.name)?'knee':''):''}
+function spAnimAll(root){root.querySelectorAll('.spanim:not([data-on])').forEach(b=>{b.dataset.on='1';spMount(b)})}
+
+function spFigure(id,v){return `<div class="spanim" data-ex="${id}" data-v="${v||''}"></div>`}
+function spFigureOld(id){const ps=SP_POSE[id]||SP_POSE.jj;const L=(p,a,b)=>`<line x1="${p[a][0]}" y1="${p[a][1]}" x2="${p[b][0]}" y2="${p[b][1]}"/>`;
   const fr=(p,k)=>`<g class="spf f${k}">${L(p,'n','p')}${L(p,'n','le')}${L(p,'le','lh')}${L(p,'n','re')}${L(p,'re','rh')}${L(p,'p','lk')}${L(p,'lk','lf')}${L(p,'p','rk')}${L(p,'rk','rf')}<circle cx="${p.h[0]}" cy="${p.h[1]}" r="7" fill="#FFC800" stroke="#3C3C3C" stroke-width="3"/></g>`;
   const floor=['pu','pl','br','cr','mc'].includes(id)?'<line x1="4" y1="90" x2="96" y2="90" stroke="#E5E5E5" stroke-width="3"/>':'<line x1="20" y1="91" x2="80" y2="91" stroke="#E5E5E5" stroke-width="3"/>';
   return `<svg viewBox="0 0 100 100" class="spfig sp-${id}" stroke="#58CC02" stroke-width="5.5" stroke-linecap="round" fill="none" aria-hidden="true">${floor}${fr(ps[0],0)}${fr(ps[1],1)}</svg>`}
@@ -4839,21 +4936,21 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
      ${!f.intro?`<div class="spsafe"><b>Sebelum mulai</b><ul><li>Cari tempat lapang dan lantai yang tidak licin.</li><li>Berhenti kalau terasa sakit atau pusing.</li><li>Minum air putih setelahnya.</li></ul></div>`:''}
      ${missed?`<div class="spnote">Kemarin kamu belum olahraga. Tidak apa-apa, yang penting jangan bolos dua kali. Ayo mulai lagi hari ini!</div>`:''}
      <div class="spweek">${week()}</div>
-     <div class="splist">${plan.map((x,i)=>`<div class="spitem">${spFigure(x.id)}<span><b>${esc(x.name)}</b><small>${x.t==='time'?x.amt+' detik':x.amt+' kali'+(x.per?' '+x.per:'')}</small></span></div>`).join('')}</div>
+     <div class="splist">${plan.map((x,i)=>`<div class="spitem">${spFigure(x.id,spVar(x))}<span><b>${esc(x.name)}</b><small>${x.t==='time'?x.amt+' detik':x.amt+' kali'+(x.per?' '+x.per:'')}</small></span></div>`).join('')}</div>
      <button class="primary press" id="spGo">Mulai</button><button class="ghost" id="spMini">Lagi kurang semangat? Versi mini (setengahnya)</button>`}
    else if(st.phase==='ex'||st.phase==='ready'){const timeEx=ex.t==='time';const pct=timeEx?Math.max(0,st.left/ex.amt):0;
      body=`<div class="spprog">${st.plan.map((x,i)=>`<i class="${i<st.k?'d':i===st.k?'c':''}"></i>`).join('')}</div>
-     <div class="spfigbig">${spFigure(ex.id)}</div><h2 class="spname">${esc(ex.name)}</h2>
+     <div class="spfigbig">${spFigure(ex.id,spVar(ex))}</div><h2 class="spname">${esc(ex.name)}</h2>
      <div class="spamt">${timeEx?(st.phase==='ready'?ex.amt+' detik':`<span class="sptime">${st.left}</span> detik`):ex.amt+' kali'+(ex.per?` <small>${ex.per}</small>`:'')}</div>
      ${timeEx&&st.phase==='ex'?`<div class="spbar"><i style="width:${pct*100}%"></i></div>`:''}
      <p class="sptip">${esc(ex.tip)}</p>
      ${timeEx?(st.phase==='ready'?`<button class="primary press" id="spStart">Mulai ${ex.amt} detik</button>`:`<button class="ghost" id="spSkip">Lewati gerakan ini</button>`):`<button class="primary press" id="spDone">Selesai ✓</button><button class="ghost" id="spSkip">Lewati gerakan ini</button>`}`}
-   else if(st.phase==='rest'){const nx=st.plan[st.k];body=`<div class="sphead"><span class="spbadge">Istirahat</span><h2 class="sptime big">${st.left}</h2><p class="note">Tarik napas dalam. Berikutnya: <b>${esc(nx.name)}</b> ${nx.t==='time'?nx.amt+' detik':nx.amt+' kali'}</p></div><div class="spfigbig small">${spFigure(nx.id)}</div><button class="primary press" id="spNext">Lanjut sekarang</button>`}
+   else if(st.phase==='rest'){const nx=st.plan[st.k];body=`<div class="sphead"><span class="spbadge">Istirahat</span><h2 class="sptime big">${st.left}</h2><p class="note">Tarik napas dalam. Berikutnya: <b>${esc(nx.name)}</b> ${nx.t==='time'?nx.amt+' detik':nx.amt+' kali'}</p></div><div class="spfigbig small">${spFigure(nx.id,spVar(nx))}</div><button class="primary press" id="spNext">Lanjut sekarang</button>`}
    else if(st.phase==='feel'){body=`<div class="sphead"><span class="spbadge">🎉 Selesai!</span><h2>Bagaimana rasanya?</h2><p class="note">Jawabanmu dipakai untuk mengatur jumlah gerakan berikutnya.</p></div>
      <div class="spfeel"><button data-f="easy">😎<b>Terlalu mudah</b><small>Tambah lebih banyak</small></button><button data-f="ok">🙂<b>Pas</b><small>Naik sedikit</small></button><button data-f="hard">😮‍💨<b>Berat</b><small>Kurangi dulu</small></button></div>`}
    else if(st.phase==='end'){body=`<div class="sphead"><div class="mascot" data-mascot data-mood="happy" style="width:120px;margin:0 auto"></div><h2>Kamu anak yang aktif!</h2><p class="note">Hari ini kamu sudah bergerak. Sedikit demi sedikit, badanmu makin kuat. Setiap hari 1% lebih baik.</p></div>
      <div class="spweek">${week()}</div><div class="sprew"><span>+10 XP</span><span>+5 permata</span></div><button class="primary press" id="spEnd">Lanjut belajar</button>`}
-   el.innerHTML=`<div class="onbin spin"><div class="aved-top"><button class="back" id="spX" aria-label="Tutup">✕</button><span style="flex:1"></span></div>${body}</div>`;hydrate(el);
+   const _r=1;el.innerHTML=`<div class="onbin spin"><div class="aved-top"><button class="back" id="spX" aria-label="Tutup">✕</button><span style="flex:1"></span></div>${body}</div>`;hydrate(el);spAnimAll(el);
    $('#spX').onclick=()=>{if(st.phase==='end'||st.phase==='intro'){close();return}openModal(`<h3>Berhenti olahraga?</h3><p>Sedikit lagi selesai. Kalau berhenti, level ini belum dihitung.</p><div class="acts"><button class="primary" id="mNo">Lanjut olahraga</button><button class="ghost" id="mYes">Berhenti</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();close()}};
    const go=$('#spGo');if(go)go.onclick=()=>{st.plan=spPlan(false);st.k=0;begin()};const mi=$('#spMini');if(mi)mi.onclick=()=>{st.mini=true;st.plan=spPlan(true);st.k=0;begin()};
    const sS=$('#spStart');if(sS)sS.onclick=()=>runTimer(ex.amt,()=>next());
