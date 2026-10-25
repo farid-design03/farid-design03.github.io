@@ -1436,6 +1436,11 @@ body.arcfs .qcard>#qtext{padding:6px 12px!important;margin:0!important}
 body.arcfs .stage{border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important}
 body.arcfs .qwrap{padding:0!important}
 body.arcfs{padding:0!important;margin:0!important}body.arcfs .app,body.arcfs .main{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;box-sizing:border-box}
+.ajmat3{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ajmat3 select{width:100%;min-width:0}.ajmat3 #ajUnit{grid-column:1/3}.ajmat3 .seg{grid-column:1/3;justify-self:start}
+body.arcfs{overflow:hidden!important}
+body.arcfs .playbar{padding-top:calc(6px + env(safe-area-inset-top,0px))!important;position:relative;z-index:5}
+body.arcfs #quitBtn{min-width:44px;min-height:40px;touch-action:manipulation}
+.ajmat3 .seg button{white-space:nowrap;padding-inline:14px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3274,7 +3279,7 @@ const lvHex=()=>CUR?CUR.color:getComputedStyle(document.documentElement).getProp
 const GAME_ORI={lari:'landscape',ular:'landscape',pancing:'landscape'};
 const GFS={on:false,mine:false};
 function isTouchDev(){try{return matchMedia('(pointer:coarse)').matches}catch(e){return false}}
-function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'portrait';
+function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'portrait';try{window.scrollTo(0,0)}catch(e){}
   document.body.classList.add('arcfs');document.body.dataset.ori=ori;GFS.on=true;
   const lock=()=>{try{const so=screen.orientation;if(so&&so.lock){const r=so.lock(ori);r&&r.catch&&r.catch(()=>{})}}catch(e){}};
   lock();
@@ -3900,15 +3905,15 @@ const Buah={
 const Labirin={
  setup(){const{W,H,ctx}=arc,n=arc.labels.length;const LC=W>=600&&W>H?Math.min(4,n):2;this.LC=LC;const bw=(W-8-LC*8)/LC;
   this.leg=arc.labels.map((l,k)=>({k,f:fit(ctx,l,bw-40,36,16,10)}));const rowsL=Math.ceil(n/LC);this.bh=Math.max(30,Math.max(...this.leg.map(g=>g.f.lines.length*g.f.s*1.08))+10);this.top=8+rowsL*(this.bh+6)+6;
-  const C=W<520?9:13;const avH=H-this.top-8;let cs=Math.floor(Math.min((W-16)/C,avH/7));let R=Math.max(7,Math.floor(avH/cs));if(R%2===0)R--;this.C=C;this.R=R;this.cs=cs;this.ox=(W-C*cs)/2;this.oy=this.top+(avH-R*cs)/2;
+  const C=W<520?7:11;const avH=H-this.top-8;this.extra=arc.limit*.5;let cs=Math.floor(Math.min((W-16)/C,avH/7));let R=Math.max(7,Math.floor(avH/cs));if(R%2===0)R--;this.C=C;this.R=R;this.cs=cs;this.ox=(W-C*cs)/2;this.oy=this.top+(avH-R*cs)/2;
   /* labirin acak (backtracking) + beberapa jalan pintas */
   const rt=Array.from({length:C},()=>Array(R).fill(true)),dn=Array.from({length:C},()=>Array(R).fill(true)),seen=Array.from({length:C},()=>Array(R).fill(false));
   const st=[[C>>1,R>>1]];seen[C>>1][R>>1]=true;while(st.length){const [cx,cy]=st[st.length-1];const nb=shuffle([[0,-1],[1,0],[0,1],[-1,0]]).map(([dx,dy])=>[cx+dx,cy+dy,dx,dy]).filter(([x,y])=>x>=0&&y>=0&&x<C&&y<R&&!seen[x][y]);
    if(!nb.length){st.pop();continue}const [x,y,dx,dy]=nb[0];if(dx===1)rt[cx][cy]=false;if(dx===-1)rt[x][y]=false;if(dy===1)dn[cx][cy]=false;if(dy===-1)dn[x][y]=false;seen[x][y]=true;st.push([x,y])}
-  for(let x=0;x<C;x++)for(let y=0;y<R;y++){if(x<C-1&&Math.random()<.14)rt[x][y]=false;if(y<R-1&&Math.random()<.14)dn[x][y]=false}
+  for(let x=0;x<C;x++)for(let y=0;y<R;y++){if(x<C-1&&Math.random()<.3)rt[x][y]=false;if(y<R-1&&Math.random()<.3)dn[x][y]=false}
   this.rt=rt;this.dn=dn;const corners=[[0,0],[C-1,0],[0,R-1],[C-1,R-1]];const order=shuffle([...Array(n).keys()]);
   this.zones=order.map((ai,k)=>({i:ai,c:corners[k][0],r:corners[k][1]}));
-  this.p={c:C>>1,r:R>>1,tc:C>>1,tr:R>>1,u:1,dir:-1,want:-1};this.gh={c:C>>1,r:0,tc:C>>1,tr:0,u:1,wait:1.6};if(this.zones.some(z=>z.c===this.gh.c&&z.r===this.gh.r))this.gh.c=this.gh.tc=1;
+  this.p={c:C>>1,r:R>>1,tc:C>>1,tr:R>>1,u:1,dir:-1,want:-1};this.gh={c:C>>1,r:0,tc:C>>1,tr:0,u:1,wait:3.5};if(this.zones.some(z=>z.c===this.gh.c&&z.r===this.gh.r))this.gh.c=this.gh.tc=1;
   this.start=null;this.caught=false},
  can(c,r,d){if(d===0)return r>0&&!this.dn[c][r-1];if(d===1)return c<this.C-1&&!this.rt[c][r];if(d===2)return r<this.R-1&&!this.dn[c][r];if(d===3)return c>0&&!this.rt[c-1][r];return false},
  nxt(c,r,d){return [c+[0,1,0,-1][d],r+[-1,0,1,0][d]]},
@@ -3918,11 +3923,11 @@ const Labirin={
  move(x,y,active){if(!active||!this.start)return;const dx=x-this.start.x,dy=y-this.start.y;if(Math.hypot(dx,dy)<18)return;this.setDir(Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?2:0));this.start={x,y}},
  pup(){if(!this.start)return;this.start=null},
  key(k){const m={ArrowUp:0,ArrowRight:1,ArrowDown:2,ArrowLeft:3,w:0,d:1,s:2,a:3}[k];if(m!=null)this.setDir(m)},
- step(dt){if(arc.state!=='play')return;const p=this.p,sp=4.6;
+ step(dt){if(arc.state!=='play')return;const p=this.p,sp=5.2;
   if(p.u<1){p.u=Math.min(1,p.u+dt*sp)}
   if(p.u>=1){p.c=p.tc;p.r=p.tr;const z=this.zones.find(z=>z.c===p.c&&z.r===p.r);if(z){burst(this.pos(p).x,this.pos(p).y,z.i===arc.ci?'#FFD54A':'#FF6B5B',22);arcResolve(z.i);return}
    if(p.want>=0&&this.can(p.c,p.r,p.want))p.dir=p.want;if(p.dir>=0&&this.can(p.c,p.r,p.dir)){const [nc,nr]=this.nxt(p.c,p.r,p.dir);p.tc=nc;p.tr=nr;p.u=0}}
-  const g=this.gh;if(g.wait>0){g.wait-=dt}else{const gs=1.9*arc.speed;if(g.u<1)g.u=Math.min(1,g.u+dt*gs);if(g.u>=1){g.c=g.tc;g.r=g.tr;const d=this.bfs(g.c,g.r,p.tc,p.tr);if(d>=0){const [nc,nr]=this.nxt(g.c,g.r,d);g.tc=nc;g.tr=nr;g.u=0}}}
+  const g=this.gh;if(g.wait>0){g.wait-=dt}else{const gs=1.15*arc.speed;if(g.u<1)g.u=Math.min(1,g.u+dt*gs);if(g.u>=1){g.c=g.tc;g.r=g.tr;const d=this.bfs(g.c,g.r,p.tc,p.tr);if(d>=0){const [nc,nr]=this.nxt(g.c,g.r,d);g.tc=nc;g.tr=nr;g.u=0}}}
   const a=this.pos(p),b=this.pos(g);if(Math.hypot(a.x-b.x,a.y-b.y)<this.cs*.55){this.caught=true;burst(a.x,a.y,'#B57EDC',20);arcResolve(-1);arc.banner={text:'Tertangkap hantu!',color:'#C9362A',t:0}}},
  bfs(sc,sr,tc,tr){if(sc===tc&&sr===tr)return -1;const C=this.C,R=this.R,prev=new Int32Array(C*R).fill(-1),q=[sc*R+sr];prev[sc*R+sr]=sc*R+sr;
   while(q.length){const id=q.shift(),c=(id/R)|0,r=id%R;if(c===tc&&r===tr)break;for(let d=0;d<4;d++)if(this.can(c,r,d)){const [nc,nr]=this.nxt(c,r,d),ni=nc*R+nr;if(prev[ni]<0){prev[ni]=id;q.push(ni)}}}
@@ -5657,12 +5662,18 @@ function roomCreateAsk(){const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;roomCreate(s,+$('#rmUnit').value,n).then(closeModal).catch(e=>{$('#mYes').disabled=false;$('#rmErr').textContent=window.fbErr?fbErr(e):String(e.message||e)})}}
 const roomMe=()=>({name:P.name,av:P.avatar||null,score:0,c:0,i:0,done:false,t:0,joined:Date.now()});
 function roomGames(s,ui){const u=s.units[ui]||s.units[0];return (FIT[u.fit||s.fit]||FIT.long).games}
-async function roomCreate(s,ui,n,bg){const u=s.units[ui];let mode=AJAK.mode||'kuis';const games=roomGames(s,ui);if(mode!=='acak'&&!games.includes(mode))mode=games[0];
-  let raw=mode==='kuis'?unitQs(u,n):unitQs(u,n*3).filter(q=>!q.html).slice(0,n);if(raw.length<n){raw=unitQs(u,n);mode='kuis'}
+function ajakTriples(){const cls=AJAK.cls||P.cls,sid=AJAK.sid||'acak',ui=AJAK.ui==null?'acak':AJAK.ui;const cs=cls==='acak'?COURSE:COURSE.filter(c=>c.id===cls);const out=[];
+  cs.forEach(c=>c.subjects.forEach(sb=>{if(cls!=='acak'&&sid!=='acak'&&sb.id!==sid)return;sb.units.forEach((u,i)=>{if(cls!=='acak'&&sid!=='acak'&&ui!=='acak'&&i!==+ui)return;out.push({c,s:sb,u,i})})}));return out}
+function ajakSpec(){const c=COURSE.find(x=>x.id===AJAK.cls);const sb=c&&AJAK.sid!=='acak'?c.subjects.find(x=>x.id===AJAK.sid):null;const u=sb&&AJAK.ui!=='acak'?sb.units[+AJAK.ui]:null;return {c,s:sb,u,ui:u?+AJAK.ui:null}}
+function ajakGames(){const sp=ajakSpec();if(sp.s)return roomGames(sp.s,sp.ui==null?0:sp.ui);return ['ular','lari','katak','labirin','pancing','penalti','kuis']}
+async function roomCreate(s0,ui0,n,bg){const sp=ajakSpec(),tri=ajakTriples();let mode=AJAK.mode||'kuis';const games=ajakGames();if(mode!=='acak'&&!games.includes(mode))mode=games[0];
+  const pickQs=arcade=>{const out=[],seen=new Set();let g=0;while(out.length<n&&g<n*25){g++;const t=pick(tri);const q=t&&unitQs(t.u,1)[0];if(!q||seen.has(q.q)||(arcade&&q.html))continue;seen.add(q.q);out.push(q)}return out};
+  let raw=pickQs(mode!=='kuis');if(raw.length<n){raw=pickQs(false);mode='kuis'}
+  const s={id:sp.s?sp.s.id:'__mix',name:sp.s?sp.s.name:(sp.c?'Semua pelajaran '+sp.c.name:'Semua pelajaran, kelas acak')};const ui=sp.ui==null?0:sp.ui;const u={t:sp.u?sp.u.t:(sp.s?'Semua materi':'Soal campuran')};
   const modes=mode==='acak'?(()=>{const pool=games.slice(),out=[];let bag=[];for(let k=0;k<Math.ceil(n/2);k++){if(!bag.length)bag=shuffle(pool.slice());out.push(bag.pop())}return out})():null;
   const qs=raw.map(q=>({q:q.q,ans:q.ans,opts:q.opts,exp:q.exp||'',html:q.html||null,say:q.say||null}));
   const uid=FBX.user.uid;let code=null,last=null;
-  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set({host:uid,hostName:P.name,cls:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),mode,modes,status:'lobby',players:{[uid]:roomMe()},created:Date.now()});code=c}catch(e){last=e}}
+  for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set({host:uid,hostName:P.name,cls:sp.c?sp.c.id:P.cls,subj:s.id,subjName:s.name,unit:ui,title:u.t,n:qs.length,qs:JSON.stringify(qs),mode,modes,status:'lobby',players:{[uid]:roomMe()},created:Date.now()});code=c}catch(e){last=e}}
   if(!code)throw last;roomOpen(code,bg)}
 async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<6){toast('lock','Kode tantangan 6 huruf.');return}
   let snap;try{snap=await FB.db.doc('rooms/'+code).get()}catch(e){toast('lock',fbErr(e));return}
@@ -5783,13 +5794,13 @@ function bindProfTap(root,list){root.querySelectorAll('.ajrow').forEach(r=>{cons
 function ajakBindRows(root,list){bindProfTap(root,list);root.querySelectorAll('.ajinv').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.uid);if(f)ajakInvite(f,b)})}
 function ajakFoot(){const el=$('#ajFoot');if(!el)return;if(!ROOM.code){el.innerHTML='';return}const n=Object.keys((ROOM.doc&&ROOM.doc.players)||{}).length;
   el.innerHTML=`<button class="primary press" id="ajOpen">Buka ruang tanding · ${n} pemain</button>`;$('#ajOpen').onclick=()=>{$('#ajak').hidden=true;ROOM.bg=false;$('#room').hidden=false;roomRender()}}
-function openAjak(){if(!P)return;const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.min(s.units.length,Math.floor(done/NODES.length)+1));if(AJAK.ui==null||AJAK.ui>=open)AJAK.ui=open-1;AJAK.sent={};
+function openAjak(){if(!P)return;const s=SUBJ();if(!AJAK.cls){AJAK.cls=P.cls;AJAK.sid=s.id;const done=progOf().done;AJAK.ui=String(Math.max(0,Math.min(s.units.length-1,Math.floor(done/NODES.length))))}AJAK.sent={};
   if(ROOM.code&&ROOM.doc&&ROOM.doc.host!==FBX.user.uid)roomClose(true);
   let el=$('#ajak');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb ajak" id="ajak" hidden></div>');el=$('#ajak')}
   el.innerHTML=`<div class="onbin" style="max-width:600px;gap:14px;padding-bottom:20px">
     <div class="ajhead"><div class="ajbar"><button class="back" id="ajX" aria-label="Tutup">✕</button><h2>Ajak tanding</h2><span style="width:44px"></span></div>
       <div class="ajvs"><div class="ajme">${avatarSVG(P.avatar||null,{nobg:true})}</div><span class="ajv">VS</span><div class="ajyou">${silhouetteSVG()}</div></div></div>
-    <div class="ajmat"><select id="ajUnit" aria-label="Materi">${s.units.map((u,i)=>`<option value="${i}" ${i>=open?'disabled':''}>${esc(s.name)} · Unit ${i+1}: ${esc(u.t)}${i>=open?' (terkunci)':''}</option>`).join('')}</select><div class="seg small" id="ajN"><button data-n="5" aria-pressed="${AJAK.n===5}">5 soal</button><button data-n="10" aria-pressed="${AJAK.n===10}">10 soal</button></div></div>
+    <div class="ajmat ajmat3"><select id="ajCls" aria-label="Kelas"></select><select id="ajSubj" aria-label="Mata pelajaran"></select><select id="ajUnit" aria-label="Materi"></select><div class="seg small" id="ajN"><button data-n="5" aria-pressed="${AJAK.n===5}">5 soal</button><button data-n="10" aria-pressed="${AJAK.n===10}">10 soal</button></div></div>
     <div class="ajgames" id="ajGames"></div>
     <button class="ajopt" id="ajShare"><span class="ajic" style="background:#DDF0FF;color:#1C9BE8"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Bagikan undangan</b></button>
     <div class="ajopt ajsearch"><span class="ajic" style="background:#FFF4D6;color:#E8A100"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><input id="ajQ" placeholder="Cari nama pengguna teman" autocapitalize="none" autocomplete="off" spellcheck="false"><button class="ghost" id="ajGo">Cari</button></div>
@@ -5797,12 +5808,21 @@ function openAjak(){if(!P)return;const s=SUBJ(),done=progOf().done,open=Math.max
     <h4 class="ajsec">TEMANMU</h4><div id="ajList" class="ajlist"><p class="note">Memuat teman…</p></div>
     <div id="ajFoot" class="ajfoot"></div></div>`;
   el.hidden=false;el.scrollTop=0;hydrate(el);
-  $('#ajX').onclick=()=>{el.hidden=true};$('#ajUnit').value=String(AJAK.ui);$('#ajUnit').onchange=e=>{AJAK.ui=+e.target.value;if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2){roomClose(true)}};
+  $('#ajX').onclick=()=>{el.hidden=true};
+  const resetRoom=()=>{if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2)roomClose(true)};
+  const fillSel=()=>{const cs=$('#ajCls'),ss=$('#ajSubj'),us=$('#ajUnit');
+    cs.innerHTML=`<option value="acak">🎲 Kelas acak</option>`+COURSE.map(c=>`<option value="${c.id}">${esc(c.full)}</option>`).join('');cs.value=AJAK.cls;
+    const c=COURSE.find(x=>x.id===AJAK.cls);ss.disabled=!c;ss.innerHTML=`<option value="acak">🎲 Pelajaran acak</option>`+(c?c.subjects.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join(''):'');if(!c||!c.subjects.some(x=>x.id===AJAK.sid))AJAK.sid='acak';ss.value=AJAK.sid;
+    const sb=c&&c.subjects.find(x=>x.id===AJAK.sid);us.disabled=!sb;us.innerHTML=`<option value="acak">🎲 Semua materi (acak)</option>`+(sb?sb.units.map((u,i)=>`<option value="${i}">Unit ${i+1}: ${esc(u.t)}</option>`).join(''):'');if(!sb||!(+AJAK.ui<sb.units.length))AJAK.ui='acak';us.value=String(AJAK.ui)};
+  fillSel();
+  $('#ajCls').onchange=e=>{AJAK.cls=e.target.value;AJAK.sid='acak';AJAK.ui='acak';fillSel();resetRoom();drawGames()};
+  $('#ajSubj').onchange=e=>{AJAK.sid=e.target.value;AJAK.ui='acak';fillSel();resetRoom();drawGames()};
+  $('#ajUnit').onchange=e=>{AJAK.ui=e.target.value;resetRoom();drawGames()};
   $('#ajN').querySelectorAll('button').forEach(b=>b.onclick=()=>{AJAK.n=+b.dataset.n;$('#ajN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
-  const drawGames=()=>{const gs=roomGames(s,AJAK.ui);if(AJAK.mode!=='acak'&&!gs.includes(AJAK.mode))AJAK.mode='acak';
+  const drawGames=()=>{const gs=ajakGames();if(AJAK.mode!=='acak'&&!gs.includes(AJAK.mode))AJAK.mode='acak';
     $('#ajGames').innerHTML=[['acak','Acak semua game']].concat(gs.map(g=>[g,gameName(g)])).map(([id,nm])=>`<button class="ajg" data-g="${id}" aria-pressed="${AJAK.mode===id}" ${id!=='acak'?`style="--mc:${MCOL[id]||'#9B6BFF'}"`:''}>${id==='acak'?'🎲 ':''}${esc(nm)}</button>`).join('');
     $('#ajGames').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{AJAK.mode=b.dataset.g;if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2)roomClose(true);drawGames()})};
-  drawGames();const uSel=$('#ajUnit'),oldU=uSel.onchange;uSel.onchange=e=>{oldU&&oldU(e);drawGames()};
+  drawGames();
   $('#ajShare').onclick=ajakShare;$('#ajGo').onclick=()=>ajakSearch($('#ajQ').value);$('#ajQ').onkeydown=e=>{if(e.key==='Enter')ajakSearch($('#ajQ').value)};
   ajakFoot();ajakLoadFriends()}
 async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
