@@ -51,14 +51,32 @@ async function verifyUser(idToken) {
   return payload.user_id || payload.sub;
 }
 
-const val = (f) => f == null ? null : f.stringValue ?? f.integerValue ?? f.doubleValue ?? f.booleanValue ?? (f.arrayValue ? (f.arrayValue.values || []).map(val) : null);
+const val = (f) => f == null ? null : f.stringValue ?? f.integerValue ?? f.doubleValue ?? f.booleanValue
+  ?? (f.arrayValue ? (f.arrayValue.values || []).map(val) : f.mapValue ? Object.fromEntries(Object.entries(f.mapValue.fields || {}).map(([k, v]) => [k, val(v)])) : null);
+const fieldsOf = (doc) => { const out = {}; Object.entries((doc && doc.fields) || {}).forEach(([k, v]) => { out[k] = val(v); }); return out; };
+async function listDocs(path) {
+  const r = await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/${path}?pageSize=300`, { headers: { Authorization: 'Bearer ' + await accessToken() } });
+  const j = await r.json();
+  return (j.documents || []).map((d) => ({ id: d.name.split('/').pop(), ...fieldsOf(d) }));
+}
+async function deleteDoc(path) {
+  await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/${path}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + await accessToken() } });
+}
+// Kirim ke semua murid kelas yang belum mengerjakan tugas.
+async function pushTask(cid, tid, data, onlyPending) {
+  const cls = await getDoc('classes/' + cid);
+  const members = Object.keys((cls && cls.members) || {});
+  if (!members.length) return 0;
+  const done = onlyPending ? new Set((await listDocs(`classes/${cid}/tasks/${tid}/done`)).map((d) => d.id)) : new Set();
+  let sent = 0;
+  for (const uid of members) if (!done.has(uid)) sent += await pushTo(uid, data);
+  return sent;
+}
 async function getDoc(path) {
   const r = await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/${path}`, { headers: { Authorization: 'Bearer ' + await accessToken() } });
   if (r.status === 404) return null;
   const j = await r.json();
-  const out = {};
-  Object.entries(j.fields || {}).forEach(([k, v]) => { out[k] = val(v); });
-  return out;
+  return fieldsOf(j);
 }
 
 async function pushTo(uid, data) {
@@ -77,7 +95,32 @@ async function pushTo(uid, data) {
   return sent;
 }
 
+// Pengingat tugas terjadwal (Cron Trigger setiap jam).
+async function reminders() {
+  const now = new Date();
+  const list = await listDocs('reminders');
+  for (const r of list) {
+    const tz = Number(r.tz || 480);
+    const local = new Date(now.getTime() + tz * 60000);
+    const day = local.toISOString().slice(0, 10), hour = local.getUTCHours();
+    if (!r.due || day > r.due) { await deleteDoc('reminders/' + r.id); continue; }
+    const hours = (r.hours || []).map(Number);
+    if (!hours.includes(hour)) continue;
+    const key = day + ':' + hour;
+    if (r.last === key) continue;
+    await pushTask(r.classId, r.tid, { type: 'task', tid: r.tid, title: `Jangan lupa tugasmu: ${r.title || ''}`, body: `${r.subjName || ''} · batas ${r.due}. Kerjakan sekarang, ya!` }, true);
+    await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/reminders/${r.id}?updateMask.fieldPaths=last`, {
+      method: 'PATCH', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: { last: { stringValue: key } } }),
+    });
+  }
+}
+
 export default {
+  async scheduled(event, env, ctx) {
+    if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT);
+    ctx.waitUntil(reminders());
+  },
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
@@ -85,7 +128,14 @@ export default {
     try {
       if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT);
       const uid = await verifyUser((request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, ''));
-      const { type, id } = await request.json();
+      const { type, id, cid, tid } = await request.json();
+      if (type === 'task') {
+        if (!cid || cid !== uid || !/^[A-Za-z0-9_-]{4,120}$/.test(tid || '')) return reply(403, { error: 'Bukan guru kelas ini' }, origin);
+        const t = await getDoc(`classes/${cid}/tasks/${tid}`);
+        if (!t) return reply(404, { error: 'Tugas tidak ditemukan' }, origin);
+        const sent = await pushTask(cid, tid, { type: 'task', tid, title: `Tugas baru: ${t.title || ''}`, body: `${t.subjName || ''} · ${t.n || ''} soal · batas ${t.due || ''}. Yuk kerjakan!` }, false);
+        return reply(200, { ok: true, sent }, origin);
+      }
       if (!/^[A-Za-z0-9_-]{6,120}$/.test(id || '')) return reply(400, { error: 'id tidak valid' }, origin);
       const inv = await getDoc('invites/' + id);
       if (!inv) return reply(404, { error: 'Undangan tidak ditemukan' }, origin);

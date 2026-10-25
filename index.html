@@ -1227,6 +1227,8 @@ body.has-invite .nav[data-tab=team] i::before{content:'';position:absolute;right
 .ajgames{display:flex;gap:6px;flex-wrap:wrap}
 .ajg{border:3px solid var(--ink);border-radius:999px;padding:5px 12px;background:#fff;font-family:var(--display);font-weight:800;font-size:14px;color:var(--ink)}
 .ajg[aria-pressed="true"]{background:var(--mc,#9B6BFF);color:#fff;box-shadow:0 3px 0 var(--ink)}
+.tkhours{display:flex;gap:8px;flex-wrap:wrap}.tkhours label{display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:800;color:var(--muted)}.tkhours label[hidden]{display:none}
+.tkhours select{font:inherit;font-size:15px;padding:6px 8px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3822,7 +3824,7 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(taskNag,1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
@@ -4083,7 +4085,7 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
   FBX.busy=true;fbStop();clearTimeout(FBX.t);
   const del=p=>FB.db.doc(p).delete().catch(()=>{});const list=p=>FB.db.collection(p).get().then(q=>q.docs.map(d=>d.id)).catch(()=>[]);
   try{if(st){if(me.classId){try{await fbLeave()}catch(e){}}if(me.username){await del('recovery/'+me.username);await del('handles/'+me.username)}}
-    else{const cid=u.uid;for(const t of await list('classes/'+cid+'/tasks')){for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
+    else{const cid=u.uid;for(const t of await list('classes/'+cid+'/tasks')){await del('reminders/'+t);for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
       for(const d of await list('classes/'+cid+'/board'))await del('classes/'+cid+'/board/'+d);
       const code=FBX.classDoc&&FBX.classDoc.code;if(code)await del('classCodes/'+code);await FB.db.doc('classes/'+cid).delete().catch(()=>{})}
     await FB.db.doc('users/'+u.uid).delete();await u.delete()}
@@ -4117,28 +4119,36 @@ async function renderTTask(){const v=$('#vTTask'),c=tCls(),cid=FBX.user.uid;
      <div class="tfield"><label for="tkUnit">Materi</label><select id="tkUnit"></select></div>
      <div class="tfield"><label for="tkN">Jumlah soal</label><select id="tkN"><option>5</option><option selected>8</option><option>10</option><option>15</option></select></div>
      <div class="tfield"><label for="tkDue">Batas waktu</label><input id="tkDue" type="date" value="${dayKey(new Date(Date.now()+3*864e5))}"></div></div>
+    <div class="tfield"><label>Pengingat ke HP murid setiap hari, sampai tugas dikerjakan</label><div class="seg small" id="tkRem">${[0,1,2,3].map(n=>`<button data-r="${n}" aria-pressed="${n===3}">${n?n+' kali':'Tidak'}</button>`).join('')}</div>
+     <div class="tkhours" id="tkHours">${[7,13,19].map((h,i)=>`<label>Jam ke-${i+1}<select data-h="${i}">${Array.from({length:17},(_,k)=>k+5).map(x=>`<option value="${x}" ${x===h?'selected':''}>${String(x).padStart(2,'0')}.00</option>`).join('')}</select></label>`).join('')}</div>
+     <small class="note" style="margin:0">Murid yang sudah mengerjakan tidak diingatkan lagi. Notifikasi tugas baru langsung dikirim saat tugas diberikan.</small></div>
     <p class="note" id="tkErr" style="color:var(--bad);font-weight:700;margin:0"></p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" id="tkAdd">Berikan tugas</button>${isPro()?'':`<span class="note" style="margin:0">Paket Gratis: maksimal ${FREE_TASKS} tugas aktif.</span><button class="smallbtn" data-fb="pro">Lihat paket Pro</button>`}</div></div>
    <div id="tkList" style="display:flex;flex-direction:column;gap:16px"><div class="tcard"><p class="note" style="margin:0">Memuat tugas…</p></div></div>`;
   hydrate(v);fbBindCode(v);
+  let remN=3;const drawRem=()=>{$('#tkRem').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.r===remN));$('#tkHours').querySelectorAll('label').forEach((l,i)=>l.hidden=i>=remN)};
+  $('#tkRem').querySelectorAll('button').forEach(b=>b.onclick=()=>{remN=+b.dataset.r;drawRem()});drawRem();
   const fillU=()=>{const s=c.subjects.find(x=>x.id===$('#tkSubj').value);$('#tkUnit').innerHTML=s.units.map((u,i)=>`<option value="${i}">Unit ${i+1}: ${esc(u.t)}</option>`).join('')};$('#tkSubj').onchange=fillU;fillU();
   let tasks=[];
   $('#tkAdd').onclick=async()=>{const today=dayKey();if(!isPro()&&tasks.filter(x=>x.due>=today).length>=FREE_TASKS){proAsk();return}
     const s=c.subjects.find(x=>x.id===$('#tkSubj').value),ui=+$('#tkUnit').value,due=$('#tkDue').value;
     if(!due||due<today){$('#tkErr').textContent='Batas waktu tidak boleh sebelum hari ini.';return}
-    const tk={title:s.units[ui].t,cls:c.id,subj:s.id,subjName:s.name,unit:ui,n:+$('#tkN').value,due,created:Date.now()};
-    $('#tkAdd').disabled=true;try{await FB.db.collection('classes/'+cid+'/tasks').add(tk);toast('target','Tugas diberikan. Murid melihatnya di halaman Belajar.');renderTTask()}catch(e){$('#tkAdd').disabled=false;$('#tkErr').textContent=fbErr(e)}};
+    const hours=[...$('#tkHours').querySelectorAll('select')].slice(0,remN).map(x=>+x.value).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b);
+    const tk={title:s.units[ui].t,cls:c.id,subj:s.id,subjName:s.name,unit:ui,n:+$('#tkN').value,due,hours,created:Date.now()};
+    $('#tkAdd').disabled=true;try{const ref=await FB.db.collection('classes/'+cid+'/tasks').add(tk);
+      if(hours.length)FB.db.doc('reminders/'+ref.id).set({classId:cid,tid:ref.id,title:tk.title,subjName:tk.subjName,due,hours,tz:-new Date().getTimezoneOffset(),created:Date.now()}).catch(e=>console.warn('reminder',e));
+      notifyServer('task',null,{cid,tid:ref.id});toast('target','Tugas diberikan. Murid melihatnya di halaman Belajar.');renderTTask()}catch(e){$('#tkAdd').disabled=false;$('#tkErr').textContent=fbErr(e)}};
   try{const q=await FB.db.collection('classes/'+cid+'/tasks').get();tasks=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>b.created-a.created);
     const dones=await Promise.all(tasks.map(x=>FB.db.collection('classes/'+cid+'/tasks/'+x.id+'/done').get().then(r=>r.docs.map(d=>Object.assign({uid:d.id},d.data()))).catch(()=>[])));
     tasks.forEach((x,i)=>x.done=dones[i]);const online=students().filter(p=>p._remote);const today=dayKey();
     $('#tkList').innerHTML=tasks.length?tasks.map(x=>{const avg=av(x.done.map(d=>d.score));
-      return `<div class="tcard"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:200px"><h3>${esc(x.title)}</h3><p class="sub" style="margin:0">${esc(x.subjName)} · ${x.n} soal · batas ${fmtDs(x.due)} ${x.due<today?'<span class="pill mute">Lewat batas</span>':'<span class="pill ok">Aktif</span>'}</p></div>
+      return `<div class="tcard"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:200px"><h3>${esc(x.title)}</h3><p class="sub" style="margin:0">${esc(x.subjName)} · ${x.n} soal · batas ${fmtDs(x.due)}${x.hours&&x.hours.length?` · 🔔 ${x.hours.map(h=>String(h).padStart(2,'0')+'.00').join(', ')}`:''} ${x.due<today?'<span class="pill mute">Lewat batas</span>':'<span class="pill ok">Aktif</span>'}</p></div>
         <span class="pill mid">${x.done.length} dari ${online.length} murid${avg!=null?' · rata-rata '+avg:''}</span><button class="smallbtn" data-tkd="${x.id}">Rincian</button><button class="smallbtn" data-tkx="${x.id}" style="color:var(--bad)">Hapus</button></div>
         <div id="tkd_${x.id}" hidden>${online.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>Nama</th><th class="num">Nilai</th><th>Dikerjakan</th></tr></thead><tbody>${online.map(p=>{const d=x.done.find(y=>y.uid===p._uid);
           return `<tr><td class="nm">${esc(p.name)}</td><td class="num">${d?d.score:'—'}</td><td>${d?fmtDs(dayKey(new Date(d.at)))+(d.tries>1?` · ${d.tries} kali`:''):'<span class="pill bad">Belum</span>'}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid online di kelas ini. Bagikan kode kelas supaya murid bisa mengerjakan tugas dari rumah.</p>'}</div></div>`}).join(''):'<div class="tcard"><p class="note" style="margin:0">Belum ada tugas. Buat tugas pertama di atas.</p></div>';
     $('#tkList').querySelectorAll('[data-tkd]').forEach(b=>b.onclick=()=>{const d=$('#tkd_'+b.dataset.tkd);d.hidden=!d.hidden;b.textContent=d.hidden?'Rincian':'Tutup'});
     $('#tkList').querySelectorAll('[data-tkx]').forEach(b=>b.onclick=()=>{const x=tasks.find(t=>t.id===b.dataset.tkx);openModal(`<h3>Hapus tugas "${esc(x.title)}"?</h3><p>Nilai murid untuk tugas ini juga terhapus.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);
-      $('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{$('#mYes').disabled=true;try{for(const d of x.done)await FB.db.doc('classes/'+cid+'/tasks/'+x.id+'/done/'+d.uid).delete();await FB.db.doc('classes/'+cid+'/tasks/'+x.id).delete();closeModal();renderTTask()}catch(e){closeModal();toast('lock',fbErr(e))}}})}
+      $('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{$('#mYes').disabled=true;try{for(const d of x.done)await FB.db.doc('classes/'+cid+'/tasks/'+x.id+'/done/'+d.uid).delete();await FB.db.doc('classes/'+cid+'/tasks/'+x.id).delete();FB.db.doc('reminders/'+x.id).delete().catch(()=>{});closeModal();renderTTask()}catch(e){closeModal();toast('lock',fbErr(e))}}})}
   catch(e){$('#tkList').innerHTML=`<div class="tcard"><p class="note" style="color:var(--bad);margin:0">${esc(fbErr(e))}</p></div>`}}
 
 /* murid: daftar tugas di halaman Belajar */
@@ -4148,6 +4158,12 @@ async function fbLoadTasks(){const m=FBX.me||{};FBX.tasksAt=Date.now();if(!m.cla
     const mine=await Promise.all(ts.map(x=>FB.db.doc('classes/'+cid+'/tasks/'+x.id+'/done/'+uid).get().then(s=>s.exists?s.data():null).catch(()=>null)));
     ts.forEach((x,i)=>x.mine=mine[i]);const old=dayKey(new Date(Date.now()-7*864e5));
     FBX.tasks=ts.filter(x=>x.due>=old).sort((a,b)=>(!!a.mine-!!b.mine)||(a.due<b.due?-1:1))}catch(e){FBX.tasks=[]}}
+function taskNag(){const ts=(FBX.tasks||[]).filter(x=>!x.mine&&x.due>=dayKey());if(!ts.length||isT()||!P||document.body.classList.contains('playing')||!$('#modal').hidden||document.hidden)return;
+  const key=ts.map(x=>x.id).join(',');if(FBX.nagKey===key&&Date.now()-(FBX.nagAt||0)<20*60000)return;FBX.nagKey=key;FBX.nagAt=Date.now();
+  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.target}</span><h3>${ts.length===1?'Ada tugas dari guru!':`Ada ${ts.length} tugas dari guru!`}</h3></div><div class="plist">${ts.map(x=>`<div class="pl"><span class="grow"><b>${esc(x.title)}</b><br><small style="color:var(--muted)">${esc(x.subjName)} · batas ${fmtDs(x.due)}</small></span><button class="primary" data-nag="${x.id}" style="padding:6px 14px;font-size:15px">Kerjakan</button></div>`).join('')}</div><p class="note" style="text-align:center">Pengingat ini muncul terus sampai tugasnya dikerjakan.</p><div class="acts"><button class="ghost" id="mNo">Nanti</button></div>`);
+  $('#mNo').onclick=closeModal;$('#mbox').querySelectorAll('[data-nag]').forEach(b=>b.onclick=()=>{closeModal();fbStartTask(ts.find(x=>x.id===b.dataset.nag))})}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&FBX.user&&!isT()){FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();FBX.nagAt=0;taskNag()})}});
+window.fbOpenTask=function(tid){const go2=()=>{const x=(FBX.tasks||[]).find(t=>t.id===tid);if(x)fbStartTask(x);else toast('target','Tugas ini sudah tidak ada.')};if((FBX.tasks||[]).length)go2();else fbLoadTasks().then(go2)};
 function fbTaskBanner(){let el=$('#fbTasks');if(!el){$('#path').insertAdjacentHTML('beforebegin','<div id="fbTasks"></div>');el=$('#fbTasks')}
   const ts=FBX.tasks||[];if(isT()||!P||!ts.length){el.innerHTML='';return}const today=dayKey();
   el.innerHTML=`<div class="card fbtask"><div class="fbtask-h"><span style="width:30px;flex:none">${ICONS.target}</span><b>Tugas dari guru</b><span class="pill ${ts.some(x=>!x.mine)?'bad':'ok'}">${ts.filter(x=>!x.mine).length?ts.filter(x=>!x.mine).length+' belum':'Semua selesai'}</span></div>
@@ -4323,7 +4339,7 @@ function inviteAlert(x){inviteMark(x.id);
   openModal(`<div style="text-align:center" class="invpop"><div class="invpop-av">${avSpan({name:x.fromName,avatar:x.fromAv})}</div><h3>${esc(x.fromName)} menantangmu!</h3><p>${esc(x.subjName)}${x.title?' · '+esc(x.title):''}</p></div><div class="acts"><button class="ghost" id="mNo" style="color:var(--bad)">Tolak</button><button class="primary" id="mYes">Terima</button></div>`);
   $('#mNo').onclick=()=>{closeModal();inviteAnswer(x,false)};$('#mYes').onclick=()=>{closeModal();inviteAnswer(x,true)}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AJAK.pendingAlert){const x=AJAK.pendingAlert;AJAK.pendingAlert=null;if(AJAK.inv.some(i=>i.id===x.id)){AJAK.inv=AJAK.inv;inviteAlert(Object.assign({},x,{_again:1}))}}});
-if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(m.push){const d=m.push;if(d.type==='accepted')toast('team',d.title);return}if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
+if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(m.task){window.fbOpenTask&&fbOpenTask(m.task);return}if(m.push){const d=m.push;if(d.type==='task'){FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();FBX.nagAt=0;taskNag()});return}if(d.type==='accepted')toast('team',d.title);return}if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
   if(m.action==='accept')inviteAnswer(x,true);else if(m.action==='decline')inviteAnswer(x,false);else if(AJAK.inv.some(i=>i.id===m.inv))inviteAlert(Object.assign({},x))});
 function notifAsk(){try{if(!('Notification' in window)||Notification.permission!=='default'||localStorage.getItem('jk_notif_asked'))return;localStorage.setItem('jk_notif_asked','1');
   openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3>Nyalakan pemberitahuan?</h3><p>Supaya kamu tahu saat teman menantangmu bertanding.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
@@ -4341,7 +4357,7 @@ const _goR=go;
 go=function(tab){_goR(tab);if(!ROOM.code)return;
   if(ROOM.playing&&!game){ROOM.playing=false;clearInterval(ROOM.timer);ROOM.timer=null;const lv=$('#roomLive');if(lv)lv.hidden=true;ROOM.pendingShow=true}
   if(ROOM.pendingShow&&!document.body.classList.contains('playing')){ROOM.pendingShow=false;$('#room').hidden=false;if(ROOM.doc)roomRender()}};
-window.fbCheckRoomLink=function(){let c=null,act=null,inv=null;try{const q=new URLSearchParams(location.search);act=q.get('act');inv=q.get('inv');c=q.get('tantang')||sessionStorage.getItem('jk_tantang')}catch(e){}
+window.fbCheckRoomLink=function(){try{const tg=new URLSearchParams(location.search).get('tugas');if(tg&&FBX.user&&P&&!isT()){history.replaceState(history.state,'',location.pathname);setTimeout(()=>fbOpenTask(tg),1500);return}}catch(e){}let c=null,act=null,inv=null;try{const q=new URLSearchParams(location.search);act=q.get('act');inv=q.get('inv');c=q.get('tantang')||sessionStorage.getItem('jk_tantang')}catch(e){}
   if(inv&&act&&FBX.user&&P&&!isT()){try{history.replaceState(history.state,'',location.pathname)}catch(e){}try{sessionStorage.removeItem('jk_tantang')}catch(e){}setTimeout(()=>inviteAnswer({id:inv,code:c},act!=='decline'),600);return}
   if(!c)return;try{sessionStorage.removeItem('jk_tantang')}catch(e){}if(FBX.user&&P&&!isT())setTimeout(()=>roomJoin(c),600)};
 try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStorage.setItem('jk_tantang',c)}catch(e){}
@@ -4353,7 +4369,8 @@ async function fbPushRegister(){try{if(!FB.cfg.vapidKey||!firebase.messaging||!(
   await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true})}catch(e){console.warn('push',e)}}
 async function fbPushUnregister(){try{if(FBX.pushTok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(FBX.pushTok)},{merge:true})}catch(e){}}
 window.fbPushRegister=fbPushRegister;
-async function notifyServer(type,id){try{if(!FB.cfg.pushUrl||!FBX.user)return;const t=await FBX.user.getIdToken();await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify({type,id})})}catch(e){console.warn('notif',e)}}
+async function notifyServer(type,id,extra){try{if(!FB.cfg.pushUrl||!FBX.user)return;const t=await FBX.user.getIdToken();await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(Object.assign({type,id},extra||{}))})}catch(e){console.warn('notif',e)}}
+window.notifyServer=(...a)=>notifyServer(...a);
 
 /* ---------- panel admin (penjual) ---------- */
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');

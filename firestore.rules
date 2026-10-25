@@ -134,6 +134,13 @@ service cloud.firestore {
       allow delete: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
     }
 
+    // Jadwal pengingat tugas (dibaca pengirim notifikasi di Cloudflare).
+    match /reminders/{tid} {
+      allow read: if signedIn() && resource.data.classId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.classId == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.classId == request.auth.uid;
+    }
+
     match /classCodes/{code} {
       allow get: if signedIn();
       allow list: if false;
