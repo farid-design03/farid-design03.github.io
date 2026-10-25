@@ -13,6 +13,10 @@ service cloud.firestore {
         && request.auth.token.email_verified == true;
     }
 
+    function memberOf(cid) {
+      return request.auth.uid in get(/databases/$(database)/documents/classes/$(cid)).data.members;
+    }
+
     function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
 
     function isProUid(uid) {
@@ -62,6 +66,36 @@ service cloud.firestore {
               && (request.resource.data.members.size() <= resource.data.members.size()
                   || request.resource.data.members.size() <= (isProUid(resource.data.teacherUid) ? 2000 : 10))));
       allow delete: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
+
+      // Tugas dari guru. ID kelas sama dengan ID guru.
+      match /tasks/{tid} {
+        allow read: if signedIn() && (request.auth.uid == cid || memberOf(cid));
+        allow write: if signedIn() && request.auth.uid == cid;
+
+        match /done/{uid} {
+          allow read: if signedIn() && (request.auth.uid == cid || request.auth.uid == uid);
+          allow create, update: if signedIn() && request.auth.uid == uid && memberOf(cid)
+            && request.resource.data.score is number;
+          allow delete: if signedIn() && (request.auth.uid == cid || request.auth.uid == uid);
+        }
+      }
+
+      // Peringkat XP mingguan sekelas.
+      match /board/{uid} {
+        allow read: if signedIn() && (request.auth.uid == cid || memberOf(cid));
+        allow create, update: if signedIn() && request.auth.uid == uid && memberOf(cid);
+        allow delete: if signedIn() && (request.auth.uid == cid || request.auth.uid == uid);
+      }
+    }
+
+    // Kode pemulihan murid. Isinya terenkripsi dengan kode yang hanya dimiliki murid.
+    match /recovery/{username} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
     match /classCodes/{code} {

@@ -1053,6 +1053,10 @@ body.f-noteam .nav[data-tab="team"],body.f-noshop .nav[data-tab="shop"],body.f-n
 .fbstat{border:3px solid var(--ink);border-radius:16px;padding:10px 14px;background:#fff;display:flex;flex-direction:column}
 .fbstat b{font-family:var(--title);font-size:30px}.fbstat small{color:var(--muted);font-weight:700}
 body.fb-free .nav.tnav[data-tab=tatt] span::after,body.fb-free .nav.tnav[data-tab=teval] span::after,body.fb-free .nav.tnav[data-tab=tbank] span::after,body.fb-free .nav.tnav[data-tab=trapor] span::after{content:'PRO';margin-left:6px;font-size:10px;font-weight:800;background:var(--orange,#FF8A3D);color:#fff;border-radius:6px;padding:1px 5px;vertical-align:middle;letter-spacing:.04em}
+.fbtask{padding:14px 16px;display:flex;flex-direction:column;gap:10px;border-color:var(--orange,#FF8A3D)}
+.fbtask-h{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px}.fbtask-h b{flex:1}
+.fbtask-r{display:flex;align-items:center;gap:10px;border-top:2px dashed #E3E6F2;padding-top:10px}.fbtask-r .grow{flex:1;min-width:0;display:flex;flex-direction:column}.fbtask-r small{color:var(--muted);font-weight:600}
+.fbtask-b{padding:8px 16px!important;font-size:16px!important;flex:none}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3342,7 +3346,7 @@ function startOnboarding(first){const t=T();const o={step:0,name:'',cls:(t&&t.cl
        <div class="tfield"><label for="suPass">Sandi (4 angka)</label><input id="suPass" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass)}" autocomplete="new-password"></div>
        <div class="tfield"><label for="suPass2">Ulangi sandi</label><input id="suPass2" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass2)}" autocomplete="new-password"></div>${FB?`<div class="tfield"><label for="suCode">Kode kelas dari guru (boleh dikosongkan)</label><input id="suCode" maxlength="8" autocapitalize="characters" autocomplete="off" class="fbcodein" value="${esc(o.code||'')}" placeholder="Contoh: K7B4QX"></div>`:''}<p class="note" id="suErr" style="color:var(--bad);font-weight:700;margin:0"></p></div>`);
       ok=!full;btn='Buat akun'}
-    if(s===5){body=talk(`Siap, ${esc(o.name.trim())}!`,`Nama penggunamu <strong>${esc(o.user)}</strong>. Ikuti jalur dari atas ke bawah, setiap lingkaran adalah satu level.`)+`<div class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">${[['star','Pelajaran','5 soal singkat. Pilih jawaban, lalu tekan Periksa.'],['game','Level game','Jawab soal sambil menembak, balapan, atau memancing.'],['chest','Peti hadiah','Buka untuk mendapat permata.'],['trophy','Ujian unit','Lulus untuk membuka unit berikutnya.'],['flame','Hari beruntun','Belajar setiap hari supaya apimu terus menyala.']].map(x=>`<div style="display:flex;gap:12px;align-items:center"><span style="width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;background:${x[0]==='flame'?'#FFF0DC':'var(--blue)'};color:${x[0]==='flame'?'#FF8A00':'#fff'};border:${x[0]==='chest'||x[0]==='flame'?'0':'3px solid var(--ink)'}">${ICONS[x[0]]}</span><span><b style="font-family:var(--display)">${x[1]}</b><br><small style="color:var(--muted)">${x[2]}</small></span></div>`).join('')}</div>`;btn='Ayo mulai!'}
+    if(s===5){body=talk(`Siap, ${esc(o.name.trim())}!`,`Nama penggunamu <strong>${esc(o.user)}</strong>. Ikuti jalur dari atas ke bawah, setiap lingkaran adalah satu level.`)+(o.rc?`<div class="tcard" style="align-items:center;text-align:center;gap:6px"><b>Kode pemulihan</b><div class="fbcode-big" style="font-size:30px">${o.rc}</div><small style="color:var(--muted);font-weight:700">Foto layar ini atau minta orang tua mencatatnya. Kode ini dipakai jika kamu lupa sandi.</small></div>`:'')+`<div class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">${[['star','Pelajaran','5 soal singkat. Pilih jawaban, lalu tekan Periksa.'],['game','Level game','Jawab soal sambil menembak, balapan, atau memancing.'],['chest','Peti hadiah','Buka untuk mendapat permata.'],['trophy','Ujian unit','Lulus untuk membuka unit berikutnya.'],['flame','Hari beruntun','Belajar setiap hari supaya apimu terus menyala.']].map(x=>`<div style="display:flex;gap:12px;align-items:center"><span style="width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;background:${x[0]==='flame'?'#FFF0DC':'var(--blue)'};color:${x[0]==='flame'?'#FF8A00':'#fff'};border:${x[0]==='chest'||x[0]==='flame'?'0':'3px solid var(--ink)'}">${ICONS[x[0]]}</span><span><b style="font-family:var(--display)">${x[1]}</b><br><small style="color:var(--muted)">${x[2]}</small></span></div>`).join('')}</div>`;btn='Ayo mulai!'}
     el.innerHTML=`<div class="onbin"><div class="onbbar"><button class="back" id="onbBack" aria-label="Kembali">←</button><span class="lbar"><i style="width:${(s+1)/steps*100}%"></i></span></div>${body}<div class="onbfoot"><button class="primary press" id="onbNext" ${ok?'':'disabled'}>${btn}</button>${s===0?'<button class="linkbtn" id="onbHave" style="width:100%;margin-top:10px">Saya sudah punya akun</button>':''}</div></div>`;hydrate(el);
     const nm=$('#onbName');if(nm){nm.oninput=()=>{o.name=nm.value;$('#onbNext').disabled=!o.name.trim()};setTimeout(()=>nm.focus(),60);nm.onkeydown=e=>{if(e.key==='Enter'&&o.name.trim())$('#onbNext').click()}}
     const su=$('#suUser');if(su){su.oninput=()=>{o.user=su.value;o.userEdited=true};$('#suPass').oninput=e=>o.pass=e.target.value;$('#suPass2').oninput=e=>o.pass2=e.target.value;setTimeout(()=>$('#suPass').focus(),60)}
@@ -3384,6 +3388,7 @@ function bootApp(){migrateTeacher();ensureUsers();
    Akun online, token kelas, paket Gratis/Pro untuk guru, panel admin.
    ========================================================= */
 const FB=(()=>{try{if(typeof window==='undefined'||!window.FB_CONFIG||!window.firebase)return null;firebase.initializeApp(window.FB_CONFIG);const db=firebase.firestore();try{const r=db.enablePersistence({synchronizeTabs:true});r&&r.catch&&r.catch(()=>{})}catch(e){}const auth=firebase.auth();auth.languageCode='id';return {auth,db,cfg:window.FB_CONFIG}}catch(e){console.error('Firebase',e);return null}})();
+if(!FB&&typeof window!=='undefined'&&window.FB_CONFIG){window.__fbFail=true}
 const FBX={user:null,me:null,admin:false,unsub:[],t:null,busy:false,cfg:{},classDoc:null,remote:[],members:{}};
 if(FB){
 const FREE_MAX=+(FB.cfg.freeStudents||10);
@@ -3410,19 +3415,19 @@ function fbQueue(){if(!FBX.user||FBX.busy||!SESSION)return;clearTimeout(FBX.t);i
 function fbClassData(){return {teacher:APP.teacher,sessions:APP.sessions||[],bank:APP.bank||[],deleted:APP.deleted||[],roster:(APP.profiles||[]).filter(p=>!p._remote)}}
 function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let pr;
   if(SESSION.role==='student'&&P){const p=Object.assign({},P);delete p._remote;delete p._uid;delete p._pin;
-    pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true})}
+    pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}}
   else if(SESSION.role==='teacher'&&APP.teacher){const t=APP.teacher;
     pr=FB.db.doc('classes/'+u.uid).set({teacherUid:u.uid,name:t.name||'',school:t.school||'',cls:t.cls||'',data:JSON.stringify(fbClassData()),upd:Date.now()},{merge:true})}
   else return Promise.resolve();
   return pr.then(()=>{if(isT())syncPill('ok','Tersimpan online')}).catch(e=>{console.warn(e);if(isT())syncPill('off','Belum tersimpan, dicoba lagi');clearTimeout(FBX.t);FBX.t=setTimeout(fbFlush,15000)})}
 
 /* ---------- masuk otomatis (sekali login, perangkat mengingat) ---------- */
-bootApp=function(){busy(true);FB.auth.onAuthStateChanged(u=>{if(FBX.busy)return;fbRoute(u).catch(e=>{console.error(e);busy(false);toast('lock',fbErr(e));showWelcome()})})};
+bootApp=function(){busy(true);FB.auth.onAuthStateChanged(u=>{if(FBX.busy)return;fbRoute(u).catch(e=>{console.error(e);fbOffline(e)})})};
 async function fbRoute(u){fbStop();FBX.user=u;FBX.me=null;FBX.admin=false;
   if(!u){busy(false);setSession(null);P=null;document.body.classList.remove('teacher','fb-free');$('#adminPanel').hidden=true;showWelcome();return}
   busy(true);
   if(u.email&&!u.emailVerified&&!u.email.endsWith('@'+MAIL_DOM)){try{await u.reload();if(FB.auth.currentUser&&FB.auth.currentUser.emailVerified)await FB.auth.currentUser.getIdToken(true)}catch(e){}}
-  let snap=null;try{snap=await FB.db.doc('users/'+u.uid).get()}catch(e){}
+  let snap=null;try{snap=await FB.db.doc('users/'+u.uid).get()}catch(e){fbOffline(e);return}
   if(!u.email.endsWith('@'+MAIL_DOM)){try{await FB.db.doc('config/admin').get();FBX.admin=true}catch(e){FBX.admin=false}}
   try{const c=await FB.db.doc('config/app').get();FBX.cfg=c.exists?c.data():{}}catch(e){FBX.cfg={}}
   LIC.announce=FBX.cfg.announce||'';LIC.contact=FBX.cfg.wa||'';
@@ -3439,12 +3444,12 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent()}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
-window.fbAfterSignup=function(){FBX.busy=false;fbHideAuth();afterLogin();fbListenStudent()};
+window.fbAfterSignup=function(){FBX.busy=false;fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
@@ -3481,17 +3486,17 @@ async function fbJoin(code){const u=FBX.user;code=String(code||'').toUpperCase()
   const c=cs.data(),me=FBX.me||{},clsName=[c.name,c.school].filter(Boolean).join(' · ');
   if(me.classId===c.classId)return c;
   const b=FB.db.batch();
-  if(me.classId)b.update(FB.db.doc('classes/'+me.classId),{['members.'+u.uid]:FV().delete()});
+  if(me.classId){b.update(FB.db.doc('classes/'+me.classId),{['members.'+u.uid]:FV().delete()});b.delete(FB.db.doc('classes/'+me.classId+'/board/'+u.uid))}
   b.update(FB.db.doc('classes/'+c.classId),{['members.'+u.uid]:(P&&P.name)||'Murid'});
   b.set(FB.db.doc('users/'+u.uid),{classId:c.classId,teacherUid:c.teacherUid,joinCode:code,clsName},{merge:true});
   try{await b.commit()}catch(e){throw new Error(/permission/.test(String(e.code||''))?'Kelas ini sudah penuh atau kodenya sudah diganti. Minta kode terbaru ke gurumu.':fbErr(e))}
-  FBX.me=Object.assign({},me,{classId:c.classId,teacherUid:c.teacherUid,joinCode:code,clsName});return c}
+  FBX.me=Object.assign({},me,{classId:c.classId,teacherUid:c.teacherUid,joinCode:code,clsName});FBX.boardKey=null;FBX.tasksAt=0;try{fbBoardPush()}catch(e){}return c}
 async function fbLeave(){const u=FBX.user,m=FBX.me||{};if(!m.classId)return;const b=FB.db.batch();
-  b.update(FB.db.doc('classes/'+m.classId),{['members.'+u.uid]:FV().delete()});
+  b.update(FB.db.doc('classes/'+m.classId),{['members.'+u.uid]:FV().delete()});b.delete(FB.db.doc('classes/'+m.classId+'/board/'+u.uid));
   b.set(FB.db.doc('users/'+u.uid),{classId:null,teacherUid:null,joinCode:null,clsName:null},{merge:true});
-  await b.commit();FBX.me=Object.assign({},m,{classId:null,teacherUid:null,joinCode:null,clsName:null})}
+  await b.commit();FBX.me=Object.assign({},m,{classId:null,teacherUid:null,joinCode:null,clsName:null});FBX.tasks=[];FBX.boardKey=null}
 async function fbKick(uid){const b=FB.db.batch();
-  b.update(FB.db.doc('classes/'+FBX.user.uid),{['members.'+uid]:FV().delete()});
+  b.update(FB.db.doc('classes/'+FBX.user.uid),{['members.'+uid]:FV().delete()});b.delete(FB.db.doc('classes/'+FBX.user.uid+'/board/'+uid));
   b.update(FB.db.doc('users/'+uid),{classId:null,teacherUid:null,joinCode:null});await b.commit()}
 
 /* ---------- layar sambutan & login ---------- */
@@ -3522,6 +3527,7 @@ window.fbSignupStudent=async function(o,next,err){if(o.fbDone){next();return}con
     const p=newProfile({name:o.name.trim(),cls:o.cls,subj:o.subj,goal:o.goal,color:o.color});p.user=o.user;p.pass=o.pass;
     const me={role:'student',username:o.user,name:p.name,cls:p.cls,pin:o.pass,classId:null,teacherUid:null,joinCode:null,clsName:null,xp:0,lastDay:null,p:JSON.stringify(p),plan:'free',proUntil:0,created:Date.now(),upd:Date.now()};
     await FB.db.doc('users/'+u.uid).set(me);FBX.user=u;FBX.me=me;
+    try{o.rc=await fbSetRecovery(o.user,o.pass)}catch(e){console.warn('recovery',e)}
     APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};P=p;store.set('app',APP);setSession({role:'student',id:p.id,uid:u.uid});
     if(o.code&&o.code.trim()){try{const k=await fbJoin(o.code);toast('team',`Kamu bergabung di kelas ${k.name||''}.`)}catch(e){toast('lock',(e.message||e)+' Kamu bisa gabung kelas nanti di menu Profil.')}}
     o.fbDone=true;next()}
@@ -3637,8 +3643,160 @@ const _bAC=bindAccountCard;
 bindAccountCard=function(){_bAC();if(!FBX.user)return;
   $('#acPass').onclick=()=>{openModal(`<h3>Ganti sandi</h3><div class="tfield"><label for="cpOld">Sandi lama</label><input id="cpOld" type="password" inputmode="numeric" maxlength="4"></div><div class="tfield"><label for="cpNew">Sandi baru (4 angka)</label><input id="cpNew" type="password" inputmode="numeric" maxlength="4"></div><p class="note" id="cpErr" style="color:var(--bad)"></p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Simpan</button></div>`);
     $('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{const o=$('#cpOld').value,v=$('#cpNew').value;if(!/^\d{4}$/.test(v)){$('#cpErr').textContent='Sandi harus 4 angka.';return}
-      try{const u=FBX.user;await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,uPass(o)));await u.updatePassword(uPass(v));await FB.db.doc('users/'+u.uid).set({pin:v},{merge:true});P.pass=v;save();closeModal();toast('key','Sandi diganti.');renderProfile()}
+      try{const u=FBX.user;await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,uPass(o)));await u.updatePassword(uPass(v));await FB.db.doc('users/'+u.uid).set({pin:v},{merge:true});P.pass=v;if(FBX.me&&FBX.me.rc){try{await fbSetRecovery(FBX.me.username||P.user,v,FBX.me.rc)}catch(e){}}save();closeModal();toast('key','Sandi diganti.');renderProfile()}
       catch(e){$('#cpErr').textContent=/wrong|invalid/.test(String(e.code||''))?'Sandi lama salah.':fbErr(e)}}}};
+
+/* ---------- layar saat gagal tersambung ---------- */
+function fbOffline(e){busy(false);const el=$('#auth');el.hidden=false;$('#onb').hidden=true;
+  const perm=/permission/.test(String(e&&e.code||''));
+  el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="sad"></div><h1 class="wtitle" style="font-size:34px">Belum tersambung</h1><p class="wsub">${perm?'Server menolak akses. Jika kamu pemilik aplikasi, pastikan aturan Firestore sudah dipasang.':'Periksa koneksi internet, lalu coba lagi.'}</p></div>
+   <div class="wbtns"><button class="primary press" id="ofRetry">COBA LAGI</button><button class="ghost press" id="ofOut">KELUAR DARI AKUN</button></div></div>`;
+  hydrate(el);$('#ofRetry').onclick=()=>{el.hidden=true;fbRoute(FB.auth.currentUser).catch(fbOffline)};$('#ofOut').onclick=()=>{el.hidden=true;logout()}}
+
+/* ---------- kode pemulihan murid (tanpa email) ---------- */
+const b64=a=>btoa(String.fromCharCode(...new Uint8Array(a))),ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const rcGen=()=>genCode().slice(0,4)+'-'+genCode().slice(0,4);
+const rcNorm=c=>{const x=String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return x.slice(0,4)+'-'+x.slice(4,8)};
+async function rcKey(code,salt){const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(rcNorm(code)),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function rcSeal(code,pin){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const k=await rcKey(code,salt);
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(pin));return {salt:b64(salt),iv:b64(iv),ct:b64(ct)}}
+async function rcOpen(code,r){const k=await rcKey(code,ub64(r.salt));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(r.iv)},k,ub64(r.ct));return new TextDecoder().decode(pt)}
+async function fbSetRecovery(username,pin,code){const u=FBX.user;code=rcNorm(code||rcGen());const sealed=await rcSeal(code,pin);
+  await FB.db.doc('recovery/'+username).set(Object.assign({uid:u.uid},sealed));
+  await FB.db.doc('users/'+u.uid).set({rc:code},{merge:true});FBX.me=Object.assign({},FBX.me,{rc:code});return code}
+async function rcRecover(user,code){let s;try{s=await FB.db.doc('recovery/'+String(user).trim().toLowerCase()).get()}catch(e){throw new Error(fbErr(e))}
+  if(!s.exists)throw new Error('Nama pengguna ini belum punya kode pemulihan. Minta bantuan gurumu.');
+  try{return await rcOpen(code,s.data())}catch(e){throw new Error('Kode pemulihan salah.')}}
+
+const _showLogin2=showLogin;
+showLogin=function(pf){_showLogin2(pf);
+  $('#lgForgot').onclick=()=>{const v=$('#lgUser').value.trim();openModal(`<h3>Lupa sandi?</h3>
+    <div class="seg small" id="fgTab" style="margin-bottom:10px"><button data-t="m" aria-pressed="${!v.includes('@')}">Murid</button><button data-t="g" aria-pressed="${v.includes('@')}">Guru</button></div>
+    <div id="fgM" ${v.includes('@')?'hidden':''}><p>Masukkan nama pengguna dan <b>kode pemulihan</b> yang muncul saat mendaftar. Tidak punya kodenya? Minta gurumu melihat sandimu di menu Murid.</p>
+     <div class="tfield"><label for="fgUser">Nama pengguna</label><input id="fgUser" autocapitalize="none" value="${esc(v.includes('@')?'':v)}"></div>
+     <div class="tfield"><label for="fgCode">Kode pemulihan</label><input id="fgCode" class="fbcodein" placeholder="XXXX-XXXX" autocomplete="off"></div></div>
+    <div id="fgG" ${v.includes('@')?'':'hidden'}><p>Tulis email guru. Kami kirim tautan untuk membuat sandi baru.</p><div class="tfield"><label for="fgMail">Email guru</label><input id="fgMail" type="email" value="${esc(v.includes('@')?v:'')}"></div></div>
+    <p class="note" id="fgErr" style="font-weight:700"></p><div class="acts"><button class="ghost" id="mNo">Tutup</button><button class="primary" id="mYes">Lanjut</button></div>`);
+    let tab=v.includes('@')?'g':'m';
+    $('#fgTab').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;$('#fgTab').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#fgM').hidden=tab!=='m';$('#fgG').hidden=tab!=='g';$('#fgErr').textContent=''});
+    $('#mNo').onclick=closeModal;
+    $('#mYes').onclick=async()=>{const er=$('#fgErr');er.style.color='';
+      if(tab==='g'){const m=$('#fgMail').value.trim();if(!m.includes('@')){er.textContent='Tulis email guru.';return}FB.auth.sendPasswordResetEmail(m).then(()=>{er.textContent='Tautan terkirim. Periksa kotak masuk atau folder spam.'}).catch(e=>{er.textContent=fbErr(e)});return}
+      const u=$('#fgUser').value.trim(),c=$('#fgCode').value;if(!u||c.replace(/[^A-Za-z0-9]/g,'').length<8){er.textContent='Isi nama pengguna dan 8 huruf kode pemulihan.';return}
+      er.textContent='Memeriksa…';try{const pin=await rcRecover(u,c);closeModal();$('#lgUser').value=u.toLowerCase();$('#lgPass').value=pin;
+        openModal(`<div style="text-align:center"><h3>Sandimu ketemu!</h3><p>Sandi untuk <b>${esc(u.toLowerCase())}</b> adalah</p><div class="fbcode-big" style="display:inline-block">${esc(pin)}</div><p class="note">Catat baik-baik, ya.</p></div><div class="acts"><button class="primary" id="mYes">Masuk sekarang</button></div>`);$('#mYes').onclick=()=>{closeModal();$('#lgGo').click()}}
+      catch(e){er.style.color='var(--bad)';er.textContent=e.message||String(e)}}}};
+
+/* ---------- hapus akun (wajib untuk Play Store) ---------- */
+function fbDeleteAsk(){const st=!isT();
+  openModal(`<h3>Hapus akun?</h3><p>${st?'Semua progres belajar, XP, dan permatamu akan dihapus permanen.':'Akun guru, kelas, kode kelas, tugas, absensi, dan nilai akan dihapus permanen. Akun murid tetap ada.'} Tindakan ini tidak bisa dibatalkan.</p>
+   <div class="tfield"><label for="dlPw">${st?'Sandi (4 angka)':'Sandi guru'}</label><input id="dlPw" type="password" ${st?'inputmode="numeric" maxlength="4"':''} autocomplete="current-password"></div>
+   <div class="tfield"><label for="dlTx">Ketik HAPUS untuk melanjutkan</label><input id="dlTx" autocomplete="off"></div><p class="note" id="dlErr" style="color:var(--bad);font-weight:700"></p>
+   <div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus permanen</button></div>`);
+  $('#mNo').onclick=closeModal;
+  $('#mYes').onclick=async()=>{if($('#dlTx').value.trim().toUpperCase()!=='HAPUS'){$('#dlErr').textContent='Ketik HAPUS dulu.';return}const b=$('#mYes');b.disabled=true;b.textContent='Menghapus…';
+    try{await fbDeleteAccount($('#dlPw').value);closeModal();toast('check','Akun sudah dihapus.')}
+    catch(e){b.disabled=false;b.textContent='Hapus permanen';$('#dlErr').textContent=/wrong|invalid/.test(String(e.code||''))?'Sandi salah.':fbErr(e)}}}
+async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
+  await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email,st?uPass(pw):pw));
+  FBX.busy=true;fbStop();clearTimeout(FBX.t);
+  const del=p=>FB.db.doc(p).delete().catch(()=>{});const list=p=>FB.db.collection(p).get().then(q=>q.docs.map(d=>d.id)).catch(()=>[]);
+  try{if(st){if(me.classId){try{await fbLeave()}catch(e){}}if(me.username)await del('recovery/'+me.username)}
+    else{const cid=u.uid;for(const t of await list('classes/'+cid+'/tasks')){for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
+      for(const d of await list('classes/'+cid+'/board'))await del('classes/'+cid+'/board/'+d);
+      const code=FBX.classDoc&&FBX.classDoc.code;if(code)await del('classCodes/'+code);await FB.db.doc('classes/'+cid).delete().catch(()=>{})}
+    await FB.db.doc('users/'+u.uid).delete();await u.delete()}
+  finally{FBX.busy=false}
+  setSession(null);APP={profiles:[],cur:null,sessions:[],deleted:[],bank:[]};store.set('app',APP);P=null;FBX.me=null;FBX.classDoc=null;
+  document.body.classList.remove('teacher','fb-free');$('#adminPanel').hidden=true;showWelcome()}
+
+/* ---------- profil murid: kode pemulihan & hapus akun ---------- */
+const _rP2=renderProfile;
+renderProfile=function(){_rP2();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
+  host.insertAdjacentHTML('beforeend',`<div class="prow"><span style="width:44px;height:44px;flex:none">${ICONS.key}</span><span class="grow"><b>Kode pemulihan</b><small>${m.rc?`Dipakai jika lupa sandi. <b id="rcShow" style="font-family:var(--title);letter-spacing:.1em">••••-••••</b>`:'Belum ada. Buat kode supaya akunmu bisa dipulihkan jika lupa sandi.'}</small></span>${m.rc?'<button class="smallbtn" id="rcEye">Lihat</button>':'<button class="smallbtn" id="rcMake">Buat kode</button>'}</div>
+   <div class="prow"><button class="linkbtn" id="fbDel" style="color:var(--bad);flex:1">Hapus akun</button></div>`);
+  const ey=$('#rcEye');if(ey)ey.onclick=()=>{const s=$('#rcShow');const on=s.textContent.includes('•');s.textContent=on?m.rc:'••••-••••';ey.textContent=on?'Sembunyikan':'Lihat'};
+  const mk=$('#rcMake');if(mk)mk.onclick=()=>{mk.disabled=true;fbSetRecovery(m.username||P.user,P.pass||m.pin).then(c=>{toast('key',`Kode pemulihanmu: ${c}. Catat baik-baik!`);renderProfile();setTimeout(()=>{const e=$('#rcEye');e&&e.click()},50)}).catch(e=>{mk.disabled=false;toast('lock',fbErr(e))})};
+  $('#fbDel').onclick=fbDeleteAsk};
+
+/* ---------- pengaturan guru: hapus akun ---------- */
+const _rTS2=renderTSet;
+renderTSet=function(){_rTS2();const o=$('#fbOut');if(o&&!$('#fbDel'))o.insertAdjacentHTML('afterend','<button class="linkbtn" id="fbDel" style="color:var(--bad)">Hapus akun guru</button>');const d=$('#fbDel');if(d)d.onclick=fbDeleteAsk};
+TEACH_R.tset=renderTSet;
+
+/* ---------- tugas dari guru ---------- */
+const FREE_TASKS=2;
+document.querySelector('.nav.tnav[data-tab=tstud]').insertAdjacentHTML('beforebegin','<button class="nav tnav" data-tab="ttask"><i data-icon="target"></i><span>Tugas</span></button>');
+$('#vTStud').insertAdjacentHTML('afterend','<section id="vTTask" class="view" hidden style="flex-direction:column;gap:16px"></section>');
+TEACH_R.ttask=()=>renderTTask();TAB_VIEW.ttask='vTTask';views.push('vTTask');
+async function renderTTask(){const v=$('#vTTask'),c=tCls(),cid=FBX.user.uid;
+  v.innerHTML=thead(['Tugas','target'],'Beri latihan untuk dikerjakan murid di rumah. Nilainya masuk otomatis begitu murid selesai.')+
+   `<div class="tcard"><h3>Buat tugas baru</h3><div class="tform">
+     <div class="tfield"><label for="tkSubj">Mata pelajaran</label><select id="tkSubj">${c.subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div>
+     <div class="tfield"><label for="tkUnit">Materi</label><select id="tkUnit"></select></div>
+     <div class="tfield"><label for="tkN">Jumlah soal</label><select id="tkN"><option>5</option><option selected>8</option><option>10</option><option>15</option></select></div>
+     <div class="tfield"><label for="tkDue">Batas waktu</label><input id="tkDue" type="date" value="${dayKey(new Date(Date.now()+3*864e5))}"></div></div>
+    <p class="note" id="tkErr" style="color:var(--bad);font-weight:700;margin:0"></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" id="tkAdd">Berikan tugas</button>${isPro()?'':`<span class="note" style="margin:0">Paket Gratis: maksimal ${FREE_TASKS} tugas aktif.</span><button class="smallbtn" data-fb="pro">Lihat paket Pro</button>`}</div></div>
+   <div id="tkList" style="display:flex;flex-direction:column;gap:16px"><div class="tcard"><p class="note" style="margin:0">Memuat tugas…</p></div></div>`;
+  hydrate(v);fbBindCode(v);
+  const fillU=()=>{const s=c.subjects.find(x=>x.id===$('#tkSubj').value);$('#tkUnit').innerHTML=s.units.map((u,i)=>`<option value="${i}">Unit ${i+1}: ${esc(u.t)}</option>`).join('')};$('#tkSubj').onchange=fillU;fillU();
+  let tasks=[];
+  $('#tkAdd').onclick=async()=>{const today=dayKey();if(!isPro()&&tasks.filter(x=>x.due>=today).length>=FREE_TASKS){proAsk();return}
+    const s=c.subjects.find(x=>x.id===$('#tkSubj').value),ui=+$('#tkUnit').value,due=$('#tkDue').value;
+    if(!due||due<today){$('#tkErr').textContent='Batas waktu tidak boleh sebelum hari ini.';return}
+    const tk={title:s.units[ui].t,cls:c.id,subj:s.id,subjName:s.name,unit:ui,n:+$('#tkN').value,due,created:Date.now()};
+    $('#tkAdd').disabled=true;try{await FB.db.collection('classes/'+cid+'/tasks').add(tk);toast('target','Tugas diberikan. Murid melihatnya di halaman Belajar.');renderTTask()}catch(e){$('#tkAdd').disabled=false;$('#tkErr').textContent=fbErr(e)}};
+  try{const q=await FB.db.collection('classes/'+cid+'/tasks').get();tasks=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>b.created-a.created);
+    const dones=await Promise.all(tasks.map(x=>FB.db.collection('classes/'+cid+'/tasks/'+x.id+'/done').get().then(r=>r.docs.map(d=>Object.assign({uid:d.id},d.data()))).catch(()=>[])));
+    tasks.forEach((x,i)=>x.done=dones[i]);const online=students().filter(p=>p._remote);const today=dayKey();
+    $('#tkList').innerHTML=tasks.length?tasks.map(x=>{const avg=av(x.done.map(d=>d.score));
+      return `<div class="tcard"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:200px"><h3>${esc(x.title)}</h3><p class="sub" style="margin:0">${esc(x.subjName)} · ${x.n} soal · batas ${fmtDs(x.due)} ${x.due<today?'<span class="pill mute">Lewat batas</span>':'<span class="pill ok">Aktif</span>'}</p></div>
+        <span class="pill mid">${x.done.length} dari ${online.length} murid${avg!=null?' · rata-rata '+avg:''}</span><button class="smallbtn" data-tkd="${x.id}">Rincian</button><button class="smallbtn" data-tkx="${x.id}" style="color:var(--bad)">Hapus</button></div>
+        <div id="tkd_${x.id}" hidden>${online.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>Nama</th><th class="num">Nilai</th><th>Dikerjakan</th></tr></thead><tbody>${online.map(p=>{const d=x.done.find(y=>y.uid===p._uid);
+          return `<tr><td class="nm">${esc(p.name)}</td><td class="num">${d?d.score:'—'}</td><td>${d?fmtDs(dayKey(new Date(d.at)))+(d.tries>1?` · ${d.tries} kali`:''):'<span class="pill bad">Belum</span>'}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid online di kelas ini. Bagikan kode kelas supaya murid bisa mengerjakan tugas dari rumah.</p>'}</div></div>`}).join(''):'<div class="tcard"><p class="note" style="margin:0">Belum ada tugas. Buat tugas pertama di atas.</p></div>';
+    $('#tkList').querySelectorAll('[data-tkd]').forEach(b=>b.onclick=()=>{const d=$('#tkd_'+b.dataset.tkd);d.hidden=!d.hidden;b.textContent=d.hidden?'Rincian':'Tutup'});
+    $('#tkList').querySelectorAll('[data-tkx]').forEach(b=>b.onclick=()=>{const x=tasks.find(t=>t.id===b.dataset.tkx);openModal(`<h3>Hapus tugas "${esc(x.title)}"?</h3><p>Nilai murid untuk tugas ini juga terhapus.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);
+      $('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{$('#mYes').disabled=true;try{for(const d of x.done)await FB.db.doc('classes/'+cid+'/tasks/'+x.id+'/done/'+d.uid).delete();await FB.db.doc('classes/'+cid+'/tasks/'+x.id).delete();closeModal();renderTTask()}catch(e){closeModal();toast('lock',fbErr(e))}}})}
+  catch(e){$('#tkList').innerHTML=`<div class="tcard"><p class="note" style="color:var(--bad);margin:0">${esc(fbErr(e))}</p></div>`}}
+
+/* murid: daftar tugas di halaman Belajar */
+FBX.tasks=[];FBX.tasksAt=0;
+async function fbLoadTasks(){const m=FBX.me||{};FBX.tasksAt=Date.now();if(!m.classId||!FBX.user){FBX.tasks=[];return}const cid=m.classId,uid=FBX.user.uid;
+  try{const q=await FB.db.collection('classes/'+cid+'/tasks').get();const ts=q.docs.map(d=>Object.assign({id:d.id},d.data()));
+    const mine=await Promise.all(ts.map(x=>FB.db.doc('classes/'+cid+'/tasks/'+x.id+'/done/'+uid).get().then(s=>s.exists?s.data():null).catch(()=>null)));
+    ts.forEach((x,i)=>x.mine=mine[i]);const old=dayKey(new Date(Date.now()-7*864e5));
+    FBX.tasks=ts.filter(x=>x.due>=old).sort((a,b)=>(!!a.mine-!!b.mine)||(a.due<b.due?-1:1))}catch(e){FBX.tasks=[]}}
+function fbTaskBanner(){let el=$('#fbTasks');if(!el){$('#path').insertAdjacentHTML('beforebegin','<div id="fbTasks"></div>');el=$('#fbTasks')}
+  const ts=FBX.tasks||[];if(isT()||!P||!ts.length){el.innerHTML='';return}const today=dayKey();
+  el.innerHTML=`<div class="card fbtask"><div class="fbtask-h"><span style="width:30px;flex:none">${ICONS.target}</span><b>Tugas dari guru</b><span class="pill ${ts.some(x=>!x.mine)?'bad':'ok'}">${ts.filter(x=>!x.mine).length?ts.filter(x=>!x.mine).length+' belum':'Semua selesai'}</span></div>
+    ${ts.map(x=>{const d=x.mine,late=x.due<today;return `<div class="fbtask-r"><span class="grow"><b>${esc(x.title)}</b><small>${esc(x.subjName)} · ${x.n} soal · ${d?`Nilaimu <b>${d.score}</b>`:late?'Lewat batas waktu':'Batas '+fmtDs(x.due)}</small></span><button class="${d?'ghost':'primary'} fbtask-b" data-task="${x.id}">${d?'Ulangi':'Kerjakan'}</button></div>`}).join('')}</div>`;
+  el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>fbStartTask(ts.find(x=>x.id===b.dataset.task)))}
+function fbStartTask(x){const c=COURSE.find(k=>k.id===x.cls),s=c&&c.subjects.find(k=>k.id===x.subj),u=s&&s.units[x.unit];if(!u){toast('lock','Materi tugas ini tidak ditemukan.');return}
+  beginRun({kind:'practice',qs:unitQs(u,x.n),mode:'kuis',title:`Tugas · ${u.t}`,subj:s,cls:x.cls,task:x.id})}
+function fbSubmitTask(tid,score,correct,total){const m=FBX.me||{};if(!m.classId)return;const x=(FBX.tasks||[]).find(t=>t.id===tid),prev=x&&x.mine;
+  const best=prev&&prev.score>score?prev:{score,correct,total};
+  const doc={name:P.name,score:best.score,correct:best.correct,total:best.total,last:score,at:Date.now(),tries:((prev&&prev.tries)||0)+1};if(x)x.mine=doc;
+  FB.db.doc('classes/'+m.classId+'/tasks/'+tid+'/done/'+FBX.user.uid).set(doc).then(()=>toast('target',`Tugas terkirim ke guru. Nilai: ${score}`)).catch(e=>toast('lock','Tugas belum terkirim: '+fbErr(e)))}
+const _finishRun=finishRun;
+finishRun=function(){const o=game&&game.lesson;if(o&&o.task&&FBX.user&&!isT()){const ok=Math.max(0,o.target-Math.min(o.target,o.wrong));fbSubmitTask(o.task,Math.round(ok/o.target*100),ok,o.target)}_finishRun()};
+const _renderPath=renderPath;
+renderPath=function(){_renderPath();if(!FBX.user||isT())return;fbTaskBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+
+/* ---------- peringkat kelas online ---------- */
+const _rL=renderLeague;
+renderLeague=function(){_rL();if(isT()||!FBX.user||!P)return;const m=FBX.me||{},card=$('#leagueCard'),p=card.querySelector('.lhead p'),box=card.children[2];
+  if(!m.classId){if(p)p.textContent='Gabung kelas lewat menu Profil supaya bisa bersaing XP mingguan dengan teman sekelasmu.';const n=card.children[3];if(n)n.remove();return}
+  if(p)p.textContent=`Peringkat XP minggu ini di ${m.clsName||'kelasmu'}. Minggu baru mulai setiap Senin.`;const n=card.children[3];if(n)n.remove();
+  box.innerHTML='<p class="note">Memuat peringkat kelas…</p>';
+  FB.db.collection('classes/'+m.classId+'/board').where('week','==',weekKey()).get().then(q=>{const me=FBX.user.uid;const rows=q.docs.map(d=>Object.assign({uid:d.id},d.data())).filter(r=>r.uid!==me);
+    rows.push({uid:me,name:P.name,color:P.color,wxp:P.week.xp});rows.sort((a,b)=>(b.wxp||0)-(a.wxp||0));
+    box.innerHTML=rows.map((r,i)=>`<div class="lrow ${r.uid===me?'me':''}"><span class="rk ${i<3?'top':''}">${i+1}</span><span class="avatar" style="--av:${esc(r.color||'#9B6BFF')}">${esc(String(r.name||'?')[0].toUpperCase())}</span><span class="nm">${esc(r.name||'')}</span><span class="xp">${r.wxp||0} XP</span></div>`).join('')+(rows.length<2?'<p class="note">Belum ada teman sekelas yang belajar minggu ini. Ayo jadi yang pertama!</p>':'')})
+   .catch(e=>{box.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`})};
+function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT())return;ensureDay(P);const key=m.classId+':'+P.week.id+':'+P.week.xp+':'+P.name;if(key===FBX.boardKey)return;FBX.boardKey=key;
+  FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
+
 
 /* ---------- panel admin (penjual) ---------- */
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
@@ -3678,6 +3836,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
   }).catch(e=>{$('#adList').innerHTML=`<p class="note" style="color:var(--bad)">${esc(/permission/.test(String(e.code||''))?'Akses admin ditolak. Pastikan email admin sudah diverifikasi (klik tautan di email), lalu muat ulang halaman.':fbErr(e))}</p>`;$('#adStats').innerHTML=''})};
 }
 
+if(window.__fbFail){bootApp=function(){const el=$('#auth');el.hidden=false;el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="sad"></div><h1 class="wtitle" style="font-size:34px">Belum tersambung</h1><p class="wsub">Aplikasi butuh internet saat pertama kali dibuka. Periksa koneksi, lalu coba lagi.</p></div><div class="wbtns"><button class="primary press" onclick="location.reload()">COBA LAGI</button></div></div>`;hydrate(el)}}
 /* ---------- wiring ---------- */
 const cvEl=$('#cv');
 function ptr(e){const r=cvEl.getBoundingClientRect(),z=arc.z||1;return [(e.clientX-r.left)/z,(e.clientY-r.top)/z]}
