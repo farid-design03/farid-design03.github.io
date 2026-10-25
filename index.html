@@ -1441,6 +1441,12 @@ body.arcfs{overflow:hidden!important}
 body.arcfs .playbar{padding-top:calc(6px + env(safe-area-inset-top,0px))!important;position:relative;z-index:5}
 body.arcfs #quitBtn{min-width:44px;min-height:40px;touch-action:manipulation}
 .ajmat3 .seg button{white-space:nowrap;padding-inline:14px}
+.stepper{display:inline-flex;align-items:center;gap:4px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:3px;box-shadow:0 3px 0 var(--line)}
+.stepper button{width:36px;height:36px;border-radius:10px;border:0;background:#F2F2F2;font:inherit;font-size:22px;font-weight:900;color:#4B4B4B;cursor:pointer;line-height:1}
+.stepper button:active{transform:translateY(2px);background:#E5E5E5}
+.stepper input{width:46px;border:0!important;background:transparent!important;text-align:center;font:inherit;font-size:18px;font-weight:900;color:var(--ink);padding:0;-moz-appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stepper span{font-size:13px;font-weight:800;color:var(--muted);margin-right:4px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3025,8 +3031,7 @@ function renderSetup(){
   $('#teamNames').querySelectorAll('input').forEach((inp,i)=>inp.oninput=()=>{GROUP.names[i]=inp.value;store.set('group',GROUP)});
   $('#fmtSeg').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.f===GROUP.format);b.onclick=()=>{GROUP.format=b.dataset.f;store.set('group',GROUP);renderSetup()}});
   $('#fmtNote').textContent=GROUP.format==='terbagi'?'Layar dibagi dua dan dua pemain (atau dua tim) bermain bersamaan. Pemain kiri menyentuh layar kiri atau memakai W A S D, F, dan angka 1–4. Pemain kanan menyentuh layar kanan atau memakai tombol panah, Enter, dan 7 8 9 0. Semua game bisa dipakai.':GROUP.format==='giliran'?'Tim bergantian menjawab satu soal per giliran. Semua jenis game bisa dipakai, cocok untuk dimainkan di depan kelas.':'Semua tim melihat soal yang sama. Tim tercepat menekan tombolnya (keyboard atau klik guru), lalu menjawab. Benar +15, salah −5 dan tim lain boleh merebut. Memakai tampilan Kuis.';
-  $('#perSeg').innerHTML=[2,3,5,10].map(n=>`<button data-p="${n}" aria-pressed="${n===GROUP.per}">${n}</button>`).join('');
-  $('#perSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{GROUP.per=+b.dataset.p;store.set('group',GROUP);renderSetup()});
+  $('#perSeg').className='';$('#perSeg').innerHTML=stepperHTML('perStep',clamp(+GROUP.per||3,1,30),1,30);bindStepper('perStep',v=>{GROUP.per=v;store.set('group',GROUP)});
 }
 function applyTV(){document.body.classList.toggle('tv',TV&&window.innerWidth>=700)}
 const MODE_LIST=[
@@ -5765,6 +5770,13 @@ async function openUserProfile(uid,fb){if(!P||!FBX.user)return;fb=fb||{};
   $('#upDuel').onclick=()=>{closeModal();const f={uid,name:th.name,av:th.av||null};openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(uid)}"]`);ajakInvite(f,ab||null)},350)}}
 window.openUserProfile=openUserProfile;
 /* ---------- AJAK TANDING (seperti Duolingo): bagikan, cari nama pengguna, undang teman ---------- */
+/* pengatur jumlah soal bebas: tombol − / + dan bisa diketik */
+function stepperHTML(id,v,min,max){return `<div class="stepper" id="${id}" data-min="${min}" data-max="${max}"><button type="button" data-d="-1" aria-label="Kurangi">−</button><input type="number" inputmode="numeric" min="${min}" max="${max}" value="${v}" aria-label="Jumlah soal"><span>soal</span><button type="button" data-d="1" aria-label="Tambah">+</button></div>`}
+function bindStepper(id,cb){const el=$('#'+id);if(!el)return;const inp=el.querySelector('input'),mn=+el.dataset.min,mx=+el.dataset.max;
+  const set=v=>{v=Math.round(clamp(+v||mn,mn,mx));inp.value=v;cb(v)};
+  el.querySelectorAll('button').forEach(b=>{let t=null,iv=null;const step=()=>set(+inp.value+ +b.dataset.d);
+    b.onclick=step;b.onpointerdown=()=>{t=setTimeout(()=>{iv=setInterval(step,90)},450)};['pointerup','pointerleave','pointercancel'].forEach(e=>b.addEventListener(e,()=>{clearTimeout(t);clearInterval(iv)}))});
+  inp.onchange=()=>set(inp.value);inp.onblur=()=>set(inp.value)}
 const AJAK={ui:null,n:5,mode:'acak',sent:{},found:null,inv:[],unsubInv:null};window.AJAK=AJAK;
 function silhouetteSVG(){return `<svg viewBox="0 0 120 120" aria-hidden="true"><path d="M14 121 C16 97 36 87 60 87 C84 87 104 97 106 121Z" fill="#0E8F63"/><rect x="52" y="70" width="16" height="20" fill="#0E8F63"/><circle cx="60" cy="52" r="29" fill="#0E8F63"/><circle cx="33" cy="54" r="7" fill="#0E8F63"/><circle cx="87" cy="54" r="7" fill="#0E8F63"/><ellipse cx="50" cy="50" rx="7" ry="9" fill="#fff"/><ellipse cx="70" cy="50" rx="7" ry="9" fill="#fff"/><circle cx="52" cy="52" r="4" fill="${AVK}"/><circle cx="72" cy="52" r="4" fill="${AVK}"/><path d="M55 66 Q60 70 66 65" stroke="${AVK}" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`}
 function fbHandleSync(){const m=FBX.me||{};if(!FBX.user||isT()||!P||!m.username)return;const key=JSON.stringify([P.name,P.avatar,P.cls]);if(AJAK.hk===key)return;AJAK.hk=key;
@@ -5800,7 +5812,7 @@ function openAjak(){if(!P)return;const s=SUBJ();if(!AJAK.cls){AJAK.cls=P.cls;AJA
   el.innerHTML=`<div class="onbin" style="max-width:600px;gap:14px;padding-bottom:20px">
     <div class="ajhead"><div class="ajbar"><button class="back" id="ajX" aria-label="Tutup">✕</button><h2>Ajak tanding</h2><span style="width:44px"></span></div>
       <div class="ajvs"><div class="ajme">${avatarSVG(P.avatar||null,{nobg:true})}</div><span class="ajv">VS</span><div class="ajyou">${silhouetteSVG()}</div></div></div>
-    <div class="ajmat ajmat3"><select id="ajCls" aria-label="Kelas"></select><select id="ajSubj" aria-label="Mata pelajaran"></select><select id="ajUnit" aria-label="Materi"></select><div class="seg small" id="ajN"><button data-n="5" aria-pressed="${AJAK.n===5}">5 soal</button><button data-n="10" aria-pressed="${AJAK.n===10}">10 soal</button></div></div>
+    <div class="ajmat ajmat3"><select id="ajCls" aria-label="Kelas"></select><select id="ajSubj" aria-label="Mata pelajaran"></select><select id="ajUnit" aria-label="Materi"></select>${stepperHTML("ajN",AJAK.n,1,50)}</div>
     <div class="ajgames" id="ajGames"></div>
     <button class="ajopt" id="ajShare"><span class="ajic" style="background:#DDF0FF;color:#1C9BE8"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Bagikan undangan</b></button>
     <div class="ajopt ajsearch"><span class="ajic" style="background:#FFF4D6;color:#E8A100"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><input id="ajQ" placeholder="Cari nama pengguna teman" autocapitalize="none" autocomplete="off" spellcheck="false"><button class="ghost" id="ajGo">Cari</button></div>
@@ -5818,7 +5830,7 @@ function openAjak(){if(!P)return;const s=SUBJ();if(!AJAK.cls){AJAK.cls=P.cls;AJA
   $('#ajCls').onchange=e=>{AJAK.cls=e.target.value;AJAK.sid='acak';AJAK.ui='acak';fillSel();resetRoom();drawGames()};
   $('#ajSubj').onchange=e=>{AJAK.sid=e.target.value;AJAK.ui='acak';fillSel();resetRoom();drawGames()};
   $('#ajUnit').onchange=e=>{AJAK.ui=e.target.value;resetRoom();drawGames()};
-  $('#ajN').querySelectorAll('button').forEach(b=>b.onclick=()=>{AJAK.n=+b.dataset.n;$('#ajN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+  bindStepper('ajN',v=>{if(v!==AJAK.n){AJAK.n=v;if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2)roomClose(true)}});
   const drawGames=()=>{const gs=ajakGames();if(AJAK.mode!=='acak'&&!gs.includes(AJAK.mode))AJAK.mode='acak';
     $('#ajGames').innerHTML=[['acak','Acak semua game']].concat(gs.map(g=>[g,gameName(g)])).map(([id,nm])=>`<button class="ajg" data-g="${id}" aria-pressed="${AJAK.mode===id}" ${id!=='acak'?`style="--mc:${MCOL[id]||'#9B6BFF'}"`:''}>${id==='acak'?'🎲 ':''}${esc(nm)}</button>`).join('');
     $('#ajGames').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{AJAK.mode=b.dataset.g;if(ROOM.code&&ROOM.doc&&ROOM.doc.status==='lobby'&&ROOM.doc.host===FBX.user.uid&&Object.keys(ROOM.doc.players).length<2)roomClose(true);drawGames()})};
@@ -5832,17 +5844,17 @@ async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Ma
 /* main berdua offline di satu HP (layar terbagi) */
 function duoCard(){const v=$('#vTeam');if(!v||!P)return;let el=$('#duoCard');const rc=v.querySelector('.roomcard');
   if(!el){(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card duocard" id="duoCard"></div>');el=$('#duoCard')}
-  const c=CLS();const n1=GROUP.duo1||P.name,n2=GROUP.duo2||'Teman';const per=[3,5,10].includes(GROUP.per)?GROUP.per:5;
+  const c=CLS();const n1=GROUP.duo1||P.name,n2=GROUP.duo2||'Teman';const per=clamp(+GROUP.per||5,1,30);
   el.innerHTML=`<div class="duohead"><span class="duoic"><svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><rect x="10" y="4" width="28" height="40" rx="6" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M10 24 H38" stroke="currentColor" stroke-width="3" stroke-dasharray="3 3"/><circle cx="24" cy="14" r="4" fill="#1CB0F6"/><circle cx="24" cy="34" r="4" fill="#FF9600"/></svg></span><div><h3 style="margin:0">Main berdua di satu HP</h3><p class="note" style="margin:0">Tanpa internet. Layar dibagi dua, kalian berhadapan dan menjawab bersamaan.</p></div></div>
     <div class="duonames"><label><i style="background:#1CB0F6"></i><input id="duoN1" maxlength="16" value="${esc(n1)}" aria-label="Nama pemain 1"></label><span class="duovs">VS</span><label><i style="background:#FF9600"></i><input id="duoN2" maxlength="16" value="${esc(n2)}" aria-label="Nama pemain 2"></label></div>
-    <div class="duorow"><span>Soal per pemain</span><div class="seg small" id="duoPer">${[3,5,10].map(n=>`<button data-p="${n}" aria-pressed="${n===per}">${n}</button>`).join('')}</div></div>
+    <div class="duorow"><span>Soal per pemain</span>${stepperHTML("duoPer",per,1,30)}</div>
     <b class="duolbl">Pilih pelajaran (${esc(c.name)})</b>
     <div class="duosubj">${c.subjects.map(sb=>`<button class="duos" data-s="${sb.id}" style="--sc:${sb.color}"><span>${sb.glyph}</span>${esc(sb.name)}</button>`).join('')}</div>`;
   hydrate(el);
   $('#duoN1').oninput=e=>{GROUP.duo1=e.target.value;store.set('group',GROUP)};$('#duoN2').oninput=e=>{GROUP.duo2=e.target.value;store.set('group',GROUP)};
-  el.querySelectorAll('#duoPer button').forEach(b=>b.onclick=()=>{GROUP.per=+b.dataset.p;store.set('group',GROUP);duoCard()});
+  bindStepper('duoPer',v=>{GROUP.per=v;store.set('group',GROUP)});
   el.querySelectorAll('.duos').forEach(b=>b.onclick=()=>{const sb=c.subjects.find(x=>x.id===b.dataset.s);
-    GROUP.format='terbagi';GROUP.per=per;GROUP.names=[($('#duoN1').value.trim()||'Pemain 1'),($('#duoN2').value.trim()||'Pemain 2')].concat(GROUP.names.slice(2));store.set('group',GROUP);
+    GROUP.format='terbagi';GROUP.per=clamp(+GROUP.per||per,1,30);GROUP.names=[($('#duoN1').value.trim()||'Pemain 1'),($('#duoN2').value.trim()||'Pemain 2')].concat(GROUP.names.slice(2));store.set('group',GROUP);
     PLAY='group';L=lvOf();setLvColor(L);document.documentElement.style.setProperty('--lvc',sb.color);
     S={id:sb.id,name:sb.name,fit:sb.fit,make:()=>shuffle(sb.units.flatMap(u=>unitQs(u,3)))};openGames()})}
 async function friendsCard(){const v=$('#vTeam');if(!v||!FBX.user||isT())return;let el=$('#friendCard');if(!el){const rc=v.querySelector('.roomcard');(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card friendcard" id="friendCard"></div>');el=$('#friendCard')}
