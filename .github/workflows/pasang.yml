@@ -1,0 +1,39 @@
+# Pemasang otomatis JELAS.
+# Setiap kali aturan database (firestore.rules) atau kode server (notif/worker.js) berubah,
+# GitHub memasangnya ke Firebase dan Cloudflare. Kunci disimpan di
+# Settings → Secrets and variables → Actions (tidak pernah ditulis di file ini).
+name: Pasang otomatis
+on:
+  push:
+    branches: [main]
+    paths: ['firestore.rules', 'notif/**', '.github/**']
+  workflow_dispatch:
+jobs:
+  aturan-firestore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save google-auth-library@9
+      - name: Pasang aturan Firestore
+        run: node .github/scripts/aturan.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+  server-cloudflare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pasang kode server Cloudflare
+        working-directory: notif
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "Kunci Cloudflare belum diisi di GitHub Secrets, langkah ini dilewati."; exit 0; fi
+          npx --yes wrangler@3 deploy
