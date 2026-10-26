@@ -1529,13 +1529,13 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 @media(min-width:640px){.adplan{grid-template-columns:1.4fr .8fr 1fr}.adplan .tfield:first-child{grid-column:auto}}
 .wlegal{margin:0;text-align:center;font-size:13px;font-weight:700}.wlegal a{color:var(--muted,#777);text-decoration:none}
 /* ---- menu samping guru di HP ---- */
-.tbar,.tscrim{display:none}
+.tnbar,.tscrim{display:none}
 @media (max-width:999px){
- body.teacher .tbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:45;align-items:center;gap:12px;height:58px;padding:env(safe-area-inset-top,0px) max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px));background:#fff;border-bottom:2px solid var(--line)}
- body.teacher .tbar-menu{flex:none;width:44px;height:44px;padding:0;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer}
- body.teacher .tbar-menu:active{border-bottom-width:2px;transform:translateY(2px)}
- body.teacher .tbar b{flex:1;min-width:0;font-family:var(--title);font-size:21px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
- body.teacher .tbar-tag{flex:none;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.08em;color:#fff;background:var(--purple,#8549BA);border-radius:999px;padding:3px 10px}
+ body.teacher .tnbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:45;align-items:center;gap:12px;height:58px;padding:env(safe-area-inset-top,0px) max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px));background:#fff;border-bottom:2px solid var(--line)}
+ body.teacher .tnbar-menu{flex:none;width:44px;height:44px;padding:0;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer}
+ body.teacher .tnbar-menu:active{border-bottom-width:2px;transform:translateY(2px)}
+ body.teacher .tnbar b{flex:1;min-width:0;font-family:var(--title);font-size:21px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.teacher .tnbar-tag{flex:none;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.08em;color:#fff;background:var(--purple,#8549BA);border-radius:999px;padding:3px 10px}
  body.teacher .main.wrap{padding-top:calc(72px + env(safe-area-inset-top,0px))!important;padding-bottom:40px!important}
  body.teacher .side{top:0!important;bottom:0!important;left:0!important;right:auto!important;width:min(82vw,300px);height:auto;flex-direction:column!important;justify-content:flex-start!important;align-items:stretch!important;gap:4px!important;border-top:0!important;border-right:2px solid var(--line)!important;background:#fff!important;padding:calc(14px + env(safe-area-inset-top,0px)) 12px calc(16px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))!important;overflow-y:auto!important;overflow-x:hidden!important;transform:translateX(-105%);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s;z-index:70!important;visibility:hidden}
  body.teacher.tnav-open .side{transform:none;visibility:visible;box-shadow:10px 0 30px rgba(20,24,40,.2)}
@@ -1549,10 +1549,49 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
  body.teacher .tscrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,24,40,.45);opacity:0;pointer-events:none;transition:opacity .25s}
  body.teacher.tnav-open .tscrim{opacity:1;pointer-events:auto}
  body.teacher.tnav-open{overflow:hidden}
- body.playing .tbar,body.playing .tscrim{display:none!important}
+ body.playing .tnbar,body.playing .tscrim{display:none!important}
  body.teacher:not(.playing) .toast{top:calc(68px + env(safe-area-inset-top, 0px))}
 }
 @media (max-width:999px) and (prefers-reduced-motion:reduce){body.teacher .side,body.teacher .tscrim{transition:none}}
+/* ---- absensi rapi di HP ---- */
+@media (max-width:640px){
+ .attwrap{overflow:visible}
+ .atttable,.atttable tbody{display:block;width:100%;min-width:0}
+ .atttable thead{display:none}
+ .atttable tr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"no nm pct" "st st st";align-items:center;gap:8px 10px;padding:12px 2px;border-bottom:2px dashed var(--line)}
+ .atttable td{display:block;padding:0!important;border:0!important;min-width:0}
+ .atttable td:nth-child(1){grid-area:no;color:var(--muted);font-weight:800}.atttable td:nth-child(1):empty{display:none}
+ .atttable td:nth-child(2){grid-area:nm;white-space:normal;overflow-wrap:anywhere}
+ .atttable td:nth-child(3){grid-area:st}
+ .atttable td:nth-child(4){grid-area:pct;color:var(--muted);font-weight:800;font-size:13px}
+ .atttable td:nth-child(4)::before{content:'Hadir '}
+ .atttable .attset{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+ .atttable .attb{width:100%;height:44px;font-size:18px}
+}
+/* ---- tidak ada yang terpotong di HP ---- */
+.modal{grid-template-columns:minmax(0,1fr);justify-items:center}
+.modal .mbox{min-width:0;max-width:100%;box-sizing:border-box}
+@media (max-width:640px){
+ .chart{min-width:0!important;width:100%;height:auto}
+ .chartwrap{overflow:visible}
+ .ttable.stack,.ttable.stack tbody{display:block;width:100%;min-width:0}
+ .ttable.stack thead{display:none}
+ .ttable.stack tr{display:block;border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;padding:4px 14px;margin:0 0 10px;background:#fff}
+ .ttable.stack tr.click{cursor:pointer}.ttable.stack tr.click:active{transform:translateY(2px);border-bottom-width:2px}
+ .ttable.stack td{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:7px 0!important;border:0!important;border-bottom:1px dashed var(--line)!important;text-align:right;white-space:normal;min-width:0;overflow-wrap:anywhere}
+ .ttable.stack td:last-child{border-bottom:0!important}
+ .ttable.stack td::before{content:attr(data-label);flex:none;max-width:48%;text-align:left;font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+ .ttable.stack td:empty,.ttable.stack td[data-label=""]:not(.nm):empty{display:none}
+ .ttable.stack td.nm{justify-content:flex-start;font-size:17px;font-weight:800;padding-top:10px!important}
+ .ttable.stack td.nm::before{display:none}
+ .ttable.stack tr{display:flex!important;flex-direction:column}
+ .ttable.stack td.nm{order:-1;text-align:left}
+ .ttable.stack td[data-label="No"]{display:none}
+ .ttable.stack td>*{max-width:100%}
+ .ttable.stack .num{text-align:right}
+ .tablewrap:has(> .ttable.stack){overflow:visible}
+}
+@media (max-width:360px){.lrow{gap:8px;padding:8px}.lrow .avatar{width:40px!important;height:40px!important;flex:none}.lrow .rk{width:24px}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -1567,7 +1606,7 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 </div>
 
 <div class="app" id="app">
-  <div class="tbar" id="tBar"><button class="tbar-menu press" id="tMenu" aria-label="Buka menu" aria-controls="sideNav" aria-expanded="false"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button><b id="tBarTitle">Dasbor</b><span class="tbar-tag">GURU</span></div>
+  <div class="tnbar" id="tBar"><button class="tnbar-menu press" id="tMenu" aria-label="Buka menu" aria-controls="sideNav" aria-expanded="false"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button><b id="tBarTitle">Dasbor</b><span class="tnbar-tag">GURU</span></div>
   <div class="tscrim" id="tScrim"></div>
   <nav class="side" id="sideNav" aria-label="Menu utama">
     <div class="sbrand"><span class="logo mascot" data-mascot></span><b class="sbname">JELAS<small>Jelajah Kelas</small></b></div>
@@ -5413,7 +5452,7 @@ function renderTAtt(){const t=T(),list=students();ATT_DATE=ATT_DATE||dayKey();co
    <div class="tcard"><h3>Kehadiran</h3><div class="tbar"><input type="date" id="attDate" value="${ATT_DATE}" aria-label="Tanggal pertemuan"><span class="pill ${teach?'ok':'mute'}">${teach?'Hari mengajar':'Di luar jadwal'}</span><span style="flex:1"></span><button class="ghost" id="attAll" ${list.length?'':'disabled'}>Tandai semua hadir</button></div>
     <p class="sub" style="margin:0">${fmtD(ATT_DATE)} · Hadir ${cnt.H} · Izin ${cnt.I} · Sakit ${cnt.S} · Alpa ${cnt.A} · Belum diisi ${Math.max(0,list.length-cnt.H-cnt.I-cnt.S-cnt.A)}</p>
     <div class="legend"><span style="--c:var(--green)">H = Hadir</span><span style="--c:var(--blue)">I = Izin</span><span style="--c:var(--orange)">S = Sakit</span><span style="--c:var(--red)">A = Alpa</span></div>
-    ${list.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th>Status</th><th class="num">Kehadiran total</th></tr></thead><tbody>${list.map(p=>{const a=attOf(p.id);return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td><div class="attset">${['H','I','S','A'].map(v=>`<button class="attb" data-p="${p.id}" data-v="${v}" aria-pressed="${s.att[p.id]===v}">${v}</button>`).join('')}</div></td><td class="num">${a.pct==null?'—':a.pct+'%'}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid. Tambahkan di menu Murid.</p>'}</div>
+    ${list.length?`<div class="tablewrap attwrap"><table class="ttable atttable"><thead><tr><th>No</th><th>Nama</th><th>Status</th><th class="num">Kehadiran total</th></tr></thead><tbody>${list.map(p=>{const a=attOf(p.id);return `<tr><td>${p.no||''}</td><td class="nm">${esc(p.name)}</td><td><div class="attset">${['H','I','S','A'].map(v=>`<button class="attb" data-p="${p.id}" data-v="${v}" aria-pressed="${s.att[p.id]===v}">${v}</button>`).join('')}</div></td><td class="num">${a.pct==null?'—':a.pct+'%'}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid. Tambahkan di menu Murid.</p>'}</div>
    <div class="tcard"><h3>Riwayat pertemuan</h3>${APP.sessions.length?`<div class="sessions">${APP.sessions.slice().reverse().map(x=>{const h=Object.values(x.att).filter(v=>v==='H').length;const ev=x.evals.filter(e=>Object.keys(e.results).length).length;return `<button class="sess" data-date="${x.date}" aria-current="${x.date===ATT_DATE}"><span class="dt">${fmtDs(x.date)} ${dOf(x.date).getFullYear()}</span><span class="grow">${DAYN[dOf(x.date).getDay()]} · Hadir ${h} dari ${list.length} · ${ev} evaluasi</span></button>`}).join('')}</div>`:'<p class="note">Belum ada pertemuan tercatat.</p>'}</div>`;
   hydrate($('#vTAtt'));
   $('#vTAtt').querySelectorAll('.daychip').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;t.days=t.days.includes(d)?t.days.filter(x=>x!==d):[...t.days,d];save();renderTAtt()});
@@ -7149,6 +7188,10 @@ try{document.fonts&&document.fonts.load(`700 20px "Baloo 2"`)}catch(e){}
 setSound();setMusic();applyTV();
 document.querySelectorAll('.nav').forEach(n=>{const sp=n.querySelector('span');if(sp){n.setAttribute('aria-label',sp.textContent.trim());if(!n.title)n.title=sp.textContent.trim()}});
 document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{const t=n.dataset.tab;if(t==='guru')return enterTeacher();if(t==='texit')return exitTeacher();if(TEACH_R[t])return go(t);if(P)go(t)});
+/* ---------- tabel jadi kartu di HP: beri label setiap isian ---------- */
+function stackTables(root){(root||document).querySelectorAll('table.ttable:not(.atttable)').forEach(t=>{const hs=[...t.querySelectorAll('thead th')].map(h=>h.textContent.trim());if(!hs.length)return;
+  t.classList.add('stack');t.querySelectorAll('tbody tr').forEach(tr=>{let k=0;[...tr.children].forEach(td=>{if(!td.hasAttribute('data-label'))td.setAttribute('data-label',hs[k]||'');k+=+(td.getAttribute('colspan')||1)})})})}
+{let st=null;new MutationObserver(()=>{clearTimeout(st);st=setTimeout(()=>stackTables(),30)}).observe(document.body,{childList:true,subtree:true})}
 /* ---------- menu samping guru di HP ---------- */
 (function(){const b=document.body,menu=$('#tMenu'),scrim=$('#tScrim'),side=$('#sideNav');if(!menu||!side)return;
   const mob=()=>innerWidth<1000&&b.classList.contains('teacher');
