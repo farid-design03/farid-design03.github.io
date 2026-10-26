@@ -143,6 +143,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Teman: A mengikuti B. Hanya A yang boleh membuat; A atau B boleh menghapus.
+    match /fol/{id} {
+      allow read: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+      allow create, update: if signedIn() && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string && request.resource.data.to != request.auth.uid
+        && id == request.auth.uid + '_' + request.resource.data.to;
+      allow delete: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+    }
+
     // Undangan tanding dari teman.
     match /invites/{id} {
       allow read: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);

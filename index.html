@@ -1685,6 +1685,27 @@ body.wzon{overflow:hidden}
 .fqnote{background:#FFF8E6;border:2px solid #FFE2A3;border-radius:14px;padding:8px 12px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.fqnote .grow{flex:1}
 .fqpick{display:flex;flex-direction:column;gap:4px}
 .set>span small{display:none}
+/* ---- teman: ikuti ---- */
+.pfollow{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.pfc{display:flex;flex-direction:column;align-items:flex-start;gap:0;background:none;border:0;padding:4px 2px;cursor:pointer;text-align:left}
+.pfc b{font-family:var(--title);font-size:24px;color:var(--ink)}.pfc span{font-weight:700;color:var(--muted);font-size:15px}
+.pfbtns{display:flex;gap:10px;padding:4px 16px 16px}.pfbtns #pAddFr{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;font-size:16px;letter-spacing:.04em}.pfbtns #pShare{flex:none;width:56px;display:grid;place-items:center;color:#1CB0F6;padding:0}
+.folov{z-index:96}.folh{margin:0;font-family:var(--title);font-size:30px;color:var(--ink)}
+.ffopt{display:flex;align-items:center;gap:14px;width:100%;background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:18px;padding:12px 14px;text-align:left;font:inherit;cursor:pointer;box-sizing:border-box}
+.ffopt b{flex:1;font-family:var(--display);font-weight:800;font-size:18px;color:var(--ink)}
+.ffopt input{flex:1;min-width:0;border:0;background:none;font:inherit;font-weight:700;font-size:17px;outline:none;color:var(--ink)}
+.ffic{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;overflow:hidden}.ffic svg{width:100%;height:100%}.ffopt .ffic svg[width="28"]{width:28px;height:28px}
+.ffsh{flex:none;color:var(--muted)}
+.folsec h3{margin:6px 0 0;font-family:var(--title);font-size:24px;color:var(--ink)}
+.ffsug{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;scrollbar-width:none}.ffsug::-webkit-scrollbar{display:none}
+.ffcard{position:relative;flex:0 0 160px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 12px 14px;text-align:center}
+.ffcard .ffav{cursor:pointer}.ffcard .ffav .avatar{width:72px;height:72px}
+.ffcard b{font-family:var(--display);font-weight:800;font-size:17px;margin-top:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ffcard small{color:var(--muted);font-weight:700;min-height:1.2em}.ffcard .folb{margin-top:6px;width:100%}
+.ffno{position:absolute;top:6px;right:6px;width:30px;height:30px;border:0;background:none;color:var(--muted);font-size:16px;font-weight:800;cursor:pointer;border-radius:8px}
+.ajrow .ffno{position:static;flex:none}
+.folb{font-size:14px;padding:8px 14px;letter-spacing:.04em}.folb.sm{flex:none}
+.fllist{padding:6px 14px;display:flex;flex-direction:column}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -6240,12 +6261,12 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
-window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,2500);window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,2500);setTimeout(folNotice,3500);window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
@@ -6603,7 +6624,12 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
 
 /* ---------- profil murid: kode pemulihan & hapus akun ---------- */
 const _rP2=renderProfile;
-renderProfile=function(){if(FBX.user&&P&&!isT())P.unlimited=false;_rP2();const su=$('#sUnl');if(su&&FBX.user&&!isT())su.closest('.set').remove();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
+function profFollowRow(){const pt=$('#profileTop');if(!pt||$('#pFollow'))return;const fc=FOL.following,fr=FOL.followers;
+  pt.insertAdjacentHTML('beforeend',`<div class="pfollow" id="pFollow"><button class="pfc" data-fl="following"><b>${fc?fc.length:'–'}</b><span>Mengikuti</span></button><button class="pfc" data-fl="followers"><b>${fr?fr.length:'–'}</b><span>Pengikut</span></button></div>
+   <div class="pfbtns"><button class="ghost press" id="pAddFr"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="9" cy="8" r="4" fill="currentColor"/><path d="M2 20 C2 15 5 13 9 13 C13 13 16 15 16 20Z M19 7 V13 M16 10 H22" fill="currentColor" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>TAMBAHKAN TEMAN</button><button class="ghost press" id="pShare" aria-label="Bagikan profil">${shareIcon}</button></div>`);
+  pt.querySelectorAll('[data-fl]').forEach(b=>b.onclick=()=>openFollowList(b.dataset.fl));$('#pAddFr').onclick=openFindFriends;$('#pShare').onclick=shareProfile;
+  if(!fc||!fr)folLoad().then(()=>{const r=$('#pFollow');if(r){r.querySelector('[data-fl=following] b').textContent=FOL.following.length;r.querySelector('[data-fl=followers] b').textContent=FOL.followers.length}}).catch(()=>{})}
+renderProfile=function(){if(FBX.user&&P&&!isT())P.unlimited=false;_rP2();if(FBX.user&&P&&!isT())profFollowRow();const su=$('#sUnl');if(su&&FBX.user&&!isT())su.closest('.set').remove();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
   host.insertAdjacentHTML('beforeend',googleOnly(FBX.user)?'<div class="prow"><button class="linkbtn" id="fbDel" style="color:var(--bad);flex:1">Hapus akun</button></div>':`<div class="prow"><span style="width:44px;height:44px;flex:none">${ICONS.key}</span><span class="grow"><b>Kode pemulihan</b><small>${m.rc?`Dipakai jika lupa sandi. <b id="rcShow" style="font-family:var(--title);letter-spacing:.1em">••••-••••</b>`:'Belum ada. Buat kode supaya akunmu bisa dipulihkan jika lupa sandi.'}</small></span>${m.rc?'<button class="smallbtn" id="rcEye">Lihat</button>':'<button class="smallbtn" id="rcMake">Buat kode</button>'}</div>
    <div class="prow"><button class="linkbtn" id="fbDel" style="color:var(--bad);flex:1">Hapus akun</button></div>`);
   const ey=$('#rcEye');if(ey)ey.onclick=()=>{const s=$('#rcShow');const on=s.textContent.includes('•');s.textContent=on?m.rc:'••••-••••';ey.textContent=on?'Sembunyikan':'Lihat'};
@@ -6820,8 +6846,9 @@ async function openUserProfile(uid,fb){if(!P||!FBX.user)return;fb=fb||{};
     <div class="upvs"><div><span class="upmini">${avatarSVG(P.avatar||null)}</span><b>Kamu</b></div><span class="ajv">VS</span><div><span class="upmini">${avatarSVG(th.av||null)}</span><b>${esc(th.name)}</b></div></div>
     <div class="cmpwrap"><div class="chhead"><b>XP 7 hari terakhir</b><span><i class="lg" style="background:#1CB0F6"></i>Kamu ${ch.sa}</span><span><i class="lg" style="background:#FF9600"></i>${esc(th.name)} ${ch.sb}</span></div>${ch.svg}</div>
     <div class="ctable"><div class="ctr ch"><span>Kamu</span><span></span><span>${esc(th.name)}</span></div>${rows}</div><p class="upmsg">${cmpLine(me,th,th.name)}</p>
-    <div class="acts"><button class="ghost" id="upClose">Tutup</button><button class="primary" id="upDuel">Tantang</button></div>`;
-  hydrate(box);$('#upX').onclick=closeModal;$('#upClose').onclick=closeModal;
+    <div class="acts"><span id="upFol"></span><button class="primary" id="upDuel">Tantang</button></div>`;
+  hydrate(box);$('#upX').onclick=closeModal;
+  {const fo={uid,name:th.name,av:th.av||null,user:th.user||''};const put=()=>{const h=$('#upFol');if(!h)return;h.innerHTML=folBtn(fo);folBind(h,[fo])};if(FOL.following)put();else folLoad().then(put).catch(()=>{})}
   $('#upDuel').onclick=()=>{closeModal();const f={uid,name:th.name,av:th.av||null};openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(uid)}"]`);ajakInvite(f,ab||null)},350)}}
 window.openUserProfile=openUserProfile;
 /* ---------- AJAK TANDING (seperti Duolingo): bagikan, cari nama pengguna, undang teman ---------- */
@@ -6931,10 +6958,66 @@ window.renderFQ=async function(box){if(!box)return;if(!FBX.user||isT()||!P){box.
       window.renderFQ(box)}catch(e){b.disabled=false;toast('lock',fbErr(e))}})};
 async function fqNotice(){try{if(!FBX.user||isT()||!P)return;await fqLoad();await window.fqSync();const me=FBX.user.uid;
   FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if((+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0))toast('team',`${nm} mencolekmu! Ayo selesaikan misi teman.`);else if(d['gift_'+o]&&!d['giftGot_'+me])toast('gem',`${nm} mengirim hadiah. Ambil di menu Misi.`)})}catch(e){}}
+/* ---------- teman: ikuti pemain JELAS mana pun ---------- */
+const FOL={following:null,followers:null};window.FOL=FOL;
+const IKUTI_KEY=(()=>{try{const q=new URLSearchParams(location.search),v=q.get('ikuti');if(v){sessionStorage.setItem('jk_ikuti',v.toLowerCase());q.delete('ikuti');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash)}}catch(e){}return 1})();
+async function folLoad(){const me=FBX.user.uid;const [a,b]=await Promise.all([FB.db.collection('fol').where('from','==',me).get(),FB.db.collection('fol').where('to','==',me).get()]);
+  FOL.following=a.docs.map(d=>{const x=d.data();return {uid:x.to,name:x.toName,av:x.toAv||null,user:x.toUser||'',at:x.at}});
+  FOL.followers=b.docs.map(d=>{const x=d.data();return {uid:x.from,name:x.fromName,av:x.fromAv||null,user:x.fromUser||'',at:x.at}});return FOL}
+const isFollowing=uid=>!!(FOL.following||[]).some(x=>x.uid===uid);
+async function folDo(f,on){const me=FBX.user.uid,id=me+'_'+f.uid;if(f.uid===me)return;
+  if(on){const d={from:me,to:f.uid,at:Date.now(),fromName:P.name,fromAv:P.avatar||null,fromUser:(FBX.me||{}).username||'',toName:f.name||'',toAv:f.av||null,toUser:f.user||f.username||''};await FB.db.doc('fol/'+id).set(d);
+    FOL.following=(FOL.following||[]).filter(x=>x.uid!==f.uid).concat([{uid:f.uid,name:d.toName,av:d.toAv,user:d.toUser,at:d.at}]);notifyServer('follow',id)}
+  else{await FB.db.doc('fol/'+id).delete();FOL.following=(FOL.following||[]).filter(x=>x.uid!==f.uid)}}
+async function folRemoveFollower(uid){await FB.db.doc('fol/'+uid+'_'+FBX.user.uid).delete();FOL.followers=(FOL.followers||[]).filter(x=>x.uid!==uid)}
+function folBtn(f,small){const on=isFollowing(f.uid);return `<button class="${on?'ghost':'primary'} press folb${small?' sm':''}" data-follow="${esc(f.uid)}" aria-pressed="${on}">${on?'✓ DIIKUTI':'IKUTI'}</button>`}
+function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach(b=>b.onclick=async e=>{e.stopPropagation();const f=list.find(x=>x.uid===b.dataset.follow);if(!f)return;const on=!isFollowing(f.uid);b.disabled=true;
+  try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
+const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+async function shareProfile(){const u=(FBX.me||{}).username||P.user;if(!u){toast('lock','Nama penggunamu belum ada.');return}
+  const link=`${location.origin}${location.pathname}?ikuti=${encodeURIComponent(u)}`,text=`Ikuti aku di JELAS, yuk! Nama penggunaku @${u}. ${link}`;
+  try{if(navigator.share){await navigator.share({title:'JELAS',text});return}}catch(e){if(e&&e.name==='AbortError')return}copyText(text)}
+function folOverlay(id,html){let el=$('#'+id);if(!el){document.body.insertAdjacentHTML('beforeend',`<div class="onb folov" id="${id}" hidden role="dialog" aria-modal="true"></div>`);el=$('#'+id)}el.innerHTML=html;el.hidden=false;el.scrollTop=0;hydrate(el);return el}
+async function openFindFriends(){if(!FBX.user)return;
+  const el=folOverlay('ffind',`<div class="onbin" style="max-width:600px;gap:16px"><div class="onbbar"><button class="back" id="ffX" aria-label="Kembali">←</button></div><h2 class="folh">Temukan temanmu</h2>
+    <div class="ffopt"><span class="ffic" style="background:#FFF4D6;color:#E8A100"><svg viewBox="0 0 24 24" width="28" height="28"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5 L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><input id="ffQ" placeholder="Cari nama pengguna" autocapitalize="none" autocomplete="off" spellcheck="false" aria-label="Nama pengguna teman"><button class="ghost press" id="ffGo">Cari</button></div>
+    <div id="ffRes"></div>
+    <button class="ffopt press" id="ffShare"><span class="ffic">${avatarSVG(P.avatar||null)}</span><b>Bagikan tautan profilmu</b><span class="ffsh">${shareIcon}</span></button>
+    <div class="folsec"><h3>Usulan teman</h3></div><div class="ffsug" id="ffSug"><p class="note">Memuat…</p></div></div>`);
+  $('#ffX').onclick=()=>{el.hidden=true;if(curTab==='profile')renderProfile()};$('#ffShare').onclick=shareProfile;
+  const search=async()=>{const u=$('#ffQ').value.trim().toLowerCase().replace(/^@/,''),out=$('#ffRes');if(!u){out.innerHTML='';return}out.innerHTML='<p class="note">Mencari…</p>';
+    try{const s=await FB.db.doc('handles/'+u).get();if(!s.exists||s.data().uid===FBX.user.uid){out.innerHTML=`<p class="note">${s.exists?'Itu nama penggunamu sendiri.':'@'+esc(u)+' tidak ditemukan.'}</p>`;return}
+      const f={uid:s.data().uid,name:s.data().name,av:s.data().av||null,user:u};out.innerHTML=`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>@${esc(u)}</small></span>${folBtn(f,true)}</div>`;folBind(out,[f]);bindProfTap2(out,[f])}catch(e){out.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`}};
+  $('#ffGo').onclick=search;$('#ffQ').onkeydown=e=>{if(e.key==='Enter')search()};
+  try{if(!FOL.following)await folLoad()}catch(e){}
+  let base=[];try{base=await friendsData()}catch(e){}
+  const seen=new Set([FBX.user.uid,...(FOL.following||[]).map(x=>x.uid),...(P.ffNo||[])]);const sug=[];
+  (FOL.followers||[]).forEach(f=>{if(!seen.has(f.uid)){seen.add(f.uid);sug.push(Object.assign({sub:'Mengikutimu'},f))}});
+  base.forEach(f=>{if(!seen.has(f.uid)){seen.add(f.uid);sug.push(f)}});
+  const box=$('#ffSug');if(!box)return;
+  box.innerHTML=sug.length?sug.slice(0,20).map(f=>`<div class="ffcard" data-card="${esc(f.uid)}"><button class="ffno" data-no="${esc(f.uid)}" aria-label="Sembunyikan">✕</button><span class="ffav tapprof">${avSpan({name:f.name,avatar:f.av})}</span><b>${esc(f.name)}</b><small>${esc(f.sub||'')}</small>${folBtn(f,true)}</div>`).join(''):'<p class="note">Belum ada usulan. Cari teman dengan nama penggunanya, atau bagikan tautan profilmu.</p>';
+  folBind(box,sug);box.querySelectorAll('[data-no]').forEach(b=>b.onclick=()=>{P.ffNo=(P.ffNo||[]).concat([b.dataset.no]).slice(-200);save();b.closest('.ffcard').remove()});
+  box.querySelectorAll('.ffcard .ffav').forEach(a=>a.onclick=()=>{const f=sug.find(x=>x.uid===a.closest('.ffcard').dataset.card);el.hidden=true;openUserProfile(f.uid,f)})}
+function bindProfTap2(root,list){root.querySelectorAll('.ajrow').forEach(r=>{const b=r.querySelector('[data-follow]');if(!b)return;const f=list.find(x=>x.uid===b.dataset.follow);if(!f)return;r.querySelectorAll('.avatar,.grow').forEach(t=>{t.classList.add('tapprof');t.onclick=()=>{document.querySelectorAll('.folov').forEach(o=>o.hidden=true);openUserProfile(f.uid,f)}})})}
+async function openFollowList(tab){if(!FBX.user)return;try{await folLoad()}catch(e){}
+  const draw=()=>{const list=tab==='followers'?FOL.followers:FOL.following;
+    const el=folOverlay('flist',`<div class="onbin" style="max-width:600px;gap:14px"><div class="onbbar"><button class="back" id="flX" aria-label="Kembali">←</button></div><h2 class="folh">${esc(P.name)}</h2>
+      <div class="rptabs" role="tablist"><button data-ft="following" aria-pressed="${tab==='following'}">MENGIKUTI · ${FOL.following.length}</button><button data-ft="followers" aria-pressed="${tab==='followers'}">PENGIKUT · ${FOL.followers.length}</button></div>
+      <div class="card fllist">${list.length?list.slice().sort((a,b)=>(b.at||0)-(a.at||0)).map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${f.user?'@'+esc(f.user):''}</small></span>${tab==='followers'&&!isFollowing(f.uid)?folBtn(f,true):tab==='following'?folBtn(f,true):'<span class="pill ok">Saling ikuti</span>'}${tab==='followers'?`<button class="ffno" data-rm="${esc(f.uid)}" aria-label="Hapus pengikut">✕</button>`:''}</div>`).join(''):`<p class="note" style="margin:0">${tab==='followers'?'Belum ada pengikut.':'Kamu belum mengikuti siapa pun.'}</p>`}</div>
+      <button class="primary press" id="flAdd">TAMBAHKAN TEMAN</button></div>`);
+    $('#flX').onclick=()=>{el.hidden=true;if(curTab==='profile')renderProfile()};$('#flAdd').onclick=()=>{el.hidden=true;openFindFriends()};
+    el.querySelectorAll('[data-ft]').forEach(b=>b.onclick=()=>{tab=b.dataset.ft;draw()});folBind(el,list,()=>{});bindProfTap2(el,list);
+    el.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.rm);openModal(`<h3>Hapus ${esc(f.name)} dari pengikutmu?</h3><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{try{await folRemoveFollower(f.uid);closeModal();draw()}catch(e){closeModal();toast('lock',fbErr(e))}}})};
+  draw()}
+async function folNotice(){try{const v=sessionStorage.getItem('jk_ikuti');if(v){sessionStorage.removeItem('jk_ikuti');const s=await FB.db.doc('handles/'+v).get();if(s.exists&&s.data().uid!==FBX.user.uid){if(!FOL.following)await folLoad();openUserProfile(s.data().uid,{name:s.data().name,av:s.data().av||null,user:v});return}}
+  await folLoad();const last=P.folSeen||0,news=FOL.followers.filter(f=>(f.at||0)>last);P.folSeen=Date.now();save();
+  if(news.length&&last)toast('team',news.length===1?`${news[0].name} mulai mengikutimu.`:`${news[0].name} dan ${news.length-1} lainnya mulai mengikutimu.`)}catch(e){}}
 async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
   (P.friends||[]).forEach(f=>map.set(f.uid,{uid:f.uid,name:f.name,av:f.av,sub:'Lawan tanding'}));
   if(m.classId){try{const q=await FB.db.collection('classes/'+m.classId+'/board').get();q.docs.forEach(d=>{if(d.id===me)return;const x=d.data();const o=map.get(d.id)||{uid:d.id};map.set(d.id,Object.assign(o,{name:x.name,av:x.av||o.av||null,sub:'Teman sekelas'}))})}catch(e){}}
+  try{if(!FOL.following)await folLoad();(FOL.following||[]).forEach(f=>{const o=map.get(f.uid)||{uid:f.uid};map.set(f.uid,Object.assign({name:f.name,av:f.av||null,user:f.user,sub:'Kamu ikuti'},o))})}catch(e){}
   return [...map.values()].filter(f=>f.name)}
+window.friendsData=friendsData;
 /* main berdua offline di satu HP (layar terbagi) */
 function duoCard(){const v=$('#vTeam');if(!v||!P)return;let el=$('#duoCard');const rc=v.querySelector('.roomcard');
   if(!el){(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card duocard" id="duoCard"></div>');el=$('#duoCard')}

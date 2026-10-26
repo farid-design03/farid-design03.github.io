@@ -299,6 +299,12 @@ export default {
         return reply(200, { ok: true, sent }, origin);
       }
       if (!/^[A-Za-z0-9_-]{6,120}$/.test(id || '')) return reply(400, { error: 'id tidak valid' }, origin);
+      if (type === 'follow') {
+        const d = await getDoc('fol/' + id);
+        if (!d || d.from !== uid) return reply(403, { error: 'Bukan pengikut ini' }, origin);
+        const sent = await pushTo(d.to, { type: 'follow', title: `${d.fromName || 'Seseorang'} mulai mengikutimu`, body: 'Buka JELAS untuk mengikuti balik.' });
+        return reply(200, { ok: true, sent }, origin);
+      }
       if (type === 'nudge') {
         const d = await getDoc('fq/' + id);
         if (!d || !(d.members || []).includes(uid)) return reply(403, { error: 'Bukan anggota misi teman ini' }, origin);
