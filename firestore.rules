@@ -117,6 +117,12 @@ service cloud.firestore {
     }
 
     // Nama pengguna murid untuk fitur "Cari teman" (hanya bisa dicari dengan nama persis, tidak bisa didaftar).
+    // Catatan pembayaran: hanya ditulis server pembayaran (Cloudflare Worker).
+    match /payments/{id} {
+      allow get: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if isAdmin();
+      allow write: if false;
+    }
     match /handles/{username} {
       allow get: if signedIn();
       allow list: if false;

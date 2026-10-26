@@ -1517,6 +1517,17 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .sarate b{font-family:var(--title);font-size:20px}.sarate small{font-size:11px;font-weight:800}
 .saq{font-weight:700;font-size:15px;line-height:1.35}.sameta{display:block;color:var(--muted,#777);font-weight:700;font-size:12px;margin-top:3px}
 .saans{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.saans .pill{white-space:normal}
+.payplans{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:4px 0}
+.payplan{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px 10px 12px;border:2px solid var(--line,#E5E5E5);border-bottom-width:4px;border-radius:16px;background:#fff;font:inherit;cursor:pointer;color:var(--ink,#3C3C3C)}
+.payplan b{font-size:15px}.payplan .pp-price{font-family:var(--title);font-size:22px;color:var(--ink,#3C3C3C)}.payplan small{color:var(--muted,#777);font-weight:700;font-size:12px;text-align:center}
+.payplan[aria-checked=true]{border-color:#84D8FF;background:#DDF4FF}.payplan[aria-checked=true] .pp-price{color:#1899D6}
+.pp-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#FF9600;color:#fff;font-size:11px;font-weight:800;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.pro-mini .pl{padding:6px 0}.payways{margin:0}
+.payspin{width:44px;height:44px;border-radius:50%;border:5px solid #DDF4FF;border-top-color:#1CB0F6;animation:spin 1s linear infinite}
+.adpay-on{display:flex;align-items:center;gap:8px;cursor:pointer}.adpay-on input{width:20px;height:20px}
+.adplans{display:flex;flex-direction:column;gap:10px}.adplan{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;border:2px solid var(--line,#E5E5E5);border-radius:14px}.adplan .tfield{min-width:0}.adplan input{min-width:0;width:100%;box-sizing:border-box}.adplan .tfield:first-child{grid-column:1/-1}
+@media(min-width:640px){.adplan{grid-template-columns:1.4fr .8fr 1fr}.adplan .tfield:first-child{grid-column:auto}}
+.wlegal{margin:0;text-align:center;font-size:13px;font-weight:700}.wlegal a{color:var(--muted,#777);text-decoration:none}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -6061,7 +6072,7 @@ showWelcome=function(){_showWelcome();const sc=document.querySelector('#auth .ws
   if(!$('#wTeacher'))document.querySelector('#auth .wbtns').insertAdjacentHTML('beforeend','<button class="linkbtn" id="wTeacher"></button>');
   const wl=$('#wLogin');if(wl&&!$('#wGoogle')){wl.insertAdjacentHTML('afterend',gBtnHTML('wGoogle'));$('#wGoogle').onclick=e=>fbGoogle(e.currentTarget)}
   const w=$('#wTeacher');w.textContent='Saya guru, daftarkan kelas';w.onclick=()=>{closeAuth();teacherSetup()};
-  if(!$('#wPriv'))document.querySelector('#auth .wbtns').insertAdjacentHTML('beforeend','<a class="linkbtn" id="wPriv" href="privacy.html" target="_blank" rel="noopener" style="font-size:13px;text-align:center;text-decoration:none">Kebijakan privasi</a>')};
+  if(!$('#wPriv'))document.querySelector('#auth .wbtns').insertAdjacentHTML('beforeend','<p class="wlegal"><a id="wPriv" href="privacy.html" target="_blank" rel="noopener">Kebijakan privasi</a> · <a href="terms.html" target="_blank" rel="noopener">Syarat &amp; ketentuan</a></p>')};
 const _showLogin=showLogin;
 showLogin=function(pf){_showLogin(pf);const tc=document.querySelector('#auth .tcard');if(tc&&!$('#lgGoogle')){tc.insertAdjacentHTML('beforebegin',gBtnHTML('lgGoogle')+'<p class="gor"><span>atau pakai nama pengguna</span></p>');$('#lgGoogle').onclick=e=>fbGoogle(e.currentTarget)}const l=document.querySelector('label[for=lgUser]');if(l)l.textContent='Nama pengguna atau email';
   $('#lgUser').placeholder='Murid: nama pengguna · Guru: email';$('#lgPass').placeholder='Murid: 4 angka · Guru: sandi';
@@ -6141,11 +6152,50 @@ function proAsk(){const wa=String(FBX.cfg.wa||'').replace(/\D/g,'').replace(/^0/
    <p class="note">${FBX.cfg.price?`<b>${esc(FBX.cfg.price)}</b>. `:''}Setelah pembayaran, admin mengaktifkan Pro untuk email <b>${esc(mail)}</b>. Fitur langsung terbuka tanpa perlu keluar.</p>
    <div class="acts"><button class="ghost" id="mNo">Nanti saja</button>${wa?`<a class="primary" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">Hubungi admin</a>`:''}</div>`);
   $('#mNo').onclick=closeModal}
+/* ---------- pembayaran otomatis paket Pro (Xendit) ---------- */
+const PLANS_DEF=[{id:'b1',name:'1 bulan',days:30,price:25000},{id:'b6',name:'6 bulan',days:183,price:120000},{id:'b12',name:'1 tahun',days:365,price:200000}];
+const rupiah=n=>'Rp'+Math.round(+n||0).toLocaleString('id-ID');
+function payPlans(){const l=Array.isArray(FBX.cfg.plans)&&FBX.cfg.plans.length?FBX.cfg.plans:PLANS_DEF;
+  return l.map(p=>({id:String(p.id),name:String(p.name||''),days:Math.round(+p.days||0),price:Math.round(+p.price||0)})).filter(p=>p.id&&p.days>0&&p.price>=10000)}
+const payOn=()=>!!(FBX.cfg.payOn&&FB.cfg&&FB.cfg.pushUrl&&payPlans().length);
+const PAYRET=(()=>{try{const q=new URLSearchParams(location.search),v=q.get('bayar');if(v){q.delete('bayar');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash)}return v}catch(e){return null}})();
+const _proAskWA=proAsk;
+proAsk=function(){if(!payOn())return _proAskWA();const plans=payPlans(),mail=(FBX.user&&FBX.user.email)||'';
+  const base=plans.slice().sort((a,b)=>a.days-b.days)[0],perDay=base.price/base.days;
+  const save=p=>Math.round((1-(p.price/p.days)/perDay)*100);const best=plans.reduce((a,b)=>save(b)>save(a)?b:a,plans[0]);let sel=(plans.find(p=>p.id===best.id)||plans[0]).id;
+  const wa=String(FBX.cfg.wa||'').replace(/\D/g,'').replace(/^0/,'62');const paid=isPaid();
+  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.trophy||''}</span><h3>${paid?'Perpanjang JELAS Pro':'JELAS Pro'}</h3><p>${paid?`Pro aktif sampai ${fmtTs(FBX.me.proUntil)}. Perpanjangan ditambahkan setelah tanggal itu.`:(trialUntil()&&!inTrial()?`Masa coba gratismu berakhir ${fmtTs(trialUntil())}. `:'')+'Buka semua fitur guru:'}</p></div>
+   ${paid?'':`<div class="plist pro-mini">${PRO_LIST.map(x=>`<div class="pl"><span style="width:26px;flex:none">${ICONS[x[0]]||''}</span><span class="grow"><b>${x[1]}</b></span></div>`).join('')}</div>`}
+   <div class="payplans" role="radiogroup" aria-label="Pilih paket">${plans.map(p=>{const s=save(p);return `<button class="payplan press" role="radio" data-pp="${esc(p.id)}" aria-checked="${p.id===sel}">${p.id===best.id&&s>0?'<span class="pp-tag">Paling hemat</span>':''}<b>${esc(p.name)}</b><span class="pp-price">${rupiah(p.price)}</span><small>${p.days>=60?`≈ ${rupiah(p.price/p.days*30)}/bulan`:`${p.days} hari`}${s>0?` · hemat ${s}%`:''}</small></button>`}).join('')}</div>
+   <p class="note payways">Bayar dengan <b>QRIS</b> (semua e-wallet &amp; m-banking), <b>DANA</b>, <b>OVO</b>, <b>ShopeePay</b>, atau <b>transfer bank</b>. Pro aktif otomatis untuk <b>${esc(mail)}</b> setelah pembayaran berhasil.</p>
+   <p class="note" id="payErr" style="color:var(--bad);font-weight:700;margin:0"></p>
+   <div class="acts"><button class="ghost" id="mNo">Nanti saja</button><button class="primary press" id="payGo"></button></div>
+   <p class="note" style="text-align:center;margin:0">${wa?`Ada kendala? <a href="https://wa.me/${wa}?text=${encodeURIComponent('Halo Admin JELAS, saya ada kendala pembayaran paket Pro.\nEmail guru: '+mail)}" target="_blank" rel="noopener">Hubungi admin</a> · `:''}<a href="terms.html" target="_blank" rel="noopener">Syarat &amp; pengembalian dana</a></p>`);
+  const sync=()=>{document.querySelectorAll('[data-pp]').forEach(b=>b.setAttribute('aria-checked',b.dataset.pp===sel));const p=plans.find(x=>x.id===sel);$('#payGo').textContent=`Bayar ${rupiah(p.price)}`};sync();
+  document.querySelectorAll('[data-pp]').forEach(b=>b.onclick=()=>{sel=b.dataset.pp;tone([660],.03);sync()});
+  $('#mNo').onclick=closeModal;
+  $('#payGo').onclick=async()=>{const g=$('#payGo'),er=$('#payErr');g.disabled=true;g.textContent='Membuka pembayaran…';er.textContent='';
+    try{const t=await FBX.user.getIdToken();const r=await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify({type:'pay',plan:sel})});
+      const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw new Error(j.error||'Server pembayaran tidak menjawab.');
+      try{sessionStorage.setItem('payGo',String(Date.now()))}catch(e){}location.href=j.url}
+    catch(e){g.disabled=false;sync();er.textContent=/fetch|network/i.test(String(e.message))?'Tidak tersambung. Periksa internet, lalu coba lagi.':e.message}}};
+function payReturn(){const v=PAYRET;if(!v||payReturn.done)return;payReturn.done=true;
+  if(v!=='ok'){toast('lock','Pembayaran dibatalkan. Kamu bisa mencoba lagi kapan saja.');return}
+  const okNow=()=>isPaid()&&!(FBX.me&&FBX.me.pay);
+  const success=()=>{openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:120px;height:120px;margin:0 auto"></div><h3>Terima kasih! JELAS Pro aktif</h3><p>Berlaku sampai <b>${fmtTs(FBX.me.proUntil)}</b>. Bukti pembayaran dikirim ke emailmu.</p></div><div class="acts"><button class="primary" id="mNo">Mulai pakai</button></div>`);hydrate($('#modal'));$('#mNo').onclick=closeModal;try{sfx.ok()}catch(e){}};
+  if(okNow()){success();return}
+  openModal(`<div style="text-align:center"><div class="payspin" style="margin:6px auto 12px"></div><h3>Memastikan pembayaran…</h3><p id="payWait">Biasanya kurang dari 1 menit. Jangan tutup aplikasi dulu.</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);
+  $('#mNo').onclick=()=>{clearInterval(t);closeModal()};let n=0;
+  const t=setInterval(()=>{n++;if(okNow()){clearInterval(t);success();return}
+    if(n===60){const w=$('#payWait');if(w)w.innerHTML='Pembayaranmu masih diproses bank. Pro akan aktif otomatis, kamu boleh menutup layar ini. Jika lebih dari 1 jam belum aktif, hubungi admin.'}
+    if(n>600)clearInterval(t)},1000)}
+const _fETpay=fbEnterTeacher;
+fbEnterTeacher=async function(u,me){const r=await _fETpay(u,me);if(PAYRET)setTimeout(payReturn,600);return r};
 const _go=go;
 go=function(tab){if(isT()&&PRO_TABS.includes(tab)&&!isPro()){proAsk();return}_go(tab);const n=document.querySelector('.nav[aria-current="page"]');if(n&&innerWidth<1000)try{n.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}};
 licCard=function(){const p=isPro(),tr=inTrial();return `<div class="tcard" id="licCard"><h3>Paket</h3><div class="plist"><div class="pl"><span class="grow"><b>Paket sekarang</b></span>${tr?'<span class="pill ok">Coba gratis Pro</span>':p?'<span class="pill ok">Pro</span>':'<span class="pill mute">Gratis</span>'}</div>
   ${p?`<div class="pl"><span class="grow"><b>${tr?'Masa coba berakhir':'Berlaku sampai'}</b></span><span class="pill mute">${fmtTs(tr?trialUntil():FBX.me.proUntil)}${tr?` (${trialLeft()} hari lagi)`:''}</span></div>`:`<div class="pl"><span class="grow"><b>Batas murid</b></span><span class="pill mute">${FREE_MAX} murid</span></div>`}</div>
-  ${p&&!tr?'':'<button class="primary" id="licGo" style="align-self:flex-start">Lihat paket Pro</button>'}</div>`};
+  ${p&&!tr?(payOn()?'<button class="ghost" id="licGo" style="align-self:flex-start">Perpanjang Pro</button>':''):'<button class="primary" id="licGo" style="align-self:flex-start">Lihat paket Pro</button>'}</div>`};
 bindLicCard=function(){const b=$('#licGo');if(b)b.onclick=proAsk};
 
 /* ---------- kartu kode kelas ---------- */
@@ -6695,11 +6745,25 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
     <div class="tfield"><label for="adPrice">Harga Pro yang ditampilkan ke guru</label><input id="adPrice" placeholder="Contoh: Rp49.000 per bulan" value="${esc(FBX.cfg.price||'')}"></div>
     <div class="tfield"><label for="adAnn">Pengumuman untuk semua guru (kosongkan jika tidak ada)</label><textarea id="adAnn" class="note-area">${esc(FBX.cfg.announce||'')}</textarea></div>
     <button class="primary" id="adCfg" style="align-self:flex-start">Simpan pengaturan</button></div>
+   <div class="tcard"><h3>Pembayaran otomatis (Xendit)</h3><p class="sub" style="margin:0">Guru membayar sendiri lewat QRIS, e-wallet, atau transfer bank, lalu Pro aktif otomatis. Harga minimal Rp10.000.</p>
+    <label class="adpay-on"><input type="checkbox" id="adPayOn" ${FBX.cfg.payOn?'checked':''}> <b>Aktifkan tombol Bayar untuk guru</b></label>
+    <div class="adplans">${[0,1,2].map(i=>{const p=payPlans()[i]||PLANS_DEF[i]||{};return `<div class="adplan"><div class="tfield"><label for="apN${i}">Nama paket ${i+1}</label><input id="apN${i}" value="${esc(p.name||'')}" placeholder="Contoh: 1 bulan"></div><div class="tfield"><label for="apD${i}">Lama (hari)</label><input id="apD${i}" type="number" min="1" value="${p.days||''}"></div><div class="tfield"><label for="apP${i}">Harga (Rp)</label><input id="apP${i}" type="number" min="10000" step="1000" value="${p.price||''}"></div></div>`}).join('')}</div>
+    <p class="note" style="margin:0">Kosongkan harga untuk menyembunyikan paket.</p><p class="note" id="adPayErr" style="color:var(--bad);font-weight:700;margin:0"></p>
+    <button class="primary" id="adPaySave" style="align-self:flex-start">Simpan paket</button>
+    <h3 style="margin-top:8px">Pembayaran terakhir</h3><div id="adPays"><p class="note">Memuat…</p></div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="adTeach">Buka Mode Guru</button><button class="ghost" id="adOut" style="color:var(--bad)">Keluar</button></div></div>`;
   hydrate(el);
   $('#adOut').onclick=logout;
   $('#adTeach').onclick=async()=>{setSession({role:'teacher',uid:u.uid});el.hidden=true;busy(true);let s=null;try{s=await FB.db.doc('users/'+u.uid).get()}catch(e){}busy(false);
     if(s&&s.exists&&s.data().role==='teacher'){FBX.me=s.data();fbEnterTeacher(u,FBX.me)}else fbTeacherForm(u)};
+  $('#adPaySave').onclick=()=>{const ids=['b1','b6','b12'],plans=[];let bad='';
+    [0,1,2].forEach(i=>{const name=$('#apN'+i).value.trim(),days=Math.round(+$('#apD'+i).value||0),price=Math.round(+$('#apP'+i).value||0);if(!price)return;
+      if(!name||days<1)bad=`Paket ${i+1}: isi nama dan lama hari.`;else if(price<10000)bad=`Paket ${i+1}: harga minimal Rp10.000.`;else plans.push({id:ids[i],name,days,price})});
+    const on=$('#adPayOn').checked;if(!bad&&on&&!plans.length)bad='Isi minimal satu paket.';$('#adPayErr').textContent=bad;if(bad)return;
+    const c={payOn:on,plans,upd:Date.now()};FB.db.doc('config/app').set(c,{merge:true}).then(()=>{FBX.cfg=Object.assign({},FBX.cfg,c);toast('check',on?'Paket tersimpan. Tombol Bayar aktif untuk guru.':'Paket tersimpan. Tombol Bayar belum aktif.')}).catch(e=>toast('lock',fbErr(e)))};
+  FB.db.collection('payments').get().then(q=>{const list=q.docs.map(d=>d.data()).sort((a,b)=>(b.created||0)-(a.created||0)).slice(0,30);const el=$('#adPays');if(!el)return;
+    const paid=list.filter(x=>x.status==='PAID'),sum=paid.reduce((a,x)=>a+(+x.amount||0),0);
+    el.innerHTML=list.length?`<p class="sub" style="margin:0 0 8px">${paid.length} lunas · total ${rupiah(sum)} (sebelum potongan Xendit)</p><div class="tablewrap"><table class="ttable"><thead><tr><th>Tanggal</th><th>Guru</th><th>Paket</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>${list.map(x=>`<tr><td>${new Date(x.created||0).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="nm">${esc(x.email||'')}</td><td>${esc(x.planName||x.plan||'')}</td><td class="num">${rupiah(x.amount)}</td><td>${x.status==='PAID'?'<span class="pill ok">Lunas</span>':x.status==='EXPIRED'?'<span class="pill mute">Kedaluwarsa</span>':'<span class="pill mid">Menunggu</span>'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Belum ada pembayaran.</p>'}).catch(()=>{const el=$('#adPays');if(el)el.innerHTML='<p class="note">Belum bisa memuat. Pastikan aturan Firestore terbaru sudah dipasang.</p>'});
   $('#adCfg').onclick=()=>{const c={wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),upd:Date.now()};
     FB.db.doc('config/app').set(c,{merge:true}).then(()=>{FBX.cfg=Object.assign({},FBX.cfg,c);toast('check','Pengaturan aplikasi tersimpan.')}).catch(e=>toast('lock',fbErr(e)))};
   let rows=[];

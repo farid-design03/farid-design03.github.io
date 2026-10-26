@@ -1,5 +1,6 @@
 // Pengirim notifikasi tantangan JELAS — Cloudflare Worker (gratis, tanpa kartu).
 // Rahasia yang dibutuhkan di Cloudflare: SERVICE_ACCOUNT = isi file kunci akun layanan Firebase (.json).
+// Pembayaran (Xendit): XENDIT_SECRET_KEY = Secret API key, XENDIT_CALLBACK_TOKEN = Webhook verification token.
 
 const ALLOWED_ORIGINS = ['https://farid-design03.github.io'];
 let SA = null, ACCESS = { token: null, exp: 0 }, JWKS = { keys: null, exp: 0 };
@@ -95,6 +96,96 @@ async function pushTo(uid, data) {
   return sent;
 }
 
+// Tulis sebagian kolom dokumen (dokumen dibuat jika belum ada).
+const fv = (v) => v == null ? { nullValue: null } : typeof v === 'boolean' ? { booleanValue: v } : typeof v === 'number'
+  ? (Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v }) : { stringValue: String(v) };
+async function patchDoc(path, obj, precondition) {
+  const mask = Object.keys(obj).map((k) => 'updateMask.fieldPaths=' + encodeURIComponent(k)).join('&');
+  const pre = precondition ? '&currentDocument.updateTime=' + encodeURIComponent(precondition) : '';
+  const r = await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/${path}?${mask}${pre}`, {
+    method: 'PATCH', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fv(v)])) }),
+  });
+  if (!r.ok) throw new Error('Firestore ' + r.status + ': ' + (await r.text()).slice(0, 200));
+}
+async function getDocRaw(path) {
+  const r = await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/${path}`, { headers: { Authorization: 'Bearer ' + await accessToken() } });
+  if (r.status === 404) return null;
+  const j = await r.json();
+  return { data: fieldsOf(j), updateTime: j.updateTime };
+}
+
+// ---------- Pembayaran paket Pro lewat Xendit ----------
+// Harga dibaca dari Firestore config/app.plans (diatur admin). Jika kosong, pakai harga bawaan ini.
+const DEFAULT_PLANS = [
+  { id: 'b1', name: '1 bulan', days: 30, price: 25000 },
+  { id: 'b6', name: '6 bulan', days: 183, price: 120000 },
+  { id: 'b12', name: '1 tahun', days: 365, price: 200000 },
+];
+const xAuth = (env) => 'Basic ' + btoa(env.XENDIT_SECRET_KEY + ':');
+async function plansNow() {
+  const cfg = (await getDoc('config/app')) || {};
+  const list = Array.isArray(cfg.plans) && cfg.plans.length ? cfg.plans : DEFAULT_PLANS;
+  return list.map((p) => ({ id: String(p.id), name: String(p.name || ''), days: Math.round(+p.days || 0), price: Math.round(+p.price || 0) }))
+    .filter((p) => p.id && p.days > 0 && p.price >= 10000);
+}
+async function createInvoice(env, uid, planId, origin) {
+  if (!env.XENDIT_SECRET_KEY) return { status: 503, body: { error: 'Pembayaran otomatis belum diaktifkan.' } };
+  const user = await getDoc('users/' + uid);
+  if (!user || user.role !== 'teacher') return { status: 403, body: { error: 'Paket Pro hanya untuk akun guru.' } };
+  const plan = (await plansNow()).find((p) => p.id === planId);
+  if (!plan) return { status: 400, body: { error: 'Paket tidak ditemukan.' } };
+  const now = Date.now(), pend = user.pay;
+  if (pend && pend.plan === plan.id && +pend.price === plan.price && +pend.exp > now + 15 * 60e3 && pend.url) return { status: 200, body: { url: pend.url, reused: true } };
+  const ext = `jelas_${uid}_${plan.id}_${now}`;
+  const site = (ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]) + '/';
+  const r = await fetch('https://api.xendit.co/v2/invoices', {
+    method: 'POST', headers: { Authorization: xAuth(env), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      external_id: ext, amount: plan.price, currency: 'IDR', invoice_duration: 86400,
+      description: `JELAS Pro ${plan.name} untuk ${user.email || ''}`.trim(),
+      payer_email: user.email || undefined,
+      customer: { given_names: String(user.name || 'Guru JELAS').slice(0, 50), email: user.email || undefined },
+      customer_notification_preference: { invoice_paid: ['email'] },
+      items: [{ name: `JELAS Pro ${plan.name}`, quantity: 1, price: plan.price, category: 'Langganan' }],
+      success_redirect_url: site + '?bayar=ok', failure_redirect_url: site + '?bayar=batal',
+    }),
+  });
+  const inv = await r.json();
+  if (!r.ok || !inv.invoice_url) return { status: 502, body: { error: 'Xendit menolak: ' + (inv.message || r.status) } };
+  const exp = inv.expiry_date ? Date.parse(inv.expiry_date) : now + 86400e3;
+  await patchDoc('payments/' + ext, { uid, plan: plan.id, planName: plan.name, days: plan.days, amount: plan.price, status: 'PENDING', invoiceId: inv.id, url: inv.invoice_url, email: user.email || '', created: now });
+  await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/users/${uid}?updateMask.fieldPaths=pay`, {
+    method: 'PATCH', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: { pay: { mapValue: { fields: { plan: fv(plan.id), price: fv(plan.price), url: fv(inv.invoice_url), exp: fv(exp), ext: fv(ext) } } } } }),
+  });
+  return { status: 200, body: { url: inv.invoice_url } };
+}
+// Kabar dari Xendit. Status selalu dicek ulang langsung ke Xendit sebelum Pro diaktifkan.
+async function xenditWebhook(request, env) {
+  if (!env.XENDIT_CALLBACK_TOKEN || request.headers.get('x-callback-token') !== env.XENDIT_CALLBACK_TOKEN) return new Response('forbidden', { status: 403 });
+  const body = await request.json().catch(() => ({}));
+  const ext = String(body.external_id || '');
+  if (!/^jelas_[A-Za-z0-9]+_[A-Za-z0-9]+_\d+$/.test(ext) || !body.id) return new Response('ignored', { status: 200 });
+  const r = await fetch('https://api.xendit.co/v2/invoices/' + encodeURIComponent(body.id), { headers: { Authorization: xAuth(env) } });
+  const inv = await r.json();
+  if (!r.ok || inv.external_id !== ext) return new Response('unknown invoice', { status: 200 });
+  const pay = await getDocRaw('payments/' + ext);
+  if (!pay) return new Response('no record', { status: 200 });
+  const p = pay.data;
+  if (p.status === 'PAID') return new Response('already', { status: 200 });
+  if (inv.status === 'EXPIRED') { await patchDoc('payments/' + ext, { status: 'EXPIRED' }); return new Response('expired', { status: 200 }); }
+  if (inv.status !== 'PAID' && inv.status !== 'SETTLED') return new Response('pending', { status: 200 });
+  if (+(inv.paid_amount ?? inv.amount) < +p.amount) return new Response('underpaid', { status: 200 });
+  // Kunci catatan pembayaran dulu supaya kabar ganda tidak menambah masa Pro dua kali.
+  try { await patchDoc('payments/' + ext, { status: 'PAID', paidAt: Date.now(), method: inv.payment_method || '', channel: inv.payment_channel || '' }, pay.updateTime); }
+  catch (e) { return new Response('race', { status: 200 }); }
+  const user = (await getDoc('users/' + p.uid)) || {};
+  const base = Math.max(Date.now(), +user.proUntil || 0);
+  await patchDoc('users/' + p.uid, { plan: 'pro', proUntil: base + (+p.days) * 864e5, pay: null, lastPay: ext });
+  return new Response('ok', { status: 200 });
+}
+
 // Pengingat tugas terjadwal (Cron Trigger setiap jam).
 async function reminders() {
   const now = new Date();
@@ -124,11 +215,16 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
+    if (request.method === 'POST' && new URL(request.url).pathname === '/xendit') {
+      try { if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT); return await xenditWebhook(request, env); }
+      catch (e) { return new Response('error: ' + String(e && e.message || e), { status: 500 }); }
+    }
     if (request.method !== 'POST') return reply(200, { ok: true, info: 'Pengirim notifikasi JELAS aktif.' }, origin);
     try {
       if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT);
       const uid = await verifyUser((request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, ''));
-      const { type, id, cid, tid } = await request.json();
+      const { type, id, cid, tid, plan } = await request.json();
+      if (type === 'pay') { const r = await createInvoice(env, uid, String(plan || ''), origin); return reply(r.status, r.body, origin); }
       if (type === 'task') {
         if (!cid || cid !== uid || !/^[A-Za-z0-9_-]{4,120}$/.test(tid || '')) return reply(403, { error: 'Bukan guru kelas ini' }, origin);
         const t = await getDoc(`classes/${cid}/tasks/${tid}`);
