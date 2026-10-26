@@ -1596,9 +1596,9 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 @media (max-width:360px){.lrow{gap:8px;padding:8px}.lrow .avatar{width:40px!important;height:40px!important;flex:none}.lrow .rk{width:24px}}
 /* ---- pemberitahuan ringkas di dasbor guru ---- */
 .nbox{display:flex;flex-direction:column;gap:8px}
-.nrow{display:flex;align-items:flex-start;gap:10px;background:#F2F8FF;border:2px solid #CFE6FF;border-radius:16px;padding:10px 10px 10px 14px}
-.nrow.warn{background:#FFF8E6;border-color:#FFE2A3}
-.ndot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--blue,#1CB0F6);margin-top:6px}.nrow.warn .ndot{background:#FF9600}
+.dnrow{display:flex;align-items:flex-start;gap:10px;background:#F2F8FF;border:2px solid #CFE6FF;border-radius:16px;padding:10px 10px 10px 14px}
+.dnrow.warn{background:#FFF8E6;border-color:#FFE2A3}
+.ndot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--blue,#1CB0F6);margin-top:6px}.dnrow.warn .ndot{background:#FF9600}
 .ntx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .ntx b{font-family:var(--display);font-weight:800;font-size:15px;color:var(--ink)}
 .ntx span{font-size:14px;line-height:1.4;color:#4B4B4B;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
@@ -1606,7 +1606,7 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .nacts{flex:none;display:flex;gap:6px;align-self:center}
 .nx{flex:none;width:32px;height:32px;border:0;background:none;border-radius:10px;color:var(--muted);font-size:16px;font-weight:800;cursor:pointer}
 .nx:hover{background:rgba(0,0,0,.06)}
-@media (max-width:640px){.nrow{flex-wrap:wrap}.nacts{order:3;flex-basis:100%;padding-left:20px}}
+@media (max-width:640px){.dnrow{flex-wrap:wrap}.nacts{order:3;flex-basis:100%;padding-left:20px}}
 .notifbar2{display:flex;align-items:center;gap:10px;background:#F2F8FF;border:2px solid #CFE6FF;border-radius:16px;padding:8px 6px 8px 12px;margin:0 0 12px}
 .notifbar2 .nb-ic{font-size:20px;flex:none}.notifbar2 .grow{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .notifbar2 b{font-family:var(--display);font-weight:800;font-size:14px;color:var(--ink)}.notifbar2 small{font-size:14px;color:#4B4B4B}
@@ -6423,7 +6423,7 @@ function dashTidy(v,hasStud){const head=v.querySelector('.thead');if(!head)retur
   notes.forEach(n=>{const b=n.querySelector('b'),title=b?b.textContent.trim():'',span=n.querySelector('span');const warn=n.classList.contains('warn');
     const key='n:'+qKey(title+(title==='Pengumuman'&&span?span.textContent:''));if(DISMISS.is(key)){n.remove();return}
     const acts=[...n.querySelectorAll('button')];acts.forEach(a=>a.remove());
-    const row=document.createElement('div');row.className='nrow'+(warn?' warn':'');
+    const row=document.createElement('div');row.className='dnrow'+(warn?' warn':'');
     row.innerHTML=`<span class="ndot" aria-hidden="true"></span><div class="ntx"><b></b><span></span></div><div class="nacts"></div><button class="nx" aria-label="Tutup pemberitahuan">✕</button>`;
     row.querySelector('.ntx b').textContent=title;row.querySelector('.ntx span').textContent=span?span.textContent.trim():'';acts.forEach(a=>row.querySelector('.nacts').appendChild(a));
     row.querySelector('.ntx span').onclick=e=>e.currentTarget.classList.toggle('open');row.querySelector('.nx').onclick=()=>{DISMISS.set(key,title==='Pengumuman'?3650*864e5:warn?864e5:3*864e5);row.remove();if(box&&!box.children.length)box.remove()};
