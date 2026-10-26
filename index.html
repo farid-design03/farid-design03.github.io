@@ -1659,6 +1659,32 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .ajsum .ghost{flex:none}
 .duogo{width:100%;font-size:20px;padding:13px}
 body.wzon{overflow:hidden}
+/* ---- misi bulanan & teman ---- */
+#vQuest{gap:16px!important}
+.mqhead{margin:0 -16px;padding:22px 20px 22px;background:var(--mc);color:#fff;border-radius:0 0 24px 24px}
+@media (min-width:1000px){.mqhead{margin:0;border-radius:24px}}
+.mqtop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.mqtop h2{margin:0;font-family:var(--title);font-size:30px;color:#fff;line-height:1.1}
+.mqhead .qclock{color:#fff;opacity:.95}
+.mbadge{width:84px;height:92px;flex:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.18))}.mbadge.dim{opacity:.55;filter:grayscale(.5)}
+.mqcard{margin-top:14px;background:#fff;color:var(--ink);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.mqcard b{font-family:var(--display);font-weight:800;font-size:18px}
+.qbar.mqbar{height:22px;margin:0}.qbar.mqbar i{background:var(--mc)}.qbar.mqbar span{font-size:13px}
+.mbrow{display:flex;gap:8px;flex-wrap:wrap}.mbrow .mbadge{width:44px;height:48px}
+.qsec{display:flex;align-items:center;justify-content:space-between;margin:6px 2px -6px}
+.qsec h3{margin:0;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.08em;color:var(--muted)}
+.qclock{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.04em;color:var(--muted)}.qclock i{width:20px;height:20px}
+.fqcard{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.fqart{background:#FFE6C7;display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:16px 16px 0;height:130px;box-sizing:border-box}
+.fqart .fqav{width:112px;height:112px;border-radius:50% 50% 0 0;overflow:hidden}.fqart .fqav svg{width:100%;height:100%;display:block}
+.fqbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.fqbody>b{font-family:var(--display);font-weight:800;font-size:19px}
+.fqprog{display:flex;align-items:center;gap:12px}.fqprog .qbar{flex:1;margin:0;height:22px}.fqprog .qbar i{background:#FF9600}.fqchest{width:52px;height:52px;flex:none}
+.fqrow{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:17px}.fqrow i{width:14px;height:14px;border-radius:50%;flex:none}.fqrow span{margin-left:auto;color:var(--muted)}
+.fqbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fqbtns button{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
+.fqnote{background:#FFF8E6;border:2px solid #FFE2A3;border-radius:14px;padding:8px 12px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.fqnote .grow{flex:1}
+.fqpick{display:flex;flex-direction:column;gap:4px}
+.set>span small{display:none}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -1713,7 +1739,7 @@ body.wzon{overflow:hidden}
 
     <!-- TEAM -->
     <section id="vTeam" class="view" hidden style="flex-direction:column;gap:18px">
-      <div class="pagehead"><i data-icon="team"></i><div><h2>Main Bareng</h2><p>Bertanding satu kelas di layar TV, beregu atau dua pemain sekaligus.</p></div></div>
+      <div class="pagehead"><i data-icon="team"></i><div><h2>Main Bareng</h2></div></div>
       <div class="setup card">
         <div id="groupBox" class="gbox">
           <div class="row"><span class="lbl">Format</span><div class="seg small" id="fmtSeg"><button data-f="giliran">Bergiliran</button><button data-f="rebutan">Rebutan</button><button data-f="terbagi">Layar terbagi</button></div></div>
@@ -1754,7 +1780,7 @@ body.wzon{overflow:hidden}
 
     <!-- SHOP -->
     <section id="vShop" class="view" hidden style="flex-direction:column;gap:18px">
-      <div class="pagehead"><i data-icon="shop"></i><div><h2>Toko</h2><p>Tukarkan permata dari pelajaran, peti, dan misi.</p></div></div>
+      <div class="pagehead"><i data-icon="shop"></i><div><h2>Toko</h2></div></div>
       <div id="shopList" class="shoplist"></div>
     </section>
 
@@ -4833,7 +4859,7 @@ function petSVG(id,cap){const f=PET_ART[id];if(!f)return null;
   return `<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse cx="60" cy="118" rx="34" ry="5" fill="rgba(27,30,61,.15)"/><g class="mbody" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">${f(cap)}</g></svg>`}
 function openPets(){if(!P)return;P.pets=P.pets||['uli'];const gem=`<span style="width:16px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
   const cap=(CAPS.find(c=>c[0]===(P.outfit||{}).cap)||CAPS[0])[2];
-  const render=()=>{openModal(`<h3>Pilih teman belajar</h3><p class="note" style="margin:0 0 10px">Hewan khas Indonesia. Kamu punya ${gem} ${P.gems} permata.</p><div class="petgrid">${PETS.map(([id,name,reg,price])=>{const own=price===0||P.pets.includes(id),on=curPet()===id;
+  const render=()=>{openModal(`<h3>Pilih teman belajar</h3><p class="note" style="margin:0 0 10px">Kamu punya ${gem} ${P.gems} permata.</p><div class="petgrid">${PETS.map(([id,name,reg,price])=>{const own=price===0||P.pets.includes(id),on=curPet()===id;
       return `<button class="petit ${on?'on':''}" data-id="${id}" ${!own&&P.gems<price?'data-poor="1"':''}><span class="petpic mascot">${id==='uli'?mascotSVG('uli'):petSVG(id,cap)}</span><b>${esc(name)}</b><small>${esc(reg)}</small><em>${on?'Dipakai':own?(price?'Dimiliki':'Gratis'):`${gem} ${price}`}</em></button>`}).join('')}</div><button class="ghost" id="mClose" style="margin-top:12px">Tutup</button>`);
     $('#mClose').onclick=closeModal;
     $('#mbox').querySelectorAll('.petit').forEach(b=>b.onclick=()=>{const id=b.dataset.id,pr=petOf(id)[3],own=pr===0||P.pets.includes(id);
@@ -4898,7 +4924,7 @@ function ensureQuests(){const t=dayKey();if(P.quests&&P.quests.day===t)return;co
 const qdef=id=>QUEST_T.find(q=>q.id===id);
 const qprog=q=>Math.min(q.goal,P.today[qdef(q.id).key]||0);
 function bump(key,n){const before=P.quests.list.map(q=>qprog(q)>=q.goal);if(key==='best')P.today.best=Math.max(P.today.best||0,n);else P.today[key]=(P.today[key]||0)+n;
-  P.quests.list.forEach((q,i)=>{if(!before[i]&&qprog(q)>=q.goal)setTimeout(()=>toast('quest',`Misi selesai: ${qdef(q.id).t(q.goal)}`),300)})}
+  P.quests.list.forEach((q,i)=>{if(!before[i]&&qprog(q)>=q.goal){monthTick();setTimeout(()=>toast('quest',`Misi selesai: ${qdef(q.id).t(q.goal)}`),300)}})}
 const BADGES=[
  {id:'api',ic:'flame',name:'Api Menyala',color:'#FF8A00',val:p=>p.bestStreak||0,lv:[3,7,30],d:n=>`Belajar ${n} hari berturut-turut`},
  {id:'xp',ic:'bolt',name:'Pengumpul XP',color:'#FFC23D',val:p=>p.xp,lv:[100,500,2000],d:n=>`Kumpulkan ${n} XP`},
@@ -5177,7 +5203,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
   const yest=dayKey(new Date(Date.now()-864e5)),missed=f.n>0&&!f.days[yest]&&!f.days[dayKey()];
   const week=()=>{const out=[];for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*864e5),k=dayKey(d);out.push(`<span class="spday ${f.days[k]?'on':''}"><i>${f.days[k]?'✓':''}</i>${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</span>`)}return out.join('')};
   const render=()=>{const ex=st.plan&&st.plan[st.k];let body='';
-   if(st.phase==='intro'){const plan=spPlan(false);body=`<div class="sphead"><span class="spbadge">🏃 Level Olahraga</span><h2>Waktunya gerak badan!</h2><p class="note">Sebentar saja, sekitar 2 menit. Jumlahnya disesuaikan dengan kemampuanmu dan naik sedikit demi sedikit.</p></div>
+   if(st.phase==='intro'){const plan=spPlan(false);body=`<div class="sphead"><span class="spbadge">🏃 Level Olahraga</span><h2>Waktunya gerak badan!</h2><p class="note">Sekitar 2 menit.</p></div>
      ${!f.intro?`<div class="spsafe"><b>Sebelum mulai</b><ul><li>Cari tempat lapang dan lantai yang tidak licin.</li><li>Berhenti kalau terasa sakit atau pusing.</li><li>Minum air putih setelahnya.</li></ul></div>`:''}
      ${missed?`<div class="spnote">Kemarin kamu belum olahraga. Tidak apa-apa, yang penting jangan bolos dua kali. Ayo mulai lagi hari ini!</div>`:''}
      <div class="spweek">${week()}</div>
@@ -5191,9 +5217,9 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
      ${(()=>{const fm=SP_FORM[spAnimKey(ex.id,spVar(ex))]||{};return fm.cues?`<ul class="spcues">${fm.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:`<p class="sptip">${esc(ex.tip)}</p>`})()}
      ${timeEx?(st.phase==='ready'?`<button class="primary press" id="spStart">Mulai ${ex.amt} detik</button>`:`<button class="ghost" id="spSkip">Lewati gerakan ini</button>`):`<button class="primary press" id="spDone">Selesai ✓</button><button class="ghost" id="spSkip">Lewati gerakan ini</button>`}`}
    else if(st.phase==='rest'){const nx=st.plan[st.k];body=`<div class="sphead"><span class="spbadge">Istirahat</span><h2 class="sptime big">${st.left}</h2><p class="note">Tarik napas dalam. Berikutnya: <b>${esc(nx.name)}</b> ${nx.t==='time'?nx.amt+' detik':nx.amt+' kali'}</p></div><div class="spfigbig small">${spFigure(nx.id,spVar(nx))}</div><button class="primary press" id="spNext">Lanjut sekarang</button>`}
-   else if(st.phase==='feel'){body=`<div class="sphead"><span class="spbadge">🎉 Selesai!</span><h2>Bagaimana rasanya?</h2><p class="note">Jawabanmu dipakai untuk mengatur jumlah gerakan berikutnya.</p></div>
+   else if(st.phase==='feel'){body=`<div class="sphead"><span class="spbadge">🎉 Selesai!</span><h2>Bagaimana rasanya?</h2></div>
      <div class="spfeel"><button data-f="easy">😎<b>Terlalu mudah</b><small>Tambah lebih banyak</small></button><button data-f="ok">🙂<b>Pas</b><small>Naik sedikit</small></button><button data-f="hard">😮‍💨<b>Berat</b><small>Kurangi dulu</small></button></div>`}
-   else if(st.phase==='end'){body=`<div class="sphead"><div class="mascot" data-mascot data-mood="happy" style="width:120px;margin:0 auto"></div><h2>Kamu anak yang aktif!</h2><p class="note">Hari ini kamu sudah bergerak. Sedikit demi sedikit, badanmu makin kuat. Setiap hari 1% lebih baik.</p></div>
+   else if(st.phase==='end'){body=`<div class="sphead"><div class="mascot" data-mascot data-mood="happy" style="width:120px;margin:0 auto"></div><h2>Kamu anak yang aktif!</h2><p class="note">Setiap hari 1% lebih baik.</p></div>
      <div class="spweek">${week()}</div><div class="sprew"><span>+10 XP</span><span>+5 permata</span></div><button class="primary press" id="spEnd">Lanjut belajar</button>`}
    const _r=1;el.innerHTML=`<div class="onbin spin"><div class="aved-top"><button class="back" id="spX" aria-label="Tutup">✕</button><span style="flex:1"></span></div>${body}</div>`;hydrate(el);spAnimAll(el);
    $('#spX').onclick=()=>{if(st.phase==='end'||st.phase==='intro'){close();return}openModal(`<h3>Berhenti olahraga?</h3><p>Sedikit lagi selesai. Kalau berhenti, level ini belum dihitung.</p><div class="acts"><button class="primary" id="mNo">Lanjut olahraga</button><button class="ghost" id="mYes">Berhenti</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();close()}};
@@ -5292,7 +5318,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   const badgeBefore=BADGES.map(b=>blevel(b));const goalBefore=P.today.xp>=P.goal;
   P.stats.lessons++;if(perfect)P.stats.perfect++;if(o.kind==='test')P.stats.tests++;if(o.kind==='game'&&!P.stats.games.includes(g.mode))P.stats.games.push(g.mode);P.stats.correct+=g.correct;
   const streakUp=addXp(xp);P.gems+=gems;
-  bump('xp',0);bump('lessons',1);if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
+  bump('xp',0);bump('lessons',1);fqTick();if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
   save();renderTop();
   const screens=[];
   const title=o.kind==='test'?'Ujian lulus!':o.kind==='game'?'Level game selesai!':o.kind==='practice'?'Latihan selesai!':perfect?'Pelajaran sempurna!':'Pelajaran selesai!';
@@ -5331,15 +5357,34 @@ function renderLeague(){const t=tierOf(P);APP.profiles.forEach(p=>ensureDay(p));
   renderBoard()}
 
 /* ---------- quests ---------- */
-function renderQuests(){ensureQuests();const h=24-new Date().getHours();$('#questReset').textContent=`Misi baru dalam ${h} jam.`;const p=Math.min(100,Math.round(P.today.xp/P.goal*100));
-  $('#goalCard').innerHTML=`<div class="ring" style="--p:${p}"><span>${P.today.xp}<br><small style="font-size:12px">XP</small></span></div><div><b>Target harian</b><p>${P.today.xp>=P.goal?'Tercapai! Kamu luar biasa hari ini.':`${P.today.xp} dari ${P.goal} XP. Selesaikan ${Math.ceil((P.goal-P.today.xp)/10)} level lagi.`}</p></div>`;
-  $('#questList').innerHTML=P.quests.list.map((q,i)=>{const d=qdef(q.id),v=qprog(q),ok=v>=q.goal;return `<div class="quest">${ico(d.icon)}<div class="qb"><div class="qt">${d.t(q.goal)}</div><div class="qbar"><i style="width:${v/q.goal*100}%"></i><span>${v} / ${q.goal}</span></div></div><button class="claim ${q.claimed?'got':''}" data-q="${i}" ${!ok||q.claimed?'disabled':''}>${q.claimed?'Diambil':`<span style="width:20px;color:#1C9BE8">${ICONS.gem}</span>${d.gems}`}</button></div>`}).join('');
-  hydrate($('#vQuest'));$('#questList').querySelectorAll('.claim').forEach(b=>b.onclick=()=>{const q=P.quests.list[+b.dataset.q];if(q.claimed||qprog(q)<q.goal)return;q.claimed=true;P.gems+=qdef(q.id).gems;save();renderTop();sfx.win();popFx(b,`+${qdef(q.id).gems}`);renderQuests()})}
+/* ---------- misi bulanan ---------- */
+const MQ_GOAL=30,MQ_GEMS=100;
+const monthKey=(d=new Date())=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
+function ensureMonth(){const k=monthKey();if(!P.month||P.month.id!==k)P.month={id:k,n:0,claimed:false};P.mbadges=P.mbadges||[]}
+function monthTick(){ensureMonth();P.month.n=Math.min(MQ_GOAL,P.month.n+1);if(P.month.n===MQ_GOAL)setTimeout(()=>toast('trophy',`Misi bulan ini selesai! Ambil lencananya di menu Misi.`),900)}
+function fqTick(){const wk=weekKey();if(!P.fqw||P.fqw.wk!==wk)P.fqw={wk,n:0};P.fqw.n++;if(window.fqSync)setTimeout(()=>window.fqSync(),400)}
+const MCOLS=['#1CB0F6','#CE82FF','#58CC02','#FF4B4B','#FFC800','#FF9600','#2B70C9','#00CD9C','#E6007E','#7A5CFA','#FF9600','#1899D6'];
+const monthName=k=>{const [y,m]=k.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('id-ID',{month:'long'})};
+function monthBadge(k,dim){const [y,m]=k.split('-').map(Number),c=MCOLS[(m-1)%12],t=monthName(k).slice(0,3).toUpperCase();
+  return `<svg viewBox="0 0 100 110" class="mbadge${dim?' dim':''}" aria-label="Lencana ${esc(monthName(k))} ${y}" role="img"><path d="M50 4 L90 24 V62 C90 84 72 100 50 106 C28 100 10 84 10 62 V24Z" fill="${c}" stroke="#1B1E3D" stroke-width="4" stroke-linejoin="round"/><path d="M50 16 L80 31 V61 C80 78 67 90 50 95 C33 90 20 78 20 61 V31Z" fill="#fff" opacity=".25"/><path d="M50 30 L56 44 L71 45 L59 55 L63 70 L50 62 L37 70 L41 55 L29 45 L44 44Z" fill="#FFD84D" stroke="#1B1E3D" stroke-width="3" stroke-linejoin="round"/><rect x="24" y="76" width="52" height="18" rx="9" fill="#1B1E3D"/><text x="50" y="90" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" font-family="system-ui,sans-serif">${t}</text></svg>`}
+const clockTag=t=>`<span class="qclock"><i data-icon="clock"></i>${t}</span>`;
+function renderQuests(){ensureQuests();ensureMonth();const now=new Date(),k=P.month.id,mc=MCOLS[now.getMonth()];
+  const daysLeft=new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate()+1,hLeft=24-now.getHours(),m=P.month,done=m.n>=MQ_GOAL;
+  $('#vQuest').innerHTML=`<div class="mqhead" style="--mc:${mc}"><div class="mqtop"><div><h2>Misi ${esc(monthName(k))}</h2>${clockTag(daysLeft+' HARI')}</div>${monthBadge(k,!done)}</div>
+     <div class="mqcard"><b>${done?(m.claimed?'Lencana didapat!':'Tantangan selesai!'):`Selesaikan ${MQ_GOAL} misi harian`}</b><div class="qbar mqbar"><i style="width:${m.n/MQ_GOAL*100}%"></i><span>${m.n} / ${MQ_GOAL}</span></div>${done&&!m.claimed?`<button class="primary press" id="mqClaim">Ambil lencana +${MQ_GEMS}</button>`:''}</div></div>
+   ${P.mbadges.length?`<div class="mbrow">${P.mbadges.slice(-6).map(x=>`<span title="${esc(monthName(x))}">${monthBadge(x)}</span>`).join('')}</div>`:''}
+   <div id="fqBox"></div>
+   <div class="qsec"><h3>MISI HARIAN</h3>${clockTag(hLeft+'J')}</div>
+   <div class="card questlist" id="questList"></div>`;
+  $('#questList').innerHTML=P.quests.list.map((q,i)=>{const d=qdef(q.id),v=qprog(q),ok=v>=q.goal;return `<div class="quest">${ico(d.icon)}<div class="qb"><div class="qt">${d.t(q.goal)}</div><div class="qbar"><i style="width:${v/q.goal*100}%"></i><span>${v} / ${q.goal}</span></div></div><button class="claim ${q.claimed?'got':''}" data-q="${i}" ${!ok||q.claimed?'disabled':''} aria-label="${q.claimed?'Hadiah sudah diambil':'Ambil '+d.gems+' permata'}">${q.claimed?'✓':`<span style="width:20px;color:#1C9BE8">${ICONS.gem}</span>${d.gems}`}</button></div>`}).join('');
+  hydrate($('#vQuest'));$('#questList').querySelectorAll('.claim').forEach(b=>b.onclick=()=>{const q=P.quests.list[+b.dataset.q];if(q.claimed||qprog(q)<q.goal)return;q.claimed=true;P.gems+=qdef(q.id).gems;save();renderTop();sfx.win();popFx(b,`+${qdef(q.id).gems}`);renderQuests()});
+  const mq=$('#mqClaim');if(mq)mq.onclick=()=>{m.claimed=true;if(!P.mbadges.includes(k))P.mbadges.push(k);P.gems+=MQ_GEMS;save();renderTop();sfx.win();popFx(mq,'+'+MQ_GEMS);renderQuests()};
+  if(window.renderFQ)window.renderFQ($('#fqBox'))}
 
 /* ---------- shop ---------- */
 function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICONS.gem}</span>${n}`;
   const outfit=(list,kind)=>list.map(([id,name,col,price])=>{const own=P.owned[kind].includes(id),on=P.outfit[kind]===id;return `<div class="item"><span class="ii"><span class="swatchdot" style="background:${col}"></span></span><span class="it"><b>${name}</b><small>${on?'Sedang dipakai':own?'Sudah dimiliki':'Gaya baru untuk '+petName()}</small></span><button class="buy ${own?'owned':''}" data-kind="${kind}" data-id="${id}" data-price="${price}" ${on||(!own&&P.gems<price)?'disabled':''}>${on?'Dipakai':own?'Pakai':gem(price)}</button></div>`}).join('');
-  $('#shopList').innerHTML=`<div class="card shopsec shopav"><div class="shopav-av" style="--av:${avBgColor(P.avatar)}">${avatarSVG(P.avatar||null)}</div><div style="flex:1;min-width:160px"><h3>Kostum avatar</h3><p class="note" style="margin:0">Rambut, kacamata, baju adat dari Aceh sampai Papua, sampai mahkota. Sebagian gratis, sisanya dibeli dengan permata.</p></div><button class="primary" id="shopAv">Ubah avatar</button></div><div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3><p class="note" style="margin:0">Dapatkan lebih banyak dari peti hadiah, level sempurna, ujian unit, dan misi harian.</p></div>
+  $('#shopList').innerHTML=`<div class="card shopsec shopav"><div class="shopav-av" style="--av:${avBgColor(P.avatar)}">${avatarSVG(P.avatar||null)}</div><div style="flex:1;min-width:160px"><h3>Kostum avatar</h3><p class="note" style="margin:0"></p></div><button class="primary" id="shopAv">Ubah avatar</button></div><div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3></div>
    <div class="card shopsec"><h3>Nyawa</h3>
     <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${P.unlimited?'Mode kelas aktif: nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${P.unlimited||P.hearts>=5||P.gems<50?'disabled':''}>${gem(50)}</button></div>
     <div class="item"><span class="ii">${ico('target')}</span><span class="it"><b>Latihan</b><small>Ulangi materi yang sudah dipelajari, dapat +1 nyawa</small></span><button class="buy" id="buyPractice" style="color:var(--ok)">Gratis</button></div></div>
@@ -5358,7 +5403,7 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
 /* ---------- profile ---------- */
 function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done/NODES.length);return n}
 function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class="sethead"><h3 style="margin:0;flex:1">Pengaturan</h3><button class="back" id="setX" aria-label="Tutup">✕</button></div><div class="card settings" id="setBody"></div></div>`);
-  $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
+  $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   const rs=()=>{
   el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
    `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
@@ -5381,7 +5426,7 @@ function renderProfile(){const t=tierOf(P);
   $('#profileTop').querySelectorAll('.avcolors button').forEach(b=>b.onclick=()=>{P.color=b.dataset.c;save();renderProfile()});
   $('#pStats').innerHTML=[[`<span style="color:#FF8A00;width:34px">${ICONS.flame}</span>`,shownStreak(),'Hari beruntun'],[ico('bolt'),P.xp,'Total XP'],[`<i>${shield(t[2])}</i>`,t[0],'Liga sekarang'],[ico('check'),unitsDone(P),'Unit selesai']].map(x=>`<div class="ps">${x[0]}<span><b>${x[1]}</b><small>${x[2]}</small></span></div>`).join('');
   $('#badgeList').innerHTML=BADGES.map(b=>{const l=blevel(b),nx=b.lv[Math.min(l,b.lv.length-1)],v=b.val(P);return `<div class="badge ${l?'':'none'}"><span class="bdg">${badgeSVG(b,l)}<span class="lv">${l?'Level '+l:'Belum'}</span></span><span class="bt"><b>${b.name}</b><small>${l>=b.lv.length?'Level tertinggi tercapai!':b.d(nx)}</small><div class="qbar"><i style="width:${Math.min(100,v/nx*100)}%"></i><span>${Math.min(v,nx)} / ${nx}</span></div></span></div>`}).join('');
-  const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
+  const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   $('#profileList').innerHTML=APP.profiles.map(p=>`<div class="prow">${avSpan(p)}<span class="grow"><b>${esc(p.name)}</b><small>${(COURSE.find(c=>c.id===p.cls)||{}).full||''} · ${p.xp} XP</small></span>${p.id===P.id?'<small><b>Sedang dipakai</b></small>':`${T()?'':`<button class="smallbtn" data-use="${p.id}">Pakai</button><button class="smallbtn danger" data-del="${p.id}">Hapus</button>`}`}</div>`).join('')+`${T()?'<div class="prow"><button class="primary" id="toPicker" style="width:100%">Ganti murid</button></div>':'<div class="prow"><button class="primary" id="addProfile" style="width:100%">+ Tambah profil teman</button></div>'}`;
   $('#profileList').querySelectorAll('[data-use]').forEach(b=>b.onclick=()=>{P=APP.profiles.find(p=>p.id===b.dataset.use);afterLogin();toast('user',`Halo, ${P.name}!`)});
   $('#profileList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const p=APP.profiles.find(x=>x.id===b.dataset.del);openModal(`<h3>Hapus profil ${esc(p.name)}?</h3><p>Semua XP, beruntun, dan kemajuan belajar profil ini akan dihapus dari perangkat ini.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);
@@ -5403,7 +5448,7 @@ function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[
 /* ---------- boot ---------- */
 function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');setTimeout(askGender,900)}
 function askGender(){if(!P||P.gender||document.body.classList.contains('teacher'))return;const o={gender:null};
-  openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px">Supaya pilihan avatar dan olahraganya pas untukmu.</p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`);
+  openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px"></p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`);
   $('#mbox').querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{P.gender=b.dataset.gd;const a=avNorm(P.avatar);const bad=Object.keys(AV_G).some(c=>!avFor(c,a[c],P.gender));if(bad){const d=avDefaultFor(P.gender);['hair','hc','brow','eyes','acc','adat','dunia'].forEach(c=>{if(!avFor(c,a[c],P.gender)||c==='hair'||c==='hc')a[c]=d[c]});P.avatar=a;P.color=avBgColor(a)}save();closeModal();renderTop();if(curTab==='profile')renderProfile();toast('check','Tersimpan. Terima kasih!')})}
 
 /* =========================================================
@@ -5445,7 +5490,7 @@ function barChart(pts,kkm){if(!pts.length)return '<p class="note">Belum ada nila
   pts.forEach((p,i)=>{const x=l+i*slot+(slot-bw)/2,top=y(p.v);s+=`<rect x="${x}" y="${top}" width="${bw}" height="${y(0)-top}" rx="5" fill="${p.v>=kkm?'#26BF66':'#FF8A3D'}" stroke="${K}" stroke-width="2"/><text x="${x+bw/2}" y="${top-5}" text-anchor="middle" font-size="12" font-weight="800" style="fill:${K}">${p.v}</text><text x="${x+bw/2}" y="${H-12}" text-anchor="middle" font-size="11">${esc(p.l)}</text>`});
   s+=`<line x1="${l}" x2="${W-r}" y1="${y(kkm)}" y2="${y(kkm)}" stroke="#E5383B" stroke-width="2" stroke-dasharray="6 5"/><text x="${W-r+6}" y="${y(kkm)+4}" font-size="11" font-weight="800" style="fill:#E5383B">KKM ${kkm}</text></svg>`;
   return `<div class="chartwrap">${s}</div>`}
-function thead(title,sub,extra){return `<div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS[title[1]]||''}</span><div class="grow"><h2>${title[0]}</h2><p>${sub}</p></div>${extra||''}</div>`}
+function thead(title,sub,extra){return `<div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS[title[1]]||''}</span><div class="grow"><h2>${title[0]}</h2>${sub?`<p>${sub}</p>`:''}</div>${extra||''}</div>`}
 
 /* ---------- entering / leaving teacher mode ---------- */
 function enterTeacher(){if(!T()){teacherSetup();return}showLogin(T().user||'guru')}
@@ -5494,15 +5539,15 @@ function renderTDash(){const t=T(),list=students(),today=dayKey(),sess=sessionOf
   const next=[];{const d=new Date();for(let i=1;i<40&&next.length<5;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i);if(t.days.includes(x.getDay()))next.push(dayKey(x))}}
   const attention=[...new Map([...below.map(p=>[p.id,p]),...alpa.map(p=>[p.id,p])]).values()];
   $('#vTDash').innerHTML=licBanner()+`<div class="thead"><span style="width:56px;height:56px;flex:none">${ICONS.teach}</span><div class="grow"><h2>${greet}, ${esc(t.name)}</h2><p>${esc(t.school||'Sekolah')} · ${c.full} · ${list.length} murid</p></div><span class="datepill ${teach?'on':''}">${fmtD(today)}<br>${teach?'Hari mengajar':'Bukan jadwal mengajar'}</span></div>
-   ${list.length?'':`<div class="tcard"><h3>Mulai dengan menambah murid</h3><p class="sub">Daftarkan nama murid satu per satu atau sekaligus. Murid memilih namanya sendiri saat belajar di TV atau HP.</p><button class="primary" data-go="tstud" style="align-self:flex-start">Tambah murid</button></div>`}
-   <div class="tcard"><h3>Pertemuan hari ini</h3>${teach?'':`<p class="sub">Hari ini bukan jadwal mengajar, tetapi kamu tetap bisa mencatat pertemuan tambahan.</p>`}
+   ${list.length?'':`<div class="tcard"><h3>Mulai dengan menambah murid</h3><p class="sub">Daftarkan nama muridmu.</p><button class="primary" data-go="tstud" style="align-self:flex-start">Tambah murid</button></div>`}
+   <div class="tcard"><h3>Pertemuan hari ini</h3>${teach?'':`<p class="sub"></p>`}
     <div class="today"><div class="tstep ${attFilled?'ok':''}"><div class="tn"><i>1</i>Absensi</div><p>${attFilled?`${hadirToday} dari ${list.length} murid hadir.`:'Belum diisi.'}</p><button class="${attFilled?'ghost':'primary'}" data-go="tatt">${attFilled?'Ubah absensi':'Isi absensi'}</button></div>
      <div class="tstep ${graded?'ok':''}"><div class="tn"><i>2</i>Evaluasi di TV</div><p>${graded?`${graded} murid sudah dinilai dalam ${sess.evals.length} evaluasi.`:'Mainkan game evaluasi di TV sentuh. Nilai langsung masuk rapor.'}</p><button class="primary" data-go="teval">${graded?'Evaluasi lagi':'Mulai evaluasi'}</button></div></div></div>
    <div class="kpis"><div class="kpi"><span class="kl">Murid</span><span class="kv">${list.length}</span><span class="kn">${activeWeek} berlatih minggu ini</span></div>
     <div class="kpi ${attPct!=null&&attPct<80?'warn':'good'}"><span class="kl">Kehadiran</span><span class="kv">${attPct==null?'—':attPct+'%'}</span><span class="kn">${APP.sessions.filter(s=>Object.keys(s.att).length).length} pertemuan tercatat</span></div>
     <div class="kpi ${avgAll!=null&&avgAll<t.kkm?'warn':'good'}"><span class="kl">Rata-rata nilai</span><span class="kv">${avgAll==null?'—':avgAll}</span><span class="kn">KKM ${t.kkm}</span></div>
     <div class="kpi ${below.length?'warn':''}"><span class="kl">Di bawah KKM</span><span class="kv">${below.length}</span><span class="kn">murid perlu bimbingan</span></div></div>
-   <div class="tgrid2"><div class="tcard"><h3>Rata-rata nilai per pertemuan</h3><p class="sub">Batang hijau di atas KKM, oranye di bawah KKM.</p>${barChart(pts,t.kkm)}</div>
+   <div class="tgrid2"><div class="tcard"><h3>Rata-rata nilai per pertemuan</h3>${barChart(pts,t.kkm)}</div>
     <div class="tcard"><h3>Perlu perhatian</h3>${attention.length?`<div class="plist">${attention.map(p=>{const a=studentAvg(p.id),at=attOf(p.id);return `<div class="pl">${avatarOf(p)}<span class="grow"><b>${esc(p.name)}</b><small>${a!=null&&a<t.kkm?`Rata-rata ${a}`:''}${a!=null&&a<t.kkm&&at.A>=2?' · ':''}${at.A>=2?`Alpa ${at.A} kali`:''}</small></span><button class="smallbtn" data-rep="${p.id}">Rapor</button></div>`}).join('')}</div>`:'<p class="note">Belum ada murid yang perlu perhatian khusus.</p>'}
      <h3 style="margin-top:6px">Paling rajin berlatih minggu ini</h3>${list.filter(p=>p.week.xp>0).length?`<div class="plist">${list.filter(p=>p.week.xp>0).sort((a,b)=>b.week.xp-a.week.xp).slice(0,5).map((p,i)=>`<div class="pl">${avatarOf(p)}<span class="grow"><b>${i+1}. ${esc(p.name)}</b><small>${shownStreak(p)} hari beruntun</small></span><span class="pill mid">${p.week.xp} XP</span></div>`).join('')}</div>`:'<p class="note">Belum ada murid yang berlatih minggu ini.</p>'}</div></div>
    <div class="tcard"><h3>Jadwal mengajar berikutnya</h3><p class="sub">Hari mengajar: ${t.days.length?t.days.slice().sort((a,b)=>((a+6)%7)-((b+6)%7)).map(d=>DAYN[d]).join(', '):'belum diatur'}</p><div class="daychips">${next.map(k=>`<span class="pill mute" style="font-size:14px;padding:4px 12px">${fmtD(k).split(' ').slice(0,3).join(' ')}</span>`).join('')}</div><button class="ghost" data-go="tatt" style="align-self:flex-start">Atur jadwal</button></div>`;
@@ -5514,8 +5559,8 @@ let ATT_DATE=null;
 function renderTAtt(){const t=T(),list=students();ATT_DATE=ATT_DATE||dayKey();const s=sessionOf(ATT_DATE,false)||{att:{},evals:[]};const teach=isTeachDay(dOf(ATT_DATE));
   const cnt={H:0,I:0,S:0,A:0};Object.values(s.att).forEach(v=>cnt[v]++);
   const order=[1,2,3,4,5,6,0];
-  $('#vTAtt').innerHTML=thead(['Absensi','cal'],'Atur hari mengajar dan catat kehadiran setiap pertemuan.')+
-   `<div class="tcard"><h3>Hari mengajar</h3><p class="sub">Ketuk hari saat kamu mengajar kelas ini. Dasbor akan mengingatkan absensi dan evaluasi pada hari-hari tersebut.</p><div class="daychips">${order.map(d=>`<button class="daychip" data-d="${d}" aria-pressed="${t.days.includes(d)}">${DAYN[d]}</button>`).join('')}</div></div>
+  $('#vTAtt').innerHTML=thead(['Absensi','cal'],'')+
+   `<div class="tcard"><h3>Hari mengajar</h3><div class="daychips">${order.map(d=>`<button class="daychip" data-d="${d}" aria-pressed="${t.days.includes(d)}">${DAYN[d]}</button>`).join('')}</div></div>
    <div class="tcard"><h3>Kehadiran</h3><div class="tbar"><input type="date" id="attDate" value="${ATT_DATE}" aria-label="Tanggal pertemuan"><span class="pill ${teach?'ok':'mute'}">${teach?'Hari mengajar':'Di luar jadwal'}</span><span style="flex:1"></span><button class="ghost" id="attAll" ${list.length?'':'disabled'}>Tandai semua hadir</button></div>
     <p class="sub" style="margin:0">${fmtD(ATT_DATE)} · Hadir ${cnt.H} · Izin ${cnt.I} · Sakit ${cnt.S} · Alpa ${cnt.A} · Belum diisi ${Math.max(0,list.length-cnt.H-cnt.I-cnt.S-cnt.A)}</p>
     <div class="legend"><span style="--c:var(--green)">H = Hadir</span><span style="--c:var(--blue)">I = Izin</span><span style="--c:var(--orange)">S = Sakit</span><span style="--c:var(--red)">A = Alpa</span></div>
@@ -5539,12 +5584,12 @@ function evalSource(s){if(EV.src&&EV.src.startsWith('b:')){const b=(APP.bank||[]
 function renderTEval(){normBank();const c=tCls(),s=evalSubj();EV.subj=s.id;const src=evalSource(s);const games=FIT[src.fit].games;if(!games.includes(EV.game))EV.game=games[0];
   const today=dayKey(),sess=sessionOf(today,false);const attFilled=sess&&Object.keys(sess.att).length>0;const list=students();const part=attFilled?list.filter(p=>sess.att[p.id]==='H'):list;
   const todays=sess?sess.evals:[];const banks=bankOf(s.id).filter(b=>b.qs.length);
-  $('#vTEval').innerHTML=thead(['Evaluasi Harian','tv'],'Mainkan di TV layar sentuh. Murid maju bergiliran, nilainya langsung masuk rapor.')+
+  $('#vTEval').innerHTML=thead(['Evaluasi Harian','tv'],'')+
    (todays.length?`<div class="tcard"><h3>Evaluasi hari ini</h3><div class="sessions">${todays.map(e=>`<button class="sess" data-eid="${e.id}"><span class="dt">${esc(e.subjName)}</span><span class="grow">${esc(e.unit)} · ${gameName(e.game)} · ${Object.keys(e.results).length} murid dinilai</span><span class="pill mid">Lanjutkan</span></button>`).join('')}</div></div>`:'')+
    `<div class="tcard"><h3>1. Materi yang dievaluasi</h3><div class="daychips">${c.subjects.map(x=>`<button class="daychip" data-s="${x.id}" aria-pressed="${x.id===s.id}">${esc(x.name)}</button>`).join('')}</div>
      <div class="tfield"><label for="evUnit">Materi hari ini</label><select id="evUnit"><optgroup label="Materi bawaan">${s.units.map((x,i)=>`<option value="u:${i}" ${EV.src==='u:'+i?'selected':''}>Unit ${i+1}: ${esc(x.t)}</option>`).join('')}</optgroup>${banks.length?`<optgroup label="Soal buatan guru">${banks.map(b=>`<option value="b:${b.id}" ${EV.src==='b:'+b.id?'selected':''}>${esc(b.title)} (${b.qs.length} soal)</option>`).join('')}</optgroup>`:''}</select></div>
      <p class="sub" style="margin:0">${src.bank?`Memakai ${src.count} soal buatanmu.`:`Ingin memakai soal sendiri? Buat paket di menu <button class="smallbtn" data-go="tbank">Soal</button>`}</p></div>
-   <div class="tcard"><h3>2. Game evaluasi</h3><p class="sub">Hanya game yang cocok dengan bentuk jawaban materi ini.</p><div class="modes" id="evModes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-m="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===EV.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div></div>
+   <div class="tcard"><h3>2. Game evaluasi</h3><div class="modes" id="evModes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-m="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===EV.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div></div>
    <div class="tcard"><h3>3. Cara bermain</h3><div class="seg small" id="evFmt" style="flex-wrap:wrap">${EV_FMTS.map(f=>`<button data-f="${f[0]}" aria-pressed="${f[0]===EV.fmt}">${f[1]}</button>`).join('')}</div><p class="sub" style="margin:0">${EV_FMTS.find(f=>f[0]===EV.fmt)[2]}${EV.fmt==='rebutan'&&EV.game!=='kuis'?' Game yang dipilih di atas diganti Kuis Klasik.':''}</p></div>
    <div class="tcard"><h3>4. Jumlah soal per murid</h3><div class="seg small" id="evN" style="max-width:360px">${[3,5,10].map(n=>`<button data-n="${n}" aria-pressed="${n===EV.n}">${n} soal</button>`).join('')}</div>
      ${src.bank&&src.count<EV.n?`<p class="sub" style="margin:4px 0 0">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:''}
@@ -5560,7 +5605,7 @@ function renderTEval(){normBank();const c=tCls(),s=evalSubj();EV.subj=s.id;const
   $('#evStart').onclick=()=>{const ss=sessionOf(today,true);const e={id:'e'+Date.now().toString(36),subj:s.id,subjName:s.name,ui:src.bank?null:src.ui,bank:src.bank?src.bank.id:null,unit:src.title,game:EV.fmt==='rebutan'?'kuis':EV.game,fmt:EV.fmt,n:src.bank?Math.min(EV.n,src.count):EV.n,results:{},at:Date.now()};ss.evals.push(e);save();EVR={sid:ss.id,eid:e.id};EVSEL=[];fsOn();go('trun')};evTidy()}
 function evTidy(){const v=$('#vTEval');[...v.querySelectorAll(':scope > .tcard')].filter(c=>/^\d+\.\s/.test((c.querySelector('h3')||{}).textContent||'')).forEach(c=>c.remove());const b=$('#evStart');if(b)b.remove();
   const n=students().length,last=EV.game?`<p class="sub" style="margin:0">Terakhir: ${esc((tCls().subjects.find(x=>x.id===EV.subj)||{}).name||'')} · ${gameName(EV.game)} · ${EV.n} soal</p>`:'';
-  v.insertAdjacentHTML('beforeend',`<div class="tcard evnew"><span class="evnew-ic"><i data-icon="tv"></i></span><div class="grow"><h3>Evaluasi baru</h3><p class="sub" style="margin:0">Pilih mata pelajaran, materi, game, dan cara bermain, langkah demi langkah.</p>${last}</div><button class="primary press" id="evWiz" ${n?'':'disabled'}>Siapkan evaluasi</button>${n?'':'<p class="note">Belum ada murid. Tambahkan di menu <button class="smallbtn" data-go="tstud">Murid</button></p>'}</div>`);
+  v.insertAdjacentHTML('beforeend',`<div class="tcard evnew"><span class="evnew-ic"><i data-icon="tv"></i></span><div class="grow"><h3>Evaluasi baru</h3>${last}</div><button class="primary press" id="evWiz" ${n?'':'disabled'}>Siapkan evaluasi</button>${n?'':'<p class="note">Belum ada murid. Tambahkan di menu <button class="smallbtn" data-go="tstud">Murid</button></p>'}</div>`);
   hydrate(v);bindTeacherLinks(v);$('#evWiz').onclick=evalWizard}
 function curEval(){const s=EVR&&APP.sessions.find(x=>x.id===EVR.sid);const e=s&&s.evals.find(x=>x.id===EVR.eid);return {sess:s,e}}
 let RUN_ALL=false;
@@ -5620,7 +5665,7 @@ function raporRows(){const t=T(),c=tCls();return students().map(p=>{const at=att
 function renderTRapor(){if(RP.pid&&APP.profiles.some(p=>p.id===RP.pid))return renderStudentReport(RP.pid);RP.pid=null;const t=T(),c=tCls();const rows=raporRows();
   const nEval=APP.sessions.filter(s=>s.evals.some(e=>Object.keys(e.results).length)).length;
   $('#vTRapor').innerHTML=thead(['Rapor Kelas','report'],`${c.full} · KKM ${t.kkm} · ${nEval} pertemuan dinilai`,`<button class="ghost" id="rpCopy" style="background:#fff">Salin ke Excel</button>`)+
-   `<div class="tcard"><p class="sub" style="margin:0">Nilai adalah rata-rata semua evaluasi harian di TV. Ketuk nama murid untuk melihat rapor lengkap.</p>
+   `<div class="tcard">
     ${rows.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>No</th><th>Nama</th><th class="num">Hadir</th>${c.subjects.map(s=>`<th class="num">${esc(s.name)}</th>`).join('')}<th class="num">Rata-rata</th><th>Predikat</th><th>Status</th></tr></thead><tbody>${rows.map(r=>`<tr class="click" data-rep="${r.p.id}"><td>${r.p.no||''}</td><td class="nm">${esc(r.p.name)}</td><td class="num">${r.at.pct==null?'—':r.at.pct+'%'}</td>${r.subs.map(v=>`<td class="num ${v!=null&&v<t.kkm?'score low':''}">${v==null?'—':v}</td>`).join('')}<td class="num score ${r.all!=null&&r.all<t.kkm?'low':''}">${r.all==null?'—':r.all}</td><td>${predOf(r.all)}</td><td>${statusPill(r.all)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid.</p>'}</div>`;
   hydrate($('#vTRapor'));$('#vTRapor').querySelectorAll('tr[data-rep]').forEach(tr=>tr.onclick=()=>{RP.pid=tr.dataset.rep;renderTRapor();window.scrollTo(0,0)});
   $('#rpCopy').onclick=()=>{const head=['No','Nama','Hadir %',...c.subjects.map(s=>s.name),'Rata-rata','Predikat','Status'];copyText([head,...rows.map(r=>[r.p.no||'',r.p.name,r.at.pct==null?'':r.at.pct,...r.subs.map(v=>v==null?'':v),r.all==null?'':r.all,predOf(r.all),r.all==null?'Belum dinilai':r.all>=t.kkm?'Tuntas':'Belum tuntas'])].map(a=>a.join('\t')).join('\n'))}}
@@ -5658,9 +5703,9 @@ function renderSoalAnalisis(){const c=tCls();if(RPV.subj!=='all'&&!c.subjects.so
   $('#vTRapor').innerHTML=thead(['Soal Tersulit','report'],`${c.full} · dari latihan ${A.nStu} murid di aplikasi`,`<button class="ghost" id="saPdf" style="background:#fff">Unduh PDF</button>`)+rpTabs()+
    `<div class="chips sachips">${[['all','Semua'],...c.subjects.map(s=>[s.id,s.name])].map(([id,n])=>`<button class="chip" data-sj="${id}" aria-pressed="${RPV.subj===id}">${esc(n)}</button>`).join('')}</div>`+
    (A.list.length||A.ul.length?
-   `<div class="tcard"><h3>Materi paling sulit</h3><p class="sub" style="margin:0">Persentase jawaban salah per materi. Materi di atas perlu diulang di kelas.</p>
+   `<div class="tcard"><h3>Materi paling sulit</h3>
      <div class="sabars">${A.ul.map(u=>`<div class="sabar"><div class="sabt"><b>${esc(u.u)}</b><small>${esc(subjNm(u.s))} · ${u.stu.size} murid pernah salah</small></div><div class="sabtrack"><i style="width:${Math.max(3,u.r)}%;background:${rateCol(u.r)}"></i></div><span class="sabv" style="color:${rateCol(u.r)}">${u.r}%</span></div>`).join('')||'<p class="note">Belum cukup data.</p>'}</div></div>
-    <div class="tcard"><h3>Soal yang paling sering salah</h3><p class="sub" style="margin:0">Diurutkan dari persentase salah tertinggi. Soal berangka acak dikelompokkan per jenis soal.</p>
+    <div class="tcard"><h3>Soal yang paling sering salah</h3>
      <ol class="salist">${A.list.map(i=>`<li><div class="sarate" style="--c:${rateCol(i.r)}"><b>${i.r}%</b><small>salah</small></div><div class="grow"><div class="saq">${i.g?'<span class="pill mute">Angka berbeda-beda</span> ':''}${esc(i.g?i.xw:i.x)}</div>
        <small class="sameta">${esc(i.u)} · ${esc(subjNm(i.s))} · ${i.w} dari ${i.n} jawaban salah · ${i.stu} murid</small>
        <div class="saans"><span class="pill ok">Kunci${i.g?' contoh ini':''}: ${esc(i.g?i.aw:i.a)}</span>${(i.g?i.pw:i.top)?`<span class="pill bad">${i.g?'Dijawab':'Sering dijawab'}: ${esc(i.g?i.pw:i.top)}</span>`:''}</div></div></li>`).join('')||'<p class="note">Belum ada soal yang dijawab salah lebih dari sekali.</p>'}</ol></div>`
@@ -5749,7 +5794,7 @@ renderStudentReport=function(pid){_rSR0(pid);const b=$('#rpCopy1');if(b){b.inser
 /* ---------- students ---------- */
 function addStudentBlock(){const next=Math.max(0,...APP.profiles.map(p=>p.no||0))+1;
   return `<div class="tcard"><h3>Tambah murid</h3><div class="tform"><div class="tfield"><label for="asNo">No. absen</label><input id="asNo" type="number" min="1" value="${next}"></div><div class="tfield"><label for="asName">Nama murid</label><input id="asName" maxlength="24" placeholder="Nama lengkap atau panggilan" autocomplete="off"></div></div><button class="primary" id="asAdd" style="align-self:flex-start">Tambah</button>
-   <h3 style="margin-top:6px">Tambah banyak sekaligus</h3><p class="sub">Tulis atau tempel satu nama per baris. Nomor absen dibuat berurutan.</p><textarea class="note-area" id="asBulk" placeholder="Andi Pratama&#10;Budi Santoso&#10;Citra Ayu"></textarea><button class="ghost" id="asBulkAdd" style="align-self:flex-start">Tambahkan semua</button></div>`}
+   <h3 style="margin-top:6px">Tambah banyak sekaligus</h3><p class="sub">Satu nama per baris.</p><textarea class="note-area" id="asBulk" placeholder="Andi Pratama&#10;Budi Santoso&#10;Citra Ayu"></textarea><button class="ghost" id="asBulkAdd" style="align-self:flex-start">Tambahkan semua</button></div>`}
 function bindStudentBlock(rerender){const add=(name,no)=>{if(licMax()&&APP.profiles.length>=licMax())return false;const t=T(),c=tCls();const p=newProfile({name,cls:c.id,subj:c.subjects[0].id,goal:20});p.user=suggestUser(name);p.no=no;p.unlimited=!!t.unlimited;if(t.autoPass)p.pass=randPass();APP.profiles.push(p);return true};
   const limitMsg=()=>toast('lock',`Batas lisensi ${licMax()} murid sudah tercapai. Hubungi penjual untuk menambah.`);
   $('#asAdd').onclick=()=>{const n=$('#asName').value.trim();if(!n){$('#asName').focus();return}if(!add(n,+$('#asNo').value||null)){limitMsg();return}save();toast('user',`${n} ditambahkan.`);rerender();setTimeout(()=>{const x=$('#asName');x&&x.focus()},50)};
@@ -5757,7 +5802,7 @@ function bindStudentBlock(rerender){const add=(name,no)=>{if(licMax()&&APP.profi
   $('#asBulkAdd').onclick=()=>{const names=$('#asBulk').value.split('\n').map(x=>x.trim()).filter(Boolean);if(!names.length)return;let no=Math.max(0,...APP.profiles.map(p=>p.no||0)),ok=0;for(const n of names){if(!add(n.slice(0,24),++no))break;ok++}save();if(ok<names.length)limitMsg();toast('user',`${ok} murid ditambahkan.`);rerender()}}
 function renderTStud(){const list=students(),c=tCls(),t=T();const withPass=list.filter(p=>p.pass).length;
   $('#vTStud').innerHTML=thead(['Murid','team'],`${list.length}${licMax()?' dari '+licMax():''} murid di ${c.full}. Murid masuk dengan nama pengguna dan sandinya, atau mendaftar sendiri.`)+addStudentBlock()+
-   `<div class="tcard"><h3>Sandi murid</h3><p class="sub">Murid masuk dengan nama pengguna dan sandi 4 angka. Murid yang belum punya sandi membuat sandinya sendiri saat pertama kali masuk. Saat evaluasi di TV, sandi tidak diminta.</p>
+   `<div class="tcard"><h3>Sandi murid</h3><p class="sub">Murid masuk dengan nama pengguna dan sandi 4 angka.</p>
      <p style="margin:0;font-weight:700">${withPass} dari ${list.length} murid sudah punya sandi.</p>
      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="pwAll" ${list.length?'':'disabled'}>Buat sandi acak untuk yang belum punya</button><button class="ghost" id="pwCopy" ${list.length?'':'disabled'}>Salin daftar akun</button><button class="ghost" id="pwClear" ${withPass?'':'disabled'} style="color:var(--bad)">Hapus semua sandi</button></div>
      <div class="set" style="border:0;padding:0"><span><b>Sandi otomatis untuk murid baru</b><small>Setiap murid yang ditambahkan langsung mendapat sandi acak</small></span><button class="tgl" id="pwAuto" aria-pressed="${!!t.autoPass}" aria-label="Sandi otomatis"></button></div></div>
@@ -5777,8 +5822,8 @@ function renderTStud(){const list=students(),c=tCls(),t=T();const withPass=list.
 
 /* ---------- teacher settings ---------- */
 function renderTSet(){const t=T();
-  const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
-  $('#vTSet').innerHTML=thead(['Pengaturan','gear'],'Data kelas, murid, mode kelas, keamanan, dan cadangan data.')+
+  const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
+  $('#vTSet').innerHTML=thead(['Pengaturan','gear'],'')+
    `<div class="tcard"><h3>Data kelas</h3><div class="tform"><div class="tfield"><label for="stName">Nama guru</label><input id="stName" value="${esc(t.name)}"></div><div class="tfield"><label for="stSchool">Nama sekolah</label><input id="stSchool" value="${esc(t.school||'')}"></div>
      <div class="tfield"><label for="stCls">Kelas yang diajar</label><select id="stCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
@@ -5885,7 +5930,7 @@ function adminLogin(){openModal(`<span style="width:56px;align-self:center">${IC
   setTimeout(()=>$('#adPw').focus(),50);const go=()=>{const pw=$('#adPw').value;if(GAS){$('#adErr').textContent='Memeriksa…';google.script.run.withSuccessHandler(r=>{const o=JSON.parse(r);ADMIN_TOKEN=o.token;licFromServer(o.license);closeModal();openAdmin()}).withFailureHandler(()=>{$('#adErr').textContent='Sandi admin salah.';sfx.bad()}).adminLogin(pw);return}if(pwHash(pw)===LIC.adminHash){closeModal();openAdmin()}else{$('#adErr').textContent='Sandi admin salah.';sfx.bad()}};
   $('#mYes').onclick=go;$('#adPw').onkeydown=e=>{if(e.key==='Enter')go()};$('#mNo').onclick=closeModal}
 function openAdmin(){const el=$('#adminPanel');el.hidden=false;const until=dayKey(new Date(LIC.until));const f=LIC.features;
-  const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b><small>${small}</small></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
+  const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   el.innerHTML=`<div class="onbin" style="max-width:820px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>Atur masa aktif, batas murid, fitur, dan buat kode aktivasi untuk pelanggan.</p></div><button class="ghost" id="adClose" style="color:var(--ink);background:#fff">Keluar admin</button></div>
    <div class="kpis"><div class="kpi ${licActive()?'good':'warn'}"><span class="kl">Status</span><span class="kv" style="font-size:26px">${licActive()?(LIC.trial?'Uji coba':'Aktif'):'Berakhir'}</span><span class="kn">${fmtTs(LIC.until)}</span></div><div class="kpi"><span class="kl">Sisa hari</span><span class="kv">${Math.max(0,licDays())}</span><span class="kn">hari</span></div><div class="kpi"><span class="kl">Murid</span><span class="kv">${APP.profiles.length}</span><span class="kn">batas ${licMax()||'tidak ada'}</span></div><div class="kpi"><span class="kl">Guru</span><span class="kv" style="font-size:20px">${T()?esc(T().name):'—'}</span><span class="kn">${T()?esc(T().school||''):'Belum diatur'}</span></div></div>
@@ -5929,7 +5974,7 @@ function parseImport(text){const rows=text.split(/\r?\n/).map(l=>l.split('\t')).
     if(!q||ki<0||!opts[ki]||opts.filter(Boolean).length<2){skip++;return}out.push({id:'q'+Date.now().toString(36)+R(100,999)+out.length,q,opts,a:ki,exp:exp||''})});return {qs:out,skip}}
 function renderTBank(){normBank();const c=tCls();const b=BK.id&&APP.bank.find(x=>x.id===BK.id);if(!b){BK.id=null;return renderBankList()}renderBankEditor(b)}
 function renderBankList(){const c=tCls();
-  $('#vTBank').innerHTML=thead(['Bank Soal Guru','quiz'],'Buat soal sendiri untuk evaluasi harian. Game yang cocok dipilih otomatis dari panjang jawabannya.',`<button class="ghost" id="bkNew" style="color:var(--ink);background:#fff">+ Paket soal baru</button>`)+
+  $('#vTBank').innerHTML=thead(['Bank Soal Guru','quiz'],'',`<button class="ghost" id="bkNew" style="color:var(--ink);background:#fff">+ Paket soal baru</button>`)+
    c.subjects.map(s=>{const list=bankOf(s.id);return `<div class="tcard"><h3>${esc(s.name)}</h3>${list.length?`<div class="sessions">${list.map(x=>`<button class="sess" data-bk="${x.id}"><span class="dt">${esc(x.title)}</span><span class="grow">${x.qs.length} soal · cocok untuk ${FIT[bankFit(x)].games.filter(g=>g!=='kuis').map(gameName).join(', ')||'Kuis Klasik'}</span><span class="pill mid">Ubah</span></button>`).join('')}</div>`:'<p class="note" style="margin:0">Belum ada paket soal.</p>'}</div>`}).join('')+
    `<div class="tcard"><h3>${GAS?'Lewat Google Sheet atau Excel':'Salin dari Excel'}</h3><p class="sub" style="margin:0">Di dalam paket soal ada tombol <b>Impor dari Excel</b>. Salin baris dengan urutan kolom: Pertanyaan, A, B, C, D, Kunci (A/B/C/D), Pembahasan.${GAS?' Di Google Sheet juga ada tab <b>Impor Soal</b>: isi barisnya, lalu buka ulang aplikasi.':''}</p></div>`;
   hydrate($('#vTBank'));$('#vTBank').querySelectorAll('[data-bk]').forEach(x=>x.onclick=()=>{BK.id=x.dataset.bk;BK.edit=null;renderTBank();window.scrollTo(0,0)});
@@ -5941,7 +5986,7 @@ function renderBankEditor(b){const c=tCls();const e=BK.edit!=null?b.qs.find(q=>q
     <p class="sub" style="margin:0">${b.qs.length} soal · game yang cocok: ${FIT[bankFit(b)].games.map(gameName).join(', ')}</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="ghost" id="bkImp">Impor dari Excel</button><button class="ghost" id="bkDel" style="color:var(--bad)">Hapus paket</button></div></div>
    <div class="tcard"><h3>${e?'Ubah soal':'Tambah soal'}</h3><div class="tfield"><label for="qText">Pertanyaan</label><textarea class="note-area" id="qText" style="min-height:70px" placeholder="Contoh: Hasil dari 3/4 + 1/4 adalah …">${esc(f.q)}</textarea></div>
     <div class="optedit">${['A','B','C','D'].map((L,i)=>`<label class="oe"><input type="radio" name="qKey" value="${i}" ${f.a===i?'checked':''} aria-label="Kunci ${L}"><b>${L}</b><input id="qO${i}" maxlength="60" value="${esc(f.opts[i]||'')}" placeholder="Pilihan ${L}${i>1?' (boleh kosong)':''}"></label>`).join('')}</div>
-    <p class="note" style="margin:0">Pilih bulatan di samping jawaban yang benar.</p>
+    
     <div class="tfield"><label for="qExp">Pembahasan (tidak wajib)</label><input id="qExp" maxlength="160" value="${esc(f.exp||'')}" placeholder="Contoh: 3/4 + 1/4 = 4/4 = 1"></div><p class="note" id="qErr" style="color:var(--bad);font-weight:700;margin:0"></p>
     <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="qSave">${e?'Simpan perubahan':'Tambah soal'}</button>${e?'<button class="ghost" id="qCancel">Batal</button>':''}</div></div>
    <div class="tcard"><h3>Daftar soal</h3>${b.qs.length?`<ol class="qlist">${b.qs.map(q=>`<li><div class="qq">${esc(q.q)}</div><div class="qo">${q.opts.map((o,i)=>o?`<span class="${i===q.a?'key':''}">${'ABCD'[i]}. ${esc(o)}</span>`:'').join('')}</div>${q.exp?`<small>${esc(q.exp)}</small>`:''}<div class="qa"><button class="smallbtn" data-qe="${q.id}">Ubah</button><button class="smallbtn danger" data-qd="${q.id}">Hapus</button></div></li>`).join('')}</ol>`:'<p class="note" style="margin:0">Belum ada soal. Tambahkan minimal 3 soal supaya bisa dipakai di evaluasi.</p>'}</div>`;
@@ -6008,10 +6053,10 @@ function wizard(o){let el=$('#wz');if(!el){document.body.insertAdjacentHTML('bef
 /* ---------- main berdua di satu HP: bertahap ---------- */
 function duoWizard(){const c=CLS();const st={n1:GROUP.duo1||P.name,n2:GROUP.duo2||'Teman',sid:null,per:clamp(+GROUP.per||5,1,30)};
   wizard({title:'Main berdua',state:st,steps:[
-    {t:'Siapa yang main?',sub:'Pemain 1 di bawah, pemain 2 di atas. Kalian duduk berhadapan.',auto:false,html:s=>`<div class="wzduo"><label><i style="background:#1CB0F6"></i><span>Pemain 1</span><input id="wzN1" maxlength="16" value="${esc(s.n1)}"></label><span class="duovs">VS</span><label><i style="background:#FF9600"></i><span>Pemain 2</span><input id="wzN2" maxlength="16" value="${esc(s.n2)}"></label></div>`,
+    {t:'Siapa yang main?',sub:'Duduk berhadapan, ya!',auto:false,html:s=>`<div class="wzduo"><label><i style="background:#1CB0F6"></i><span>Pemain 1</span><input id="wzN1" maxlength="16" value="${esc(s.n1)}"></label><span class="duovs">VS</span><label><i style="background:#FF9600"></i><span>Pemain 2</span><input id="wzN2" maxlength="16" value="${esc(s.n2)}"></label></div>`,
      bind:(el,s)=>{$('#wzN1').oninput=e=>s.n1=e.target.value;$('#wzN2').oninput=e=>s.n2=e.target.value},ok:s=>s.n1.trim()&&s.n2.trim()?true:'Tulis nama kedua pemain.'},
-    {t:'Mau belajar apa?',sub:`Soal untuk ${esc(c.full)}.`,html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.sid),pick:(s,v)=>s.sid=v,ok:s=>s.sid?true:'Pilih pelajaran dulu.'},
-    {t:'Berapa soal per pemain?',sub:'Lebih sedikit = lebih cepat selesai.',html:s=>wzOpts([3,5,10,15].map(n=>({v:n,l:n+' soal',s:n<=3?'Kilat':n<=5?'Biasa':n<=10?'Seru':'Panjang'})),s.per,true),pick:(s,v)=>s.per=+v,auto:false}],
+    {t:'Mau belajar apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.sid),pick:(s,v)=>s.sid=v,ok:s=>s.sid?true:'Pilih pelajaran dulu.'},
+    {t:'Berapa soal per pemain?',html:s=>wzOpts([3,5,10,15].map(n=>({v:n,l:n+' soal',s:n<=3?'Kilat':n<=5?'Biasa':n<=10?'Seru':'Panjang'})),s.per,true),pick:(s,v)=>s.per=+v,auto:false}],
    summary:s=>{const sb=c.subjects.find(x=>x.id===s.sid);return `<b>${esc(s.n1)}</b> vs <b>${esc(s.n2)}</b> · ${esc(sb?sb.name:'')} · ${s.per} soal`},
    finish:{label:'Pilih game →',run:(s,b,close)=>{const sb=c.subjects.find(x=>x.id===s.sid);GROUP.duo1=s.n1.trim();GROUP.duo2=s.n2.trim();GROUP.format='terbagi';GROUP.per=s.per;GROUP.names=[GROUP.duo1,GROUP.duo2].concat((GROUP.names||[]).slice(2));store.set('group',GROUP);
      PLAY='group';L=lvOf();setLvColor(L);document.documentElement.style.setProperty('--lvc',sb.color);S={id:sb.id,name:sb.name,fit:sb.fit,make:()=>shuffle(sb.units.flatMap(u=>unitQs(u,3)))};close();openGames()}}})}
@@ -6023,8 +6068,8 @@ function evalWizard(){normBank();const c=tCls();const st={subj:EV.subj&&c.subjec
   const today=dayKey(),sess=sessionOf(today,false),attFilled=sess&&Object.keys(sess.att).length>0,list=students(),part=attFilled?list.filter(p=>sess.att[p.id]==='H'):list;
   wizard({title:'Evaluasi di TV',state:st,steps:[
     {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.subj),pick:(s,v)=>{if(s.subj!==v){s.subj=v;s.src='u:0';s.game=null}}},
-    {t:'Materi hari ini',sub:'Pilih materi bawaan atau paket soal buatanmu.',html:s=>{const sb=subj(s),banks=bankOf(sb.id).filter(b=>b.qs.length);return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})).concat(banks.map(b=>({v:'b:'+b.id,l:b.title,s:`Soal buatanmu · ${b.qs.length} soal`}))),s.src)},pick:(s,v)=>{if(s.src!==v){s.src=v;s.game=null}}},
-    {t:'Pakai game apa?',sub:'Hanya game yang cocok dengan bentuk jawaban materi ini.',html:s=>{const src=srcOf(s),games=FIT[src.fit].games;if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
+    {t:'Materi hari ini',html:s=>{const sb=subj(s),banks=bankOf(sb.id).filter(b=>b.qs.length);return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})).concat(banks.map(b=>({v:'b:'+b.id,l:b.title,s:`Soal buatanmu · ${b.qs.length} soal`}))),s.src)},pick:(s,v)=>{if(s.src!==v){s.src=v;s.game=null}}},
+    {t:'Pakai game apa?',html:s=>{const src=srcOf(s),games=FIT[src.fit].games;if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
     {t:'Cara bermain',html:s=>wzOpts(EV_FMTS.map(f=>({v:f[0],l:f[1],s:f[2]})),s.fmt),pick:(s,v)=>s.fmt=v},
     {t:'Berapa soal per murid?',auto:false,html:s=>{const src=srcOf(s);return wzOpts([3,5,10].map(n=>({v:n,l:n+' soal'})),s.n,true)+(src.bank&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
    summary:s=>{const src=srcOf(s);return `<b>${esc(subj(s).name)}</b> · ${esc(src.title)} · ${gameName(s.fmt==='rebutan'?'kuis':s.game)} · ${EV_FMTS.find(f=>f[0]===s.fmt)[1]} · ${s.n} soal`},
@@ -6078,17 +6123,17 @@ function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?
   const steps=6;
   const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';if(s>=1)applyTheme(o.cls,s>=2?o.subj:null);
     const talk=(tt,sub)=>`<div class="onbtalk"><div class="mascot" data-mascot data-mood="${s===5?'happy':'idle'}"></div><div class="bubble"><b>${tt}</b>${sub?`<span>${sub}</span>`:''}</div></div>`;
-    if(s===0){body=talk('Halo! Siapa namamu?','Aku Uli. Aku akan menemanimu belajar setiap hari.')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`+`<p class="onbglbl">Kamu laki-laki atau perempuan?</p>`+`<div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="${o.gender===g}"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`;ok=!!o.name.trim()&&!!o.gender}
-    if(s===1){body=talk('Kamu kelas berapa?','Materinya akan disesuaikan dengan kelasmu.')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.map(x=>x.name).join(' · ')}</small></span></button>`).join('')}</div>`}
-    if(s===2){const c=COURSE.find(x=>x.id===o.cls);if(!o.subj||!c.subjects.some(x=>x.id===o.subj))o.subj=c.subjects[0].id;body=talk('Mau belajar apa dulu?','Pelajaran lain bisa dipilih nanti dari tombol di kiri atas.')+`<div class="onbopts">${c.subjects.map(x=>`<button class="onbopt" data-s="${x.id}" aria-pressed="${o.subj===x.id}"><span class="sg" style="background:${x.color}">${x.glyph}</span><span>${x.name}<small>${x.units.length} unit: ${x.units.map(u=>u.t).slice(0,3).join(', ')}${x.units.length>3?', …':''}</small></span></button>`).join('')}</div>`}
-    if(s===3){body=talk('Berapa target harianmu?','Sedikit tapi rutin lebih baik daripada banyak tapi jarang.')+`<div class="onbopts">${[[10,'Santai','sekitar 1 level sehari'],[20,'Biasa','sekitar 2 level sehari'],[30,'Serius','sekitar 3 level sehari'],[50,'Hebat','5 level atau lebih']].map(g=>`<button class="onbopt" data-g="${g[0]}" aria-pressed="${o.goal===g[0]}"><span class="sg" style="background:var(--orange)">${g[0]}</span><span>${g[1]}<small>${g[0]} XP, ${g[2]}</small></span></button>`).join('')}</div>`}
+    if(s===0){body=talk('Halo! Siapa namamu?','')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`+`<p class="onbglbl">Kamu laki-laki atau perempuan?</p>`+`<div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="${o.gender===g}"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`;ok=!!o.name.trim()&&!!o.gender}
+    if(s===1){body=talk('Kamu kelas berapa?','')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.map(x=>x.name).join(' · ')}</small></span></button>`).join('')}</div>`}
+    if(s===2){const c=COURSE.find(x=>x.id===o.cls);if(!o.subj||!c.subjects.some(x=>x.id===o.subj))o.subj=c.subjects[0].id;body=talk('Mau belajar apa dulu?','')+`<div class="onbopts">${c.subjects.map(x=>`<button class="onbopt" data-s="${x.id}" aria-pressed="${o.subj===x.id}"><span class="sg" style="background:${x.color}">${x.glyph}</span><span>${x.name}<small>${x.units.length} unit: ${x.units.map(u=>u.t).slice(0,3).join(', ')}${x.units.length>3?', …':''}</small></span></button>`).join('')}</div>`}
+    if(s===3){body=talk('Berapa target harianmu?','')+`<div class="onbopts">${[[10,'Santai','sekitar 1 level sehari'],[20,'Biasa','sekitar 2 level sehari'],[30,'Serius','sekitar 3 level sehari'],[50,'Hebat','5 level atau lebih']].map(g=>`<button class="onbopt" data-g="${g[0]}" aria-pressed="${o.goal===g[0]}"><span class="sg" style="background:var(--orange)">${g[0]}</span><span>${g[1]}<small>${g[0]} XP, ${g[2]}</small></span></button>`).join('')}</div>`}
     if(s===4){if(!o.userEdited)o.user=suggestUser(o.name);const full=licMax()&&APP.profiles.length>=licMax();
-      body=talk('Buat akunmu',o.google?'Pilih nama pengguna untukmu. Lain kali cukup masuk dengan Google.':'Pakai nama pengguna dan sandi ini untuk masuk di HP atau TV lain.')+(full?`<div class="tcard"><b>Kelas sudah penuh</b><p class="sub" style="margin:0">Batas ${licMax()} murid sudah tercapai. Minta gurumu menghubungi admin.</p></div>`:`<div class="tcard" style="gap:12px">
+      body=talk('Buat akunmu','')+(full?`<div class="tcard"><b>Kelas sudah penuh</b><p class="sub" style="margin:0">Batas ${licMax()} murid sudah tercapai. Minta gurumu menghubungi admin.</p></div>`:`<div class="tcard" style="gap:12px">
        <div class="tfield"><label for="suUser">Nama pengguna</label><input id="suUser" maxlength="16" autocapitalize="none" spellcheck="false" value="${esc(o.user)}"></div>
-       ${o.google?'<p class="note" style="margin:0">Kamu masuk dengan akun Google, jadi tidak perlu membuat sandi. Nama pengguna dipakai teman untuk mengajakmu bermain.</p>':`<div class="tfield"><label for="suPass">Sandi (4 angka)</label><input id="suPass" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass)}" autocomplete="new-password"></div>
+       ${o.google?'':`<div class="tfield"><label for="suPass">Sandi (4 angka)</label><input id="suPass" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass)}" autocomplete="new-password"></div>
        <div class="tfield"><label for="suPass2">Ulangi sandi</label><input id="suPass2" type="password" inputmode="numeric" maxlength="4" value="${esc(o.pass2)}" autocomplete="new-password"></div>`}${FB?`<div class="tfield"><label for="suCode">Kode kelas dari guru (boleh dikosongkan)</label><input id="suCode" maxlength="8" autocapitalize="characters" autocomplete="off" class="fbcodein" value="${esc(o.code||'')}" placeholder="Contoh: K7B4QX"></div>`:''}<p class="note" id="suErr" style="color:var(--bad);font-weight:700;margin:0"></p></div>`);
       ok=!full;btn='Buat akun'}
-    if(s===5){body=talk(`Siap, ${esc(o.name.trim())}!`,`Nama penggunamu <strong>${esc(o.user)}</strong>. Ikuti jalur dari atas ke bawah, setiap lingkaran adalah satu level.`)+(o.rc?`<div class="tcard" style="align-items:center;text-align:center;gap:6px"><b>Kode pemulihan</b><div class="fbcode-big" style="font-size:30px">${o.rc}</div><small style="color:var(--muted);font-weight:700">Foto layar ini atau minta orang tua mencatatnya. Kode ini dipakai jika kamu lupa sandi.</small></div>`:'')+`<div class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">${[['star','Pelajaran','5 soal singkat. Pilih jawaban, lalu tekan Periksa.'],['game','Level game','Jawab soal sambil menembak, balapan, atau memancing.'],['chest','Peti hadiah','Buka untuk mendapat permata.'],['trophy','Ujian unit','Lulus untuk membuka unit berikutnya.'],['flame','Hari beruntun','Belajar setiap hari supaya apimu terus menyala.']].map(x=>`<div style="display:flex;gap:12px;align-items:center"><span style="width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;background:${x[0]==='flame'?'#FFF0DC':'var(--blue)'};color:${x[0]==='flame'?'#FF8A00':'#fff'};border:${x[0]==='chest'||x[0]==='flame'?'0':'3px solid var(--ink)'}">${ICONS[x[0]]}</span><span><b style="font-family:var(--display)">${x[1]}</b><br><small style="color:var(--muted)">${x[2]}</small></span></div>`).join('')}</div>`;btn='Ayo mulai!'}
+    if(s===5){body=talk(`Siap, ${esc(o.name.trim())}!`,`Nama penggunamu <strong>${esc(o.user)}</strong>.`)+(o.rc?`<div class="tcard" style="align-items:center;text-align:center;gap:6px"><b>Kode pemulihan</b><div class="fbcode-big" style="font-size:30px">${o.rc}</div><small style="color:var(--muted);font-weight:700">Foto layar ini atau minta orang tua mencatatnya. Kode ini dipakai jika kamu lupa sandi.</small></div>`:'')+`<div class="card" style="padding:14px;display:flex;flex-direction:column;gap:10px">${[['star','Pelajaran','5 soal singkat. Pilih jawaban, lalu tekan Periksa.'],['game','Level game','Jawab soal sambil menembak, balapan, atau memancing.'],['chest','Peti hadiah','Buka untuk mendapat permata.'],['trophy','Ujian unit','Lulus untuk membuka unit berikutnya.'],['flame','Hari beruntun','Belajar setiap hari supaya apimu terus menyala.']].map(x=>`<div style="display:flex;gap:12px;align-items:center"><span style="width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:50%;background:${x[0]==='flame'?'#FFF0DC':'var(--blue)'};color:${x[0]==='flame'?'#FF8A00':'#fff'};border:${x[0]==='chest'||x[0]==='flame'?'0':'3px solid var(--ink)'}">${ICONS[x[0]]}</span><span><b style="font-family:var(--display)">${x[1]}</b><br><small style="color:var(--muted)">${x[2]}</small></span></div>`).join('')}</div>`;btn='Ayo mulai!'}
     el.innerHTML=`<div class="onbin"><div class="onbbar"><button class="back" id="onbBack" aria-label="Kembali">←</button><span class="lbar"><i style="width:${(s+1)/steps*100}%"></i></span></div>${body}<div class="onbfoot"><button class="primary press" id="onbNext" ${ok?'':'disabled'}>${btn}</button>${s===0?'<button class="linkbtn" id="onbHave" style="width:100%;margin-top:10px">Saya sudah punya akun</button>':''}</div></div>`;hydrate(el);
     el.querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{o.gender=b.dataset.gd;tone([660],.03);render()});
     const nm=$('#onbName');if(nm){nm.oninput=()=>{o.name=nm.value;$('#onbNext').disabled=!o.name.trim()||!o.gender};setTimeout(()=>nm.focus(),60);nm.onkeydown=e=>{if(e.key==='Enter'&&o.name.trim()&&o.gender)$('#onbNext').click()}}
@@ -6195,12 +6240,12 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
-window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,2500);window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
@@ -6403,7 +6448,7 @@ bindLicCard=function(){const b=$('#licGo');if(b)b.onclick=proAsk};
 
 /* ---------- kartu kode kelas ---------- */
 function fbCodeCard(compact){const code=(FBX.classDoc&&FBX.classDoc.code)||'······';const n=Object.keys(FBX.members||{}).length;
-  return `<div class="tcard fbcode"><div class="fbcode-row"><div class="grow"><h3>Kode kelas</h3><p class="sub" style="margin:0">Bagikan hanya ke muridmu. Murid memasukkan kode ini saat mendaftar atau di menu Profil, lalu latihannya di rumah langsung terlihat di sini.</p></div><div class="fbcode-big" aria-label="Kode kelas">${esc(code)}</div></div>
+  return `<div class="tcard fbcode"><div class="fbcode-row"><div class="grow"><h3>Kode kelas</h3><p class="sub" style="margin:0">Bagikan ke muridmu.</p></div><div class="fbcode-big" aria-label="Kode kelas">${esc(code)}</div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" data-fb="copy">Salin pesan untuk murid</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}<span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPaid()?'<span class="pill ok">PRO</span>':inTrial()?`<span class="pill ok">Coba Pro · ${trialLeft()} hari lagi</span>`:'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
 function fbBindCode(root){if(!root)return;root.querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{const k=b.dataset.fb,code=FBX.classDoc&&FBX.classDoc.code;
     if(k==='copy')copyText(`Ayo belajar di JELAS (Jelajah Kelas)!\n1. Buka ${location.origin+location.pathname}\n2. Pilih MULAI SEKARANG, lalu buat akun\n3. Masukkan kode kelas: ${code}\nSudah punya akun? Masukkan kodenya di menu Profil.`);
@@ -6431,7 +6476,7 @@ function dashTidy(v,hasStud){const head=v.querySelector('.thead');if(!head)retur
   const today=[...v.querySelectorAll('.tcard h3')].find(h=>h.textContent.trim()==='Pertemuan hari ini');const code=v.querySelector(':scope > .fbcode');
   if(code&&today&&hasStud)today.closest('.tcard').after(code)}
 const _rTD=renderTDash;
-renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .sub').forEach(e=>{if(e.textContent.startsWith('Daftarkan nama murid'))e.textContent='Bagikan kode kelas di bawah supaya murid mendaftar sendiri dari HP-nya. Murid yang belajar hanya di TV kelas bisa kamu tambahkan di menu Murid.'});
+renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .sub').forEach(e=>{if(e.textContent.startsWith('Daftarkan nama murid'))e.textContent='Bagikan kode kelas di bawah ke muridmu.'});
   dashTidy(v,students().length>0);fbBindCode(v);const fv=$('#fbVerify');if(fv&&!fv.onclick)fv.onclick=()=>{FBX.user.sendEmailVerification().then(()=>toast('check','Tautan verifikasi dikirim ulang.')).catch(e=>toast('lock',fbErr(e)))}};TEACH_R.tdash=renderTDash;
 
 /* ---------- menu Murid versi online ---------- */
@@ -6582,7 +6627,7 @@ function taskWizard(c,cid){const plus=d=>dayKey(new Date(Date.now()+d*864e5));co
     {t:'Berapa soal?',html:s=>wzOpts([5,8,10,15].map(n=>({v:n,l:n+' soal',s:n<=5?'Sekitar 3 menit':n<=8?'Sekitar 5 menit':n<=10?'Sekitar 7 menit':'Sekitar 10 menit'})),s.n,true),pick:(s,v)=>s.n=+v},
     {t:'Kapan batas waktunya?',auto:false,html:s=>wzOpts([[1,'Besok'],[3,'3 hari lagi'],[7,'1 minggu lagi']].map(([d,l])=>({v:plus(d),l,s:fmtD(plus(d))})),s.due)+`<div class="tfield"><label for="wzDue">Atau pilih tanggal</label><input id="wzDue" type="date" min="${dayKey()}" value="${s.due}"></div>`,
      pick:(s,v)=>{s.due=v;const d=$('#wzDue');if(d)d.value=v},bind:(el,s)=>{$('#wzDue').onchange=e=>{s.due=e.target.value;el.querySelectorAll('[data-wv]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.wv===s.due))}},ok:s=>s.due&&s.due>=dayKey()?true:'Batas waktu tidak boleh sebelum hari ini.'},
-    {t:'Ingatkan murid?',sub:'Pengingat dikirim ke HP murid setiap hari sampai tugas dikerjakan. Notifikasi tugas baru langsung dikirim saat tugas diberikan.',auto:false,
+    {t:'Ingatkan murid?',sub:'Dikirim ke HP murid sampai tugas dikerjakan.',auto:false,
      html:s=>wzOpts([0,1,2,3].map(n=>({v:n,l:n?n+' kali sehari':'Tidak perlu'})),s.rem,true)+`<div class="tkhours" id="wzHours">${[0,1,2].map(i=>`<label ${i>=s.rem?'hidden':''}>Jam ke-${i+1}<select data-h="${i}">${Array.from({length:17},(_,k)=>k+5).map(x=>`<option value="${x}" ${x===s.hours[i]?'selected':''}>${String(x).padStart(2,'0')}.00</option>`).join('')}</select></label>`).join('')}</div>`,
      pick:(s,v)=>{s.rem=+v;document.querySelectorAll('#wzHours label').forEach((l,i)=>l.hidden=i>=s.rem)},bind:(el,s)=>el.querySelectorAll('#wzHours select').forEach(x=>x.onchange=()=>{s.hours[+x.dataset.h]=+x.value})}],
    summary:s=>`<b>${esc(SB(s).name)}</b> · ${esc(SB(s).units[+s.ui].t)} · ${s.n} soal · batas ${fmtD(s.due)} · ${s.rem?s.rem+' pengingat/hari':'tanpa pengingat'}`,
@@ -6592,8 +6637,8 @@ function taskWizard(c,cid){const plus=d=>dayKey(new Date(Date.now()+d*864e5));co
      if(hours.length)FB.db.doc('reminders/'+ref.id).set({classId:cid,tid:ref.id,title:tk.title,subjName:tk.subjName,due:s.due,hours,tz:-new Date().getTimezoneOffset(),created:Date.now()}).catch(e=>console.warn('reminder',e));
      notifyServer('task',null,{cid,tid:ref.id});close();toast('target','Tugas diberikan. Murid melihatnya di halaman Belajar.');renderTTask()}}})}
 async function renderTTask(){const v=$('#vTTask'),c=tCls(),cid=FBX.user.uid;
-  v.innerHTML=thead(['Tugas','target'],'Beri latihan untuk dikerjakan murid di rumah. Nilainya masuk otomatis begitu murid selesai.')+
-   `<div class="tcard evnew"><span class="evnew-ic"><i data-icon="target"></i></span><div class="grow"><h3>Buat tugas baru</h3><p class="sub" style="margin:0">Pilih pelajaran, materi, jumlah soal, batas waktu, dan pengingat, langkah demi langkah.</p></div><button class="primary press" id="tkWiz">Buat tugas</button>${isPro()?'':`<p class="note" style="margin:0">Paket Gratis: maksimal ${FREE_TASKS} tugas aktif. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></p>`}</div>
+  v.innerHTML=thead(['Tugas','target'],'')+
+   `<div class="tcard evnew"><span class="evnew-ic"><i data-icon="target"></i></span><div class="grow"><h3>Buat tugas baru</h3></div><button class="primary press" id="tkWiz">Buat tugas</button>${isPro()?'':`<p class="note" style="margin:0">Paket Gratis: maksimal ${FREE_TASKS} tugas aktif. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></p>`}</div>
    <div id="tkList" style="display:flex;flex-direction:column;gap:16px"><div class="tcard"><p class="note" style="margin:0">Memuat tugas…</p></div></div>`;
   hydrate(v);fbBindCode(v);
   let tasks=[];$('#tkWiz').onclick=()=>{const today=dayKey();if(!isPro()&&tasks.filter(x=>x.due>=today).length>=FREE_TASKS){proAsk();return}taskWizard(c,cid)};
@@ -6642,7 +6687,7 @@ renderPath=function(){_renderPath();if(!FBX.user||isT())return;fbTaskBanner();no
 /* ---------- peringkat kelas online ---------- */
 const _rL=renderLeague;
 renderLeague=function(){_rL();if(isT()||!FBX.user||!P)return;const m=FBX.me||{},card=$('#leagueCard'),p=card.querySelector('.lhead p'),box=card.children[2];
-  if(!m.classId){if(p)p.textContent='Gabung kelas lewat menu Profil supaya bisa bersaing XP mingguan dengan teman sekelasmu.';const n=card.children[3];if(n)n.remove();return}
+  if(!m.classId){if(p)p.textContent='Gabung kelas lewat Profil untuk ikut liga.';const n=card.children[3];if(n)n.remove();return}
   if(p)p.textContent=`Peringkat XP minggu ini di ${m.clsName||'kelasmu'}. Minggu baru mulai setiap Senin.`;const n=card.children[3];if(n)n.remove();
   box.innerHTML='<p class="note">Memuat peringkat kelas…</p>';
   FB.db.collection('classes/'+m.classId+'/board').where('week','==',weekKey()).get().then(q=>{const me=FBX.user.uid;const rows=q.docs.map(d=>Object.assign({uid:d.id},d.data())).filter(r=>r.uid!==me);
@@ -6656,7 +6701,7 @@ function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT(
 
 /* ---------- MAIN BARENG ONLINE: tantang teman dari jarak jauh ---------- */
 const ROOM={code:null,doc:null,unsub:null,playing:false,timer:null,lastPush:'',shown:false};window.ROOM=ROOM;
-function roomCard(){return `<div class="card roomcard"><div class="roomcard-h"><span style="width:46px;flex:none">${ICONS.team}</span><div style="flex:1;min-width:180px"><h3>Main bareng online</h3><p class="note" style="margin:0">Tantang teman dari HP masing-masing. Semua pemain mendapat soal yang sama, peringkatnya terlihat langsung.</p></div></div>
+function roomCard(){return `<div class="card roomcard"><div class="roomcard-h"><span style="width:46px;flex:none">${ICONS.team}</span><div style="flex:1;min-width:180px"><h3>Main bareng online</h3><p class="note" style="margin:0"></p></div></div>
   <div class="roomcard-b"><button class="primary" id="rmNew">Ajak tanding</button><div class="roomjoin"><input id="rmCode" class="fbcodein" maxlength="6" placeholder="KODE" autocomplete="off" autocapitalize="characters"><button class="ghost" id="rmJoin">Gabung</button></div></div></div>`}
 function bindRoomCard(){const n=$('#rmNew');if(!n)return;n.onclick=ajakWizard;$('#rmJoin').onclick=()=>roomJoin($('#rmCode').value);$('#rmCode').onkeydown=e=>{if(e.key==='Enter')roomJoin($('#rmCode').value)}}
 function roomCreateAsk(){const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.min(s.units.length,Math.floor(done/NODES.length)+1));
@@ -6710,10 +6755,10 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
    <div class="tcard" style="align-items:center;text-align:center;gap:8px"><small style="font-weight:800;color:var(--muted)">${esc(d.subjName)} · ${esc(d.title)} · ${d.n} soal · ${d.mode==='acak'?'Acak semua game':gameName(d.mode||'kuis')}</small><div class="fbcode-big">${ROOM.code}</div>
      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><a class="primary" style="text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Aku menantangmu di JELAS! ${d.subjName}: ${d.title}. Buka ${link} atau masukkan kode ${ROOM.code} di menu Main Bareng.`)}">Kirim lewat WhatsApp</a><button class="ghost" id="rmCopy">Salin kode</button></div></div>
    <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/8)`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
-     ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':`<p class="note" style="margin:0">Peringkat berubah otomatis saat teman selesai bermain.</p>`}</div>
+     ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':``}</div>
    ${lobby&&host?`<button class="primary press" id="rmGo" style="font-size:22px;padding:12px">Mulai sekarang</button><button class="ghost" id="rmMore">Ajak teman lagi</button>`:''}
    ${!lobby&&!me.done?`<button class="primary press" id="rmPlay">Main sekarang</button>`:''}
-   ${!lobby&&me.done&&host?`<button class="primary press" id="rmAgain" style="font-size:20px;padding:12px">🔁 Main lagi</button><p class="note" style="margin:-6px 0 0;text-align:center">Soal baru, pemain tetap sama. Tidak perlu mengundang ulang.</p>`:''}
+   ${!lobby&&me.done&&host?`<button class="primary press" id="rmAgain" style="font-size:20px;padding:12px">🔁 Main lagi</button><p class="note" style="margin:-6px 0 0;text-align:center"></p>`:''}
    ${!lobby&&me.done&&!host?`<p class="note" style="text-align:center;margin:0">Mau main lagi? Tunggu ${esc(d.hostName||'pembuat')} menekan <b>Main lagi</b>, nanti ronde baru muncul otomatis.</p>`:''}
    </div>`;
   hydrate(el);$('#rmX').onclick=()=>roomClose();$('#rmCopy').onclick=()=>copyText(ROOM.code);
@@ -6827,7 +6872,7 @@ function ajakWizard(){if(!P)return;ajakInit();const st={cls:AJAK.cls,sid:AJAK.si
     {t:'Pelajaran apa?',skip:s=>!C(s),html:s=>{const c=C(s);return wzOpts([{v:'acak',l:'Pelajaran acak',g:'🎲',c:'#9B6BFF'}].concat(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color}))),s.sid)},pick:(s,v)=>{if(s.sid!==v){s.sid=v;s.ui='acak'}}},
     {t:'Materi yang mana?',skip:s=>!SB(s),html:s=>{const sb=SB(s);return wzOpts([{v:'acak',l:'Semua materi',s:'Soal acak dari semua unit'}].concat(sb.units.map((u,i)=>({v:String(i),l:`Unit ${i+1}: ${u.t}`,s:u.d||''}))),s.ui)},pick:(s,v)=>s.ui=v},
     {t:'Main game apa?',html:s=>{const gs=gamesFor(s);if(s.mode!=='acak'&&!gs.includes(s.mode))s.mode='acak';return `<div class="ajgames wzgames">${[['acak','🎲 Acak semua game']].concat(gs.map(g=>[g,gameName(g)])).map(([id,nm])=>`<button class="ajg" data-wv="${id}" aria-pressed="${s.mode===id}" ${id!=='acak'?`style="--mc:${MCOL[id]||'#9B6BFF'}"`:''}>${esc(nm)}</button>`).join('')}</div>`},pick:(s,v)=>s.mode=v},
-    {t:'Berapa soal?',sub:'Tentukan sendiri, 1 sampai 50 soal.',auto:false,html:s=>`<div class="wzn">${stepperHTML('wzN',s.n,1,50)}</div>${wzOpts([3,5,10,15,20].map(n=>({v:n,l:n+' soal'})),s.n,true)}`,
+    {t:'Berapa soal?',sub:'1 sampai 50 soal.',auto:false,html:s=>`<div class="wzn">${stepperHTML('wzN',s.n,1,50)}</div>${wzOpts([3,5,10,15,20].map(n=>({v:n,l:n+' soal'})),s.n,true)}`,
      bind:(el,s,re)=>bindStepper('wzN',v=>{s.n=v;el.querySelectorAll('[data-wv]').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.wv===v))}),pick:(s,v)=>{s.n=+v;const i=$('#wzN');if(i)i.value=v}}],
    summary:s=>{const o=Object.assign({},AJAK);Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui,mode:s.mode,n:s.n});const r=ajakSummary().map(esc).join(' · ');Object.assign(AJAK,{cls:o.cls,sid:o.sid,ui:o.ui,mode:o.mode,n:o.n});return r},
    finish:{label:'Lanjut ajak teman →',run:(s,b,close)=>{const before=JSON.stringify([AJAK.cls,AJAK.sid,String(AJAK.ui),AJAK.mode,AJAK.n]);Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui,mode:s.mode,n:s.n});
@@ -6849,6 +6894,43 @@ function openAjak(){if(!P)return;ajakInit();AJAK.sent={};
   $('#ajEdit').onclick=()=>{el.hidden=true;ajakWizard()};
   $('#ajShare').onclick=ajakShare;$('#ajGo').onclick=()=>ajakSearch($('#ajQ').value);$('#ajQ').onkeydown=e=>{if(e.key==='Enter')ajakSearch($('#ajQ').value)};
   ajakFoot();ajakLoadFriends()}
+/* ---------- misi teman (mingguan, berdua) ---------- */
+const FQ={list:null,goal:20,gift:10,reward:50};window.FQ=FQ;
+const fqWeekLeft=()=>{const d=(new Date().getDay()+6)%7;return 7-d};
+const fqMine=()=>(P.fqw&&P.fqw.wk===weekKey())?P.fqw.n:0;
+async function fqLoad(){const me=FBX.user.uid;const q=await FB.db.collection('fq').where('members','array-contains',me).where('week','==',weekKey()).get();FQ.list=q.docs.map(d=>Object.assign({id:d.id},d.data()));return FQ.list}
+window.fqSync=async function(){try{if(!FBX.user||isT()||!P)return;if(!FQ.list)await fqLoad();const me=FBX.user.uid,n=fqMine();
+  for(const d of FQ.list){if((+d['n_'+me]||0)!==n){await FB.db.doc('fq/'+d.id).update({['n_'+me]:n});d['n_'+me]=n}}}catch(e){console.warn('fq',e)}};
+async function fqCreate(f){const me=FBX.user.uid,wk=weekKey(),id=`${wk}_${[me,f.uid].sort().join('_')}`;
+  let ex=null;try{const sn=await FB.db.doc('fq/'+id).get();if(sn.exists)ex=sn}catch(e){}
+  if(!ex)await FB.db.doc('fq/'+id).set({members:[me,f.uid],week:wk,goal:FQ.goal,names:{[me]:P.name,[f.uid]:f.name},avs:{[me]:P.avatar||null,[f.uid]:f.av||null},['n_'+me]:fqMine(),created:Date.now()});
+  await fqLoad();await window.fqSync()}
+window.renderFQ=async function(box){if(!box)return;if(!FBX.user||isT()||!P){box.innerHTML='';return}
+  const head=`<div class="qsec"><h3>MISI TEMAN</h3><span class="qclock"><i data-icon="clock"></i>${fqWeekLeft()}H</span></div>`;
+  if(!FQ.list){box.innerHTML=head+'<div class="card fqcard"><div class="fqbody"><p class="note">Memuat…</p></div></div>';hydrate(box);try{await fqLoad();await window.fqSync()}catch(e){box.innerHTML='';return}}
+  const me=FBX.user.uid;
+  if(!FQ.list.length){box.innerHTML=head+`<div class="card fqcard"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${silhouetteSVG()}</span></div><div class="fqbody"><b>Pilih teman untuk misi minggu ini</b><div class="fqpick" id="fqPick"><p class="note">Memuat teman…</p></div></div></div>`;hydrate(box);
+    const list=await friendsData();const pk=$('#fqPick');if(!pk)return;
+    pk.innerHTML=list.length?list.slice(0,8).map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(f.sub)}</small></span><button class="ajinv" data-fq="${esc(f.uid)}">PILIH</button></div>`).join(''):`<p class="note" style="margin:0">Belum ada teman. Gabung kelas lewat Profil atau ajak teman bertanding dulu.</p>`;
+    pk.querySelectorAll('[data-fq]').forEach(b=>b.onclick=async()=>{b.disabled=true;b.textContent='…';try{await fqCreate(list.find(x=>x.uid===b.dataset.fq));sfx.win();window.renderFQ(box)}catch(e){b.disabled=false;b.textContent='PILIH';toast('lock',fbErr(e))}});return}
+  box.innerHTML=head+FQ.list.map(d=>{const o=d.members.find(x=>x!==me)||me,nm=(d.names||{})[o]||'Teman',a=+d['n_'+me]||0,b=+d['n_'+o]||0,g=+d.goal||FQ.goal,tot=Math.min(g,a+b),done=a+b>=g;
+    const nudged=Date.now()-(+d['nudge_'+me]||0)<864e5,gifted=!!d['gift_'+me],gotGift=d['gift_'+o]&&!d['giftGot_'+me],poke=(+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0);
+    return `<div class="card fqcard" data-fqid="${esc(d.id)}"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${avatarSVG(((d.avs||{})[o])||null,{nobg:true})}</span></div>
+     <div class="fqbody">${poke?`<div class="fqnote">👋 <span class="grow">${esc(nm)} mencolekmu!</span></div>`:''}${gotGift?`<div class="fqnote">🎁 <span class="grow">Hadiah dari ${esc(nm)}</span><button class="primary press" data-fqa="got">Ambil +${FQ.gift}</button></div>`:''}
+      <b>Selesaikan ${g} level bersama</b><div class="fqprog"><div class="qbar"><i style="width:${tot/g*100}%"></i><span>${tot} / ${g}</span></div><span class="fqchest"><i data-icon="${done?'chestOpen':'chest'}"></i></span></div>
+      <div class="fqrow"><i style="background:#FF9600"></i>Kamu<span>${a} level</span></div><div class="fqrow"><i style="background:#C2410C"></i>${esc(nm)}<span>${b} level</span></div>
+      ${done&&!d['claim_'+me]?`<button class="primary press" data-fqa="claim">Buka peti +${FQ.reward}</button>`:''}
+      <div class="fqbtns"><button class="ghost press" data-fqa="nudge" ${nudged?'disabled':''}>👋 ${nudged?'DICOLEK':'COLEK'}</button><button class="ghost press" data-fqa="gift" ${gifted?'disabled':''}>🎁 ${gifted?'TERKIRIM':'HADIAH'}</button></div></div></div>`}).join('');
+  hydrate(box);
+  FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me);if((+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0)){P.fqSeen=P.fqSeen||{};P.fqSeen[d.id]=+d['nudge_'+o];save()}});
+  box.querySelectorAll('[data-fqa]').forEach(b=>b.onclick=async()=>{const card=b.closest('[data-fqid]'),d=FQ.list.find(x=>x.id===card.dataset.fqid),o=d.members.find(x=>x!==me),k=b.dataset.fqa;b.disabled=true;
+    try{if(k==='nudge'){const t=Date.now();await FB.db.doc('fq/'+d.id).update({['nudge_'+me]:t});d['nudge_'+me]=t;notifyServer('nudge',d.id);toast('check',`Kamu mencolek ${(d.names||{})[o]||'temanmu'}.`)}
+      if(k==='gift'){await FB.db.doc('fq/'+d.id).update({['gift_'+me]:Date.now()});d['gift_'+me]=Date.now();toast('check',`Hadiah +${FQ.gift} permata dikirim.`)}
+      if(k==='got'){await FB.db.doc('fq/'+d.id).update({['giftGot_'+me]:true});d['giftGot_'+me]=true;P.gems+=FQ.gift;save();renderTop();sfx.win()}
+      if(k==='claim'){await FB.db.doc('fq/'+d.id).update({['claim_'+me]:true});d['claim_'+me]=true;P.gems+=FQ.reward;save();renderTop();sfx.win();toast('trophy',`Misi teman selesai! +${FQ.reward} permata.`)}
+      window.renderFQ(box)}catch(e){b.disabled=false;toast('lock',fbErr(e))}})};
+async function fqNotice(){try{if(!FBX.user||isT()||!P)return;await fqLoad();await window.fqSync();const me=FBX.user.uid;
+  FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if((+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0))toast('team',`${nm} mencolekmu! Ayo selesaikan misi teman.`);else if(d['gift_'+o]&&!d['giftGot_'+me])toast('gem',`${nm} mengirim hadiah. Ambil di menu Misi.`)})}catch(e){}}
 async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
   (P.friends||[]).forEach(f=>map.set(f.uid,{uid:f.uid,name:f.name,av:f.av,sub:'Lawan tanding'}));
   if(m.classId){try{const q=await FB.db.collection('classes/'+m.classId+'/board').get();q.docs.forEach(d=>{if(d.id===me)return;const x=d.data();const o=map.get(d.id)||{uid:d.id};map.set(d.id,Object.assign(o,{name:x.name,av:x.av||o.av||null,sub:'Teman sekelas'}))})}catch(e){}}
@@ -6857,18 +6939,18 @@ async function friendsData(){const me=FBX.user.uid,m=FBX.me||{};const map=new Ma
 function duoCard(){const v=$('#vTeam');if(!v||!P)return;let el=$('#duoCard');const rc=v.querySelector('.roomcard');
   if(!el){(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card duocard" id="duoCard"></div>');el=$('#duoCard')}
   const c=CLS();const n1=GROUP.duo1||P.name,n2=GROUP.duo2||'Teman';const per=clamp(+GROUP.per||5,1,30);
-  el.innerHTML=`<div class="duohead"><span class="duoic"><svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><rect x="10" y="4" width="28" height="40" rx="6" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M10 24 H38" stroke="currentColor" stroke-width="3" stroke-dasharray="3 3"/><circle cx="24" cy="14" r="4" fill="#1CB0F6"/><circle cx="24" cy="34" r="4" fill="#FF9600"/></svg></span><div><h3 style="margin:0">Main berdua di satu HP</h3><p class="note" style="margin:0">Tanpa internet. Layar dibagi dua, kalian berhadapan dan menjawab bersamaan.</p></div></div>
+  el.innerHTML=`<div class="duohead"><span class="duoic"><svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><rect x="10" y="4" width="28" height="40" rx="6" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M10 24 H38" stroke="currentColor" stroke-width="3" stroke-dasharray="3 3"/><circle cx="24" cy="14" r="4" fill="#1CB0F6"/><circle cx="24" cy="34" r="4" fill="#FF9600"/></svg></span><div><h3 style="margin:0">Main berdua di satu HP</h3><p class="note" style="margin:0">Tanpa internet, satu HP berdua.</p></div></div>
     <button class="primary press duogo" id="duoGo">MAIN BERDUA</button>`;
   hydrate(el);$('#duoGo').onclick=duoWizard}
 async function friendsCard(){const v=$('#vTeam');if(!v||!FBX.user||isT())return;let el=$('#friendCard');if(!el){const rc=v.querySelector('.roomcard');(rc||v.querySelector('.pagehead')).insertAdjacentHTML('afterend','<div class="card friendcard" id="friendCard"></div>');el=$('#friendCard')}
   el.innerHTML='<h4 class="ajsec" style="margin:0">TEMANMU</h4><p class="note">Memuat teman…</p>';const list=await friendsData(),m=FBX.me||{};
-  el.innerHTML=`<h4 class="ajsec" style="margin:0">TEMANMU</h4>${list.length?list.map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(f.sub)}</small></span><button class="ajinv" data-fr="${esc(f.uid)}">TANTANG</button></div>`).join(''):`<p class="note" style="margin:0">${m.classId?'Teman sekelasmu akan muncul di sini setelah mereka belajar minggu ini.':'Gabung kelas lewat menu Profil supaya teman sekelasmu muncul di sini.'} Kamu juga bisa menekan <b>Ajak tanding</b> lalu mencari nama pengguna teman.</p>`}`;
+  el.innerHTML=`<h4 class="ajsec" style="margin:0">TEMANMU</h4>${list.length?list.map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(f.sub)}</small></span><button class="ajinv" data-fr="${esc(f.uid)}">TANTANG</button></div>`).join(''):`<p class="note" style="margin:0">${m.classId?'Teman sekelasmu akan muncul di sini setelah mereka belajar minggu ini.':'Gabung kelas lewat Profil untuk melihat teman sekelasmu.'}</p>`}`;
   bindProfTap(el,list);el.querySelectorAll('[data-fr]').forEach(b=>b.onclick=()=>{const f=list.find(x=>x.uid===b.dataset.fr);openAjak();setTimeout(()=>{const ab=document.querySelector(`#ajList .ajinv[data-uid="${CSS.escape(f.uid)}"]`);ajakInvite(f,ab||null)},350)})}
 async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=FBX.user.uid,m=FBX.me||{};const map=new Map();
   (P.friends||[]).forEach(f=>map.set(f.uid,{uid:f.uid,name:f.name,av:f.av,sub:'Lawan tanding'}));
   if(m.classId){try{const q=await FB.db.collection('classes/'+m.classId+'/board').get();q.docs.forEach(d=>{if(d.id===me)return;const x=d.data();const o=map.get(d.id)||{uid:d.id};map.set(d.id,Object.assign(o,{name:x.name,av:x.av||o.av||null,sub:'Teman sekelas'}))})}catch(e){}}
   const list=[...map.values()].filter(f=>f.name);
-  box.innerHTML=list.length?list.map(f=>ajakRow(f,f.sub)).join(''):`<p class="note">${m.classId?'Teman sekelasmu belum ada yang belajar minggu ini.':'Gabung kelas lewat menu Profil supaya teman sekelasmu muncul di sini.'} Kamu tetap bisa mengajak lewat <b>Bagikan undangan</b> atau mencari nama pengguna.</p>`;
+  box.innerHTML=list.length?list.map(f=>ajakRow(f,f.sub)).join(''):`<p class="note">${m.classId?'Teman sekelasmu belum ada yang belajar minggu ini.':'Gabung kelas lewat Profil untuk melihat teman sekelasmu.'}</p>`;
   ajakBindRows(box,list)}
 /* tantangan masuk */
 function fbListenInvites(){if(AJAK.unsubInv||!FBX.user||isT())return;AJAK.first=true;

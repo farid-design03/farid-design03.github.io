@@ -299,6 +299,13 @@ export default {
         return reply(200, { ok: true, sent }, origin);
       }
       if (!/^[A-Za-z0-9_-]{6,120}$/.test(id || '')) return reply(400, { error: 'id tidak valid' }, origin);
+      if (type === 'nudge') {
+        const d = await getDoc('fq/' + id);
+        if (!d || !(d.members || []).includes(uid)) return reply(403, { error: 'Bukan anggota misi teman ini' }, origin);
+        const other = d.members.find((x) => x !== uid), nm = (d.names || {})[uid] || 'Temanmu';
+        const sent = await pushTo(other, { type: 'nudge', title: `${nm} mencolekmu! 👋`, body: 'Ayo selesaikan misi teman minggu ini.' });
+        return reply(200, { ok: true, sent }, origin);
+      }
       const inv = await getDoc('invites/' + id);
       if (!inv) return reply(404, { error: 'Undangan tidak ditemukan' }, origin);
       let sent = 0;

@@ -131,6 +131,18 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
+    // Misi teman mingguan (berdua). Setiap anggota hanya boleh mengubah datanya sendiri.
+    match /fq/{id} {
+      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow create: if signedIn() && request.auth.uid in request.resource.data.members
+        && request.resource.data.members.size() == 2
+        && id.matches('^' + request.resource.data.week + '_.*');
+      allow update: if signedIn() && request.auth.uid in resource.data.members
+        && request.resource.data.members == resource.data.members
+        && changedKeys().hasOnly(['n_' + request.auth.uid, 'nudge_' + request.auth.uid, 'gift_' + request.auth.uid, 'giftGot_' + request.auth.uid, 'claim_' + request.auth.uid]);
+      allow delete: if false;
+    }
+
     // Undangan tanding dari teman.
     match /invites/{id} {
       allow read: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
