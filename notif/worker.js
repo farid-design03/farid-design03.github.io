@@ -1,6 +1,8 @@
 // Pengirim notifikasi tantangan JELAS — Cloudflare Worker (gratis, tanpa kartu).
 // Rahasia yang dibutuhkan di Cloudflare: SERVICE_ACCOUNT = isi file kunci akun layanan Firebase (.json).
-// Pembayaran (Xendit): XENDIT_SECRET_KEY = Secret API key, XENDIT_CALLBACK_TOKEN = Webhook verification token.
+// Pembayaran (pilih salah satu):
+//   Midtrans: MIDTRANS_SERVER_KEY = Server Key, MIDTRANS_PRODUCTION = 1 (hanya saat sudah mode asli/Production).
+//   Xendit:   XENDIT_SECRET_KEY = Secret API key, XENDIT_CALLBACK_TOKEN = Webhook verification token.
 
 const ALLOWED_ORIGINS = ['https://farid-design03.github.io'];
 let SA = null, ACCESS = { token: null, exp: 0 }, JWKS = { keys: null, exp: 0 };
@@ -130,6 +132,7 @@ async function plansNow() {
     .filter((p) => p.id && p.days > 0 && p.price >= 10000);
 }
 async function createInvoice(env, uid, planId, origin) {
+  if (env.MIDTRANS_SERVER_KEY) return createMidtrans(env, uid, planId, origin);
   if (!env.XENDIT_SECRET_KEY) return { status: 503, body: { error: 'Pembayaran otomatis belum diaktifkan.' } };
   const user = await getDoc('users/' + uid);
   if (!user || user.role !== 'teacher') return { status: 403, body: { error: 'Paket Pro hanya untuk akun guru.' } };
@@ -155,12 +158,80 @@ async function createInvoice(env, uid, planId, origin) {
   if (!r.ok || !inv.invoice_url) return { status: 502, body: { error: 'Xendit menolak: ' + (inv.message || r.status) } };
   const exp = inv.expiry_date ? Date.parse(inv.expiry_date) : now + 86400e3;
   await patchDoc('payments/' + ext, { uid, plan: plan.id, planName: plan.name, days: plan.days, amount: plan.price, status: 'PENDING', invoiceId: inv.id, url: inv.invoice_url, email: user.email || '', created: now });
-  await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/users/${uid}?updateMask.fieldPaths=pay`, {
-    method: 'PATCH', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fields: { pay: { mapValue: { fields: { plan: fv(plan.id), price: fv(plan.price), url: fv(inv.invoice_url), exp: fv(exp), ext: fv(ext) } } } } }),
-  });
+  await savePending(uid, plan, inv.invoice_url, exp, ext);
   return { status: 200, body: { url: inv.invoice_url } };
 }
+// Catat tagihan yang menunggu dibayar di dokumen guru (dipakai ulang jika guru menekan Bayar lagi).
+async function savePending(uid, plan, url, exp, ext) {
+  await fetch(`https://firestore.googleapis.com/v1/projects/${SA.project_id}/databases/(default)/documents/users/${uid}?updateMask.fieldPaths=pay`, {
+    method: 'PATCH', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: { pay: { mapValue: { fields: { plan: fv(plan.id), price: fv(plan.price), url: fv(url), exp: fv(exp), ext: fv(ext) } } } } }),
+  });
+}
+// Aktifkan / perpanjang Pro sekali saja untuk satu pembayaran.
+async function grantPro(ext, extra) {
+  const pay = await getDocRaw('payments/' + ext);
+  if (!pay) return 'no record';
+  const p = pay.data;
+  if (p.status === 'PAID') return 'already';
+  try { await patchDoc('payments/' + ext, Object.assign({ status: 'PAID', paidAt: Date.now() }, extra), pay.updateTime); }
+  catch (e) { return 'race'; }
+  const user = (await getDoc('users/' + p.uid)) || {};
+  const base = Math.max(Date.now(), +user.proUntil || 0);
+  await patchDoc('users/' + p.uid, { plan: 'pro', proUntil: base + (+p.days) * 864e5, pay: null, lastPay: ext });
+  return 'ok';
+}
+
+// ---------- Midtrans (Snap) ----------
+const mtBase = (env) => env.MIDTRANS_PRODUCTION === '1' ? { snap: 'https://app.midtrans.com', api: 'https://api.midtrans.com' } : { snap: 'https://app.sandbox.midtrans.com', api: 'https://api.sandbox.midtrans.com' };
+const mtAuth = (env) => 'Basic ' + btoa(env.MIDTRANS_SERVER_KEY + ':');
+async function createMidtrans(env, uid, planId, origin) {
+  const user = await getDoc('users/' + uid);
+  if (!user || user.role !== 'teacher') return { status: 403, body: { error: 'Paket Pro hanya untuk akun guru.' } };
+  const plan = (await plansNow()).find((p) => p.id === planId);
+  if (!plan) return { status: 400, body: { error: 'Paket tidak ditemukan.' } };
+  const now = Date.now(), pend = user.pay;
+  if (pend && pend.plan === plan.id && +pend.price === plan.price && +pend.exp > now + 15 * 60e3 && pend.url) return { status: 200, body: { url: pend.url, reused: true } };
+  const ext = `J-${uid}-${plan.id}-${now.toString(36)}`;
+  const site = (ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]) + '/';
+  const r = await fetch(mtBase(env).snap + '/snap/v1/transactions', {
+    method: 'POST', headers: { Authorization: mtAuth(env), 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      transaction_details: { order_id: ext, gross_amount: plan.price },
+      item_details: [{ id: plan.id, price: plan.price, quantity: 1, name: `JELAS Pro ${plan.name}`.slice(0, 50) }],
+      customer_details: { first_name: String(user.name || 'Guru JELAS').slice(0, 50), email: user.email || undefined },
+      callbacks: { finish: site + '?bayar=ok' },
+      expiry: { unit: 'hours', duration: 24 },
+    }),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.redirect_url) return { status: 502, body: { error: 'Midtrans menolak: ' + ((j.error_messages || []).join(', ') || r.status) } };
+  const exp = now + 24 * 3600e3;
+  await patchDoc('payments/' + ext, { uid, plan: plan.id, planName: plan.name, days: plan.days, amount: plan.price, status: 'PENDING', gateway: 'midtrans', url: j.redirect_url, email: user.email || '', created: now });
+  await savePending(uid, plan, j.redirect_url, exp, ext);
+  return { status: 200, body: { url: j.redirect_url } };
+}
+async function sha512hex(s) { return [...new Uint8Array(await crypto.subtle.digest('SHA-512', enc.encode(s)))].map((b) => b.toString(16).padStart(2, '0')).join(''); }
+// Kabar dari Midtrans: cek tanda tangan, lalu cek ulang status langsung ke Midtrans sebelum Pro diaktifkan.
+async function midtransWebhook(request, env) {
+  if (!env.MIDTRANS_SERVER_KEY) return new Response('off', { status: 200 });
+  const b = await request.json().catch(() => ({}));
+  const ext = String(b.order_id || '');
+  if (!/^J-[A-Za-z0-9]+-[A-Za-z0-9]+-[a-z0-9]+$/.test(ext)) return new Response('ignored', { status: 200 });
+  const sig = await sha512hex(ext + String(b.status_code || '') + String(b.gross_amount || '') + env.MIDTRANS_SERVER_KEY);
+  if (sig !== b.signature_key) return new Response('bad signature', { status: 403 });
+  const r = await fetch(mtBase(env).api + '/v2/' + encodeURIComponent(ext) + '/status', { headers: { Authorization: mtAuth(env), Accept: 'application/json' } });
+  const st = await r.json().catch(() => ({}));
+  if (st.order_id !== ext) return new Response('unknown order', { status: 200 });
+  const pay = await getDoc('payments/' + ext);
+  if (!pay) return new Response('no record', { status: 200 });
+  const ts = st.transaction_status, fraud = String(st.fraud_status || 'accept').toLowerCase();
+  if (['expire', 'cancel', 'deny', 'failure'].includes(ts)) { if (pay.status !== 'PAID') await patchDoc('payments/' + ext, { status: 'EXPIRED' }); return new Response('closed', { status: 200 }); }
+  if (!((ts === 'settlement' || ts === 'capture') && fraud === 'accept' && String(st.status_code) === '200')) return new Response('pending', { status: 200 });
+  if (Math.round(+st.gross_amount) < +pay.amount) return new Response('underpaid', { status: 200 });
+  return new Response(await grantPro(ext, { method: st.payment_type || '', channel: (st.va_numbers && st.va_numbers[0] && st.va_numbers[0].bank) || st.issuer || st.acquirer || '' }), { status: 200 });
+}
+
 // Kabar dari Xendit. Status selalu dicek ulang langsung ke Xendit sebelum Pro diaktifkan.
 async function xenditWebhook(request, env) {
   if (!env.XENDIT_CALLBACK_TOKEN || request.headers.get('x-callback-token') !== env.XENDIT_CALLBACK_TOKEN) return new Response('forbidden', { status: 403 });
@@ -177,13 +248,7 @@ async function xenditWebhook(request, env) {
   if (inv.status === 'EXPIRED') { await patchDoc('payments/' + ext, { status: 'EXPIRED' }); return new Response('expired', { status: 200 }); }
   if (inv.status !== 'PAID' && inv.status !== 'SETTLED') return new Response('pending', { status: 200 });
   if (+(inv.paid_amount ?? inv.amount) < +p.amount) return new Response('underpaid', { status: 200 });
-  // Kunci catatan pembayaran dulu supaya kabar ganda tidak menambah masa Pro dua kali.
-  try { await patchDoc('payments/' + ext, { status: 'PAID', paidAt: Date.now(), method: inv.payment_method || '', channel: inv.payment_channel || '' }, pay.updateTime); }
-  catch (e) { return new Response('race', { status: 200 }); }
-  const user = (await getDoc('users/' + p.uid)) || {};
-  const base = Math.max(Date.now(), +user.proUntil || 0);
-  await patchDoc('users/' + p.uid, { plan: 'pro', proUntil: base + (+p.days) * 864e5, pay: null, lastPay: ext });
-  return new Response('ok', { status: 200 });
+  return new Response(await grantPro(ext, { method: inv.payment_method || '', channel: inv.payment_channel || '' }), { status: 200 });
 }
 
 // Pengingat tugas terjadwal (Cron Trigger setiap jam).
@@ -215,8 +280,9 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
-    if (request.method === 'POST' && new URL(request.url).pathname === '/xendit') {
-      try { if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT); return await xenditWebhook(request, env); }
+    const path = new URL(request.url).pathname;
+    if (request.method === 'POST' && (path === '/xendit' || path === '/midtrans')) {
+      try { if (!SA) SA = JSON.parse(env.SERVICE_ACCOUNT); return await (path === '/midtrans' ? midtransWebhook(request, env) : xenditWebhook(request, env)); }
       catch (e) { return new Response('error: ' + String(e && e.message || e), { status: 500 }); }
     }
     if (request.method !== 'POST') return reply(200, { ok: true, info: 'Pengirim notifikasi JELAS aktif.' }, origin);
