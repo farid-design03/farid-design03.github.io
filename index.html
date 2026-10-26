@@ -1502,6 +1502,21 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .spduo{grid-template-columns:1fr!important;justify-items:center}.spok{width:min(300px,78vw)}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:10px}.gbtn svg{flex:none}
 .gor{display:flex;align-items:center;gap:10px;color:var(--mute,#777);font-size:13px;font-weight:700;margin:2px 0}.gor:before,.gor:after{content:"";flex:1;height:2px;background:var(--line,#E5E5E5)}
+.rptabs{display:flex;gap:6px;background:#fff;border:2px solid var(--line,#E5E5E5);border-radius:16px;padding:5px}
+.rptabs button{flex:1;border:0;background:none;padding:10px 8px;border-radius:12px;font:inherit;font-weight:800;color:var(--muted,#777);cursor:pointer}
+.rptabs button[aria-pressed=true]{background:#DDF4FF;color:#1899D6;box-shadow:inset 0 0 0 2px #84D8FF}
+.rpacts{display:flex;gap:10px;flex-wrap:wrap}.rpacts button{flex:1 1 180px}
+.sachips{display:flex;gap:8px;flex-wrap:wrap}.sachips .chip{border:2px solid var(--line,#E5E5E5);background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-weight:800;font-size:14px;color:var(--muted,#777);cursor:pointer}
+.sachips .chip[aria-pressed=true]{border-color:#84D8FF;background:#DDF4FF;color:#1899D6}
+.sabars{display:flex;flex-direction:column;gap:12px}.sabar{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(60px,1fr) 46px;gap:10px;align-items:center}
+.sabt b{display:block;font-size:15px;line-height:1.25}.sabt small{color:var(--muted,#777);font-weight:700;font-size:12px}
+.sabtrack{height:14px;border-radius:999px;background:#EEF1F4;overflow:hidden}.sabtrack i{display:block;height:100%;border-radius:999px}
+.sabv{font-family:var(--title);font-size:18px;text-align:right}
+.salist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}.salist li{display:flex;gap:12px;padding:12px 0;border-top:2px solid var(--line,#E5E5E5)}.salist li:first-child{border-top:0}
+.sarate{flex:none;width:58px;height:58px;border-radius:16px;background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.sarate b{font-family:var(--title);font-size:20px}.sarate small{font-size:11px;font-weight:800}
+.saq{font-weight:700;font-size:15px;line-height:1.35}.sameta{display:block;color:var(--muted,#777);font-weight:700;font-size:12px;margin-top:3px}
+.saans{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.saans .pill{white-space:normal}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3022,7 +3037,8 @@ const XQ=Object.assign({},XQ1,XQ2,XQ3,XQ4);
 COURSE.forEach(c=>c.subjects.forEach(sb=>sb.units.forEach((u,i)=>{const x=XQ[c.id+'/'+sb.id+'/'+i];if(x&&!u.g)u.xb=x})));
 const UNIT_COLORS=['#3D8BFF','#26BF66','#FF8A3D','#9B6BFF','#FF5C9E','#14B8A6'];
 function qKey(t){let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return (h>>>0).toString(36)}
-function unitQs(u,n){
+function unitQs(u,n){const qs=unitQs0(u,n);let sid='';try{sid=SUBJ().id}catch(e){}qs.forEach(q=>{if(q&&!q._u){q._u=u.t;q._s=sid}});return qs}
+function unitQs0(u,n){
   if(u.g)return fromGens(u.g,n);
   const items=u.b[1].map(i=>u.b[0][i]).concat(u.xb||[]);if(!items.length)return [];
   const seen=(typeof P!=='undefined'&&P)?(P.qseen=P.qseen||{}):{};const sc=it=>seen[qKey(it[0])]||0;
@@ -3222,9 +3238,17 @@ function showQText(q){
   $('#speakBtn').hidden=!q.say;
 }
 function shakeCard(){const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('shake')}
+/* ---------- rekam jawaban per soal (untuk analisis guru) ---------- */
+const plainTx=v=>String(v==null?'':v).replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();
+function qStat(q,ok){try{if(typeof P==='undefined'||!P||(SESSION&&SESSION.role!=='student')||(game&&game.group)||q.again||!q._u)return;
+  const raw=plainTx(q.q);if(!raw)return;const tpl=raw.replace(/\d+([.,]\d+)*/g,'#');const st=P.qst=P.qst||{};const k=qKey((q._s||'')+'|'+q._u+'|'+tpl);
+  const e=st[k]||(st[k]={n:0,w:0});e.n++;e.u=q._u;e.s=q._s||'';e.c=P.cls;if(!e.x)e.x=raw.slice(0,160);if(tpl!==raw)e.g=1;
+  if(!ok){e.w++;e.xw=raw.slice(0,160);e.a=plainTx(q.ans).slice(0,40);e.p=plainTx(q.picked).slice(0,40);e.tw=Date.now()}else if(!e.a)e.a=plainTx(q.ans).slice(0,40);
+  e.t=Date.now();const ks=Object.keys(st);
+  if(ks.length>350)ks.sort((a,b)=>((st[a].w?1e13:0)+st[a].t)-((st[b].w?1e13:0)+st[b].t)).slice(0,ks.length-300).forEach(x=>delete st[x])}catch(err){}}
 function applyResult(k,frac){
   const q=game.qs[game.i];const ok=k>=0&&q.opts[k]===q.ans;
-  game.results[game.i]=ok;q.picked=k>=0?q.opts[k]:'(waktu habis)';q.ok=ok;let gained=0;
+  game.results[game.i]=ok;q.picked=k>=0?q.opts[k]:'(waktu habis)';q.ok=ok;let gained=0;qStat(q,ok);
   if(game.group){const t=curTeam();q.team=t.name;
     if(ok){gained=10+Math.ceil(frac*10);t.score+=gained;t.correct++;game.correct++;sfx.ok()}else{sfx.bad();shakeCard()}
     mascot(ok?'happy':'sad',ok?`${t.name} ${pick(CHEER)}`:pick(COMFORT));
@@ -5464,6 +5488,115 @@ function renderStudentReport(pid){const t=T(),c=tCls(),p=APP.profiles.find(x=>x.
   hydrate($('#vTRapor'));$('#rpBack').onclick=()=>{RP.pid=null;renderTRapor()};
   let nt=null;$('#rpNote').oninput=e=>{clearTimeout(nt);nt=setTimeout(()=>{p.note=e.target.value;save()},400)};
   $('#rpCopy1').onclick=()=>{const lines=[`Rapor ${p.name}`,`${c.full}\t${t.school||''}`,`Guru\t${t.name}`,'',`Mata pelajaran\tEvaluasi\tRata-rata\tPredikat`,...c.subjects.map(s=>{const sc=ent.filter(e=>e.subj===s.id).map(e=>e.score),v=av(sc);return `${s.name}\t${sc.length}\t${v==null?'':v}\t${predOf(v)}`}),`Rata-rata keseluruhan\t\t${all==null?'':all}\t${predOf(all)}`,'',`Kehadiran\tHadir ${at.H}\tIzin ${at.I}\tSakit ${at.S}\tAlpa ${at.A}`,'',`Catatan guru\t${(p.note||'').replace(/\n/g,' ')}`];copyText(lines.join('\n'))}}
+
+/* ---------- analisis soal tersulit & rapor PDF ---------- */
+const RPV={view:'nilai',subj:'all'};
+const stTxt=v=>v==null?'Belum dinilai':v>=T().kkm?'Tuntas':'Belum tuntas';
+const subjNm=id=>{const s=tCls().subjects.find(x=>x.id===id);return s?s.name:(id||'Lainnya')};
+function soalAgg(sid){const c=tCls(),items={},units={};let nStu=0;
+  students().forEach(p=>{const st=p.qst||{};let any=false;
+    Object.entries(st).forEach(([k,e])=>{if(e.c&&e.c!==c.id)return;if(sid!=='all'&&e.s!==sid)return;any=true;
+      const it=items[k]||(items[k]={k,x:e.x,a:e.a,u:e.u,s:e.s,g:e.g,n:0,w:0,stu:0,picks:{},tw:0,xw:'',aw:'',pw:''});it.n+=e.n;it.w+=e.w;
+      if(e.w){it.stu++;if(e.p&&!e.g)it.picks[e.p]=(it.picks[e.p]||0)+e.w;if((e.tw||0)>it.tw){it.tw=e.tw;it.xw=e.xw||e.x;it.aw=e.a;it.pw=e.p}}
+      if(!it.a&&e.a)it.a=e.a;const uk=(e.s||'')+'|'+e.u,un=units[uk]||(units[uk]={u:e.u,s:e.s,n:0,w:0,stu:new Set()});un.n+=e.n;un.w+=e.w;if(e.w)un.stu.add(p.id)});
+    if(any)nStu++});
+  const list=Object.values(items).filter(i=>i.w>0&&i.n>=2).map(i=>{i.r=Math.round(i.w/i.n*100);const pk=Object.entries(i.picks).sort((a,b)=>b[1]-a[1])[0];i.top=pk?pk[0]:'';return i}).sort((a,b)=>b.r-a.r||b.w-a.w).slice(0,20);
+  const ul=Object.values(units).filter(u=>u.n>=4).map(u=>(u.r=Math.round(u.w/u.n*100),u)).sort((a,b)=>b.r-a.r).slice(0,8);
+  return {list,ul,nStu}}
+function rpTabs(){return `<div class="rptabs" role="tablist"><button data-rv="nilai" aria-pressed="${RPV.view==='nilai'}">Nilai murid</button><button data-rv="soal" aria-pressed="${RPV.view==='soal'}">Soal tersulit</button></div>`}
+function bindRpTabs(){$('#vTRapor').querySelectorAll('[data-rv]').forEach(b=>b.onclick=()=>{RPV.view=b.dataset.rv;tone([660],.03);renderTRapor();window.scrollTo(0,0)})}
+const rateCol=r=>r>=60?'var(--bad)':r>=35?'var(--orange,#FF9600)':'var(--ok)';
+function renderSoalAnalisis(){const c=tCls();if(RPV.subj!=='all'&&!c.subjects.some(s=>s.id===RPV.subj))RPV.subj='all';const A=soalAgg(RPV.subj);
+  $('#vTRapor').innerHTML=thead(['Soal Tersulit','report'],`${c.full} · dari latihan ${A.nStu} murid di aplikasi`,`<button class="ghost" id="saPdf" style="background:#fff">Unduh PDF</button>`)+rpTabs()+
+   `<div class="chips sachips">${[['all','Semua'],...c.subjects.map(s=>[s.id,s.name])].map(([id,n])=>`<button class="chip" data-sj="${id}" aria-pressed="${RPV.subj===id}">${esc(n)}</button>`).join('')}</div>`+
+   (A.list.length||A.ul.length?
+   `<div class="tcard"><h3>Materi paling sulit</h3><p class="sub" style="margin:0">Persentase jawaban salah per materi. Materi di atas perlu diulang di kelas.</p>
+     <div class="sabars">${A.ul.map(u=>`<div class="sabar"><div class="sabt"><b>${esc(u.u)}</b><small>${esc(subjNm(u.s))} · ${u.stu.size} murid pernah salah</small></div><div class="sabtrack"><i style="width:${Math.max(3,u.r)}%;background:${rateCol(u.r)}"></i></div><span class="sabv" style="color:${rateCol(u.r)}">${u.r}%</span></div>`).join('')||'<p class="note">Belum cukup data.</p>'}</div></div>
+    <div class="tcard"><h3>Soal yang paling sering salah</h3><p class="sub" style="margin:0">Diurutkan dari persentase salah tertinggi. Soal berangka acak dikelompokkan per jenis soal.</p>
+     <ol class="salist">${A.list.map(i=>`<li><div class="sarate" style="--c:${rateCol(i.r)}"><b>${i.r}%</b><small>salah</small></div><div class="grow"><div class="saq">${i.g?'<span class="pill mute">Angka berbeda-beda</span> ':''}${esc(i.g?i.xw:i.x)}</div>
+       <small class="sameta">${esc(i.u)} · ${esc(subjNm(i.s))} · ${i.w} dari ${i.n} jawaban salah · ${i.stu} murid</small>
+       <div class="saans"><span class="pill ok">Kunci${i.g?' contoh ini':''}: ${esc(i.g?i.aw:i.a)}</span>${(i.g?i.pw:i.top)?`<span class="pill bad">${i.g?'Dijawab':'Sering dijawab'}: ${esc(i.g?i.pw:i.top)}</span>`:''}</div></div></li>`).join('')||'<p class="note">Belum ada soal yang dijawab salah lebih dari sekali.</p>'}</ol></div>`
+   :`<div class="tcard" style="align-items:center;text-align:center"><div class="mascot" data-mascot data-mood="idle" style="width:110px;height:110px"></div><h3>Belum ada data</h3><p class="sub" style="margin:0">Data muncul setelah murid berlatih di jalur belajar aplikasi.${FB?' Pastikan murid sudah bergabung ke kelasmu.':''}</p></div>`);
+  hydrate($('#vTRapor'));bindRpTabs();
+  $('#vTRapor').querySelectorAll('[data-sj]').forEach(b=>b.onclick=()=>{RPV.subj=b.dataset.sj;renderTRapor()});
+  $('#saPdf').onclick=e=>pdfRun(e.currentTarget,pdfSoal)}
+
+/* ----- PDF ----- */
+let PDFLIB=null;
+function loadPdf(){if(PDFLIB)return PDFLIB;
+  const add=src=>new Promise((r,j)=>{const s=document.createElement('script');s.src=src;s.onload=r;s.onerror=()=>{s.remove();j(new Error('load'))};document.head.appendChild(s)});
+  const one=(local,cdn)=>add(local).catch(()=>add(cdn));
+  PDFLIB=(window.jspdf?Promise.resolve():one('lib/jspdf.umd.min.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'))
+    .then(()=>window.jspdf.jsPDF.API.autoTable?0:one('lib/jspdf.plugin.autotable.min.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'))
+    .then(()=>window.jspdf.jsPDF).catch(e=>{PDFLIB=null;throw new Error('Pembuat PDF gagal dimuat. Periksa internet, lalu coba lagi.')});return PDFLIB}
+const pdfT=s=>String(s==null?'':s).replace(/√/g,'akar ').replace(/≥/g,'>=').replace(/≤/g,'<=').replace(/≠/g,'!=').replace(/π/g,'pi').replace(/[→⇒]/g,'->').replace(/…/g,'...').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[–—−]/g,'-').replace(/[^\x00-\xFF]/g,'');
+const pdfDate=()=>new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+const pdfSlug=s=>String(s||'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'');
+async function pdfRun(btn,fn){const lbl=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='Membuat PDF…'}
+  try{const J=await loadPdf();await fn(J);toast('check','PDF tersimpan di folder Unduhan.')}catch(e){console.error(e);toast('lock',e.message||'PDF gagal dibuat.')}
+  finally{if(btn){btn.disabled=false;btn.textContent=lbl}}}
+const PDF_TBL={theme:'grid',styles:{font:'helvetica',fontSize:9,cellPadding:1.8,lineColor:[220,220,220],lineWidth:.2,textColor:[40,40,40]},headStyles:{fillColor:[28,176,246],textColor:255,fontStyle:'bold'},alternateRowStyles:{fillColor:[247,250,252]},margin:{left:14,right:14}};
+function pdfHead(doc,title,sub){const W=doc.internal.pageSize.getWidth(),t=T();
+  doc.setFillColor(88,204,2);doc.rect(0,0,W,16,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('JELAS - Jelajah Kelas',14,10.5);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.text(pdfT(t.school||''),W-14,10.5,{align:'right'});
+  doc.setTextColor(30);doc.setFont('helvetica','bold');doc.setFontSize(16);doc.text(pdfT(title),14,28);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(100);doc.text(pdfT(sub),14,34.5);doc.setTextColor(30);return 41}
+function pdfSign(doc,y,parent){const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),t=T();if(y>H-48){doc.addPage();y=24}
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(30);const x=W-74;
+  doc.text(pdfT(pdfDate()),x,y);doc.text('Guru Kelas',x,y+6);doc.setFont('helvetica','bold');doc.text(pdfT(t.name||'..............................'),x,y+30);
+  if(parent){doc.setFont('helvetica','normal');doc.text('Mengetahui,',14,y);doc.text('Orang tua/wali',14,y+6);doc.text('..............................',14,y+30)}}
+function pdfFoot(doc){const n=doc.getNumberOfPages(),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(150);doc.setFont('helvetica','normal');doc.text(`Dibuat dengan JELAS · ${pdfT(pdfDate())}`,14,H-8);doc.text(`Halaman ${i} dari ${n}`,W-14,H-8,{align:'right'})}}
+const lowCell=(kkm,cols)=>d=>{if(d.section==='body'&&cols.includes(d.column.index)){const v=+d.cell.raw;if(d.cell.raw!==''&&d.cell.raw!=='-'&&!isNaN(v)&&v<kkm){d.cell.styles.textColor=[220,40,40];d.cell.styles.fontStyle='bold'}}};
+function pdfClass(J){const t=T(),c=tCls(),rows=raporRows();const doc=new J({orientation:c.subjects.length>4?'landscape':'portrait',unit:'mm',format:'a4'});
+  let y=pdfHead(doc,'Rapor Kelas',`${c.full} · Guru: ${t.name||''} · KKM ${t.kkm}`);
+  const sc=rows.map(r=>r.all).filter(v=>v!=null),tun=sc.filter(v=>v>=t.kkm).length;
+  doc.setFontSize(10);doc.text(pdfT(`Jumlah murid: ${rows.length}   ·   Rata-rata kelas: ${av(sc)==null?'-':av(sc)}   ·   Tuntas: ${tun} murid   ·   Belum tuntas: ${sc.length-tun} murid`),14,y);
+  const nc=c.subjects.length;const colSt={};for(let i=3;i<=4+nc;i++)colSt[i]={halign:'right'};
+  doc.autoTable(Object.assign({},PDF_TBL,{startY:y+4,head:[['No','Nama','Hadir',...c.subjects.map(s=>pdfT(s.name)),'Rata-rata','Predikat','Status']],
+    body:rows.map(r=>[r.p.no||'',pdfT(r.p.name),r.at.pct==null?'-':r.at.pct+'%',...r.subs.map(v=>v==null?'-':v),r.all==null?'-':r.all,predOf(r.all),stTxt(r.all)]),
+    columnStyles:Object.assign({0:{halign:'center',cellWidth:10},2:{halign:'right'}},colSt),didParseCell:lowCell(t.kkm,Array.from({length:nc+1},(_,i)=>3+i))}));
+  pdfSign(doc,doc.lastAutoTable.finalY+14,false);pdfFoot(doc);doc.save(`Rapor-Kelas-${pdfSlug(c.full)}-${dayKey()}.pdf`)}
+function pdfStudentPage(doc,p){const t=T(),c=tCls(),at=attOf(p.id),ent=evalEntries(p.id),all=av(ent.map(e=>e.score));
+  let y=pdfHead(doc,'Rapor Murid',`${c.full} · ${t.school||''}`);
+  doc.autoTable(Object.assign({},PDF_TBL,{startY:y,theme:'plain',styles:Object.assign({},PDF_TBL.styles,{fontSize:10,cellPadding:1.2}),columnStyles:{0:{cellWidth:38,textColor:[110,110,110]},1:{fontStyle:'bold'}},
+    body:[['Nama',pdfT(p.name)],['No. absen',p.no||'-'],['Kelas',pdfT(c.full)],['Rata-rata nilai',`${all==null?'-':all}  (Predikat ${predOf(all)} · ${stTxt(all)})`],['Kehadiran',at.n?`${at.pct}% · Hadir ${at.H}, Izin ${at.I}, Sakit ${at.S}, Alpa ${at.A}`:'Belum ada absensi']]}));
+  y=doc.lastAutoTable.finalY+6;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Nilai per mata pelajaran',14,y);
+  doc.autoTable(Object.assign({},PDF_TBL,{startY:y+2,head:[['Mata pelajaran','Evaluasi','Rata-rata','Predikat','Status']],
+    body:c.subjects.map(s=>{const sc=ent.filter(e=>e.subj===s.id).map(e=>e.score),v=av(sc);return [pdfT(s.name),sc.length,v==null?'-':v,predOf(v),stTxt(v)]}),
+    columnStyles:{1:{halign:'right'},2:{halign:'right'}},didParseCell:lowCell(t.kkm,[2])}));
+  y=doc.lastAutoTable.finalY+6;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Latihan mandiri di aplikasi',14,y);
+  doc.autoTable(Object.assign({},PDF_TBL,{startY:y+2,head:[['Total XP','Hari beruntun','Level selesai','Unit selesai','Terakhir belajar']],
+    body:[[p.xp||0,shownStreak(p)+' hari',(p.stats&&p.stats.lessons)||0,unitsDone(p),p.lastDay?fmtDs(p.lastDay):'Belum pernah']]}));
+  if(ent.length){y=doc.lastAutoTable.finalY+6;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Riwayat evaluasi',14,y);
+    doc.autoTable(Object.assign({},PDF_TBL,{startY:y+2,head:[['Tanggal','Mata pelajaran','Materi','Benar','Nilai']],
+      body:ent.slice(-15).reverse().map(e=>[fmtDs(e.date),pdfT(e.subjName),pdfT(e.unit),`${e.correct}/${e.total}`,e.score]),columnStyles:{3:{halign:'right'},4:{halign:'right'}},didParseCell:lowCell(t.kkm,[4])}))}
+  y=doc.lastAutoTable.finalY+6;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Catatan guru',14,y);doc.setFont('helvetica','normal');doc.setFontSize(10);
+  const W=doc.internal.pageSize.getWidth(),lines=doc.splitTextToSize(pdfT(p.note||'-'),W-28);doc.text(lines,14,y+6);
+  pdfSign(doc,y+12+lines.length*5,true)}
+function pdfStudent(J,pid){const p=APP.profiles.find(x=>x.id===pid);const n=$('#rpNote');if(n&&RP.pid===pid){p.note=n.value;save()}
+  const doc=new J({unit:'mm',format:'a4'});pdfStudentPage(doc,p);pdfFoot(doc);doc.save(`Rapor-${pdfSlug(p.name)}-${dayKey()}.pdf`)}
+function pdfAll(J){const list=students().slice().sort((a,b)=>(a.no||999)-(b.no||999));if(!list.length)throw new Error('Belum ada murid.');
+  const doc=new J({unit:'mm',format:'a4'});list.forEach((p,i)=>{if(i)doc.addPage();pdfStudentPage(doc,p)});pdfFoot(doc);doc.save(`Rapor-Semua-Murid-${pdfSlug(tCls().full)}-${dayKey()}.pdf`)}
+function pdfSoal(J){const c=tCls(),A=soalAgg(RPV.subj);const doc=new J({unit:'mm',format:'a4'});
+  let y=pdfHead(doc,'Analisis Soal Tersulit',`${c.full} · ${RPV.subj==='all'?'Semua mata pelajaran':subjNm(RPV.subj)} · data latihan ${A.nStu} murid`);
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Materi paling sulit',14,y);
+  doc.autoTable(Object.assign({},PDF_TBL,{startY:y+2,head:[['Materi','Mata pelajaran','Murid salah','Jumlah jawaban','Salah']],
+    body:A.ul.length?A.ul.map(u=>[pdfT(u.u),pdfT(subjNm(u.s)),u.stu.size,u.n,u.r+'%']):[['Belum cukup data','','','','']],columnStyles:{2:{halign:'right'},3:{halign:'right'},4:{halign:'right',fontStyle:'bold'}}}));
+  y=doc.lastAutoTable.finalY+7;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Soal yang paling sering salah',14,y);
+  doc.autoTable(Object.assign({},PDF_TBL,{startY:y+2,head:[['No','Soal','Materi','Salah','Murid','Kunci','Jawaban salah']],
+    body:A.list.length?A.list.map((i,k)=>[k+1,pdfT((i.g?'(angka berbeda-beda) Contoh: '+i.xw:i.x)),pdfT(i.u),`${i.r}% (${i.w}/${i.n})`,i.stu,pdfT(i.g?i.aw:i.a),pdfT(i.g?i.pw:i.top)]):[['','Belum ada data','','','','','']],
+    columnStyles:{0:{halign:'center',cellWidth:9},1:{cellWidth:62},3:{halign:'right',fontStyle:'bold',textColor:[220,40,40]},4:{halign:'right'}}}));
+  pdfFoot(doc);doc.save(`Soal-Tersulit-${pdfSlug(c.full)}-${dayKey()}.pdf`)}
+
+/* ----- tombol di halaman rapor ----- */
+const _rTR0=renderTRapor,_rSR0=renderStudentReport;
+renderTRapor=function(){if(RP.pid&&APP.profiles.some(p=>p.id===RP.pid))return renderStudentReport(RP.pid);RP.pid=null;
+  if(RPV.view==='soal')return renderSoalAnalisis();
+  _rTR0();const v=$('#vTRapor'),th=v.querySelector('.thead');th.insertAdjacentHTML('afterend',rpTabs()+`<div class="rpacts"><button class="primary press" id="rpPdf">Unduh PDF rapor kelas</button><button class="ghost press" id="rpPdfAll" style="background:#fff">PDF rapor tiap murid</button></div>`);
+  bindRpTabs();$('#rpPdf').onclick=e=>pdfRun(e.currentTarget,pdfClass);$('#rpPdfAll').onclick=e=>pdfRun(e.currentTarget,pdfAll)};
+renderStudentReport=function(pid){_rSR0(pid);const b=$('#rpCopy1');if(b){b.insertAdjacentHTML('beforebegin','<button class="primary press" id="rpPdf1">Unduh PDF</button>');$('#rpPdf1').onclick=e=>pdfRun(e.currentTarget,J=>pdfStudent(J,pid))}
+  const bk=$('#rpBack');if(bk){bk.insertAdjacentHTML('afterend','<button class="ghost press" id="rpPdf1t" style="align-self:flex-start;background:#fff">Unduh rapor PDF</button>');$('#rpPdf1t').onclick=e=>pdfRun(e.currentTarget,J=>pdfStudent(J,pid))}};
 
 /* ---------- students ---------- */
 function addStudentBlock(){const next=Math.max(0,...APP.profiles.map(p=>p.no||0))+1;
