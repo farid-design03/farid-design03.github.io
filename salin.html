@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Salin kode · JELAS</title>
+<style>
+:root{--ink:#3C3C3C;--muted:#777;--line:#E5E5E5;--green:#58CC02;--green2:#58A700;--blue:#1CB0F6;--blue2:#1899D6}
+*{box-sizing:border-box}
+body{margin:0;background:#F7F7F7;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:520px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:16px}
+h1{font-size:26px;margin:4px 0 0}
+.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card h2{margin:0;font-size:19px;display:flex;align-items:center;gap:10px}
+.num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:16px}
+.tag{font-size:12px;font-weight:800;border-radius:999px;padding:2px 10px;background:#FFE7E7;color:#EA2B2B}.tag.opt{background:#EEF0F7;color:var(--muted)}
+ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+a.btn,button{display:block;width:100%;text-align:center;text-decoration:none;font:inherit;font-weight:800;font-size:17px;letter-spacing:.03em;border-radius:16px;padding:14px;border:0;cursor:pointer}
+button{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green2)}
+button:active,a.btn:active{transform:translateY(3px);box-shadow:none}
+button.done{background:var(--blue);box-shadow:0 4px 0 var(--blue2)}
+a.btn{background:#fff;color:var(--blue);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+small{color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<h1>Pasang pembaruan JELAS</h1>
+
+<div class="card">
+  <h2><span class="num">1</span>Aturan Firebase <span class="tag">WAJIB</span></h2>
+  <button id="cRules" disabled>Memuat…</button>
+  <a class="btn" href="https://console.firebase.google.com/project/jelajah-kelas/firestore/rules" target="_blank" rel="noopener">Buka Firebase ↗</a>
+  <ol>
+    <li>Tekan tombol hijau <b>Salin</b>.</li>
+    <li>Tekan <b>Buka Firebase</b>, lalu masuk dengan akun Google-mu.</li>
+    <li>Tekan lama di kotak kode, pilih <b>Pilih semua</b>, lalu <b>Tempel</b>.</li>
+    <li>Tekan <b>Publikasikan</b> (Publish).</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h2><span class="num">2</span>Kode server <span class="tag opt">NANTI SAJA</span></h2>
+  <small>Hanya untuk notifikasi colekan dan pengikut baru di HP. Lebih nyaman dikerjakan di laptop.</small>
+  <button id="cWorker" disabled>Memuat…</button>
+  <a class="btn" href="https://dash.cloudflare.com/?to=/:account/workers/services/view/jelas-notif/production" target="_blank" rel="noopener">Buka Cloudflare ↗</a>
+  <ol>
+    <li>Tekan tombol hijau <b>Salin</b>.</li>
+    <li>Tekan <b>Buka Cloudflare</b>, lalu <b>Edit code</b>.</li>
+    <li>Pilih semua kode lama, lalu <b>Tempel</b>.</li>
+    <li>Tekan <b>Deploy</b>.</li>
+  </ol>
+</div>
+</main>
+<script>
+function setup(id,url,label){const b=document.getElementById(id);let text='';
+  fetch(url+'?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{text=t;b.disabled=false;b.textContent=label}).catch(()=>{b.textContent='Gagal memuat. Muat ulang halaman ini.'});
+  b.onclick=async()=>{try{await navigator.clipboard.writeText(text)}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}
+    b.classList.add('done');b.textContent='✓ Tersalin! Sekarang buka & tempel';setTimeout(()=>{b.classList.remove('done');b.textContent=label},4000)}}
+setup('cRules','firestore.rules','Salin aturan Firebase');
+setup('cWorker','notif/worker.js','Salin kode server');
+</script>
+</body>
+</html>
