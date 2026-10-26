@@ -1528,6 +1528,31 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 .adplans{display:flex;flex-direction:column;gap:10px}.adplan{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;border:2px solid var(--line,#E5E5E5);border-radius:14px}.adplan .tfield{min-width:0}.adplan input{min-width:0;width:100%;box-sizing:border-box}.adplan .tfield:first-child{grid-column:1/-1}
 @media(min-width:640px){.adplan{grid-template-columns:1.4fr .8fr 1fr}.adplan .tfield:first-child{grid-column:auto}}
 .wlegal{margin:0;text-align:center;font-size:13px;font-weight:700}.wlegal a{color:var(--muted,#777);text-decoration:none}
+/* ---- menu samping guru di HP ---- */
+.tbar,.tscrim{display:none}
+@media (max-width:999px){
+ body.teacher .tbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:45;align-items:center;gap:12px;height:58px;padding:env(safe-area-inset-top,0px) max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px));background:#fff;border-bottom:2px solid var(--line)}
+ body.teacher .tbar-menu{flex:none;width:44px;height:44px;padding:0;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer}
+ body.teacher .tbar-menu:active{border-bottom-width:2px;transform:translateY(2px)}
+ body.teacher .tbar b{flex:1;min-width:0;font-family:var(--title);font-size:21px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.teacher .tbar-tag{flex:none;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.08em;color:#fff;background:var(--purple,#8549BA);border-radius:999px;padding:3px 10px}
+ body.teacher .main.wrap{padding-top:calc(72px + env(safe-area-inset-top,0px))!important;padding-bottom:40px!important}
+ body.teacher .side{top:0!important;bottom:0!important;left:0!important;right:auto!important;width:min(82vw,300px);height:auto;flex-direction:column!important;justify-content:flex-start!important;align-items:stretch!important;gap:4px!important;border-top:0!important;border-right:2px solid var(--line)!important;background:#fff!important;padding:calc(14px + env(safe-area-inset-top,0px)) 12px calc(16px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))!important;overflow-y:auto!important;overflow-x:hidden!important;transform:translateX(-105%);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s;z-index:70!important;visibility:hidden}
+ body.teacher.tnav-open .side{transform:none;visibility:visible;box-shadow:10px 0 30px rgba(20,24,40,.2)}
+ body.teacher .side .sbrand{display:flex!important;align-items:center;gap:8px;padding:2px 6px 10px;font-family:var(--title);font-size:24px;color:var(--purple);line-height:1}
+ body.teacher .side .sbrand .logo{width:44px}
+ body.teacher .side .tbadge{display:inline-block!important;align-self:flex-start;margin:0 8px 6px}
+ body.teacher .side .nav{flex:none!important;flex-direction:row!important;align-items:center;gap:14px;padding:10px 14px!important;justify-content:flex-start;min-width:0}
+ body.teacher .side .nav span{display:inline!important;font-size:17px!important;letter-spacing:.02em}
+ body.teacher .side .nav i{width:32px!important;height:32px!important}
+ body.teacher .side .nav[data-tab=texit]{margin-top:auto}
+ body.teacher .tscrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,24,40,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+ body.teacher.tnav-open .tscrim{opacity:1;pointer-events:auto}
+ body.teacher.tnav-open{overflow:hidden}
+ body.playing .tbar,body.playing .tscrim{display:none!important}
+ body.teacher:not(.playing) .toast{top:calc(68px + env(safe-area-inset-top, 0px))}
+}
+@media (max-width:999px) and (prefers-reduced-motion:reduce){body.teacher .side,body.teacher .tscrim{transition:none}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -1542,6 +1567,8 @@ body.sporting #practiceFab,body.sporting .jumpcur{display:none!important}
 </div>
 
 <div class="app" id="app">
+  <div class="tbar" id="tBar"><button class="tbar-menu press" id="tMenu" aria-label="Buka menu" aria-controls="sideNav" aria-expanded="false"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button><b id="tBarTitle">Dasbor</b><span class="tbar-tag">GURU</span></div>
+  <div class="tscrim" id="tScrim"></div>
   <nav class="side" id="sideNav" aria-label="Menu utama">
     <div class="sbrand"><span class="logo mascot" data-mascot></span><b class="sbname">JELAS<small>Jelajah Kelas</small></b></div>
     <button class="nav snav" data-tab="learn"><i data-icon="home"></i><span>Belajar</span></button>
@@ -7122,6 +7149,19 @@ try{document.fonts&&document.fonts.load(`700 20px "Baloo 2"`)}catch(e){}
 setSound();setMusic();applyTV();
 document.querySelectorAll('.nav').forEach(n=>{const sp=n.querySelector('span');if(sp){n.setAttribute('aria-label',sp.textContent.trim());if(!n.title)n.title=sp.textContent.trim()}});
 document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{const t=n.dataset.tab;if(t==='guru')return enterTeacher();if(t==='texit')return exitTeacher();if(TEACH_R[t])return go(t);if(P)go(t)});
+/* ---------- menu samping guru di HP ---------- */
+(function(){const b=document.body,menu=$('#tMenu'),scrim=$('#tScrim'),side=$('#sideNav');if(!menu||!side)return;
+  const mob=()=>innerWidth<1000&&b.classList.contains('teacher');
+  const set=o=>{o=!!o&&mob();b.classList.toggle('tnav-open',o);menu.setAttribute('aria-expanded',o);menu.setAttribute('aria-label',o?'Tutup menu':'Buka menu');if(o){const c=side.querySelector('.nav.tnav[aria-current="page"]')||side.querySelector('.nav.tnav');try{c&&c.focus({preventScroll:true})}catch(e){}}};
+  menu.onclick=()=>{try{haptic(10)}catch(e){}set(!b.classList.contains('tnav-open'))};scrim.onclick=()=>set(false);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&b.classList.contains('tnav-open')){set(false);menu.focus()}});
+  side.addEventListener('click',e=>{if(e.target.closest('.nav'))set(false)});
+  const title=()=>{const c=side.querySelector('.nav.tnav[aria-current="page"] span');const t=$('#tBarTitle');if(t)t.textContent=c?c.textContent:'Mode Guru'};
+  new MutationObserver(()=>{title();set(false)}).observe(side,{attributes:true,subtree:true,attributeFilter:['aria-current']});title();
+  addEventListener('resize',()=>{if(!mob())b.classList.remove('tnav-open')});
+  let sx=null;
+  document.addEventListener('touchstart',e=>{if(!mob()||b.classList.contains('playing'))return;const t=e.touches[0],open=b.classList.contains('tnav-open');sx=(open||t.clientX<24)?[t.clientX,t.clientY,open]:null},{passive:true});
+  document.addEventListener('touchend',e=>{if(!sx)return;const t=e.changedTouches[0],dx=t.clientX-sx[0],dy=Math.abs(t.clientY-sx[1]);if(dy<70){if(!sx[2]&&dx>60)set(true);if(sx[2]&&dx<-60)set(false)}sx=null},{passive:true})})();
 $('#subjBtn').onclick=e=>{e.stopPropagation();if(!$('#pop').hidden&&$('#pop').dataset.k==='s'){closePop();return}subjPop();$('#pop').dataset.k='s'};
 $('#clsBtn').onclick=e=>{e.stopPropagation();if(!$('#pop').hidden&&$('#pop').dataset.k==='c'){closePop();return}clsPop();$('#pop').dataset.k='c'};
 $('#streakBtn').onclick=e=>{e.stopPropagation();streakPop();$('#pop').dataset.k='f'};
