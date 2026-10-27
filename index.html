@@ -1903,6 +1903,10 @@ body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:
  body.duelland.duelon #vDuel .duelbar .eyebrow{display:none}
  body.duelland.duelon #vDuel .duelbar .back{min-height:30px;min-width:34px;padding:2px 8px}
 }
+
+.boostpill{background:#FFF3C4;border:2px solid #FFC800;border-radius:12px;padding:2px 8px;font-weight:900;color:#B7791F;font-size:14px;display:flex;align-items:center;gap:2px}
+.boostpill[hidden]{display:none}.boostpill small{font-size:11px;font-weight:800}
+.fqhint{margin:4px 0 0;font-size:12px;color:var(--muted);text-align:center}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -1963,6 +1967,7 @@ body.lessonmode .feedback{animation:sheetUp .28s cubic-bezier(.2,.9,.3,1)}
     <button class="stat" id="streakBtn" title="Hari beruntun"><i data-icon="flame"></i><span id="streakN">0</span></button>
     <button class="stat" id="gemBtn" title="Permata"><i data-icon="gem"></i><span id="gemN">0</span></button>
     <button class="stat" id="heartBtn" title="Nyawa"><i data-icon="heart"></i><span id="heartN">5</span></button>
+    <span class="stat boostpill" id="boostPill" hidden title="Pengganda XP aktif">⚡2×<small id="boostN"></small></span>
   </header>
   <div class="popover" id="pop" hidden></div>
 
@@ -4939,6 +4944,10 @@ const PETS=[
  ['kakatua','Kakatua Jambul Kuning','Maluku',60],['maleo','Maleo','Sulawesi',60],['beruang','Beruang Madu','Kalimantan',60],['kuskus','Kuskus','Papua',50],
  ['owa','Owa Jawa','Jawa',60],['macan','Macan Tutul Jawa','Jawa',70],['banteng','Banteng','Jawa',70],['pesut','Pesut Mahakam','Kalimantan',80],
  ['elang','Elang Jawa','Jawa',100],['rangkong','Rangkong Badak','Kalimantan',100],['kasuari','Kasuari','Papua',100],['merak','Merak Hijau','Jawa',120],['cenderawasih','Cenderawasih','Papua',150]];
+/* Harga dibuat ringan supaya murid tidak malas mengumpulkan permata. */
+const cheap=p=>p?Math.max(5,Math.round(p*.4/5)*5):0;
+const PRICE={heart:20,freeze:30,boost:15};
+CAPS.forEach(x=>x[3]=cheap(x[3]));BODIES.forEach(x=>x[3]=cheap(x[3]));PETS.forEach(x=>x[3]=cheap(x[3]));
 const petOf=id=>PETS.find(x=>x[0]===id)||PETS[0];
 function curPet(){return (typeof P!=='undefined'&&P&&P.pet)||'uli'}
 function petName(){return petOf(curPet())[1].split(' ')[0]}
@@ -5202,7 +5211,9 @@ function save(){if(P){P.upd=Date.now();const i=APP.profiles.findIndex(x=>x.id===
 function ensureDay(p){p=p||P;const t=dayKey();if(p.today.day!==t)p.today={day:t,xp:0,lessons:0,perfect:0,correct:0,games:0,best:0};if(p.week.id!==weekKey())p.week={id:weekKey(),xp:0}}
 function tickHearts(){if(!P)return;if(P.hearts>=5){P.heartsAt=null;return}if(!P.heartsAt)P.heartsAt=Date.now();const n=Math.floor((Date.now()-P.heartsAt)/HEART_MS);if(n>0){P.hearts=Math.min(5,P.hearts+n);P.heartsAt=P.hearts>=5?null:P.heartsAt+n*HEART_MS;save()}}
 function shownStreak(p){p=p||P;if(!p.lastDay)return 0;const gap=dayNum(dayKey())-dayNum(p.lastDay);if(gap<=1)return p.streak;if(gap===2&&p.freeze>0)return p.streak;return 0}
-function addXp(xp){P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
+function boostLeft(){const b=P&&P.xpBoost;return b&&b.until>Date.now()?Math.ceil((b.until-Date.now())/60000):0}
+function boostAdd(min){const now=Date.now();P.xpBoost={until:Math.max(now,(P.xpBoost&&P.xpBoost.until)||0)+min*60000,x:2};try{renderTop()}catch(e){}}
+function addXp(xp){if(boostLeft())xp*=2;P.xp+=xp;P.week.xp+=xp;P.today.xp+=xp;const t=dayKey();let up=false;P.xpd=P.xpd||{};P.xpd[t]=(P.xpd[t]||0)+xp;Object.keys(P.xpd).forEach(k=>{if(dayNum(t)-dayNum(k)>13)delete P.xpd[k]});
   if(P.lastDay!==t){const gap=P.lastDay?dayNum(t)-dayNum(P.lastDay):99;if(gap===1)P.streak++;else if(gap===2&&P.freeze>0){P.freeze--;P.streak++}else P.streak=1;P.lastDay=t;P.days=[...P.days.filter(d=>dayNum(t)-dayNum(d)<14),t];up=true}
   P.bestStreak=Math.max(P.bestStreak||0,P.streak);return up}
 
@@ -5252,7 +5263,7 @@ const tierOf=p=>TIERS[Math.min(TIERS.length-1,(p&&p.lg&&p.lg.t)||0)];
 const shield=c=>`<svg viewBox="0 0 48 48"><path d="M24 4 L41 10 V22 C41 33 33 40 24 44 C15 40 7 33 7 22 V10Z" fill="${c}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M24 14 l3 6.5 7 .8 -5.2 4.8 1.4 7 -6.2-3.5 -6.2 3.5 1.4-7 -5.2-4.8 7-.8z" fill="#fff" stroke="${K}" stroke-width="2" stroke-linejoin="round"/></svg>`;
 
 /* ---------- top bar & popovers ---------- */
-function renderTop(){if(!P)return;const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjGlyph').textContent=s.glyph;$('#subjName').textContent=s.name;
+function renderTop(){if(!P)return;{const bp=$('#boostPill');if(bp){const m=boostLeft();bp.hidden=!m;const bn=$('#boostN');if(bn)bn.textContent=m?` ${m}m`:''}}const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjGlyph').textContent=s.glyph;$('#subjName').textContent=s.name;
   $('#clsName').textContent=CLS().name;const st=shownStreak();$('#streakN').textContent=st;$('#streakBtn').classList.toggle('off',P.lastDay!==dayKey());
   $('#gemN').textContent=P.gems;$('#heartN').textContent=P.unlimited?'∞':P.hearts;renderRail()}
 function closePop(){$('#pop').hidden=true;document.querySelectorAll('.nrow.popopen').forEach(r=>{r.classList.remove('popopen');const p=r.querySelector('.npop');if(p)p.remove()})}
@@ -5270,7 +5281,7 @@ function gemPop(){openPop($('#gemBtn'),`<h4>${P.gems} permata</h4><p style="marg
 function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(Date.now()-P.heartsAt);const m=Math.max(0,Math.ceil(ms/60000));return `Nyawa berikutnya dalam ${m} menit.`}
 function heartsPanel(){return P.unlimited?`<p style="margin:0">Mode kelas aktif: nyawa tidak terbatas. Matikan di Profil → Pengaturan.</p>`:
   `<div style="display:flex;gap:4px;margin-bottom:8px">${Array.from({length:5},(_,i)=>`<span style="width:30px;color:${i<P.hearts?'var(--red)':'#D8DCEC'}">${ICONS.heart}</span>`).join('')}</div><p style="margin:0 0 10px;font-size:14px">${P.hearts>=5?'Nyawamu penuh.':heartTimer()} Setiap jawaban salah di pelajaran mengurangi 1 nyawa.</p>
-   <div style="display:flex;flex-direction:column;gap:8px"><button class="primary" data-act="refill" ${P.hearts>=5||P.gems<50?'disabled':''}>Isi penuh · 50 permata</button><button class="ghost" data-act="practice">Latihan untuk +1 nyawa</button></div>`}
+   <div style="display:flex;flex-direction:column;gap:8px"><button class="primary" data-act="refill" ${P.hearts>=5||P.gems<PRICE.heart?'disabled':''}>Isi penuh · ${PRICE.heart} permata</button><button class="ghost" data-act="practice">Latihan untuk +1 nyawa</button></div>`}
 /* konfirmasi sebelum membeli dengan permata, supaya tidak salah pencet */
 function buyAsk(what,price,onYes,pic){let el=$('#buyAsk');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="buyask" id="buyAsk" hidden></div>');el=$('#buyAsk')}
   const gem=`<span style="width:22px;display:inline-block;vertical-align:-4px;color:#1CB0F6">${ICONS.gem}</span>`;const after=P.gems-price;
@@ -5278,7 +5289,7 @@ function buyAsk(what,price,onYes,pic){let el=$('#buyAsk');if(!el){document.body.
     <div class="acts"><button class="ghost" id="buyNo">Batal</button><button class="primary" id="buyYes">Ya, beli</button></div></div>`;
   el.hidden=false;try{haptic(15)}catch(e){}
   const close=()=>{el.hidden=true};$('#buyNo').onclick=close;el.onclick=e=>{if(e.target===el)close()};$('#buyYes').onclick=()=>{close();onYes()}}
-function bindHeartActs(root){root.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{if(b.dataset.act==='refill'){if(P.gems>=50&&P.hearts<5){closePop();closeModal();buyAsk('isi nyawa penuh',50,()=>{if(P.gems<50)return;P.gems-=50;P.hearts=5;P.heartsAt=null;save();renderTop();tone([660,880,1100],.08);toast('heartbig','Nyawa terisi penuh!')});return}}else startPractice();closePop();closeModal()})}
+function bindHeartActs(root){root.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{if(b.dataset.act==='refill'){if(P.gems>=PRICE.heart&&P.hearts<5){closePop();closeModal();buyAsk('isi nyawa penuh',PRICE.heart,()=>{if(P.gems<PRICE.heart)return;P.gems-=PRICE.heart;P.hearts=5;P.heartsAt=null;save();renderTop();tone([660,880,1100],.08);toast('heartbig','Nyawa terisi penuh!')});return}}else startPractice();closePop();closeModal()})}
 function heartPop(){openPop($('#heartBtn'),`<h4>Nyawa</h4>${heartsPanel()}`);bindHeartActs($('#pop'))}
 
 /* ---------- modal & toast ---------- */
@@ -5712,15 +5723,17 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
   const outfit=(list,kind)=>list.map(([id,name,col,price])=>{const own=P.owned[kind].includes(id),on=P.outfit[kind]===id;return `<div class="item"><span class="ii"><span class="swatchdot" style="background:${col}"></span></span><span class="it"><b>${name}</b><small>${on?'Sedang dipakai':own?'Sudah dimiliki':'Gaya baru untuk '+petName()}</small></span><button class="buy ${own?'owned':''}" data-kind="${kind}" data-id="${id}" data-price="${price}" ${on||(!own&&P.gems<price)?'disabled':''}>${on?'Dipakai':own?'Pakai':gem(price)}</button></div>`}).join('');
   $('#shopList').innerHTML=`<div class="card shopsec shopav"><div class="shopav-av" style="--av:${avBgColor(P.avatar)}">${avatarSVG(P.avatar||null)}</div><div style="flex:1;min-width:160px"><h3>Kostum avatar</h3><p class="note" style="margin:0"></p></div><button class="primary" id="shopAv">Ubah avatar</button></div><div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3></div>
    <div class="card shopsec"><h3>Nyawa</h3>
-    <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${P.unlimited?'Mode kelas aktif: nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${P.unlimited||P.hearts>=5||P.gems<50?'disabled':''}>${gem(50)}</button></div>
+    <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${P.unlimited?'Mode kelas aktif: nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${P.unlimited||P.hearts>=5||P.gems<PRICE.heart?'disabled':''}>${gem(PRICE.heart)}</button></div>
     <div class="item"><span class="ii">${ico('target')}</span><span class="it"><b>Latihan</b><small>Ulangi materi yang sudah dipelajari, dapat +1 nyawa</small></span><button class="buy" id="buyPractice" style="color:var(--ok)">Gratis</button></div></div>
-   <div class="card shopsec"><h3>Pelindung api</h3><div class="item"><span class="ii">${ico('ice')}</span><span class="it"><b>Pelindung api</b><small>Menjaga hari beruntun jika lupa belajar satu hari. Dimiliki: ${P.freeze} dari 2</small></span><button class="buy" id="buyFreeze" ${P.freeze>=2||P.gems<80?'disabled':''}>${gem(80)}</button></div></div>
+   <div class="card shopsec"><h3>Pengganda XP</h3><div class="item"><span class="ii">${ico('bolt')}</span><span class="it"><b>XP 2× selama 15 menit</b><small>${boostLeft()?`Aktif, sisa ${boostLeft()} menit`:'Semua XP yang kamu dapat jadi dua kali lipat'}</small></span><button class="buy" id="buyBoost" ${P.gems<PRICE.boost?'disabled':''}>${gem(PRICE.boost)}</button></div></div>
+   <div class="card shopsec"><h3>Pelindung api</h3><div class="item"><span class="ii">${ico('ice')}</span><span class="it"><b>Pelindung api</b><small>Menjaga hari beruntun jika lupa belajar satu hari. Dimiliki: ${P.freeze} dari 2</small></span><button class="buy" id="buyFreeze" ${P.freeze>=2||P.gems<PRICE.freeze?'disabled':''}>${gem(PRICE.freeze)}</button></div></div>
    <div class="card shopsec shopav"><div class="mascot outfitprev" data-mascot data-mood="happy" style="width:96px;margin:0"></div><div style="flex:1;min-width:160px"><h3>Teman belajar: ${esc(petOf(curPet())[1])}</h3><p class="note" style="margin:0">${PETS.length} hewan khas Indonesia: komodo, orangutan, harimau, cenderawasih, dan lainnya. ${PETS.filter(x=>!x[3]).length} gratis, sisanya dibeli dengan permata.</p></div><button class="primary" id="shopPet">Ganti hewan</button></div>
    <div class="card shopsec"><h3>Topi toga</h3>${outfit(CAPS,'cap')}${curPet()==='uli'?`<h3 style="margin-top:12px">Warna bulu Uli</h3>${outfit(BODIES,'body')}`:''}</div>`;
   hydrate($('#shopList'));
   const buy=(price,fn,what,pic)=>{if(P.gems<price)return;buyAsk(what||'barang ini',price,()=>{if(P.gems<price)return;P.gems-=price;fn();save();renderTop();tone([660,880,1100],.08);renderShop()},pic)};
-  $('#buyHeart').onclick=()=>buy(50,()=>{P.hearts=5;P.heartsAt=null;toast('heartbig','Nyawa terisi penuh!')},'isi nyawa penuh');
-  $('#buyFreeze').onclick=()=>buy(80,()=>{P.freeze++;toast('ice','Pelindung api siap dipakai.')},'pelindung api');
+  $('#buyHeart').onclick=()=>buy(PRICE.heart,()=>{P.hearts=5;P.heartsAt=null;toast('heartbig','Nyawa terisi penuh!')},'isi nyawa penuh');
+  $('#buyFreeze').onclick=()=>buy(PRICE.freeze,()=>{P.freeze++;toast('ice','Pelindung api siap dipakai.')},'pelindung api');
+  $('#buyBoost').onclick=()=>buy(PRICE.boost,()=>{boostAdd(15);toast('bolt','XP 2× aktif selama 15 menit!')},'pengganda XP 2× (15 menit)');
   $('#buyPractice').onclick=startPractice;
   {const sa=$('#shopAv');if(sa)sa.onclick=openAvatarEditor;const sp=$('#shopPet');if(sp)sp.onclick=openPets}
   $('#shopList').querySelectorAll('.buy[data-kind]').forEach(b=>b.onclick=()=>{const k=b.dataset.kind,id=b.dataset.id;if(P.owned[k].includes(id)){P.outfit[k]=id;save();rerenderMascots();renderShop();return}
@@ -7447,7 +7460,7 @@ function openAjak(){if(!P)return;ajakInit();AJAK.sent={};
   $('#ajShare').onclick=ajakShare;$('#ajGo').onclick=()=>ajakSearch($('#ajQ').value);{let t=null;$('#ajQ').oninput=()=>{clearTimeout(t);t=setTimeout(()=>ajakSearch($('#ajQ').value),350)}}$('#ajQ').onkeydown=e=>{if(e.key==='Enter')ajakSearch($('#ajQ').value)};
   ajakFoot();ajakLoadFriends()}
 /* ---------- misi teman (mingguan, berdua) ---------- */
-const FQ={list:null,goal:20,gift:10,reward:50};window.FQ=FQ;
+const FQ={list:null,goal:20,gift:PRICE.boost,giftMin:15,reward:50};const fqToday=t=>!!t&&dayKey(new Date(+t))===dayKey();window.FQ=FQ;
 const fqWeekLeft=()=>{const d=(new Date().getDay()+6)%7;return 7-d};
 const fqMine=()=>(P.fqw&&P.fqw.wk===weekKey())?P.fqw.n:0;
 async function fqLoad(){const me=FBX.user.uid;const q=await FB.db.collection('fq').where('members','array-contains',me).where('week','==',weekKey()).get();FQ.list=q.docs.map(d=>Object.assign({id:d.id},d.data()));return FQ.list}
@@ -7466,23 +7479,25 @@ window.renderFQ=async function(box){if(!box)return;if(!FBX.user||isT()||!P){box.
     pk.innerHTML=list.length?list.slice(0,8).map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av})}<span class="grow"><b>${esc(f.name)}</b><small>${esc(f.sub)}</small></span><button class="ajinv" data-fq="${esc(f.uid)}">PILIH</button></div>`).join(''):`<p class="note" style="margin:0">Belum ada teman. Gabung kelas lewat Profil atau ajak teman bertanding dulu.</p>`;
     pk.querySelectorAll('[data-fq]').forEach(b=>b.onclick=async()=>{b.disabled=true;b.textContent='…';try{await fqCreate(list.find(x=>x.uid===b.dataset.fq));sfx.win();window.renderFQ(box)}catch(e){b.disabled=false;b.textContent='PILIH';toast('lock',fbErr(e))}});return}
   box.innerHTML=head+FQ.list.map(d=>{const o=d.members.find(x=>x!==me)||me,nm=(d.names||{})[o]||'Teman',a=+d['n_'+me]||0,b=+d['n_'+o]||0,g=+d.goal||FQ.goal,tot=Math.min(g,a+b),done=a+b>=g;
-    const nudged=Date.now()-(+d['nudge_'+me]||0)<864e5,gifted=!!d['gift_'+me],gotGift=d['gift_'+o]&&!d['giftGot_'+me],poke=(+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0);
+    const nudged=fqToday(d['nudge_'+me]),gifted=fqToday(d['gift_'+me]),gotGift=(+d['gift_'+o]||0)>(d['giftGot_'+me]===true?(+d['gift_'+o]||0):(+d['giftGot_'+me]||0)),poke=(+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0);
     return `<div class="card fqcard" data-fqid="${esc(d.id)}"><div class="fqart"><span class="fqav">${avatarSVG(P.avatar||null,{nobg:true})}</span><span class="fqav">${avatarSVG(((d.avs||{})[o])||null,{nobg:true})}</span></div>
-     <div class="fqbody">${poke?`<div class="fqnote">👋 <span class="grow">${esc(nm)} mencolekmu!</span></div>`:''}${gotGift?`<div class="fqnote">🎁 <span class="grow">Hadiah dari ${esc(nm)}</span><button class="primary press" data-fqa="got">Ambil +${FQ.gift}</button></div>`:''}
+     <div class="fqbody">${poke?`<div class="fqnote">👋 <span class="grow">${esc(nm)} mencolekmu!</span></div>`:''}${gotGift?`<div class="fqnote">🎁 <span class="grow">${esc(nm)} mengirim <b>XP 2× ${FQ.giftMin} menit</b></span><button class="primary press" data-fqa="got">Pakai</button></div>`:''}
       <b>Selesaikan ${g} level bersama</b><div class="fqprog"><div class="qbar"><i style="width:${tot/g*100}%"></i><span>${tot} / ${g}</span></div><span class="fqchest"><i data-icon="${done?'chestOpen':'chest'}"></i></span></div>
       <div class="fqrow"><i style="background:#FF9600"></i>Kamu<span>${a} level</span></div><div class="fqrow"><i style="background:#C2410C"></i>${esc(nm)}<span>${b} level</span></div>
       ${done&&!d['claim_'+me]?`<button class="primary press" data-fqa="claim">Buka peti +${FQ.reward}</button>`:''}
-      <div class="fqbtns"><button class="ghost press" data-fqa="nudge" ${nudged?'disabled':''}>👋 ${nudged?'DICOLEK':'COLEK'}</button><button class="ghost press" data-fqa="gift" ${gifted?'disabled':''}>🎁 ${gifted?'TERKIRIM':'HADIAH'}</button></div></div></div>`}).join('');
+      <div class="fqbtns"><button class="ghost press" data-fqa="nudge" ${nudged?'disabled':''}>👋 ${nudged?'DICOLEK':'COLEK'}</button><button class="ghost press" data-fqa="gift" ${gifted?'disabled':''}>🎁 ${gifted?'TERKIRIM':`XP 2× · ${FQ.gift}💎`}</button></div><p class="fqhint">Colek dan hadiah bisa dikirim lagi besok.</p></div></div>`}).join('');
   hydrate(box);
   FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me);if((+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0)){P.fqSeen=P.fqSeen||{};P.fqSeen[d.id]=+d['nudge_'+o];save()}});
   box.querySelectorAll('[data-fqa]').forEach(b=>b.onclick=async()=>{const card=b.closest('[data-fqid]'),d=FQ.list.find(x=>x.id===card.dataset.fqid),o=d.members.find(x=>x!==me),k=b.dataset.fqa;b.disabled=true;
     try{if(k==='nudge'){const t=Date.now();await FB.db.doc('fq/'+d.id).update({['nudge_'+me]:t});d['nudge_'+me]=t;notifyServer('nudge',d.id);toast('check',`Kamu mencolek ${(d.names||{})[o]||'temanmu'}.`)}
-      if(k==='gift'){await FB.db.doc('fq/'+d.id).update({['gift_'+me]:Date.now()});d['gift_'+me]=Date.now();toast('check',`Hadiah +${FQ.gift} permata dikirim.`)}
-      if(k==='got'){await FB.db.doc('fq/'+d.id).update({['giftGot_'+me]:true});d['giftGot_'+me]=true;P.gems+=FQ.gift;save();renderTop();sfx.win()}
+      if(k==='gift'){if(P.gems<FQ.gift){b.disabled=false;toast('gem',`Permatamu kurang ${FQ.gift-P.gems}. Kumpulkan dari misi harian, ya.`);return}
+        b.disabled=false;const ok=await new Promise(r=>buyAsk(`hadiah XP 2× (${FQ.giftMin} menit) untuk ${(d.names||{})[o]||'temanmu'}`,FQ.gift,()=>r(true)));if(!ok)return;
+        const t=Date.now();await FB.db.doc('fq/'+d.id).update({['gift_'+me]:t});d['gift_'+me]=t;P.gems-=FQ.gift;save();renderTop();notifyServer('nudge',d.id);toast('check',`Hadiah XP 2× dikirim ke ${(d.names||{})[o]||'temanmu'}.`)}
+      if(k==='got'){const t=Date.now();await FB.db.doc('fq/'+d.id).update({['giftGot_'+me]:t});d['giftGot_'+me]=t;boostAdd(FQ.giftMin);save();sfx.win();toast('bolt',`XP 2× aktif selama ${FQ.giftMin} menit!`)}
       if(k==='claim'){await FB.db.doc('fq/'+d.id).update({['claim_'+me]:true});d['claim_'+me]=true;P.gems+=FQ.reward;save();renderTop();sfx.win();toast('trophy',`Misi teman selesai! +${FQ.reward} permata.`)}
       window.renderFQ(box)}catch(e){b.disabled=false;toast('lock',fbErr(e))}})};
 async function fqNotice(){try{if(!FBX.user||isT()||!P)return;await fqLoad();await window.fqSync();const me=FBX.user.uid;
-  FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if((+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0))toast('team',`${nm} mencolekmu! Ayo selesaikan misi teman.`);else if(d['gift_'+o]&&!d['giftGot_'+me])toast('gem',`${nm} mengirim hadiah. Ambil di menu Misi.`)})}catch(e){}}
+  FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if((+d['nudge_'+o]||0)>((P.fqSeen||{})[d.id]||0))toast('team',`${nm} mencolekmu! Ayo selesaikan misi teman.`);else if((+d['gift_'+o]||0)>(d['giftGot_'+me]===true?(+d['gift_'+o]||0):(+d['giftGot_'+me]||0)))toast('bolt',`${nm} mengirim hadiah XP 2×. Pakai di menu Misi.`)})}catch(e){}}
 /* ---------- teman: ikuti pemain JELAS mana pun ---------- */
 const FOL={following:null,followers:null};window.FOL=FOL;
 const IKUTI_KEY=(()=>{try{const q=new URLSearchParams(location.search),v=q.get('ikuti');if(v){sessionStorage.setItem('jk_ikuti',v.toLowerCase());q.delete('ikuti');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash)}}catch(e){}return 1})();
@@ -7740,6 +7755,7 @@ const AV_PARTS={
  adat:{label:'Baju adat',items:[['none','Tanpa baju adat',0,'—'],['bima','Rimpu · NTB (Bima)',0],['betawi','Sadariah · Jakarta',0],['maluku','Baju Cele · Maluku',0],['madura',"Pesa'an · Jawa Timur",30],['sunda','Pangsi · Jawa Barat',30],['jawa','Beskap · Jawa Tengah',40],['bali','Payas · Bali',40],['sasak','Pegon · Lombok',40],['batak','Ulos · Sumatra Utara',50],['melayu','Teluk Belanga · Riau',50],['banjar','Bagajah · Kalsel',50],['bugis','Baju Bodo · Sulsel',50],['ntt','Tenun Ikat · NTT',60],['toraja',"Pokko' · Toraja",60],['aceh','Ulee Balang · Aceh',70],['dayak','King Baba · Dayak',80],['lampung','Tulang Bawang · Lampung',90],['minang','Bundo Kanduang · Sumbar',100],['palembang','Aesan Gede · Sumsel',110],['papua','Rumbai & Mahkota · Papua',120]]},
  dunia:{label:'Baju dunia',items:[['none','Tanpa baju dunia',0,'—'],['prancis','Prancis · marinière',0],['hawaii','Hawaii · kemeja aloha',0],['brasil','Brasil · kaus bola',0],['jepang','Jepang · kimono',40],['korea','Korea · hanbok',40],['tiongkok','Tiongkok · changshan',40],['india','India · sari',40],['vietnam','Vietnam · ao dai',50],['thailand','Thailand · chut thai',60],['arab','Arab · gamis & syal',50],['turki','Turki · fez',50],['belanda','Belanda · topi renda',50],['jerman','Jerman · lederhosen',50],['skotlandia','Skotlandia · tartan',60],['koboi','Amerika · koboi',60],['meksiko','Meksiko · sombrero',60],['peru','Peru · chullo',60],['rusia','Rusia · ushanka',70],['kenya','Kenya · Maasai',70],['inggris','Inggris · pengawal raja',90],['mesir','Mesir · firaun',120]]},
  bg:{label:'Latar',items:[['b1','Ungu',0,'#C9B6FF'],['b2','Biru',0,'#A9DEFF'],['b3','Hijau',0,'#B5EBAE'],['b4','Merah muda',0,'#FFC9DF'],['b5','Kuning',20,'#FFE596'],['bintang','Malam berbintang',60],['pelangi','Pelangi',100]]}};
+Object.values(AV_PARTS).forEach(p=>p.items.forEach(x=>{if(typeof x[2]==='number')x[2]=cheap(x[2])}));
 const AV_G={hair:{pendek:'L',jabrik:'L',mohawk:'L',none:'L',panjang:'P',hijab:'P',kuncir:'P',kepang:'P'},acc:{peci:'L'},
  adat:{jawa:'L',sunda:'L',betawi:'L',madura:'L',sasak:'L',batak:'L',melayu:'L',aceh:'L',dayak:'L',banjar:'L',minang:'P',bugis:'P',bima:'P',lampung:'P'},
  dunia:{koboi:'L',arab:'L',turki:'L',jerman:'L',inggris:'L',skotlandia:'L',india:'P',vietnam:'P',belanda:'P'}};
