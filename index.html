@@ -1733,6 +1733,24 @@ body.wzon{overflow:hidden}
 .ajrow .ffno{position:static;flex:none}
 .folb{font-size:14px;padding:8px 14px;letter-spacing:.04em}.folb.sm{flex:none}
 .fllist{padding:6px 14px;display:flex;flex-direction:column}
+
+/* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
+   lembar bawah  → naik dari tepi bawah
+   notifikasi    → turun dari atas, tetap di tengah
+   gelembung bicara → tumbuh dari ekornya
+   kotak dialog  → muncul di tengah */
+@keyframes sheetUp{0%{transform:translateY(105%)}100%{transform:none}}
+@keyframes fbIn{0%{transform:translateY(14px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes toastIn{0%{transform:translate(-50%,-24px);opacity:0}100%{transform:translate(-50%,0);opacity:1}}
+.feedback{animation:fbIn .25s ease-out}
+body.lessonmode .feedback{animation:sheetUp .28s cubic-bezier(.2,.9,.3,1)}
+@media (max-width:600px){.feedback{animation:sheetUp .28s cubic-bezier(.2,.9,.3,1)}}
+.toast{animation:toastIn .28s cubic-bezier(.2,1.2,.4,1)}
+.mbubble{transform-origin:right center}
+.bubble{transform-origin:left bottom}
+.npop{transform-origin:top center}
+.jumpcur{transform-origin:center}
+@media (prefers-reduced-motion:reduce){.feedback,body.lessonmode .feedback,.toast{animation:none!important}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3384,7 +3402,14 @@ const WHY={tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke 
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
 const modeInfo=()=>MODE_LIST.find(m=>m.id===MODE)||MODE_LIST[0];
 const views=['vLearn','vTeam','vGame','vLeague','vQuest','vShop','vProfile','vPlay','vDone','vDuel','vResult','vTDash','vTAtt','vTEval','vTRun','vTRapor','vTStud','vTSet','vTBank'];
-function show(v){document.body.classList.toggle('duelon',v==='vDuel');document.body.classList.toggle('playing',v==='vDuel'||v==='vPlay'||v==='vDone');if(v!=='vPlay'){document.body.classList.remove('lessonmode');const cb=document.getElementById('checkBar');if(cb)cb.hidden=true}closeMenu();views.forEach(id=>{const el=$('#'+id);el.hidden=id!==v;if(id===v){el.style.display='flex';el.classList.remove('enter');void el.offsetWidth;el.classList.add('enter')}});window.scrollTo(0,0)}
+/* Lembar yang menempel di layar (position:fixed) ditaruh langsung di <body>.
+   Jika berada di dalam kartu yang sedang beranimasi (bergoyang/muncul), posisinya ikut kartu dulu lalu meloncat. */
+var FB_HOME={};
+function placeFb(){const fb=document.getElementById('feedback');if(!fb)return;if(!FB_HOME.p){FB_HOME.p=fb.parentNode;FB_HOME.n=fb.nextSibling}
+  const fixed=document.body.classList.contains('lessonmode')||matchMedia('(max-width:600px)').matches;
+  if(fixed&&fb.parentNode!==document.body)document.body.appendChild(fb);
+  else if(!fixed&&fb.parentNode!==FB_HOME.p)FB_HOME.p.insertBefore(fb,FB_HOME.n&&FB_HOME.n.parentNode===FB_HOME.p?FB_HOME.n:null)}
+function show(v){if(v!=='vPlay'){const fb=document.getElementById('feedback');if(fb)fb.hidden=true}document.body.classList.toggle('duelon',v==='vDuel');document.body.classList.toggle('playing',v==='vDuel'||v==='vPlay'||v==='vDone');if(v!=='vPlay'){document.body.classList.remove('lessonmode');const cb=document.getElementById('checkBar');if(cb)cb.hidden=true}closeMenu();views.forEach(id=>{const el=$('#'+id);el.hidden=id!==v;if(id===v){el.style.display='flex';el.classList.remove('enter');void el.offsetWidth;el.classList.add('enter')}});window.scrollTo(0,0)}
 function setLvColor(lv){document.documentElement.style.setProperty('--lvc',`var(${lv.color})`);document.body.classList.toggle('lvl-tk',lv.id==='tk')}
 function starsOf(key){return (progress[key]||{}).stars||0}
 function totalStars(){return Object.values(progress).reduce((a,p)=>a+(p.stars||0),0)}
@@ -3526,7 +3551,7 @@ function buzz(i){if(!isRebutan()||game.locked||game.buzz!=null||game.group.locke
 function reveal(ok,title){
   const q=game.qs[game.i];setOptsEnabled(false);
   $('#opts').querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add('right')});
-  const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');$('#fbTitle').textContent=title;
+  const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');placeFb();$('#fbTitle').textContent=title;
   $('#fbText').innerHTML=ok?(q.exp||''):wrongInfo(q,-1);bindFbRead();
   $('#nextBtn').textContent=game.i>=game.qs.length-1?'Lihat klasemen →':'Soal berikutnya →';
   renderHUD();if(isRebutan())renderBuzz();$('#nextBtn').focus({preventScroll:true});
@@ -3551,7 +3576,7 @@ function answer(k){
   if(ok&&game.lesson)popFx(btns[k],'');
   if(!ok&&game.lesson&&game.lesson.reask&&game.lives>0)game.qs.push(Object.assign({},q,{ok:undefined,picked:undefined,opts:shuffle(q.opts.slice()),again:true}));
   if(game.lesson)renderHUD();
-  const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');
+  const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');placeFb();
   $('#fbTitle').textContent=ok?(team?`${team.name} benar! +${gained}`:game.lesson?pick(PRAISE):pick(PRAISE)+` +${gained}`):(k<0?(game.lesson?'Dilewati':'Waktu habis'):'Belum tepat');
   $('#fbText').innerHTML=ok?(q.exp||''):wrongInfo(q,k);bindFbRead();
   const last=game.i===game.qs.length-1||game.lives<=0;
@@ -7576,6 +7601,7 @@ window.addEventListener('scroll',()=>{if(!$('#pop').hidden)closePop()},{passive:
 $('#modal').onclick=e=>{if(e.target.id==='modal'&&!$('#mbox').querySelector('#chestImg'))closeModal()};
 $('#checkBtn').onclick=()=>{if(game&&game.sel!=null&&!game.locked)answer(game.sel)};
 $('#skipBtn2').onclick=()=>{if(game&&!game.locked)answer(-1)};
+{const cb=document.getElementById('checkBar');if(cb)document.body.appendChild(cb)}
 document.body.insertAdjacentHTML('beforeend','<button class="practicefab" id="practiceFab" hidden><i data-icon="practice"></i>Latihan</button>');
 $('#practiceFab').onclick=()=>startPractice();
 setInterval(()=>{if(P){tickHearts();if($('#statsBar').offsetParent)renderTop()}},30000);
