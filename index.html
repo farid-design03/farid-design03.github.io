@@ -16,7 +16,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Baloo+2:wght@700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Baloo+2:wght@700;800&family=Orbitron:wght@700;800;900&display=swap">
 <script>(function(){try{var t=localStorage.getItem('jelas-theme')||'siang';if(t==='auto')t=matchMedia('(prefers-color-scheme: dark)').matches?'malam':'siang';document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <style>
 /* Layout: a bright cartoon schoolyard world (sky, sun, drifting clouds, hills) behind chunky sticker-style cards with ink outlines and solid drop shadows; one committed bright look for classroom TVs */
@@ -38,15 +38,17 @@
 }
 /* Tampilan malam: biru tua keunguan dengan cahaya ungu lembut, kartu kaca gelap */
 html[data-theme=malam]{
-  --bg:#0A0A22; --surface:#16143A; --card:#15133A; --cream:#1C1946; --ink:#ECEBFF; --ink2:#D6D4F5; --muted:#A3A1CF; --muted2:#7471A6;
-  --line:rgba(150,140,255,.16); --line2:rgba(0,0,0,.45);
-  --tb:rgba(28,176,246,.14); --ty:rgba(255,200,0,.10); --tr:rgba(255,75,75,.13); --tgr:rgba(88,204,2,.13); --tg:rgba(255,255,255,.05); --track:rgba(255,255,255,.12);
-  --ok-bg:rgba(23,162,87,.18); --bad-bg:rgba(229,56,59,.18); --accent:#8B7CFF;
-  --sky-top:#0A0A22; --sky-bot:#141238;
-  --outline:2px 2px 0 #0A0A22,-2px -2px 0 #0A0A22,2px -2px 0 #0A0A22,-2px 2px 0 #0A0A22,0 2px 0 #000,2px 0 0 #0A0A22,-2px 0 0 #0A0A22,0 -2px 0 #0A0A22,0 4px 0 #000;
+  --cy:#00F0FF; --mg:#FF2BD6; --ye:#FFE600; --ng:#00FF9C; --nr:#FF2E63;
+  --bg:#05060F; --surface:#0A0F1F; --card:#0A1020; --cream:#0B1326; --ink:#E6FBFF; --ink2:#BFEFFF; --muted:#86A9C2; --muted2:#4F6B82;
+  --line:rgba(0,240,255,.24); --line2:rgba(0,240,255,.10);
+  --tb:rgba(0,240,255,.10); --ty:rgba(255,230,0,.08); --tr:rgba(255,46,99,.12); --tgr:rgba(0,255,156,.10); --tg:rgba(0,240,255,.04); --track:rgba(0,240,255,.14);
+  --ok:#00FF9C; --bad:#FF2E63; --ok-bg:rgba(0,255,156,.12); --bad-bg:rgba(255,46,99,.14); --accent:#00F0FF; --purple:#FF2BD6; --blue:#00F0FF; --gold:#FFE600;
+  --sky-top:#05060F; --sky-bot:#05060F;
+  --outline:0 0 6px rgba(0,240,255,.8),0 0 1px #00F0FF;
+  --title:"Orbitron","Nunito",system-ui,sans-serif;
   color-scheme:dark;
 }
-html[data-theme=malam] body{background:#0A0A22 radial-gradient(900px 600px at 12% -10%,rgba(124,92,255,.28),transparent 60%) fixed,radial-gradient(800px 600px at 100% 30%,rgba(56,90,255,.18),transparent 60%) fixed,radial-gradient(700px 500px at 40% 110%,rgba(160,70,255,.18),transparent 60%) fixed}
+html[data-theme=malam] body{background-color:#05060F;background-image:radial-gradient(700px 500px at 0% 0%,rgba(255,43,214,.16),transparent 60%),radial-gradient(800px 600px at 100% 100%,rgba(0,240,255,.14),transparent 60%),linear-gradient(rgba(0,240,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.05) 1px,transparent 1px);background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed}
 [hidden]{display:none!important}
 html,body{height:100%}
 body{background:var(--bg) linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bot) 75%) fixed;color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
@@ -2058,6 +2060,73 @@ html[data-theme=malam] .opt.wrong{background:rgba(255,75,75,.16)!important;color
 html[data-theme=malam] #fbText .fbtip{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
 html[data-theme=malam] .seg{background:rgba(255,255,255,.05);border-color:rgba(150,140,255,.2)}
 html[data-theme=malam] .pagehead{background:rgba(10,10,34,.86)!important;backdrop-filter:blur(10px);border-color:rgba(150,140,255,.14)!important}
+
+/* ===== tema CYBER (mode malam): neon cyan & magenta, sudut tajam, garis bercahaya ===== */
+html[data-theme=malam] .world,html[data-theme=malam] .doodle{opacity:.08!important;filter:hue-rotate(160deg)}
+html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3,html[data-theme=malam] .sbname,html[data-theme=malam] .kv,html[data-theme=malam] .pagehead h1,html[data-theme=malam] .pagehead h2{font-family:"Orbitron","Nunito",sans-serif!important;letter-spacing:.03em;text-shadow:0 0 14px rgba(0,240,255,.35)}
+html[data-theme=malam] .tn i{background:transparent!important;color:var(--ye)!important;border:1px solid var(--ye);box-shadow:0 0 10px rgba(255,230,0,.45)}
+html[data-theme=malam] .card,html[data-theme=malam] .tcard,html[data-theme=malam] .kpi,html[data-theme=malam] .thead,html[data-theme=malam] .tdpbtn,html[data-theme=malam] .sfpro,html[data-theme=malam] .unit,html[data-theme=malam] .item,html[data-theme=malam] .tstep,html[data-theme=malam] .jrow,html[data-theme=malam] .dnrow{
+  background:linear-gradient(180deg,rgba(0,240,255,.05),rgba(0,240,255,.01)),#08101F!important;border:1px solid rgba(0,240,255,.28)!important;border-radius:10px!important;
+  box-shadow:0 0 0 1px rgba(0,240,255,.04),0 0 22px rgba(0,240,255,.07),inset 0 0 18px rgba(0,240,255,.04)!important}
+html[data-theme=malam] .tstep{background:rgba(0,240,255,.03)!important}
+html[data-theme=malam] .kpi.k1,html[data-theme=malam] .kpi.k4{border-color:rgba(255,43,214,.45)!important;box-shadow:0 0 22px rgba(255,43,214,.12),inset 0 0 18px rgba(255,43,214,.06)!important}
+html[data-theme=malam] .kpi.k2,html[data-theme=malam] .kpi.k3{border-color:rgba(0,240,255,.45)!important}
+html[data-theme=malam] .kpi .kic{background:transparent!important;border:1px solid currentColor;color:var(--cy);box-shadow:0 0 14px rgba(0,240,255,.35),inset 0 0 10px rgba(0,240,255,.2)}
+html[data-theme=malam] .kpi.k1 .kic,html[data-theme=malam] .kpi.k4 .kic{color:var(--mg);box-shadow:0 0 14px rgba(255,43,214,.4),inset 0 0 10px rgba(255,43,214,.2)}
+html[data-theme=malam] .kpi .kv{color:var(--ink)}html[data-theme=malam] .kpi.good .kv{color:var(--ng)!important;text-shadow:0 0 12px rgba(0,255,156,.5)}html[data-theme=malam] .kpi.warn .kv{color:var(--nr)!important;text-shadow:0 0 12px rgba(255,46,99,.5)}
+/* ikon jadi garis neon */
+html[data-theme=malam] i[data-icon] svg,html[data-theme=malam] .thead>span>svg,html[data-theme=malam] .pagehead svg{filter:grayscale(1) invert(1) brightness(1.2) sepia(1) hue-rotate(140deg) saturate(6) drop-shadow(0 0 4px rgba(0,240,255,.8))}
+html[data-theme=malam] .nav[aria-current="page"] i[data-icon] svg,html[data-theme=malam] .kpi.k1 i[data-icon] svg,html[data-theme=malam] .kpi.k4 i[data-icon] svg{filter:grayscale(1) invert(1) brightness(1.2) sepia(1) hue-rotate(260deg) saturate(8) drop-shadow(0 0 5px rgba(255,43,214,.9))}
+/* tombol */
+html[data-theme=malam] .primary{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;color:#05060F!important;border:0!important;border-radius:8px!important;box-shadow:0 0 18px rgba(0,240,255,.45),0 0 30px rgba(255,43,214,.25)!important;text-shadow:none!important;font-family:"Orbitron","Nunito",sans-serif;letter-spacing:.08em}
+html[data-theme=malam] .primary:disabled{opacity:.45;box-shadow:none!important}
+html[data-theme=malam] .ghost,html[data-theme=malam] .smallbtn,html[data-theme=malam] .tdnav,html[data-theme=malam] .tbell{background:rgba(0,240,255,.04)!important;color:var(--cy)!important;border:1px solid rgba(0,240,255,.45)!important;border-radius:8px!important;box-shadow:0 0 10px rgba(0,240,255,.12)!important}
+html[data-theme=malam] .tbell{border-radius:50%!important}
+html[data-theme=malam] .sfprobtn{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;color:#05060F!important;box-shadow:0 0 14px rgba(255,43,214,.4)!important;border-radius:8px}
+html[data-theme=malam] .sfpro{border-color:rgba(255,43,214,.5)!important;box-shadow:0 0 22px rgba(255,43,214,.15),inset 0 0 18px rgba(255,43,214,.06)!important}
+/* navigasi */
+html[data-theme=malam] .side{background:rgba(4,6,16,.94)!important;border-color:rgba(0,240,255,.2)!important;box-shadow:1px 0 24px rgba(0,240,255,.08)}
+html[data-theme=malam] .nav{color:var(--muted);border-radius:8px!important}
+html[data-theme=malam] .nav:hover{color:var(--cy)}
+html[data-theme=malam] .nav[aria-current="page"]{background:linear-gradient(90deg,rgba(255,43,214,.22),rgba(0,240,255,.06))!important;border:1px solid rgba(255,43,214,.55)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,43,214,.25),inset 3px 0 0 #FF2BD6!important;text-shadow:0 0 8px rgba(255,43,214,.7)}
+html[data-theme=malam] body.teacher .side .tbadge{background:transparent;color:var(--mg);border:1px solid var(--mg);box-shadow:0 0 10px rgba(255,43,214,.4);font-family:"Orbitron",sans-serif;font-size:11px}
+html[data-theme=malam] .sbname{color:var(--cy)!important}
+html[data-theme=malam] .thead .datepill{background:transparent!important;color:var(--ng)!important;border:1px solid var(--ng);box-shadow:0 0 12px rgba(0,255,156,.35)}
+/* isian */
+html[data-theme=malam] input,html[data-theme=malam] select,html[data-theme=malam] textarea,html[data-theme=malam] .tsearch{background:rgba(0,240,255,.04)!important;color:var(--ink)!important;border:1px solid rgba(0,240,255,.35)!important;border-radius:8px!important}
+html[data-theme=malam] .tsearch{border-radius:999px!important}html[data-theme=malam] .tsearch input{border:0!important;background:none!important}
+html[data-theme=malam] input:focus,html[data-theme=malam] textarea:focus,html[data-theme=malam] .tsearch:focus-within{box-shadow:0 0 0 2px rgba(0,240,255,.35),0 0 16px rgba(0,240,255,.3)!important;outline:0}
+html[data-theme=malam] .seg{background:rgba(0,240,255,.04)!important;border:1px solid rgba(0,240,255,.3)!important;border-radius:8px!important}
+html[data-theme=malam] .seg button[aria-pressed=true]{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;color:#05060F!important;border-radius:6px!important;box-shadow:0 0 12px rgba(0,240,255,.4)!important}
+html[data-theme=malam] .tgl[aria-pressed=true]{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;box-shadow:0 0 12px rgba(0,240,255,.5)}
+/* popup */
+html[data-theme=malam] .modal,html[data-theme=malam] .sheet,html[data-theme=malam] .gsheet,html[data-theme=malam] .tsres,html[data-theme=malam] .tbpop,html[data-theme=malam] .tdpmenu,html[data-theme=malam] .popover{background:#070C1A!important;border:1px solid rgba(0,240,255,.4)!important;box-shadow:0 0 30px rgba(0,240,255,.18),0 20px 50px rgba(0,0,0,.6)!important}
+/* soal */
+html[data-theme=malam] .opt{background:rgba(0,240,255,.03)!important;color:var(--ink)!important;border:1px solid rgba(0,240,255,.35)!important;border-radius:10px!important;box-shadow:0 0 10px rgba(0,240,255,.08)!important}
+html[data-theme=malam] .opt[aria-pressed=true],html[data-theme=malam] .opt.sel{border-color:var(--cy)!important;box-shadow:0 0 16px rgba(0,240,255,.45)!important}
+html[data-theme=malam] .opt.right{background:rgba(0,255,156,.10)!important;color:var(--ng)!important;border-color:var(--ng)!important;box-shadow:0 0 18px rgba(0,255,156,.45)!important}
+html[data-theme=malam] .opt.wrong{background:rgba(255,46,99,.10)!important;color:var(--nr)!important;border-color:var(--nr)!important;box-shadow:0 0 18px rgba(255,46,99,.45)!important}
+html[data-theme=malam] .ttable th{background:rgba(0,240,255,.06)!important;color:var(--cy)!important;font-family:"Orbitron",sans-serif;font-size:11px}
+html[data-theme=malam] .ttable td{border-color:rgba(0,240,255,.12)!important}
+html[data-theme=malam] .pill{border-radius:6px}
+/* kalender, cincin, juara */
+html[data-theme=malam] .tdgrid span.m{background:rgba(0,240,255,.08)!important;color:var(--cy)!important;box-shadow:inset 0 0 0 1px rgba(0,240,255,.35)}
+html[data-theme=malam] .tdgrid span.t{background:linear-gradient(135deg,#FF2BD6,#00F0FF)!important;color:#05060F!important;box-shadow:0 0 16px rgba(255,43,214,.7)!important}
+html[data-theme=malam] .tdgrid span.h::after{background:var(--ng);box-shadow:0 0 6px var(--ng)}
+html[data-theme=malam] .tdrsvg .rfg{stroke:#00F0FF!important;filter:drop-shadow(0 0 6px rgba(0,240,255,.9))!important}
+html[data-theme=malam] .tdd{background:transparent!important;border:1px solid var(--mg);color:var(--mg)!important;box-shadow:0 0 10px rgba(255,43,214,.35)}
+html[data-theme=malam] .jrow.top1{border-color:var(--ye)!important;box-shadow:0 0 16px rgba(255,230,0,.25)!important}html[data-theme=malam] .jrow.top2{border-color:var(--cy)!important}html[data-theme=malam] .jrow.top3{border-color:var(--mg)!important}
+html[data-theme=malam] .jv{color:var(--cy);text-shadow:0 0 10px rgba(0,240,255,.5)}
+html[data-theme=malam] .fbcode-big{background:rgba(0,240,255,.05)!important;border:1px solid var(--cy)!important;color:var(--cy)!important;box-shadow:0 0 18px rgba(0,240,255,.35)!important;text-shadow:0 0 12px rgba(0,240,255,.8);font-family:"Orbitron",sans-serif!important;border-radius:8px!important}
+html[data-theme=malam] .tbn{background:var(--mg);box-shadow:0 0 10px var(--mg);border-color:#05060F}
+html[data-theme=malam] .qbar,html[data-theme=malam] .bar,html[data-theme=malam] .xpbar{background:rgba(0,240,255,.1)!important;box-shadow:inset 0 0 0 1px rgba(0,240,255,.25)}
+html[data-theme=malam] .qbar i{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;box-shadow:0 0 10px rgba(0,240,255,.6)}
+html[data-theme=malam] .pagehead{background:rgba(5,6,15,.88)!important;border-color:rgba(0,240,255,.2)!important;backdrop-filter:blur(10px)}
+html[data-theme=malam] .feedback.ok{background:linear-gradient(rgba(0,255,156,.10),rgba(0,255,156,.10)),#05060F!important;border:1px solid var(--ng)!important;box-shadow:0 0 26px rgba(0,255,156,.25)!important}
+html[data-theme=malam] .feedback.bad{background:linear-gradient(rgba(255,46,99,.10),rgba(255,46,99,.10)),#05060F!important;border:1px solid var(--nr)!important;box-shadow:0 0 26px rgba(255,46,99,.25)!important}
+html[data-theme=malam] .feedback.ok #fbTitle{color:var(--ng)!important;text-shadow:0 0 12px rgba(0,255,156,.6)}html[data-theme=malam] .feedback.bad #fbTitle{color:var(--nr)!important;text-shadow:0 0 12px rgba(255,46,99,.6)}
+html[data-theme=malam] #fbText .fbtip{background:rgba(0,240,255,.05)!important;border:1px solid rgba(0,240,255,.3)!important}
+html[data-theme=malam] ::selection{background:rgba(255,43,214,.45);color:#fff}
 </style>
 <style>html,body{margin:0}</style>
 </head>
