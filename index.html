@@ -2188,6 +2188,21 @@ html[data-theme=malam] .dbub::after{background:#08101F;border-color:rgba(0,240,2
 html[data-theme=malam] .dacr+.dacr,html[data-theme=malam] .dinbox>input{border-color:rgba(0,240,255,.2)!important}
 html[data-theme=malam] .dinbox input{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important}html[data-theme=malam] .dinbox>input{border-bottom:1px solid rgba(0,240,255,.2)!important}
 html[data-theme=malam] .dsb.fbk{color:#6EA8FF}html[data-theme=malam] .dsb.ggl{color:var(--ink)}
+
+/* langkah daftar: semua pilihan muat satu layar, tombol Lanjut selalu terlihat */
+#onb .onbin{min-height:100%;gap:12px}
+#onb .onbfoot{position:sticky;bottom:calc(-16px - env(safe-area-inset-bottom,0px));padding:10px 0 calc(16px + env(safe-area-inset-bottom,0px));margin-bottom:calc(-16px - env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,transparent,var(--bg) 30%);z-index:2}
+#onb .onbopts{gap:8px}
+#onb .onbopt{padding:8px 12px;font-size:16px;border-radius:16px;gap:12px;line-height:1.25}
+#onb .onbopt small{font-size:13px;line-height:1.3;margin-top:2px}
+#onb .onbopt .sg{min-width:42px;height:42px;font-size:15px;border-radius:12px}
+@media (max-height:820px){#onb .onbtalk{grid-template-columns:72px 1fr}#onb .onbtalk .bubble b{font-size:19px}#onb .onbtalk .mascot{width:72px}}
+html[data-theme=malam] #onb .onbfoot{background:linear-gradient(180deg,transparent,#05060F 30%)}
+
+#onb .onbgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#onb .onbgrid .onbopt{gap:8px;padding:8px 8px;font-size:14.5px;line-height:1.2;min-height:62px}
+#onb .onbgrid .onbopt .sg{min-width:36px;height:36px;font-size:12px;padding:0 4px;border-radius:10px}
+#onb .onbgrid .onbopt>span:last-child{display:flex;flex-direction:column;min-width:0}#onb .onbgrid .onbopt small{font-size:12px}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -6758,8 +6773,8 @@ function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?
   const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';if(s>=1)applyTheme(o.cls,s>=2?o.subj:null);
     const talk=(tt,sub)=>`<div class="onbtalk"><div class="mascot" data-mascot data-mood="${s===5?'happy':'idle'}"></div><div class="bubble"><b>${tt}</b>${sub?`<span>${sub}</span>`:''}</div></div>`;
     if(s===0){body=talk('Halo! Siapa namamu?','')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`+`<p class="onbglbl">Kamu laki-laki atau perempuan?</p>`+`<div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="${o.gender===g}"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`;ok=!!o.name.trim()&&!!o.gender}
-    if(s===1){body=talk('Kamu kelas berapa?','')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.map(x=>x.name).join(' · ')}</small></span></button>`).join('')}</div>`}
-    if(s===2){const c=COURSE.find(x=>x.id===o.cls);if(!o.subj||!c.subjects.some(x=>x.id===o.subj))o.subj=c.subjects[0].id;body=talk('Mau belajar apa dulu?','')+`<div class="onbopts">${c.subjects.map(x=>`<button class="onbopt" data-s="${x.id}" aria-pressed="${o.subj===x.id}"><span class="sg" style="background:${x.color}">${x.glyph}</span><span>${x.name}<small>${x.units.length} unit: ${x.units.map(u=>u.t).slice(0,3).join(', ')}${x.units.length>3?', …':''}</small></span></button>`).join('')}</div>`}
+    if(s===1){body=talk('Kamu kelas berapa?','')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.length<=3?c.subjects.map(x=>x.name).join(' · '):c.subjects.slice(0,2).map(x=>x.name).join(' · ')+` · +${c.subjects.length-2} pelajaran lain`}</small></span></button>`).join('')}</div>`}
+    if(s===2){const c=COURSE.find(x=>x.id===o.cls);if(!o.subj||!c.subjects.some(x=>x.id===o.subj))o.subj=c.subjects[0].id;body=talk('Mau belajar apa dulu?','')+`<div class="onbopts onbgrid">${c.subjects.map(x=>`<button class="onbopt" data-s="${x.id}" aria-pressed="${o.subj===x.id}"><span class="sg" style="background:${x.color}">${x.glyph}</span><span>${x.name}<small>${x.units.length} unit</small></span></button>`).join('')}</div>`}
     if(s===3){body=talk('Berapa target harianmu?','')+`<div class="onbopts">${[[10,'Santai','sekitar 1 level sehari'],[20,'Biasa','sekitar 2 level sehari'],[30,'Serius','sekitar 3 level sehari'],[50,'Hebat','5 level atau lebih']].map(g=>`<button class="onbopt" data-g="${g[0]}" aria-pressed="${o.goal===g[0]}"><span class="sg" style="background:var(--orange)">${g[0]}</span><span>${g[1]}<small>${g[0]} XP, ${g[2]}</small></span></button>`).join('')}</div>`}
     if(s===4){if(!o.userEdited)o.user=suggestUser(o.name);const full=licMax()&&APP.profiles.length>=licMax();
       body=talk('Buat akunmu','')+(full?`<div class="tcard"><b>Kelas sudah penuh</b><p class="sub" style="margin:0">Batas ${licMax()} murid sudah tercapai. Minta gurumu menghubungi admin.</p></div>`:`<div class="tcard" style="gap:12px">
