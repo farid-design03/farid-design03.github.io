@@ -1831,6 +1831,17 @@ body:not(.teacher) #tClsBar{display:none}
  body.playing:not(.arcfs) #vPlay .qcard:not(.arcade) .opt{min-height:58px;font-size:18px}
  body.playing:not(.arcfs) .app{background:#fff}
 }
+
+/* undang murid & permintaan gabung */
+.jrbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.jrbtns>*{min-width:0;font-size:15px!important;padding:10px 8px!important}.jrbtns>.primary{grid-column:1/-1;font-size:17px!important}
+.jrbox .ajrow{flex-wrap:wrap;row-gap:6px}.jrbox .ajrow .grow{flex:1 1 150px;min-width:0}.jrbox .ajrow .grow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.jrbox:empty{display:none}
+.jrbox{border:2px solid var(--line);border-radius:16px;padding:8px 12px;background:#FFF9E8}
+.jrres{display:flex;flex-direction:column;max-height:50vh;overflow:auto}
+.jrpend{background:#FFF9E8;border-radius:14px}
+body.has-jreq .nav[data-tab=tstud] i{position:relative}
+body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:-3px;top:-3px;width:11px;height:11px;border-radius:50%;background:#F2394B;border:2px solid #fff;z-index:1}
+.wlinv{background:#FFF9E8;border:2px solid var(--line);border-radius:18px;padding:12px 14px;text-align:left;font-weight:600}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -6335,7 +6346,7 @@ function forgotTeacher(){openModal(`<h3>Pulihkan sandi guru</h3><p>Ketik nama gu
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{const nm=$('#rpName').value.trim().toLowerCase(),pin=$('#rpPin').value;if(nm!==T().name.trim().toLowerCase()){$('#rpErr').textContent='Nama guru tidak cocok.';return}if(pin.length<4){$('#rpErr').textContent='Sandi minimal 4 karakter.';return}setTeacherPass(pin);save();closeModal();toast('check',`Sandi baru tersimpan. Nama pengguna guru: ${T().user||'guru'}`)}}
 
 /* ---------- sign-up questions (sets the student's module) ---------- */
-function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?String(g.displayName||'').trim().split(/\s+/)[0].slice(0,20):'',cls:(t&&t.cls)||'sd2',subj:null,goal:20,color:pick(AV_COLORS),user:'',pass:'',pass2:'',userEdited:false};const el=$('#onb');el.hidden=false;closeAuth();
+function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?String(g.displayName||'').trim().split(/\s+/)[0].slice(0,20):'',cls:(t&&t.cls)||'sd2',subj:null,goal:20,color:pick(AV_COLORS),user:'',pass:'',pass2:'',userEdited:false};{const jc=(window.jrPendingCode&&jrPendingCode())||'';if(jc){o.code=jc;o.via='link'}}const el=$('#onb');el.hidden=false;closeAuth();
   const steps=6;
   const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';if(s>=1)applyTheme(o.cls,s>=2?o.subj:null);
     const talk=(tt,sub)=>`<div class="onbtalk"><div class="mascot" data-mascot data-mood="${s===5?'happy':'idle'}"></div><div class="bubble"><b>${tt}</b>${sub?`<span>${sub}</span>`:''}</div></div>`;
@@ -6457,7 +6468,7 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
   setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
-function fbListenStudent(){const u=FBX.user;if(!u)return;
+function fbListenStudent(){const u=FBX.user;if(!u)return;try{jrListenStudent();setTimeout(jrUseLink,1500)}catch(e){console.warn(e)}
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
@@ -6519,7 +6530,7 @@ async function fbEnterTeacher(u,me){const ids=tclsList().map(c=>c.id);FBX.cid=me
   if(FBX.cid!==u.uid&&data.teacher){if(me.name)data.teacher.name=me.name;if(me.school!=null)data.teacher.school=me.school}
   if(!FBX.classDoc||!FBX.classDoc.code)await fbNewCode(FBX.cid,data.teacher);
   APP={profiles:data.roster||[],cur:null,teacher:data.teacher,sessions:data.sessions||[],bank:data.bank||[],deleted:data.deleted||[]};normalizeApp();store.set('app',APP);
-  P=null;setSession({role:'teacher',uid:u.uid});fbApplyPlan();busy(false);fbHideAuth();document.body.classList.add('teacher');go('tdash');
+  P=null;setSession({role:'teacher',uid:u.uid});fbApplyPlan();busy(false);fbHideAuth();document.body.classList.add('teacher');go('tdash');try{jrListen()}catch(e){console.warn(e)}try{sessionStorage.removeItem('jk_kelas')}catch(e){}
   if(fresh)fbFlush();
   FBX.unsub.push(ref.onSnapshot(s=>{if(!s.exists)return;FBX.classDoc=s.data();FBX.members=FBX.classDoc.members||{};
     if(!s.metadata.hasPendingWrites){try{const d=JSON.parse(FBX.classDoc.data||'null');if(d&&d.teacher){const mine=Object.assign({},APP,{profiles:APP.profiles.filter(p=>!p._remote)});APP=mergeApp(mine,{profiles:d.roster||[],teacher:d.teacher,sessions:d.sessions||[],bank:d.bank||[],deleted:d.deleted||[]});normalizeApp()}}catch(e){}}
@@ -6560,6 +6571,70 @@ async function fbKick(uid){const b=FB.db.batch();
   b.update(FB.db.doc('classes/'+tcid()),{['members.'+uid]:FV().delete()});b.delete(FB.db.doc('classes/'+tcid()+'/board/'+uid));
   b.update(FB.db.doc('users/'+uid),{classId:null,teacherUid:null,joinCode:null});await b.commit()}
 
+/* ---------- UNDANGAN & PERMINTAAN GABUNG KELAS ----------
+   - Guru mengundang murid lewat nama pengguna: murid langsung masuk (guru menambahkannya ke daftar anggota).
+   - Murid lewat kode atau tautan: membuat permintaan (creq) yang harus disetujui guru dulu. */
+const JR={list:[],unsub:null,seen:new Set()};window.JR=JR;
+const jrLink=code=>`${location.origin+location.pathname}?kelas=${encodeURIComponent(code||'')}`;
+function jrClsName(){const t=APP.teacher||{};const c=COURSE.find(x=>x.id===t.cls);return t.label||(c?c.full:'kelas')}
+function jrMsg(code){const t=APP.teacher||{};return `Ayo belajar di JELAS (Jelajah Kelas)! ${t.name?t.name+' ':''}mengundangmu ke kelas ${jrClsName()}.\n\nKetuk tautan ini untuk bergabung:\n${jrLink(code)}\n\nBelum punya akun? Buat akun dulu, nanti otomatis terdaftar di kelas setelah gurumu menyetujui.\nAtau masukkan kode kelas: ${code}`}
+function jrListen(){if(JR.unsub){try{JR.unsub()}catch(e){}JR.unsub=null}const cid=tcid();JR.list=[];JR.first=true;
+  const un=FB.db.collection('creq').where('cid','==',cid).onSnapshot(q=>{JR.list=q.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>r.status==='wait').sort((a,b)=>(a.at||0)-(b.at||0));
+    const fresh=JR.list.filter(r=>!JR.seen.has(r.id));fresh.forEach(r=>JR.seen.add(r.id));if(!JR.first&&fresh.length)toast('team',`${fresh[0].name} ingin bergabung ke kelasmu.`);JR.first=false;jrPaint()},e=>console.warn('creq',e));
+  JR.unsub=un;FBX.unsub.push(()=>{try{un()}catch(e){}JR.unsub=null})}
+function jrPaint(){document.querySelectorAll('[data-jr]').forEach(el=>{const l=JR.list;
+  el.innerHTML=l.length?`<h4 class="ajsec" style="margin:4px 0 6px">MENUNGGU PERSETUJUAN · ${l.length}</h4>${l.map(r=>`<div class="ajrow">${avSpan({name:r.name,avatar:r.av||null})}<span class="grow"><b>${esc(r.name)}</b><small>${r.user?'@'+esc(r.user)+' · ':''}lewat ${r.via==='link'?'tautan':'kode kelas'}</small></span><button class="ajinv" data-jok="${esc(r.id)}">TERIMA</button><button class="smallbtn" data-jno="${esc(r.id)}">Tolak</button></div>`).join('')}`:'';
+  el.querySelectorAll('[data-jok]').forEach(b=>b.onclick=()=>jrDecide(b.dataset.jok,true,b));el.querySelectorAll('[data-jno]').forEach(b=>b.onclick=()=>jrDecide(b.dataset.jno,false,b))});
+  document.body.classList.toggle('has-jreq',JR.list.length>0)}
+function jrFull(){return !isPro()&&Object.keys(FBX.members||{}).length>=FREE_MAX}
+async function jrDecide(id,ok,btn){const r=JR.list.find(x=>x.id===id);if(!r)return;if(ok&&jrFull()){toast('lock',`Paket gratis maksimal ${FREE_MAX} murid per kelas.`);proAsk&&proAsk();return}if(btn)btn.disabled=true;
+  try{const b=FB.db.batch();if(ok)b.update(FB.db.doc('classes/'+tcid()),{['members.'+r.uid]:r.name||'Murid'});b.update(FB.db.doc('creq/'+id),{status:ok?'ok':'no',clsName:[jrClsName(),(APP.teacher||{}).name].filter(Boolean).join(' · '),decided:Date.now()});await b.commit();
+    toast(ok?'check':'team',ok?`${r.name} masuk ke kelasmu.`:`Permintaan ${r.name} ditolak.`)}catch(e){if(btn)btn.disabled=false;toast('lock',fbErr(e))}}
+async function jrInvite(f,btn){if((FBX.members||{})[f.uid]!==undefined){toast('team',`${f.name} sudah ada di kelas ini.`);return}if(jrFull()){toast('lock',`Paket gratis maksimal ${FREE_MAX} murid per kelas.`);proAsk&&proAsk();return}
+  if(btn){btn.disabled=true;btn.textContent='…'}const cid=tcid();
+  try{const b=FB.db.batch();b.update(FB.db.doc('classes/'+cid),{['members.'+f.uid]:f.name||'Murid'});b.set(FB.db.doc('cinv/'+cid+'_'+f.uid),{cid,to:f.uid,teacherUid:FBX.user.uid,clsName:[jrClsName(),(APP.teacher||{}).name].filter(Boolean).join(' · '),at:Date.now()});await b.commit();
+    FBX.members=Object.assign({},FBX.members,{[f.uid]:f.name});if(btn){btn.textContent='DITAMBAHKAN';btn.classList.add('sent')}toast('check',`${f.name} ditambahkan ke kelas. Ia otomatis masuk saat membuka JELAS.`)}
+  catch(e){if(btn){btn.disabled=false;btn.textContent='TAMBAHKAN'}toast('lock',fbErr(e))}}
+function jrInviteUI(){openModal(`<span class="eyebrow">${esc(jrClsName())}</span><h3>Undang murid</h3><p class="sub" style="margin:0">Cari nama atau nama pengguna murid. Murid yang kamu undang langsung masuk ke kelas tanpa perlu persetujuan.</p>
+   <div class="ajopt ajsearch" style="margin:0"><input id="jrQ" placeholder="Cari nama murid" autocapitalize="none" autocomplete="off" spellcheck="false"></div><div id="jrRes" class="jrres"></div><button class="ghost" id="mClose">Selesai</button>`);
+  $('#mClose').onclick=()=>{closeModal();TEACH_R[curTab]&&TEACH_R[curTab]()};let t=null,sq=0;const q=$('#jrQ');setTimeout(()=>q.focus(),60);
+  const run=async()=>{const v=q.value,out=$('#jrRes');if(!String(v).trim()){out.innerHTML='';return}const tk=++sq;out.innerHTML='<p class="note">Mencari…</p>';
+    try{const res=await userSearch(v);if(tk!==sq)return;if(!res.length){out.innerHTML=`<p class="note">Tidak ada murid bernama <b>${esc(v)}</b>.</p>`;return}const mem=FBX.members||{};
+      out.innerHTML=res.map(f=>`<div class="ajrow">${avSpan({name:f.name,avatar:f.av||null})}<span class="grow"><b>${esc(f.name)}</b><small>@${esc(f.user)}</small></span>${mem[f.uid]!==undefined?'<span class="pill ok">Sudah di kelas</span>':`<button class="ajinv" data-ju="${esc(f.uid)}">TAMBAHKAN</button>`}</div>`).join('');
+      out.querySelectorAll('[data-ju]').forEach(b=>b.onclick=()=>{const f=res.find(x=>x.uid===b.dataset.ju);jrInvite(f,b)})}catch(e){out.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`}};
+  q.oninput=()=>{clearTimeout(t);t=setTimeout(run,300)};q.onkeydown=e=>{if(e.key==='Enter')run()}}
+/* sisi murid */
+async function fbJoinReq(code,via){const u=FBX.user;code=String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<4)throw new Error('Kode kelas tidak valid.');
+  let cs;try{cs=await FB.db.doc('classCodes/'+code).get()}catch(e){throw new Error(fbErr(e))}
+  if(!cs.exists)throw new Error('Kode kelas tidak ditemukan. Periksa lagi hurufnya.');
+  const c=cs.data(),me=FBX.me||{},clsName=[c.label,c.name,c.school].filter(Boolean).join(' · ');
+  if(me.classId===c.classId){toast('team','Kamu sudah ada di kelas ini.');return c}
+  const id=c.classId+'_'+u.uid;try{await FB.db.doc('creq/'+id).delete()}catch(e){}
+  await FB.db.doc('creq/'+id).set({cid:c.classId,teacherUid:c.teacherUid,uid:u.uid,name:(P&&P.name)||me.name||'Murid',av:(P&&P.avatar)||null,user:me.username||'',via:via||'code',status:'wait',clsName,at:Date.now()});
+  const pend={cid:c.classId,name:clsName};await FB.db.doc('users/'+u.uid).set({pendCls:pend},{merge:true}).catch(()=>{});FBX.me=Object.assign({},me,{pendCls:pend});
+  toast('team',`Permintaan terkirim ke guru ${clsName}. Tunggu disetujui, ya.`);return c}
+async function jrCancel(){const u=FBX.user,m=FBX.me||{};if(!m.pendCls)return;try{await FB.db.doc('creq/'+m.pendCls.cid+'_'+u.uid).delete()}catch(e){}
+  await FB.db.doc('users/'+u.uid).set({pendCls:null},{merge:true}).catch(()=>{});FBX.me=Object.assign({},m,{pendCls:null})}
+async function jrEnter(cid,teacherUid,clsName,docPath){const u=FBX.user,me=FBX.me||{};if(JR.busy)return;JR.busy=true;
+  try{if(me.classId!==cid){const b=FB.db.batch();
+      if(me.classId){b.update(FB.db.doc('classes/'+me.classId),{['members.'+u.uid]:FV().delete()});b.delete(FB.db.doc('classes/'+me.classId+'/board/'+u.uid))}
+      b.set(FB.db.doc('users/'+u.uid),{classId:cid,teacherUid,joinCode:null,clsName:clsName||'',pendCls:null},{merge:true});await b.commit();
+      FBX.me=Object.assign({},me,{classId:cid,teacherUid,joinCode:null,clsName:clsName||'',pendCls:null});FBX.boardKey=null;FBX.tasksAt=0;try{fbBoardPush()}catch(e){}
+      openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3>Kamu masuk kelas!</h3><p>Sekarang kamu tergabung di <b>${esc(clsName||'kelas gurumu')}</b>. Tugas dari gurumu akan muncul di halaman Belajar.</p></div><div class="acts"><button class="primary" id="mNo">Asyik!</button></div>`);hydrate($('#mbox'));$('#mNo').onclick=closeModal;
+      if(curTab==='profile')renderProfile()}
+    await FB.db.doc(docPath).delete().catch(()=>{})}catch(e){console.warn('join',e)}finally{JR.busy=false}}
+function jrListenStudent(){const u=FBX.user;if(!u||isT())return;
+  FBX.unsub.push(FB.db.collection('creq').where('uid','==',u.uid).onSnapshot(q=>{q.docs.forEach(d=>{const r=d.data();
+    if(r.status==='ok')jrEnter(r.cid,r.teacherUid,r.clsName,'creq/'+d.id);
+    else if(r.status==='no'){FB.db.doc('creq/'+d.id).delete().catch(()=>{});if((FBX.me||{}).pendCls){FB.db.doc('users/'+u.uid).set({pendCls:null},{merge:true}).catch(()=>{});FBX.me=Object.assign({},FBX.me,{pendCls:null})}toast('lock',`Permintaan gabung ke ${r.clsName||'kelas'} ditolak guru.`);if(curTab==='profile')renderProfile()}})},()=>{}));
+  FBX.unsub.push(FB.db.collection('cinv').where('to','==',u.uid).onSnapshot(q=>{q.docs.forEach(d=>{const r=d.data();jrEnter(r.cid,r.teacherUid,r.clsName,'cinv/'+d.id)})},()=>{}))}
+/* tautan ?kelas=KODE */
+try{const v=new URLSearchParams(location.search).get('kelas');if(v){sessionStorage.setItem('jk_kelas',v.toUpperCase());const q=new URLSearchParams(location.search);q.delete('kelas');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''))}}catch(e){}
+const jrPendingCode=()=>{try{return sessionStorage.getItem('jk_kelas')||''}catch(e){return ''}};
+function jrUseLink(){const code=jrPendingCode();if(!code||!FBX.user||isT()||!P)return;try{sessionStorage.removeItem('jk_kelas')}catch(e){}
+  fbJoinReq(code,'link').then(()=>{if(curTab==='profile')renderProfile()}).catch(e=>toast('lock',e.message||e))}
+window.jrPendingCode=jrPendingCode;
+
 /* ---------- masuk dengan akun Google ---------- */
 function gProv(){const p=new firebase.auth.GoogleAuthProvider();try{p.setCustomParameters({prompt:'select_account'})}catch(e){}return p}
 function hasGoogle(u){return !!(u&&(u.providerData||[]).some(x=>x&&x.providerId==='google.com'))}
@@ -6580,7 +6655,7 @@ function fbGoogleRole(u){busy(false);const el=$('#auth');el.hidden=false;$('#onb
 
 /* ---------- layar sambutan & login ---------- */
 const _showWelcome=showWelcome;
-showWelcome=function(){_showWelcome();const sc=document.querySelector('#auth .wschool');if(sc)sc.remove();
+showWelcome=function(){_showWelcome();const sc=document.querySelector('#auth .wschool');if(sc)sc.remove();{const jc=jrPendingCode(),wb=document.querySelector('#auth .wbtns');if(jc&&wb)wb.insertAdjacentHTML('beforebegin',`<div class="wlinv">🏫 <b>Kamu diundang bergabung ke kelas.</b><br>Belum punya akun? Ketuk <b>MULAI SEKARANG</b> untuk mendaftar. Sudah punya? Ketuk <b>SAYA SUDAH PUNYA AKUN</b>. Kamu otomatis terdaftar setelah gurumu menyetujui.</div>`)}
   if(!$('#wTeacher'))document.querySelector('#auth .wbtns').insertAdjacentHTML('beforeend','<button class="linkbtn" id="wTeacher"></button>');
   const wl=$('#wLogin');if(wl&&!$('#wGoogle')){wl.insertAdjacentHTML('afterend',gBtnHTML('wGoogle'));$('#wGoogle').onclick=e=>fbGoogle(e.currentTarget)}
   const w=$('#wTeacher');w.textContent='Saya guru, daftarkan kelas';w.onclick=()=>{closeAuth();teacherSetup()};
@@ -6614,7 +6689,7 @@ window.fbSignupStudent=async function(o,next,err){if(o.fbDone){next();return}con
     await FB.db.doc('users/'+u.uid).set(me);FBX.user=u;FBX.me=me;
     if(!o.google){try{o.rc=await fbSetRecovery(o.user,o.pass)}catch(e){console.warn('recovery',e)}}
     APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};P=p;store.set('app',APP);setSession({role:'student',id:p.id,uid:u.uid});
-    if(o.code&&o.code.trim()){try{const k=await fbJoin(o.code);toast('team',`Kamu bergabung di kelas ${k.name||''}.`)}catch(e){toast('lock',(e.message||e)+' Kamu bisa gabung kelas nanti di menu Profil.')}}
+    if(o.code&&o.code.trim()){try{await fbJoinReq(o.code,o.via||'code');try{sessionStorage.removeItem('jk_kelas')}catch(e){}}catch(e){toast('lock',(e.message||e)+' Kamu bisa gabung kelas nanti di menu Profil.')}}
     o.fbDone=true;next()}
   catch(e){setTimeout(()=>{FBX.busy=false},900);b.disabled=false;b.textContent='Buat akun';err(/email-already/.test(String(e&&e.code))?'Nama pengguna ini sudah dipakai. Coba yang lain.':fbErr(e))}};
 
@@ -6714,9 +6789,13 @@ bindLicCard=function(){const b=$('#licGo');if(b)b.onclick=proAsk};
 /* ---------- kartu kode kelas ---------- */
 function fbCodeCard(compact){const code=(FBX.classDoc&&FBX.classDoc.code)||'······';const n=Object.keys(FBX.members||{}).length;
   return `<div class="tcard fbcode"><div class="fbcode-row"><div class="grow"><h3>Kode kelas</h3><p class="sub" style="margin:0">Bagikan ke muridmu.</p></div><div class="fbcode-big" aria-label="Kode kelas">${esc(code)}</div></div>
-   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="primary" data-fb="copy">Salin pesan untuk murid</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}<span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPaid()?'<span class="pill ok">PRO</span>':inTrial()?`<span class="pill ok">Coba Pro · ${trialLeft()} hari lagi</span>`:'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
-function fbBindCode(root){if(!root)return;root.querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{const k=b.dataset.fb,code=FBX.classDoc&&FBX.classDoc.code;
-    if(k==='copy')copyText(`Ayo belajar di JELAS (Jelajah Kelas)!\n1. Buka ${location.origin+location.pathname}\n2. Pilih MULAI SEKARANG, lalu buat akun\n3. Masukkan kode kelas: ${code}\nSudah punya akun? Masukkan kodenya di menu Profil.`);
+   <div class="jrbtns"><button class="primary" data-fb="invite">+ Undang murid</button><button class="ghost" data-fb="wa">Kirim tautan lewat WA</button><button class="ghost" data-fb="link">Salin tautan</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}</div>
+   <div class="jrbox" data-jr></div>
+   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPaid()?'<span class="pill ok">PRO</span>':inTrial()?`<span class="pill ok">Coba Pro · ${trialLeft()} hari lagi</span>`:'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
+function fbBindCode(root){if(!root)return;setTimeout(jrPaint,0);root.querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{const k=b.dataset.fb,code=FBX.classDoc&&FBX.classDoc.code;
+    if(k==='copy'||k==='link')copyText(jrMsg(code));
+    if(k==='wa'){const t=encodeURIComponent(jrMsg(code));window.open('https://wa.me/?text='+t,'_blank','noopener')}
+    if(k==='invite')jrInviteUI();
     if(k==='pro')proAsk();
     if(k==='new'){openModal(`<h3>Buat kode kelas baru?</h3><p>Kode lama <b>${esc(code||'')}</b> tidak bisa dipakai lagi. Murid yang sudah bergabung tetap ada di kelasmu.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat kode baru</button></div>`);
       $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;fbNewCode(tcid(),APP.teacher).then(c=>{closeModal();toast('key',`Kode kelas baru: ${c}`);TEACH_R[curTab]&&TEACH_R[curTab]()}).catch(e=>{closeModal();toast('lock',fbErr(e))})}}});
@@ -6780,8 +6859,10 @@ TEACH_R.tset=renderTSet;
 const _rP=renderProfile;
 renderProfile=function(){_rP();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
   host.insertAdjacentHTML('beforeend',`<div class="prow"><span style="width:44px;height:44px;flex:none">${ICONS.team||''}</span><span class="grow"><b>Kelas</b><small>${m.classId?`Kamu tergabung di <b>${esc(m.clsName||'kelas gurumu')}</b>. Gurumu bisa melihat perkembangan belajarmu.`:'Belum bergabung ke kelas. Minta kode kelas ke gurumu.'}</small></span></div>
+   ${m.pendCls?`<div class="prow jrpend"><span class="grow"><b>Menunggu persetujuan guru</b><small>Permintaan gabung ke <b>${esc(m.pendCls.name||'kelas')}</b> sudah terkirim. Kamu otomatis masuk setelah gurumu menyetujui.</small></span><button class="smallbtn" id="fbPendX">Batalkan</button></div>`:''}
    <div class="prow">${m.classId?'<button class="ghost" id="fbLeave" style="flex:1">Keluar dari kelas</button>':'<input id="fbCode" class="fbcodein" maxlength="8" autocapitalize="characters" autocomplete="off" placeholder="KODE KELAS" aria-label="Kode kelas"><button class="primary" id="fbJoin">Gabung</button>'}</div>`);
-  const j=$('#fbJoin');if(j)j.onclick=()=>{j.disabled=true;fbJoin($('#fbCode').value).then(c=>{toast('team',`Kamu bergabung di kelas ${c.name||''}.`);renderProfile()}).catch(e=>{j.disabled=false;toast('lock',e.message||e)})};
+  const j=$('#fbJoin');if(j)j.onclick=()=>{j.disabled=true;fbJoinReq($('#fbCode').value,'code').then(()=>renderProfile()).catch(e=>{j.disabled=false;toast('lock',e.message||e)})};
+  const pc=$('#fbPendX');if(pc)pc.onclick=()=>jrCancel().then(()=>renderProfile());
   const lv=$('#fbLeave');if(lv)lv.onclick=()=>openModal(`<h3>Keluar dari kelas?</h3><p>Gurumu tidak bisa melihat perkembanganmu lagi. Progres belajarmu tetap aman.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar kelas</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>fbLeave().then(()=>{closeModal();renderProfile()}).catch(e=>{closeModal();toast('lock',fbErr(e))}))};
 const _bAC=bindAccountCard;
 bindAccountCard=function(){_bAC();if(!FBX.user)return;
