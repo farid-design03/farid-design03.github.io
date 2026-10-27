@@ -973,7 +973,7 @@ html[data-theme=malam] .tdpmenu{background:#16143C;border-color:rgba(150,140,255
 .tbpop{position:absolute;top:calc(100% + 10px);right:0;z-index:60;width:min(420px,calc(100vw - 32px));background:var(--card);border:2px solid var(--line);border-radius:18px;box-shadow:0 14px 34px rgba(0,0,0,.2);padding:10px;display:flex;flex-direction:column;gap:8px}
 .tbph{padding:2px 4px;font-family:var(--title);font-size:17px}.tbpb{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto}
 .tbpb .dnrow{flex-wrap:wrap}.tbpb .nacts{order:3;flex-basis:100%;padding-left:20px}
-@media (max-width:860px){.thtools{order:5;flex-basis:100%}.tsearch{flex:1;width:auto}}
+@media (max-width:860px){.thtools{order:5;flex-basis:100%;min-width:0}.tsearch{flex:1;width:auto;min-width:0}}
 @media (max-width:600px){.kpi .kic{width:38px;height:38px;align-self:flex-start}.kpi .kic i{width:22px;height:22px}.kpi .kl{font-size:11px}.kpi .kv{font-size:28px}}
 .nav#navPro{position:relative}.nprotag{position:absolute;top:2px;right:8px;font-style:normal;font-size:10px;font-weight:900;background:var(--yellow);color:#4B3200;border-radius:999px;padding:0 6px;line-height:16px}.nprotag:empty{display:none}
 @media (min-width:1000px){.nprotag{position:static;margin-left:auto;font-size:11px}}
@@ -2144,6 +2144,50 @@ html[data-theme=malam] ::selection{background:rgba(255,43,214,.45);color:#fff}
 html[data-theme=malam] .instcard{background:#070C1A;border:1px solid rgba(0,240,255,.45);box-shadow:0 0 30px rgba(0,240,255,.25)}
 html[data-theme=malam] .instben li{background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.25)}
 html[data-theme=malam] .insthowbox{background:rgba(255,230,0,.06);border:1px solid rgba(255,230,0,.35)}
+
+/* ---- sambutan & masuk gaya Duolingo ---- */
+#auth .dwel{min-height:100dvh;box-sizing:border-box;justify-content:space-between;text-align:center;padding:16px 4px calc(16px + env(safe-area-inset-bottom,0px));gap:12px}
+.dwel .dmid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.dmas{width:130px}.dmas.big{width:170px}
+.dlogo{font-family:"Nunito",sans-serif;font-weight:900;font-size:clamp(44px,12vw,58px);color:var(--green);letter-spacing:-.01em;margin:6px 0 0;line-height:1}
+.dtag{color:var(--muted2,#AFAFAF);font-size:19px;font-weight:600;margin:0}
+.dbtns{display:flex;flex-direction:column;gap:14px;width:100%;max-width:440px;margin:0 auto}
+.dbig{width:100%;min-height:54px;font-size:17px!important;letter-spacing:.06em}
+.dalt{color:var(--green)!important;background:var(--card)!important;border:2px solid var(--line)!important;box-shadow:0 4px 0 var(--line)!important;font-family:var(--title);font-weight:900;text-transform:uppercase}
+.dlink{background:none;border:0;font:inherit;font-weight:900;letter-spacing:.06em;color:var(--muted2,#AFAFAF);cursor:pointer;padding:10px}.dlink.sm{font-size:13px;letter-spacing:0;font-weight:800}.dlink.go{color:var(--green)}.dlink.blue{color:var(--blue);font-size:15px}
+.dh{font-family:var(--title);font-size:30px;margin:6px 0 10px;color:var(--ink)}
+.dacc{width:100%;max-width:520px;border:2px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card)}
+.dacr{display:flex;align-items:center;gap:16px;width:100%;background:none;border:0;padding:18px 20px;text-align:left;font:inherit;color:var(--ink);cursor:pointer}.dacr+.dacr{border-top:2px solid var(--line)}
+.dacr .avatar{width:64px;height:64px;flex:none;font-size:26px}.dacr .grow{display:flex;flex-direction:column;min-width:0;flex:1}.dacr b{font-size:19px;font-family:var(--title)}.dacr small{color:var(--muted);font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dchev{font-size:34px;color:var(--muted2,#AFAFAF);line-height:1}
+.dplus{width:64px;height:64px;flex:none;border-radius:50%;border:3px solid var(--muted2,#AFAFAF);color:var(--muted2,#AFAFAF);display:grid;place-items:center;font-size:36px;font-weight:300}.dadd b{color:var(--muted2,#AFAFAF)}
+.dminus{width:30px;height:30px;flex:none;border-radius:50%;background:var(--red);position:relative}.dminus::after{content:"";position:absolute;left:7px;right:7px;top:13px;height:4px;border-radius:2px;background:#fff}
+.dback .dmid{justify-content:center}.dfoot{display:flex;justify-content:center}
+.dtopbar{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.dx{width:40px;height:40px;border:0;background:none;font-size:28px;color:var(--muted2,#AFAFAF);cursor:pointer;line-height:1}
+.dtt{font-family:var(--title);font-size:20px;color:var(--muted2,#AFAFAF)}
+.dintro .dmid{gap:20px}.dbub{position:relative;max-width:340px;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 18px;font-size:19px;color:var(--ink);line-height:1.35}
+.dbub::after{content:"";position:absolute;left:50%;bottom:-11px;width:18px;height:18px;background:var(--card);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+.dlogin{justify-content:flex-start!important;text-align:left}
+.dform{display:flex;flex-direction:column;gap:14px;width:100%;max-width:520px;margin:10px auto 0}
+.dinbox{border:2px solid var(--line);border-radius:18px;background:var(--tg);overflow:hidden}
+.dinbox input{width:100%;box-sizing:border-box;border:0!important;background:none!important;border-radius:0!important;box-shadow:none!important;padding:16px 18px;font-size:17px;font-weight:600;color:var(--ink);outline:0}
+.dinbox>input{border-bottom:2px solid var(--line)!important}
+.dpwr{display:flex;align-items:center}.dpwr input{flex:1}.deye{background:none;border:0;color:var(--muted2,#AFAFAF);padding:0 14px;cursor:pointer;display:grid;place-items:center}.deye.on{color:var(--blue)}
+.dform #lgGo:disabled{background:var(--track)!important;color:var(--muted2,#AFAFAF)!important;box-shadow:none!important;opacity:1}
+.dform #lgErr{text-align:center}.dform #dFg{text-align:center}
+.dsp{flex:1}
+.dsoc{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:520px;margin:0 auto}
+.dsb{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:16px;border:2px solid var(--line);background:var(--card);box-shadow:0 4px 0 var(--line);font-family:var(--title);font-weight:900;font-size:16px;letter-spacing:.05em;cursor:pointer}
+.dsb.fbk{color:#3B5998}.dsb.ggl{color:var(--ink2,#4B4B4B)}
+.dterms{text-align:center;color:var(--muted2,#AFAFAF);font-size:14px;font-weight:600;margin:8px auto 0;max-width:420px}.dterms a{color:inherit;font-weight:900;text-decoration:none}
+html[data-theme=malam] .dlogo{color:var(--cy);text-shadow:0 0 18px rgba(0,240,255,.6);font-family:"Orbitron",sans-serif}
+html[data-theme=malam] .dalt{color:var(--cy)!important;background:transparent!important;border:1px solid rgba(0,240,255,.5)!important;box-shadow:0 0 12px rgba(0,240,255,.2)!important}
+html[data-theme=malam] .dacc,html[data-theme=malam] .dinbox,html[data-theme=malam] .dbub,html[data-theme=malam] .dsb{background:#08101F!important;border:1px solid rgba(0,240,255,.35)!important;box-shadow:0 0 16px rgba(0,240,255,.1)!important}
+html[data-theme=malam] .dbub::after{background:#08101F;border-color:rgba(0,240,255,.35)}
+html[data-theme=malam] .dacr+.dacr,html[data-theme=malam] .dinbox>input{border-color:rgba(0,240,255,.2)!important}
+html[data-theme=malam] .dinbox input{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important}html[data-theme=malam] .dinbox>input{border-bottom:1px solid rgba(0,240,255,.2)!important}
+html[data-theme=malam] .dsb.fbk{color:#6EA8FF}html[data-theme=malam] .dsb.ggl{color:var(--ink)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -6812,15 +6856,15 @@ bootApp=function(){busy(true);FB.auth.onAuthStateChanged(u=>{if(FBX.busy)return;
 async function fbRoute(u){fbStop();FBX.user=u;FBX.me=null;FBX.admin=false;
   if(!u){busy(false);setSession(null);P=null;document.body.classList.remove('teacher','fb-free');$('#adminPanel').hidden=true;showWelcome();return}
   busy(true);
-  if(u.email&&!u.emailVerified&&!u.email.endsWith('@'+MAIL_DOM)){try{await u.reload();if(FB.auth.currentUser&&FB.auth.currentUser.emailVerified)await FB.auth.currentUser.getIdToken(true)}catch(e){}}
+  if(u.email&&!u.emailVerified&&!(u.email||'').endsWith('@'+MAIL_DOM)){try{await u.reload();if(FB.auth.currentUser&&FB.auth.currentUser.emailVerified)await FB.auth.currentUser.getIdToken(true)}catch(e){}}
   let snap=null;try{snap=await FB.db.doc('users/'+u.uid).get()}catch(e){fbOffline(e);return}
-  if(!u.email.endsWith('@'+MAIL_DOM)){try{await FB.db.doc('config/admin').get();FBX.admin=true}catch(e){FBX.admin=false}}
+  if(!(u.email||'').endsWith('@'+MAIL_DOM)){try{await FB.db.doc('config/admin').get();FBX.admin=true}catch(e){FBX.admin=false}}
   try{const c=await FB.db.doc('config/app').get();FBX.cfg=c.exists?c.data():{}}catch(e){FBX.cfg={}}
   LIC.announce=FBX.cfg.announce||'';LIC.contact=FBX.cfg.wa||'';
   const me=snap&&snap.exists?snap.data():null;FBX.me=me;
   if(FBX.admin&&(!SESSION||SESSION.role!=='teacher')){busy(false);setSession({role:'admin',uid:u.uid});openAdmin();return}
   if(!me){busy(false);
-    if(u.email.endsWith('@'+MAIL_DOM)){try{await u.delete()}catch(e){await FB.auth.signOut()}toast('lock','Pendaftaran belum selesai. Silakan daftar lagi.');return}
+    if((u.email||'').endsWith('@'+MAIL_DOM)){try{await u.delete()}catch(e){await FB.auth.signOut()}toast('lock','Pendaftaran belum selesai. Silakan daftar lagi.');return}
     if(hasGoogle(u)){fbGoogleRole(u);return}
     fbTeacherForm(u);return}
   if(me.role==='teacher')return fbEnterTeacher(u,me);
@@ -7001,7 +7045,7 @@ window.jrPendingCode=jrPendingCode;
 
 /* ---------- masuk dengan akun Google ---------- */
 function gProv(){const p=new firebase.auth.GoogleAuthProvider();try{p.setCustomParameters({prompt:'select_account'})}catch(e){}return p}
-function hasGoogle(u){return !!(u&&(u.providerData||[]).some(x=>x&&x.providerId==='google.com'))}
+function hasGoogle(u){return !!(u&&(u.providerData||[]).some(x=>x&&(x.providerId==='google.com'||x.providerId==='facebook.com')))}
 function googleOnly(u){return hasGoogle(u)&&!(u.providerData||[]).some(x=>x&&x.providerId==='password')}
 function pwMail(u){const x=(u.providerData||[]).find(x=>x&&x.providerId==='password');return (x&&x.email)||u.email}
 const G_ICON='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff" stroke="#E5E5E5" stroke-width="2"/><path d="M16.5 11h-4.3v2.2h2.4c-.3 1.2-1.3 1.9-2.4 1.9a2.9 2.9 0 1 1 1.9-5.1l1.5-1.5A5 5 0 1 0 12.2 17c2.6 0 4.5-1.8 4.5-4.6 0-.5 0-.9-.2-1.4Z" fill="#1CB0F6"/></svg>';
@@ -7013,7 +7057,7 @@ async function fbGoogle(btn){if(btn)btn.disabled=true;setSession(null);
     if(!/popup-closed|cancelled-popup/.test(c))toast('lock',/unauthorized-domain/.test(c)?'Login Google belum diaktifkan untuk alamat ini. Hubungi pemilik aplikasi.':/operation-not-allowed/.test(c)?'Login Google belum diaktifkan di server.':/account-exists/.test(c)?'Email ini sudah terdaftar dengan sandi. Masuk dengan email dan sandi dulu.':fbErr(e))}
   finally{if(btn)btn.disabled=false}}
 function fbGoogleRole(u){busy(false);const el=$('#auth');el.hidden=false;$('#onb').hidden=true;const nm=String(u.displayName||'').trim().split(/\s+/)[0];
-  el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="happy"></div><h1 class="wtitle" style="font-size:32px">Halo${nm?', '+esc(nm):''}!</h1><p class="wsub">Akun Google <b>${esc(u.email||'')}</b> belum terdaftar di JELAS. Kamu murid atau guru?</p></div>
+  el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="happy"></div><h1 class="wtitle" style="font-size:32px">Halo${nm?', '+esc(nm):''}!</h1><p class="wsub">Akun ${(u.providerData||[]).some(x=>x&&x.providerId==='facebook.com')?'Facebook':'Google'} <b>${esc(u.email||u.displayName||'')}</b> belum terdaftar di JELAS. Kamu murid atau guru?</p></div>
    <div class="wbtns"><button class="primary press" id="grStu">SAYA MURID</button><button class="ghost press" id="grTch">SAYA GURU</button><button class="linkbtn" id="grNo">Pakai akun lain</button></div></div>`;
   hydrate(el);$('#grStu').onclick=()=>{closeAuth();startOnboarding(true,u)};$('#grTch').onclick=()=>{closeAuth();fbTeacherForm(u)};$('#grNo').onclick=()=>FB.auth.signOut()}
 
@@ -7322,6 +7366,69 @@ showLogin=function(pf){_showLogin2(pf);
         openModal(`<div style="text-align:center"><h3>Sandimu ketemu!</h3><p>Sandi untuk <b>${esc(u.toLowerCase())}</b> adalah</p><div class="fbcode-big" style="display:inline-block">${esc(pin)}</div><p class="note">Catat baik-baik, ya.</p></div><div class="acts"><button class="primary" id="mYes">Masuk sekarang</button></div>`);$('#mYes').onclick=()=>{closeModal();$('#lgGo').click()}}
       catch(e){er.style.color='var(--bad)';er.textContent=e.message||String(e)}}}};
 
+
+/* ---------- gaya Duolingo: sambutan, masuk, masuk kembali, Facebook ---------- */
+const FB_ICON='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16.5 24v-9h3l.5-3.6h-3.5V9.2c0-1 .3-1.8 1.8-1.8h1.9V4.2c-.3 0-1.5-.2-2.8-.2-2.8 0-4.6 1.7-4.6 4.8v2.6H9.6V15h3.2v9z" fill="#fff"/></svg>';
+const G_COLOR='<svg viewBox="0 0 48 48" width="26" height="26" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
+async function fbFacebook(btn){if(!firebase.auth.FacebookAuthProvider){toast('lock','Masuk dengan Facebook belum tersedia.');return}if(btn)btn.disabled=true;setSession(null);const prov=new firebase.auth.FacebookAuthProvider();try{prov.addScope('email')}catch(e){}
+  try{await FB.auth.signInWithPopup(prov)}
+  catch(e){const c=String(e&&e.code||'');
+    if(/popup-blocked|operation-not-supported|web-storage-unsupported/.test(c)){try{await FB.auth.signInWithRedirect(prov);return}catch(x){e=x}}
+    if(!/popup-closed|cancelled-popup/.test(c))toast('lock',/operation-not-allowed|invalid-api-key|configuration-not-found/.test(c)?'Masuk dengan Facebook belum diaktifkan. Untuk sementara, masuk dengan Google atau nama pengguna.':/account-exists/.test(c)?'Email Facebook ini sudah terdaftar lewat Google atau sandi. Masuk dengan cara itu dulu.':/unauthorized-domain/.test(c)?'Masuk dengan Facebook belum diaktifkan untuk alamat ini.':fbErr(e))}
+  finally{if(btn)btn.disabled=false}}
+window.fbFacebook=fbFacebook;
+/* akun yang pernah masuk di perangkat ini (tanpa sandi) */
+const ACC={get(){try{return JSON.parse(localStorage.getItem('jelas-accts')||'[]')}catch(e){return []}},put(l){try{localStorage.setItem('jelas-accts',JSON.stringify(l.slice(0,5)))}catch(e){}}};
+function accRemember(){const u=FBX.user;if(!u||FBX.admin)return;const teach=document.body.classList.contains('teacher');const t=teach&&T();
+  const prov=(u.providerData||[]).some(x=>x&&x.providerId==='facebook.com')?'facebook':(u.providerData||[]).some(x=>x&&x.providerId==='google.com')&&!(u.providerData||[]).some(x=>x&&x.providerId==='password')?'google':'password';
+  const isStu=!teach&&P;const row={uid:u.uid,name:isStu?P.name:(t&&t.name)||u.displayName||'Guru',handle:isStu?(P.user||''):(u.email||''),av:isStu?(P.avatar||null):null,color:isStu?P.color:'#26BF66',prov,role:isStu?'student':'teacher',t:Date.now()};
+  if(!row.handle&&!row.name)return;const l=ACC.get().filter(x=>x.uid!==u.uid);l.unshift(row);const k=JSON.stringify(l.slice(0,5));if(k!==localStorage.getItem('jelas-accts'))ACC.put(l)}
+setInterval(()=>{try{accRemember()}catch(e){}},15000);
+const _accGo=go;go=function(t){_accGo.apply(this,arguments);try{accRemember()}catch(e){}};
+function accAv(a){if(a.av)return `<span class="avatar avimg" style="--av:${avBgColor(a.av)}">${avatarSVG(a.av)}</span>`;return `<span class="avatar" style="--av:${a.color||'#26BF66'}">${esc((a.name||'?')[0].toUpperCase())}</span>`}
+function showBack(edit){const el=$('#auth');el.hidden=false;$('#onb').hidden=true;const l=ACC.get();if(!l.length){WEL.force=true;showWelcome();return}
+  el.innerHTML=`<div class="onbin dwel dback"><div class="dmid">${edit?'':'<div class="mascot dmas" data-mascot data-mood="happy"></div>'}<h1 class="dh">${edit?'Kelola Akun':'Masuk kembali'}</h1>
+   <div class="dacc">${l.map(a=>`<button class="dacr" data-acc="${esc(a.uid)}">${edit?'<span class="dminus" aria-hidden="true"></span>':''}${accAv(a)}<span class="grow"><b>${esc(a.name)}</b><small>${esc(a.handle||(a.prov==='google'?'Akun Google':a.prov==='facebook'?'Akun Facebook':''))}</small></span>${edit?'':'<span class="dchev" aria-hidden="true">›</span>'}</button>`).join('')}
+    ${edit?'':'<button class="dacr dadd" id="dAdd"><span class="dplus" aria-hidden="true">+</span><span class="grow"><b>Tambahkan akun lain</b></span></button>'}</div></div>
+   <div class="dfoot"><button class="dlink ${edit?'go':''}" id="dMng">${edit?'SELESAI MENGEDIT':'KELOLA AKUN'}</button></div></div>`;
+  hydrate(el);
+  el.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>{const a=l.find(x=>x.uid===b.dataset.acc);if(!a)return;
+    if(edit){ACC.put(ACC.get().filter(x=>x.uid!==a.uid));showBack(ACC.get().length?true:false);return}
+    if(a.prov==='google')fbGoogle(b);else if(a.prov==='facebook')fbFacebook(b);else showLogin(a.handle)});
+  const ad=$('#dAdd');if(ad)ad.onclick=()=>{WEL.force=true;showWelcome()};
+  $('#dMng').onclick=()=>showBack(!edit)}
+window.showBack=showBack;
+const WEL={force:false};
+showWelcome=function(){applyTheme(null,null);const el=$('#auth');el.hidden=false;$('#picker').hidden=true;$('#onb').hidden=true;
+  if(!WEL.force&&ACC.get().length){showBack(false);return}WEL.force=false;
+  const jc=window.jrPendingCode&&jrPendingCode();
+  el.innerHTML=`<div class="onbin dwel"><div class="dmid"><div class="mascot dmas big" data-mascot data-mood="happy"></div><h1 class="dlogo">jelas</h1><p class="dtag">Belajar seru sambil main. Gratis selamanya.</p>
+   ${jc?'<div class="wlinv">🏫 <b>Kamu diundang bergabung ke kelas.</b><br>Daftar atau masuk dulu. Kamu otomatis terdaftar setelah gurumu menyetujui.</div>':''}</div>
+   <div class="dbtns"><button class="primary press dbig" id="wStart">AYO MULAI</button><button class="ghost press dbig dalt" id="wLogin">AKU SUDAH PUNYA AKUN</button><button class="dlink sm" id="wTeacher">Saya guru, daftarkan kelas</button></div></div>`;
+  hydrate(el);$('#wStart').onclick=()=>{tone([660,880],.06);onbIntro(0)};$('#wLogin').onclick=()=>showLogin();$('#wTeacher').onclick=()=>{closeAuth();teacherSetup()}};
+function onbIntro(i){const el=$('#auth');el.hidden=false;
+  const say=[['Hai! Aku <b>Jeli</b>!','happy'],['Hanya <b>6 pertanyaan singkat</b> sebelum kita mulai pelajaran pertamamu!','idle']][i];
+  el.innerHTML=`<div class="onbin dwel dintro"><div class="dtopbar"><button class="dx" id="diBack" aria-label="Kembali">←</button></div><div class="dmid"><div class="dbub">${say[0]}</div><div class="mascot dmas" data-mascot data-mood="${say[1]}"></div></div>
+   <div class="dbtns"><button class="primary press dbig" id="diNext">LANJUTKAN</button></div></div>`;
+  hydrate(el);$('#diBack').onclick=()=>{if(i)onbIntro(i-1);else{WEL.force=true;showWelcome()}};$('#diNext').onclick=()=>{tone([660,880],.05);if(i<1)onbIntro(i+1);else startOnboarding(true)}}
+const _showLoginD=showLogin;
+showLogin=function(pf){_showLoginD(pf);const el=$('#auth');const g=n=>el.querySelector(n);
+  const u=g('#lgUser'),pw=g('#lgPass'),go=g('#lgGo'),fg=g('#lgForgot'),er=g('#lgErr'),gb=g('#lgGoogle');if(!u||!pw||!go)return;
+  const box=document.createElement('div');box.className='onbin dwel dlogin';
+  box.innerHTML=`<div class="dtopbar"><button class="dx" id="lgBack2" aria-label="Tutup">✕</button><b class="dtt">Masukkan detailmu</b><span style="width:40px"></span></div>
+   <div class="dform"><div class="dinbox" id="dIn"></div><div id="dEr"></div><div id="dGo"></div><div id="dFg"></div></div><div class="dsp"></div>
+   <div class="dsoc"><button class="dsb fbk press" id="lgFb">${FB_ICON}<span>FACEBOOK</span></button><button class="dsb ggl press" id="lgG2">${G_COLOR}<span>GOOGLE</span></button></div>
+   <p class="dterms">Dengan masuk ke JELAS, kamu menyetujui <a href="terms.html" target="_blank" rel="noopener">Ketentuan</a> dan <a href="privacy.html" target="_blank" rel="noopener">Kebijakan Privasi</a> kami.</p>`;
+  u.placeholder='Nama pengguna atau email';pw.placeholder='Kata sandi';
+  const pwr=document.createElement('div');pwr.className='dpwr';pwr.appendChild(pw);pwr.insertAdjacentHTML('beforeend','<button class="deye" id="lgEye" type="button" aria-label="Tampilkan sandi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1.5 12S5.5 4.5 12 4.5 22.5 12 22.5 12 18.5 19.5 12 19.5 1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3.5"/></svg></button>');
+  box.querySelector('#dIn').append(u,pwr);box.querySelector('#dEr').append(er);box.querySelector('#dGo').append(go);if(fg){fg.textContent='LUPA KATA SANDI';fg.className='dlink blue';box.querySelector('#dFg').append(fg)}
+  go.textContent='MASUK';go.classList.add('dbig');
+  el.innerHTML='';el.appendChild(box);hydrate(el);
+  const upd=()=>{go.disabled=!(u.value.trim()&&pw.value)};u.addEventListener('input',upd);pw.addEventListener('input',upd);upd();
+  $('#lgEye').onclick=()=>{const sh=pw.type==='password';pw.type=sh?'text':'password';$('#lgEye').classList.toggle('on',sh)};
+  $('#lgBack2').onclick=()=>{ACC.get().length?showBack(false):(WEL.force=true,showWelcome())};
+  $('#lgFb').onclick=e=>fbFacebook(e.currentTarget);$('#lgG2').onclick=e=>fbGoogle(e.currentTarget);
+  setTimeout(()=>(pf?pw:u).focus(),80)};
 /* ---------- hapus akun (wajib untuk Play Store) ---------- */
 function fbDeleteAsk(){const st=!isT();
   openModal(`<h3>Hapus akun?</h3><p>${st?'Semua progres belajar, XP, dan permatamu akan dihapus permanen.':'Akun guru, kelas, kode kelas, tugas, absensi, dan nilai akan dihapus permanen. Akun murid tetap ada.'} Tindakan ini tidak bisa dibatalkan.</p>
