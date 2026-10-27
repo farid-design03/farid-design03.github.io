@@ -1903,6 +1903,24 @@ body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:
  body.duelland.duelon #vDuel .duelbar .eyebrow{display:none}
  body.duelland.duelon #vDuel .duelbar .back{min-height:30px;min-width:34px;padding:2px 8px}
 }
+@media (orientation:portrait){
+ body.duelland.dlrot.duelon #vDuel{position:fixed!important;inset:0;z-index:40;background:#fff;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)!important;gap:0!important;display:flex!important;flex-direction:column}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace{flex:1;min-height:0;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:40% 1fr!important;gap:0!important}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .drace{grid-column:1/-1;order:-1;height:auto!important;border:0;border-radius:0;border-bottom:2px solid var(--line)}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .dside{transform:none!important;height:auto!important;min-height:0;border:0!important;border-top:5px solid var(--tc)!important;border-radius:0!important;box-shadow:none!important;padding:5px 8px;gap:4px}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .dside+.dside{border-left:2px solid var(--line)!important}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .dhead{gap:6px}body.duelland.dlrot.duelon #vDuel .duel.hasrace .dname{font-size:16px}body.duelland.dlrot.duelon #vDuel .duel.hasrace .dscore{font-size:18px;padding:0 8px;min-width:40px}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .dq{font-size:13px;min-height:0;max-height:2.7em;overflow:auto}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .hint,body.duelland.dlrot.duelon #vDuel .duel.hasrace .dfb{display:none}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .timer{height:6px}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .dopts{flex:1;min-height:0;gap:5px;grid-auto-rows:1fr}
+ body.duelland.dlrot.duelon #vDuel .duel.hasrace .dopts .opt{min-height:0;height:100%;font-size:14px;padding:4px 8px}
+ body.duelland.dlrot.duelon #vDuel .duelbar{position:absolute;left:6px;top:6px;right:auto;bottom:auto;transform:none;z-index:6;flex-direction:row;gap:6px}
+ body.duelland.dlrot.duelon #vDuel .duelbar .eyebrow{display:none}
+ body.duelland.dlrot.duelon #vDuel .duelbar .back{min-height:30px;min-width:34px;padding:2px 8px}
+ body.duelland.dlrot.duelon #vDuel{top:0!important;left:var(--rh,100vw)!important;right:auto!important;bottom:auto!important;width:var(--rw,100vh);height:var(--rh,100vw);transform-origin:0 0;transform:rotate(90deg)}
+ body.duelland.dlrot .rothint{display:none!important}body.duelland.dlrot #duelCount{display:grid!important}body.duelland.dlrot #duelCount[hidden]{display:none!important}body.duelland.dlrot #duelCount .cnt{transform:rotate(90deg)}
+}
 
 .boostpill{background:#FFF3C4;border:2px solid #FFC800;border-radius:12px;padding:2px 8px;font-weight:900;color:#B7791F;font-size:14px;display:flex;align-items:center;gap:2px}
 .boostpill[hidden]{display:none}.boostpill small{font-size:11px;font-weight:800}
@@ -4758,10 +4776,11 @@ const DUEL_RACE={pacu:'boat',lari:'run',balap:'car'};
 /* Balapan berdua di HP memakai posisi mendatar: lintasan di atas, jawaban pemain kiri dan kanan di bawah. Tidak ada layar terbalik. */
 let DLAND={mine:false};
 function duelLand(on){const b=document.body;
-  if(on){b.classList.add('duelland');if(!$('#rotHint'))$('#vDuel').insertAdjacentHTML('beforeend','<div class="rothint" id="rotHint"><div><div class="rotph">📱</div><b>Putar HP ke posisi mendatar</b><span>Pemain duduk berdampingan. Lintasan ada di atas, jawaban masing-masing di kiri dan kanan.</span></div></div>');
+  if(on){b.classList.add('duelland','dlrot');dlRotVars();if(!$('#rotHint'))$('#vDuel').insertAdjacentHTML('beforeend','<div class="rothint" id="rotHint"><div><div class="rotph">📱</div><b>Putar HP ke posisi mendatar</b><span>Pemain duduk berdampingan. Lintasan ada di atas, jawaban masing-masing di kiri dan kanan.</span></div></div>');
     try{const r=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');r&&r.catch&&r.catch(()=>{})}catch(e){}}
-  else{b.classList.remove('duelland');try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}if(DLAND.mine){DLAND.mine=false;try{if(document.fullscreenElement){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}}
-const duelHold=()=>document.body.classList.contains('duelland')&&matchMedia('(orientation:portrait)').matches;
+  else{b.classList.remove('duelland','dlrot');try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}if(DLAND.mine){DLAND.mine=false;try{if(document.fullscreenElement){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}}
+const duelHold=()=>false;
+function dlRotVars(){const r=document.documentElement.style;r.setProperty('--rw',innerHeight+'px');r.setProperty('--rh',innerWidth+'px');if(DUEL&&DUEL.rcv)setTimeout(duelRaceSize,60)}addEventListener('resize',()=>{if(document.body.classList.contains('dlrot'))dlRotVars()});
 window.addEventListener('orientationchange',()=>{if(DUEL&&DUEL.race){setTimeout(duelRaceSize,300);setTimeout(duelRaceSize,800)}});
 function duelRaceSize(){if(!DUEL||!DUEL.rcv)return;const cv=DUEL.rcv,W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight||150;const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.width=W+'px';cv.style.height=H+'px';DUEL.rW=W;DUEL.rH=H;DUEL.rctx=cv.getContext('2d');DUEL.rctx.setTransform(dpr,0,0,dpr,0,0)}
 function duelRaceDraw(dt){const D=DUEL;if(!D||!D.race||!D.rctx)return;const c=D.rctx,W=D.rW,H=D.rH,tot=Math.max(1,GROUP.per);D.rph=(D.rph||0)+dt*9;D.rpos=D.rpos||[0,0];
