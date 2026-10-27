@@ -292,7 +292,7 @@ export default {
       const { type, id, cid, tid, plan } = await request.json();
       if (type === 'pay') { const r = await createInvoice(env, uid, String(plan || ''), origin); return reply(r.status, r.body, origin); }
       if (type === 'task') {
-        if (!cid || cid !== uid || !/^[A-Za-z0-9_-]{4,120}$/.test(tid || '')) return reply(403, { error: 'Bukan guru kelas ini' }, origin);
+        if (!cid || (cid !== uid && !String(cid).startsWith(uid + '_')) || !/^[A-Za-z0-9_-]{4,120}$/.test(tid || '')) return reply(403, { error: 'Bukan guru kelas ini' }, origin);
         const t = await getDoc(`classes/${cid}/tasks/${tid}`);
         if (!t) return reply(404, { error: 'Tugas tidak ditemukan' }, origin);
         const sent = await pushTask(cid, tid, { type: 'task', tid, title: `Tugas baru: ${t.title || ''}`, body: `${t.subjName || ''} · ${t.n || ''} soal · batas ${t.due || ''}. Yuk kerjakan!` }, false);

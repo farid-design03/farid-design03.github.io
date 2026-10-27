@@ -17,6 +17,11 @@ service cloud.firestore {
       return request.auth.uid in get(/databases/$(database)/documents/classes/$(cid)).data.members;
     }
 
+    // Guru boleh punya banyak kelas: kelas pertama berID uid guru, kelas tambahan berID uid_acak.
+    function ownsCls(cid) {
+      return signedIn() && (cid == request.auth.uid || cid.matches(request.auth.uid + '_[A-Za-z0-9]+'));
+    }
+
     function changedKeys() { return request.resource.data.diff(resource.data).affectedKeys(); }
 
     // Pro = berlangganan, atau guru baru dalam masa coba gratis 14 hari.
@@ -62,7 +67,7 @@ service cloud.firestore {
 
     match /classes/{cid} {
       allow read: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
-      allow create: if signedIn() && cid == request.auth.uid
+      allow create: if ownsCls(cid)
         && request.resource.data.teacherUid == request.auth.uid;
       allow update: if signedIn() && (
           (resource.data.teacherUid == request.auth.uid && request.resource.data.teacherUid == request.auth.uid)
@@ -72,24 +77,24 @@ service cloud.firestore {
                   || request.resource.data.members.size() <= (isProUid(resource.data.teacherUid) ? 2000 : 10))));
       allow delete: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
 
-      // Tugas dari guru. ID kelas sama dengan ID guru.
+      // Tugas dari guru pemilik kelas.
       match /tasks/{tid} {
-        allow read: if signedIn() && (request.auth.uid == cid || memberOf(cid));
-        allow write: if signedIn() && request.auth.uid == cid;
+        allow read: if signedIn() && (ownsCls(cid) || memberOf(cid));
+        allow write: if ownsCls(cid);
 
         match /done/{uid} {
-          allow read: if signedIn() && (request.auth.uid == cid || request.auth.uid == uid);
+          allow read: if signedIn() && (ownsCls(cid) || request.auth.uid == uid);
           allow create, update: if signedIn() && request.auth.uid == uid && memberOf(cid)
             && request.resource.data.score is number;
-          allow delete: if signedIn() && (request.auth.uid == cid || request.auth.uid == uid);
+          allow delete: if signedIn() && (ownsCls(cid) || request.auth.uid == uid);
         }
       }
 
       // Peringkat XP mingguan sekelas.
       match /board/{uid} {
-        allow read: if signedIn() && (request.auth.uid == cid || memberOf(cid));
+        allow read: if signedIn() && (ownsCls(cid) || memberOf(cid));
         allow create, update: if signedIn() && request.auth.uid == uid && memberOf(cid);
-        allow delete: if signedIn() && (request.auth.uid == cid || request.auth.uid == uid);
+        allow delete: if signedIn() && (ownsCls(cid) || request.auth.uid == uid);
       }
     }
 
@@ -182,9 +187,9 @@ service cloud.firestore {
 
     // Jadwal pengingat tugas (dibaca pengirim notifikasi di Cloudflare).
     match /reminders/{tid} {
-      allow read: if signedIn() && resource.data.classId == request.auth.uid;
-      allow create: if signedIn() && request.resource.data.classId == request.auth.uid;
-      allow update, delete: if signedIn() && resource.data.classId == request.auth.uid;
+      allow read: if signedIn() && ownsCls(resource.data.classId);
+      allow create: if signedIn() && ownsCls(request.resource.data.classId);
+      allow update, delete: if signedIn() && ownsCls(resource.data.classId);
     }
 
     // Profil umum murid (untuk dikunjungi dan dibandingkan teman). Hanya pemiliknya yang boleh menulis.
@@ -199,7 +204,7 @@ service cloud.firestore {
       allow list: if false;
       allow create: if signedIn()
         && request.resource.data.teacherUid == request.auth.uid
-        && request.resource.data.classId == request.auth.uid;
+        && ownsCls(request.resource.data.classId);
       allow update: if false;
       allow delete: if signedIn() && resource.data.teacherUid == request.auth.uid;
     }

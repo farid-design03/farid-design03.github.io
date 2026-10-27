@@ -1797,6 +1797,22 @@ body.wzon{overflow:hidden}
  .view>.pagehead{top:0;margin:calc(-12px - env(safe-area-inset-top,0px)) calc(50% - 50vw) 0;padding:calc(10px + env(safe-area-inset-top,0px)) calc(50vw - 50% + 16px) 10px;border:0;border-bottom:2px solid var(--line);border-radius:0;box-shadow:none;background:#fff;min-height:64px;box-sizing:border-box}
  .view>.pagehead>i{width:38px;height:38px}.view>.pagehead h2{font-size:24px}
 }
+
+/* Pilih kelas guru */
+#tClsSide{display:none;padding:0 4px 8px}body.teacher #tClsSide{display:block}#tClsSide .tclschip{width:100%;justify-content:flex-start}#tClsSide .tcc-nm{max-width:none;flex:1;text-align:left}
+#tClsBar{flex:none;max-width:52%;min-width:0;display:flex}#tClsBar .tclschip{max-width:100%;padding:5px 10px;font-size:14px}#tClsBar .tcc-n,#tClsBar .tcc-ic{display:none}#tClsBar .tcc-nm{max-width:none}
+body:not(.teacher) #tClsBar{display:none}
+
+.tclschip{display:flex;align-items:center;gap:6px;flex:none;max-width:100%;background:#fff;border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;padding:6px 12px;font-family:var(--display);font-weight:800;font-size:15px;color:var(--ink);cursor:pointer}
+.tclschip .tcc-nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.tclschip .tcc-n{font-size:12px;color:var(--muted);font-weight:700}
+.tclschip .tcc-c{color:var(--muted)}
+.tclslist{display:flex;flex-direction:column;gap:8px}
+.tclsrow{display:flex;align-items:center;gap:8px;border:2px solid var(--line);border-radius:16px;padding:6px 8px 6px 4px}
+.tclsrow.on{border-color:var(--blue);background:#E6F2FF}
+.tclsgo{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:none;border:0;padding:6px 8px;cursor:pointer;font:inherit;color:var(--ink)}
+.tclsgo b{font-family:var(--display);font-size:17px}.tclsgo small{color:var(--muted);font-weight:600}
+@media (max-width:600px){.thead{flex-wrap:wrap}.thead .tclschip{order:5;flex:1 1 100%;justify-content:center}}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -5702,7 +5718,7 @@ function renderTDash(){const t=T(),list=students(),today=dayKey(),sess=sessionOf
   const pts=APP.sessions.filter(s=>s.evals.some(e=>Object.keys(e.results).length)).slice(-10).map(s=>({l:fmtDs(s.date),v:av(s.evals.flatMap(e=>Object.values(e.results).map(r=>r.score)))}));
   const next=[];{const d=new Date();for(let i=1;i<40&&next.length<5;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i);if(t.days.includes(x.getDay()))next.push(dayKey(x))}}
   const attention=[...new Map([...below.map(p=>[p.id,p]),...alpa.map(p=>[p.id,p])]).values()];
-  $('#vTDash').innerHTML=licBanner()+`<div class="thead"><span style="width:56px;height:56px;flex:none">${ICONS.teach}</span><div class="grow"><h2>${greet}, ${esc(t.name)}</h2><p>${esc(t.school||'Sekolah')} · ${c.full} · ${list.length} murid</p></div><span class="datepill ${teach?'on':''}">${fmtD(today)}<br>${teach?'Hari mengajar':'Bukan jadwal mengajar'}</span></div>
+  $('#vTDash').innerHTML=licBanner()+`<div class="thead"><span style="width:56px;height:56px;flex:none">${ICONS.teach}</span><div class="grow"><h2>${greet}, ${esc(t.name)}</h2><p>${esc(t.school||'Sekolah')} · ${t.label?esc(t.label)+' · ':''}${c.full} · ${list.length} murid</p></div><span class="datepill ${teach?'on':''}">${fmtD(today)}<br>${teach?'Hari mengajar':'Bukan jadwal mengajar'}</span></div>
    ${list.length?'':`<div class="tcard"><h3>Mulai dengan menambah murid</h3><p class="sub">Daftarkan nama muridmu.</p><button class="primary" data-go="tstud" style="align-self:flex-start">Tambah murid</button></div>`}
    <div class="tcard"><h3>Pertemuan hari ini</h3>${teach?'':`<p class="sub"></p>`}
     <div class="today"><div class="tstep ${attFilled?'ok':''}"><div class="tn"><i>1</i>Absensi</div><p>${attFilled?`${hadirToday} dari ${list.length} murid hadir.`:'Belum diisi.'}</p><button class="${attFilled?'ghost':'primary'}" data-go="tatt">${attFilled?'Ubah absensi':'Isi absensi'}</button></div>
@@ -5989,7 +6005,7 @@ function renderTSet(){const t=T();
   const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   $('#vTSet').innerHTML=thead(['Pengaturan','gear'],'')+
    `<div class="tcard"><h3>Data kelas</h3><div class="tform"><div class="tfield"><label for="stName">Nama guru</label><input id="stName" value="${esc(t.name)}"></div><div class="tfield"><label for="stSchool">Nama sekolah</label><input id="stSchool" value="${esc(t.school||'')}"></div>
-     <div class="tfield"><label for="stCls">Kelas yang diajar</label><select id="stCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
+     <div class="tfield"><label for="stLabel">Nama kelas</label><input id="stLabel" maxlength="30" placeholder="Contoh: 5A" value="${esc(t.label||'')}"></div><div class="tfield"><label for="stCls">Jenjang</label><select id="stCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
    addStudentBlock()+
    `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
@@ -5999,7 +6015,7 @@ function renderTSet(){const t=T();
    <div class="tcard"><h3>Cadangan data</h3><p class="sub">${GAS?'Data otomatis tersimpan di Google Sheet milikmu: tab Murid, Absensi, Nilai, dan Rapor. Cadangan teks tetap bisa disalin sebagai pengaman tambahan.':'Semua data tersimpan di browser perangkat ini. Salin cadangan secara berkala dan simpan di catatan atau WhatsApp, supaya data bisa dipulihkan jika browser dibersihkan atau pindah perangkat.'}</p>
      <div style="display:flex;gap:10px;flex-wrap:wrap">${GAS?'<a class="primary" id="stSheet" target="_blank" rel="noopener" style="text-decoration:none" hidden>Buka Google Sheet</a>':''}<button class="primary" id="stBackup">Salin cadangan</button><button class="ghost" id="stRestore">Pulihkan dari cadangan</button><button class="ghost" id="stReset" style="color:var(--bad)">Hapus semua data</button></div></div>`;
   hydrate($('#vTSet'));bindStudentBlock(renderTSet);bindLicCard(renderTSet);
-  $('#stSave').onclick=()=>{t.name=$('#stName').value.trim()||t.name;t.school=$('#stSchool').value.trim();t.kkm=Math.max(0,Math.min(100,+$('#stKkm').value||75));const nc=$('#stCls').value;if(nc!==t.cls){t.cls=nc;APP.profiles.forEach(p=>p.cls=nc)}save();toast('check','Data kelas tersimpan.')};
+  $('#stSave').onclick=()=>{t.name=$('#stName').value.trim()||t.name;{const lb=$('#stLabel');if(lb)t.label=lb.value.trim()}t.school=$('#stSchool').value.trim();t.kkm=Math.max(0,Math.min(100,+$('#stKkm').value||75));const nc=$('#stCls').value;if(nc!==t.cls){t.cls=nc;APP.profiles.forEach(p=>p.cls=nc)}save();toast('check','Data kelas tersimpan.')};
   $('#stUnl').onclick=()=>{t.unlimited=!t.unlimited;APP.profiles.forEach(p=>p.unlimited=t.unlimited);save();renderTSet()};
   $('#stTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();renderTSet()};
   $('#stMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();renderTSet()};
@@ -6376,7 +6392,7 @@ function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let
   if(SESSION.role==='student'&&P){const p=Object.assign({},P);delete p._remote;delete p._uid;delete p._pin;
     pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}try{lgSync()}catch(e){}try{fbHandleSync()}catch(e){}try{fbPubSync()}catch(e){}}
   else if(SESSION.role==='teacher'&&APP.teacher){const t=APP.teacher;
-    pr=FB.db.doc('classes/'+u.uid).set({teacherUid:u.uid,name:t.name||'',school:t.school||'',cls:t.cls||'',data:JSON.stringify(fbClassData()),upd:Date.now()},{merge:true})}
+    pr=FB.db.doc('classes/'+tcid()).set({teacherUid:u.uid,name:t.name||'',school:t.school||'',cls:t.cls||'',label:t.label||'',data:JSON.stringify(fbClassData()),upd:Date.now()},{merge:true});try{tclsSyncMeta()}catch(e){}}
   else return Promise.resolve();
   return pr.then(()=>{if(isT())syncPill('ok','Tersimpan online')}).catch(e=>{console.warn(e);if(isT())syncPill('off','Belum tersimpan, dicoba lagi');clearTimeout(FBX.t);FBX.t=setTimeout(fbFlush,15000)})}
 
@@ -6411,12 +6427,61 @@ function fbListenStudent(){const u=FBX.user;if(!u)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
 window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,2500);setTimeout(folNotice,3500);window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
-async function fbEnterTeacher(u,me){const ref=FB.db.doc('classes/'+u.uid);let cs=null;try{cs=await ref.get()}catch(e){}
+/* ---------- banyak kelas untuk satu guru ----------
+   Kelas pertama: classes/{uid}. Kelas tambahan: classes/{uid}_{acak}. Daftar kelas disimpan di users/{uid}.classes. */
+const tcid=()=>FBX.cid||(FBX.user&&FBX.user.uid);window.tcid=tcid;
+const tclsList=()=>{const u=FBX.user,me=FBX.me||{};let l=Array.isArray(me.classes)?me.classes.slice():[];if(u&&!l.some(c=>c.id===u.uid))l.unshift({id:u.uid,label:'',cls:''});return l};
+const tclsName=c=>{const co=COURSE.find(x=>x.id===c.cls);return c.label||(co?co.full:'Kelas utama')};
+function tclsSyncMeta(){const u=FBX.user,t=APP.teacher;if(!u||!t)return;const l=tclsList(),i=l.findIndex(c=>c.id===tcid());const row={id:tcid(),label:t.label||'',cls:t.cls||''};
+  const key=JSON.stringify([row,t.name,t.school]);if(FBX.tclsKey===key)return;FBX.tclsKey=key;if(i>=0)l[i]=row;else l.push(row);
+  FBX.me=Object.assign({},FBX.me||{},{classes:l,name:t.name,school:t.school||''});FB.db.doc('users/'+u.uid).set({classes:l,name:t.name||'',school:t.school||''},{merge:true}).catch(()=>{FBX.tclsKey=null})}
+async function tclsSwitch(id){if(id===tcid())return;busy(true);try{clearTimeout(FBX.t);await fbFlush();await FB.db.doc('users/'+FBX.user.uid).set({curCls:id},{merge:true});FBX.me=Object.assign({},FBX.me,{curCls:id})}catch(e){busy(false);toast('lock',fbErr(e));return}
+  closeModal();await fbRoute(FBX.user);toast('check',`Sekarang: ${tclsName(tclsList().find(c=>c.id===id)||{})}`)}
+async function tclsAdd(label,cls){const u=FBX.user;const id=u.uid+'_'+Math.random().toString(36).slice(2,8);const t0=APP.teacher||{};
+  const teacher={name:t0.name||'Guru',school:t0.school||'',cls,label,kkm:t0.kkm||75,days:(t0.days||[1,2,3,4,5]).slice(),unlimited:t0.unlimited!==false,created:Date.now(),user:t0.user||u.email};
+  clearTimeout(FBX.t);await fbFlush();
+  await FB.db.doc('classes/'+id).set({teacherUid:u.uid,name:teacher.name,school:teacher.school,cls,label,members:{},data:JSON.stringify({teacher,sessions:[],bank:APP.bank||[],deleted:[],roster:[]}),upd:Date.now()});
+  const keep=FBX.classDoc;FBX.classDoc={members:{}};try{await fbNewCode(id,teacher)}finally{FBX.classDoc=keep}
+  const l=tclsList();l.push({id,label,cls});await FB.db.doc('users/'+u.uid).set({classes:l,curCls:id},{merge:true});FBX.me=Object.assign({},FBX.me,{classes:l,curCls:id});
+  closeModal();await fbRoute(u);toast('check',`Kelas ${label||''} dibuat. Bagikan kodenya ke murid.`)}
+async function tclsDelete(id){const u=FBX.user;if(id===u.uid)return;const del=p=>FB.db.doc(p).delete().catch(()=>{});const list=p=>FB.db.collection(p).get().then(q=>q.docs.map(d=>d.id)).catch(()=>[]);
+  let cd=null;try{const sn=await FB.db.doc('classes/'+id).get();cd=sn.exists?sn.data():null}catch(e){}
+  for(const m of Object.keys((cd&&cd.members)||{})){try{await FB.db.doc('users/'+m).update({classId:null,teacherUid:null,joinCode:null})}catch(e){}}
+  for(const t of await list('classes/'+id+'/tasks')){await del('reminders/'+t);for(const d of await list('classes/'+id+'/tasks/'+t+'/done'))await del('classes/'+id+'/tasks/'+t+'/done/'+d);await del('classes/'+id+'/tasks/'+t)}
+  for(const d of await list('classes/'+id+'/board'))await del('classes/'+id+'/board/'+d);if(cd&&cd.code)await del('classCodes/'+cd.code);await del('classes/'+id);
+  const l=tclsList().filter(c=>c.id!==id);const patch={classes:l};if(tcid()===id)patch.curCls=u.uid;await FB.db.doc('users/'+u.uid).set(patch,{merge:true});FBX.me=Object.assign({},FBX.me,patch)}
+function tclsChip(){if(!FBX.user||!isT()||!APP.teacher)return '';const n=tclsList().length;return `<button class="tclschip press" id="tClsChip" aria-haspopup="dialog" title="Ganti atau tambah kelas"><span class="tcc-ic">🏫</span><span class="tcc-nm">${esc(tclsName({label:APP.teacher.label,cls:APP.teacher.cls}))}</span>${n>1?`<span class="tcc-n">${n} kelas</span>`:''}<span class="tcc-c">▾</span></button>`}
+window.tclsChip=tclsChip;
+function tclsMount(){const on=!!(FBX.user&&isT()&&APP.teacher);const bar=$('#tBar');
+  let a=$('#tClsBar');if(!a&&bar){const ti=$('#tBarTitle');(ti||bar.lastElementChild).insertAdjacentHTML('afterend','<span id="tClsBar"></span>');a=$('#tClsBar')}
+  let sd=$('#tClsSide');if(!sd){const br=document.querySelector('#sideNav .sbrand');if(br){br.insertAdjacentHTML('afterend','<div id="tClsSide"></div>');sd=$('#tClsSide')}}
+  const h=on?tclsChip():'';if(a)a.innerHTML=h;if(sd)sd.innerHTML=h}
+window.tclsMount=tclsMount;
+function tclsPicker(){const l=tclsList(),cur=tcid();
+  openModal(`<span class="eyebrow">Kelasmu</span><h3>Pilih kelas</h3><div class="tclslist">${l.map(c=>`<div class="tclsrow ${c.id===cur?'on':''}"><button class="tclsgo" data-cid="${esc(c.id)}"><b>${esc(tclsName(c))}</b><small>${esc((COURSE.find(x=>x.id===c.cls)||{}).full||'')}${c.id===cur?' · sedang dibuka':''}</small></button>${c.id!==FBX.user.uid&&c.id!==cur?`<button class="smallbtn danger" data-cdel="${esc(c.id)}" aria-label="Hapus kelas">Hapus</button>`:''}</div>`).join('')}</div>
+   <button class="primary" id="tclsNew">+ Tambah kelas</button><button class="ghost" id="mClose">Tutup</button>`);
+  $('#mClose').onclick=closeModal;$('#tclsNew').onclick=tclsNewForm;
+  document.querySelectorAll('#mbox [data-cid]').forEach(b=>b.onclick=()=>tclsSwitch(b.dataset.cid));
+  document.querySelectorAll('#mbox [data-cdel]').forEach(b=>b.onclick=()=>{const c=l.find(x=>x.id===b.dataset.cdel);
+    openModal(`<h3>Hapus kelas ${esc(tclsName(c))}?</h3><p>Semua murid dikeluarkan dari kelas ini, dan tugas, absensi, serta nilainya ikut terhapus. Akun murid tetap ada.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus kelas</button></div>`);
+    $('#mNo').onclick=tclsPicker;$('#mYes').onclick=async()=>{$('#mYes').disabled=true;$('#mYes').textContent='Menghapus…';try{await tclsDelete(c.id);toast('check','Kelas dihapus.');tclsPicker()}catch(e){toast('lock',fbErr(e));tclsPicker()}}})}
+function tclsNewForm(){const t=APP.teacher||{};
+  openModal(`<span class="eyebrow">Kelas baru</span><h3>Tambah kelas</h3><div class="tfield"><label for="ncLabel">Nama kelas</label><input id="ncLabel" maxlength="30" placeholder="Contoh: 5A, 7 Merah, X TKJ 2"></div>
+   <div class="tfield"><label for="ncCls">Jenjang</label><select id="ncCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div>
+   <p class="sub" style="margin:0">Kelas baru punya kode, murid, absensi, tugas, dan nilai sendiri. Bank soalmu ikut tersedia di kelas baru.</p>
+   <p class="note" id="ncErr" style="color:var(--bad);font-weight:700;margin:0"></p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat kelas</button></div>`);
+  setTimeout(()=>{const i=$('#ncLabel');if(i)i.focus()},60);$('#mNo').onclick=tclsPicker;
+  $('#mYes').onclick=async()=>{const label=$('#ncLabel').value.trim();if(!label){$('#ncErr').textContent='Isi nama kelas dulu.';return}if(tclsList().some(c=>(c.label||'').toLowerCase()===label.toLowerCase())){$('#ncErr').textContent='Nama kelas ini sudah ada.';return}
+    $('#mYes').disabled=true;$('#mYes').textContent='Membuat…';try{await tclsAdd(label,$('#ncCls').value)}catch(e){$('#mYes').disabled=false;$('#mYes').textContent='Buat kelas';$('#ncErr').textContent=fbErr(e)}}}
+window.tclsPicker=tclsPicker;
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#tClsChip,.tclschip');if(b){e.preventDefault();tclsPicker()}});
+async function fbEnterTeacher(u,me){const ids=tclsList().map(c=>c.id);FBX.cid=me.curCls&&ids.includes(me.curCls)?me.curCls:u.uid;const ref=FB.db.doc('classes/'+FBX.cid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
   if(FBX.classDoc){try{data=JSON.parse(FBX.classDoc.data||'null')}catch(e){}}
   const fresh=!data||!data.teacher;
   if(fresh)data={teacher:{name:me.name||'Guru',school:me.school||'',cls:me.cls||'sd2',kkm:75,days:[1,2,3,4,5],unlimited:true,created:Date.now(),user:u.email},sessions:[],bank:[],deleted:[],roster:[]};
-  if(!FBX.classDoc||!FBX.classDoc.code)await fbNewCode(u.uid,data.teacher);
+  if(FBX.cid!==u.uid&&data.teacher){if(me.name)data.teacher.name=me.name;if(me.school!=null)data.teacher.school=me.school}
+  if(!FBX.classDoc||!FBX.classDoc.code)await fbNewCode(FBX.cid,data.teacher);
   APP={profiles:data.roster||[],cur:null,teacher:data.teacher,sessions:data.sessions||[],bank:data.bank||[],deleted:data.deleted||[]};normalizeApp();store.set('app',APP);
   P=null;setSession({role:'teacher',uid:u.uid});fbApplyPlan();busy(false);fbHideAuth();document.body.classList.add('teacher');go('tdash');
   if(fresh)fbFlush();
@@ -6434,8 +6499,8 @@ const CODE_CH='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const genCode=()=>Array.from({length:6},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join('');
 async function fbNewCode(uid,t){const old=FBX.classDoc&&FBX.classDoc.code;let last=null;
   for(let i=0;i<5;i++){const code=genCode();try{
-    await FB.db.doc('classCodes/'+code).set({classId:uid,teacherUid:uid,name:(t&&t.name)||'',school:(t&&t.school)||'',created:Date.now()});
-    const patch={teacherUid:uid,code};if(!FBX.classDoc||!FBX.classDoc.members)patch.members={};
+    const tu=FBX.user.uid;await FB.db.doc('classCodes/'+code).set({classId:uid,teacherUid:tu,name:(t&&t.name)||'',school:(t&&t.school)||'',label:(t&&t.label)||'',created:Date.now()});
+    const patch={teacherUid:tu,code};if(!FBX.classDoc||!FBX.classDoc.members)patch.members={};
     await FB.db.doc('classes/'+uid).set(patch,{merge:true});
     if(old&&old!==code)FB.db.doc('classCodes/'+old).delete().catch(()=>{});
     FBX.classDoc=Object.assign({},FBX.classDoc||{},patch);return code}catch(e){last=e}}
@@ -6443,7 +6508,7 @@ async function fbNewCode(uid,t){const old=FBX.classDoc&&FBX.classDoc.code;let la
 async function fbJoin(code){const u=FBX.user;code=String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<4)throw new Error('Kode kelas tidak valid.');
   let cs;try{cs=await FB.db.doc('classCodes/'+code).get()}catch(e){throw new Error(fbErr(e))}
   if(!cs.exists)throw new Error('Kode kelas tidak ditemukan. Periksa lagi hurufnya.');
-  const c=cs.data(),me=FBX.me||{},clsName=[c.name,c.school].filter(Boolean).join(' · ');
+  const c=cs.data(),me=FBX.me||{},clsName=[c.label,c.name,c.school].filter(Boolean).join(' · ');
   if(me.classId===c.classId)return c;
   const b=FB.db.batch();
   if(me.classId){b.update(FB.db.doc('classes/'+me.classId),{['members.'+u.uid]:FV().delete()});b.delete(FB.db.doc('classes/'+me.classId+'/board/'+u.uid))}
@@ -6456,7 +6521,7 @@ async function fbLeave(){const u=FBX.user,m=FBX.me||{};if(!m.classId)return;cons
   b.set(FB.db.doc('users/'+u.uid),{classId:null,teacherUid:null,joinCode:null,clsName:null},{merge:true});
   await b.commit();FBX.me=Object.assign({},m,{classId:null,teacherUid:null,joinCode:null,clsName:null});FBX.tasks=[];FBX.boardKey=null}
 async function fbKick(uid){const b=FB.db.batch();
-  b.update(FB.db.doc('classes/'+FBX.user.uid),{['members.'+uid]:FV().delete()});b.delete(FB.db.doc('classes/'+FBX.user.uid+'/board/'+uid));
+  b.update(FB.db.doc('classes/'+tcid()),{['members.'+uid]:FV().delete()});b.delete(FB.db.doc('classes/'+tcid()+'/board/'+uid));
   b.update(FB.db.doc('users/'+uid),{classId:null,teacherUid:null,joinCode:null});await b.commit()}
 
 /* ---------- masuk dengan akun Google ---------- */
@@ -6551,7 +6616,7 @@ enterTeacher=function(){showLogin()};
 /* ---------- keluar ---------- */
 const _logout=logout;
 logout=function(){fbStop();clearTimeout(FBX.t);const fl=Promise.all([SESSION?fbFlush():Promise.resolve(),typeof fbPushUnregister==='function'?fbPushUnregister():null]);setSession(null);
-  APP={profiles:[],cur:null,sessions:[],deleted:[],bank:[]};store.set('app',APP);FBX.me=null;FBX.admin=false;FBX.classDoc=null;FBX.remote=[];FBX.members={};
+  APP={profiles:[],cur:null,sessions:[],deleted:[],bank:[]};store.set('app',APP);FBX.me=null;FBX.admin=false;FBX.classDoc=null;FBX.cid=null;FBX.remote=[];FBX.members={};
   document.body.classList.remove('fb-free','fb-student');_logout();timeout(fl,3000).finally(()=>FB.auth.signOut())};
 
 /* ---------- paket Pro ---------- */
@@ -6618,7 +6683,7 @@ function fbBindCode(root){if(!root)return;root.querySelectorAll('[data-fb]').for
     if(k==='copy')copyText(`Ayo belajar di JELAS (Jelajah Kelas)!\n1. Buka ${location.origin+location.pathname}\n2. Pilih MULAI SEKARANG, lalu buat akun\n3. Masukkan kode kelas: ${code}\nSudah punya akun? Masukkan kodenya di menu Profil.`);
     if(k==='pro')proAsk();
     if(k==='new'){openModal(`<h3>Buat kode kelas baru?</h3><p>Kode lama <b>${esc(code||'')}</b> tidak bisa dipakai lagi. Murid yang sudah bergabung tetap ada di kelasmu.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat kode baru</button></div>`);
-      $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;fbNewCode(FBX.user.uid,APP.teacher).then(c=>{closeModal();toast('key',`Kode kelas baru: ${c}`);TEACH_R[curTab]&&TEACH_R[curTab]()}).catch(e=>{closeModal();toast('lock',fbErr(e))})}}});
+      $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;fbNewCode(tcid(),APP.teacher).then(c=>{closeModal();toast('key',`Kode kelas baru: ${c}`);TEACH_R[curTab]&&TEACH_R[curTab]()}).catch(e=>{closeModal();toast('lock',fbErr(e))})}}});
   const v=root.querySelector('#fbVerify');if(v)v.onclick=()=>FBX.user.sendEmailVerification().then(()=>toast('check','Tautan verifikasi dikirim. Periksa email.')).catch(e=>toast('lock',fbErr(e)))}
 licBanner=function(){const out=[];if(FBX.cfg.announce)out.push(`<div class="tcard annc"><b>Pengumuman</b><span>${esc(FBX.cfg.announce)}</span></div>`);
   const u=FBX.user;if(u&&u.email&&!u.emailVerified)out.push(`<div class="tcard annc warn"><b>Verifikasi emailmu</b><span>Kami mengirim tautan ke ${esc(u.email)}. Klik tautan itu supaya kamu bisa membuat sandi baru jika lupa. <button class="smallbtn" id="fbVerify">Kirim ulang</button></span></div>`);
@@ -6757,7 +6822,7 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
   FBX.busy=true;fbStop();clearTimeout(FBX.t);
   const del=p=>FB.db.doc(p).delete().catch(()=>{});const list=p=>FB.db.collection(p).get().then(q=>q.docs.map(d=>d.id)).catch(()=>[]);
   try{if(st){if(me.classId){try{await fbLeave()}catch(e){}}if(me.username){await del('recovery/'+me.username);await del('handles/'+me.username)}await del('pub/'+u.uid)}
-    else{const cid=u.uid;for(const t of await list('classes/'+cid+'/tasks')){await del('reminders/'+t);for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
+    else{for(const c of tclsList())if(c.id!==u.uid){try{await tclsDelete(c.id)}catch(e){}}const cid=u.uid;FBX.cid=cid;try{const sn=await FB.db.doc('classes/'+cid).get();FBX.classDoc=sn.exists?sn.data():FBX.classDoc}catch(e){}for(const t of await list('classes/'+cid+'/tasks')){await del('reminders/'+t);for(const d of await list('classes/'+cid+'/tasks/'+t+'/done'))await del('classes/'+cid+'/tasks/'+t+'/done/'+d);await del('classes/'+cid+'/tasks/'+t)}
       for(const d of await list('classes/'+cid+'/board'))await del('classes/'+cid+'/board/'+d);
       const code=FBX.classDoc&&FBX.classDoc.code;if(code)await del('classCodes/'+code);await FB.db.doc('classes/'+cid).delete().catch(()=>{})}
     await FB.db.doc('users/'+u.uid).delete();await u.delete()}
@@ -6805,7 +6870,7 @@ function taskWizard(c,cid){const plus=d=>dayKey(new Date(Date.now()+d*864e5));co
      let ref;try{ref=await FB.db.collection('classes/'+cid+'/tasks').add(tk)}catch(e){throw new Error(fbErr(e))}
      if(hours.length)FB.db.doc('reminders/'+ref.id).set({classId:cid,tid:ref.id,title:tk.title,subjName:tk.subjName,due:s.due,hours,tz:-new Date().getTimezoneOffset(),created:Date.now()}).catch(e=>console.warn('reminder',e));
      notifyServer('task',null,{cid,tid:ref.id});close();toast('target','Tugas diberikan. Murid melihatnya di halaman Belajar.');renderTTask()}}})}
-async function renderTTask(){const v=$('#vTTask'),c=tCls(),cid=FBX.user.uid;
+async function renderTTask(){const v=$('#vTTask'),c=tCls(),cid=tcid();
   v.innerHTML=thead(['Tugas','target'],'')+
    `<div class="tcard evnew"><span class="evnew-ic"><i data-icon="target"></i></span><div class="grow"><h3>Buat tugas baru</h3></div><button class="primary press" id="tkWiz">Buat tugas</button>${isPro()?'':`<p class="note" style="margin:0">Paket Gratis: maksimal ${FREE_TASKS} tugas aktif. <button class="smallbtn" data-fb="pro">Lihat paket Pro</button></p>`}</div>
    <div id="tkList" style="display:flex;flex-direction:column;gap:16px"><div class="tcard"><p class="note" style="margin:0">Memuat tugas…</p></div></div>`;
@@ -7410,7 +7475,7 @@ window.addEventListener('load',()=>setTimeout(backArm,300));document.addEventLis
 /* ---------- navigasi laptop: kartu akun di menu samping & pintasan keyboard ---------- */
 const navLabel=n=>((n.querySelector('span')||n).textContent||'').trim();
 function navItems(){return [...document.querySelectorAll('#sideNav .nav')].filter(n=>n.offsetParent!==null&&n.dataset.tab!=='texit')}
-function renderSideFoot(){const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
+function renderSideFoot(){try{window.tclsMount&&tclsMount()}catch(e){}const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
   if(t&&T()){const plan=typeof window.fbPlanLabel==='function'?window.fbPlanLabel():tCls().full;
     el.innerHTML=`<div class="who"><span class="avatar" style="--av:#26BF66">${esc((T().name||'G')[0].toUpperCase())}</span><span><b>${esc(T().name||'Guru')}</b><small>Guru · ${esc(plan)}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
   else if(P){el.innerHTML=`<div class="who">${avSpan(P)}<span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
