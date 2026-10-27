@@ -925,6 +925,38 @@ body.teacher .side .tbadge{display:block;margin:-6px 6px 10px;background:var(--i
 .kpi.warn .kv{color:var(--bad)}.kpi.good .kv{color:var(--ok)}
 .tgrid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
 .thtools{display:flex;align-items:center;gap:10px}
+.jseg button{font-size:13px}
+.jlist{display:flex;flex-direction:column;gap:6px}
+.jrow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:var(--tg);border:2px solid transparent}
+.jrow .avatar{width:36px;height:36px;flex:none}.jrow .grow b{font-size:15px}
+.jrk{width:30px;text-align:center;font-family:var(--title);font-weight:900;font-size:18px;color:var(--muted);flex:none}
+.jrow.top1 .jrk,.jrow.top2 .jrk,.jrow.top3 .jrk{font-size:24px}
+.jrow.top1{background:var(--ty);border-color:#FFD84D}.jrow.top2{border-color:var(--line2)}.jrow.top3{border-color:#F3B27A}
+.jv{font-family:var(--title);font-weight:900;font-size:16px;white-space:nowrap}
+@media (max-width:1279px){.tdl .tdrail{flex-direction:row;flex-wrap:wrap;align-items:flex-start}.tdl .tdrail>*{flex:1 1 300px;box-sizing:border-box}}
+.jrow .grow{flex:1;min-width:0}.jseg button{display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;padding:4px 12px!important;min-width:max-content}
+body.teacher .sfoot{border:0!important;background:none!important;box-shadow:none!important;padding:0!important}
+html[data-theme=malam] .jrow{background:rgba(255,255,255,.04)}html[data-theme=malam] .jrow.top1{background:rgba(255,200,0,.12);border-color:rgba(255,216,77,.5)}html[data-theme=malam] .jrow.top2{border-color:rgba(200,200,255,.3)}html[data-theme=malam] .jrow.top3{border-color:rgba(243,178,122,.45)}
+
+.tdprof{position:relative}
+.tdpbtn{display:flex;align-items:center;gap:10px;width:100%;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit;text-align:left;box-shadow:0 4px 0 var(--line2)}
+.tdpbtn .avatar{width:46px;height:46px;flex:none;font-size:20px}.tdpn{display:flex;flex-direction:column;min-width:0;flex:1}.tdpn b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}.tdpn small{color:var(--purple);font-weight:800;font-size:12px}
+.tdpc{flex:none;color:var(--muted);transition:transform .2s}.tdpbtn[aria-expanded=true] .tdpc{transform:rotate(180deg)}
+.tdpmenu{position:absolute;top:calc(100% + 8px);right:0;min-width:220px;z-index:70;background:var(--card);border:2px solid var(--line);border-radius:16px;box-shadow:0 14px 34px rgba(0,0,0,.2);padding:6px;display:flex;flex-direction:column}
+.tdpmenu button{background:none;border:0;text-align:left;padding:10px 12px;border-radius:10px;font:inherit;font-weight:800;color:var(--ink);cursor:pointer}.tdpmenu button:hover{background:var(--tb)}.tdpmenu .pmout{color:var(--bad)}
+.tdpmini .tdpbtn{padding:0;border-radius:50%;width:44px;height:44px;justify-content:center;box-shadow:none}.tdpmini .tdpn,.tdpmini .tdpc{display:none}.tdpmini .avatar{width:40px;height:40px;font-size:17px}
+.tdpbig{display:none}
+@media (min-width:1280px){.tdpbig{display:block}.tdpmini{display:none}.tdl{grid-template-columns:minmax(0,1fr) 330px}}
+.sfpro{display:flex;flex-direction:column;gap:6px;background:linear-gradient(160deg,#F3EDFF,#E7F1FF);border:2px solid #DCCFFF;border-radius:16px;padding:12px}
+.sfph{display:flex;align-items:center;gap:6px}.sfph b{font-size:14px;line-height:1.2}.sfcrown{font-size:18px}.sfpro p{margin:0;font-size:12px;color:var(--muted);font-weight:700;line-height:1.35}
+.sfprobtn{background:var(--purple);color:#fff;border:0;border-radius:12px;padding:8px 10px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 3px 0 #6B45D6}
+.sfpro.on{background:linear-gradient(160deg,#EFFFE3,#E4F7FF);border-color:#C8EBB0}.sfpro.on .sfprobtn{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:none}
+body.teacher .sfoot{gap:10px}
+html[data-theme=malam] .sfpro{background:linear-gradient(160deg,rgba(124,92,255,.35),rgba(60,40,160,.18));border-color:rgba(160,140,255,.35)}
+html[data-theme=malam] .sfprobtn{background:linear-gradient(180deg,#8B6CFF,#6A45F0);box-shadow:0 3px 0 #3F26A8}
+html[data-theme=malam] .tdpbtn{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),#141236;border-color:rgba(150,140,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.28)}
+html[data-theme=malam] .tdpmenu{background:#16143C;border-color:rgba(150,140,255,.22)}html[data-theme=malam] .tdpn small{color:#B9A6FF}
+
 .tsearch{position:relative;display:flex;align-items:center;gap:8px;background:var(--tg);border:2px solid var(--line);border-radius:999px;padding:0 14px;height:44px;width:clamp(200px,24vw,340px);color:var(--muted)}
 .tsearch input{border:0!important;background:none!important;outline:0;flex:1;min-width:0;font:inherit;font-weight:700;color:var(--ink);padding:0;height:100%;box-shadow:none!important}
 .tsearch:focus-within{border-color:var(--blue)}
@@ -963,8 +995,8 @@ html[data-theme=malam] .tbn{border-color:#141236}
 .tdgrid span.h::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--green)}
 .tdgrid span.t{background:var(--accent)!important;color:#fff!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
 .tdleg{display:flex;gap:14px;font-size:12px;color:var(--muted);font-weight:700}.tdleg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}.tdleg i.m{background:var(--tb);border:2px solid var(--accent)}.tdleg i.h{background:var(--green)}
-.tdrb{display:flex;align-items:center;gap:14px}.ring{width:104px;height:104px;flex:none;transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:10}.ring .rbg{stroke:var(--track)}.ring .rfg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dasharray .6s}
-.ring text{transform:rotate(90deg);transform-origin:50px 50px;font-family:var(--title);font-weight:900;font-size:22px;fill:var(--ink)}
+.tdrb{display:flex;align-items:center;gap:14px}.tdrsvg{width:104px;height:104px;flex:none;transform:rotate(-90deg)}.tdrsvg circle{fill:none;stroke-width:10}.tdrsvg .rbg{stroke:var(--track)}.tdrsvg .rfg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dasharray .6s}
+.tdrsvg text{transform:rotate(90deg);transform-origin:50px 50px;font-family:var(--title);font-weight:900;font-size:22px;fill:var(--ink)}
 .tdn{display:flex;align-items:center;gap:10px;padding:6px 0}.tdn+.tdn{border-top:2px dashed var(--line)}
 .tdd{width:42px;height:42px;flex:none;border-radius:12px;background:var(--tb);color:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}.tdd b{font-size:17px}.tdd small{font-size:10px;font-weight:800}
 .tdn .grow{display:flex;flex-direction:column;min-width:0}.tdn .grow small{color:var(--muted);font-size:12px}.tdm{font-size:12px;color:var(--muted);font-weight:700}
@@ -2020,7 +2052,7 @@ html[data-theme=malam] .modal,html[data-theme=malam] .sheet,html[data-theme=mala
 html[data-theme=malam] .opt{background:rgba(255,255,255,.04);color:var(--ink);border-color:rgba(150,140,255,.22)}
 html[data-theme=malam] .ttable th{background:rgba(255,255,255,.04);color:var(--muted)}html[data-theme=malam] .ttable td{border-color:rgba(150,140,255,.12)}
 html[data-theme=malam] .tdgrid span.t{background:linear-gradient(135deg,#8B6CFF,#5B3FE0)!important;box-shadow:0 0 0 3px rgba(124,92,255,.35),0 0 16px rgba(124,92,255,.6)}
-html[data-theme=malam] .ring .rfg{stroke:url(#ringG);stroke:#8B6CFF;filter:drop-shadow(0 0 6px rgba(139,108,255,.7))}
+html[data-theme=malam] .tdrsvg .rfg{stroke:#8B6CFF;filter:drop-shadow(0 0 6px rgba(139,108,255,.7))}
 html[data-theme=malam] .opt.right{background:rgba(88,204,2,.18)!important;color:#8EE04F!important;border-color:#58CC02}
 html[data-theme=malam] .opt.wrong{background:rgba(255,75,75,.16)!important;color:#FF8A8A!important}
 html[data-theme=malam] #fbText .fbtip{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
@@ -2058,7 +2090,6 @@ html[data-theme=malam] .pagehead{background:rgba(10,10,34,.86)!important;backdro
     <button class="nav tnav" data-tab="trapor"><i data-icon="report"></i><span>Rapor</span></button>
     <button class="nav tnav" data-tab="tstud"><i data-icon="team"></i><span>Murid</span></button>
     <button class="nav tnav" data-tab="tset"><i data-icon="gear"></i><span>Atur</span></button>
-    <button class="nav tnav" id="navPro" data-pro="1"><i data-icon="trophy"></i><span>Pro</span><em class="nprotag" id="navProTag"></em></button>
     <button class="nav tnav" data-tab="texit"><i data-icon="exit"></i><span>Keluar</span></button>
     <div class="sfoot" id="sideFoot"></div>
   </nav>
@@ -5968,6 +5999,15 @@ function openPicker(){showWelcome()}
 function closePicker(){$('#picker').hidden=true}
 
 /* ---------- dashboard ---------- */
+function juaraHTML(k){const list=students();
+  const val={streak:p=>shownStreak(p)||0,att:p=>{const a=attOf(p.id);return a.n?Math.round(a.H/a.n*100):null},xp:p=>p.xp||0}[k];
+  const fmt={streak:v=>`${v} hari 🔥`,att:v=>`${v}%`,xp:v=>`${v} XP`}[k];
+  const rows=list.map(p=>({p,v:val(p)})).filter(x=>x.v!=null&&x.v>0).sort((a,b)=>b.v-a.v||String(a.p.name).localeCompare(b.p.name)).slice(0,10);
+  const tabs=[['streak','🔥 Runtunan'],['att','✅ Kehadiran'],['xp','⚡ XP']];
+  const emp={streak:'Belum ada murid yang punya runtunan belajar.',att:'Belum ada absensi tercatat.',xp:'Belum ada murid yang mengumpulkan XP.'}[k];
+  return `<div class="tdrh"><h3>🏆 Daftar juara</h3><div class="seg small jseg">${tabs.map(([t,l])=>`<button data-juara="${t}" aria-pressed="${t===k}">${l}</button>`).join('')}</div></div>
+   ${rows.length?`<div class="jlist">${rows.map((x,i)=>`<div class="jrow ${i<3?'top'+(i+1):''}"><span class="jrk">${i<3?['🥇','🥈','🥉'][i]:i+1}</span>${avatarOf(x.p)}<span class="grow"><b>${esc(x.p.name)}</b></span><span class="jv">${fmt(x.v)}</span></div>`).join('')}</div>`:`<p class="note" style="margin:0">${emp}</p>`}`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-juara]');if(!b)return;const el=$('#tdJuara');if(el){el.innerHTML=juaraHTML(b.dataset.juara);hydrate(el)}});
 let TDCAL=0;
 function tdCalHTML(t){const now=new Date(),b=new Date(now.getFullYear(),now.getMonth()+TDCAL,1),y=b.getFullYear(),m=b.getMonth(),dim=new Date(y,m+1,0).getDate(),st=(b.getDay()+6)%7,tk=dayKey();
   const BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];let cells='';
@@ -6005,11 +6045,12 @@ function renderTDash(){const t=T(),list=students(),today=dayKey(),sess=sessionOf
      <div class="tstep ${graded?'ok':''}"><div class="tn"><i>2</i>Evaluasi di TV</div><p>${graded?`${graded} murid sudah dinilai dalam ${sess.evals.length} evaluasi.`:'Mainkan game evaluasi di TV sentuh. Nilai langsung masuk rapor.'}</p><button class="primary" data-go="teval">${graded?'Evaluasi lagi':'Mulai evaluasi'}</button></div></div></div>
    <div class="tgrid2"><div class="tcard"><h3>Rata-rata nilai per pertemuan</h3>${barChart(pts,t.kkm)}</div>
     <div class="tcard"><h3>Perlu perhatian</h3>${attention.length?`<div class="plist">${attention.map(p=>{const a=studentAvg(p.id),at=attOf(p.id);return `<div class="pl">${avatarOf(p)}<span class="grow"><b>${esc(p.name)}</b><small>${a!=null&&a<t.kkm?`Rata-rata ${a}`:''}${a!=null&&a<t.kkm&&at.A>=2?' · ':''}${at.A>=2?`Alpa ${at.A} kali`:''}</small></span><button class="smallbtn" data-rep="${p.id}">Rapor</button></div>`}).join('')}</div>`:'<p class="note">Belum ada murid yang perlu perhatian khusus.</p>'}
-     <h3 style="margin-top:6px">Paling rajin berlatih minggu ini</h3>${list.filter(p=>p.week.xp>0).length?`<div class="plist">${list.filter(p=>p.week.xp>0).sort((a,b)=>b.week.xp-a.week.xp).slice(0,5).map((p,i)=>`<div class="pl">${avatarOf(p)}<span class="grow"><b>${i+1}. ${esc(p.name)}</b><small>${shownStreak(p)} hari beruntun</small></span><span class="pill mid">${p.week.xp} XP</span></div>`).join('')}</div>`:'<p class="note">Belum ada murid yang berlatih minggu ini.</p>'}</div></div>
+</div></div>
+   <div class="tcard tdjuara" id="tdJuara">${juaraHTML('streak')}</div>
    </div><aside class="tdrail" id="tdRail">
    <div class="tcard tdcal" id="tdCal">${tdCalHTML(t)}</div>
    <div class="tcard tdring"><div class="tdrh"><h3>Kehadiran hari ini</h3><button class="tdlink" data-go="tatt">${attFilled?'Ubah':'Isi'}</button></div>
-    <div class="tdrb"><svg viewBox="0 0 100 100" class="ring"><circle cx="50" cy="50" r="44" class="rbg"/><circle cx="50" cy="50" r="44" class="rfg" stroke-dasharray="${RC*ringP/100} ${RC}"/><text x="50" y="57" text-anchor="middle">${ringP}%</text></svg>
+    <div class="tdrb"><svg viewBox="0 0 100 100" class="tdrsvg"><circle cx="50" cy="50" r="44" class="rbg"/><circle cx="50" cy="50" r="44" class="rfg" stroke-dasharray="${RC*ringP/100} ${RC}"/><text x="50" y="57" text-anchor="middle">${ringP}%</text></svg>
     <div><b>${attFilled?(ringP>=80?'Kelas ramai!':'Ada yang belum hadir'):'Belum diabsen'}</b><p class="sub" style="margin:0">${attFilled?`${hadirToday} dari ${list.length} murid hadir hari ini.`:teach?'Isi absensi di awal pertemuan.':'Hari ini bukan jadwal mengajar.'}</p></div></div></div>
    <div class="tcard tdnext"><div class="tdrh"><h3>Jadwal berikutnya</h3><button class="tdlink" data-go="tatt">Atur</button></div>
     ${next.length?next.map(k=>{const d=new Date(k+'T00:00');return `<div class="tdn"><span class="tdd"><b>${d.getDate()}</b><small>${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</small></span><span class="grow"><b>Pertemuan ${c.full}</b><small>Absensi dan evaluasi</small></span><span class="tdm">${fmtD(k).split(' ').slice(2,3).join(' ')}</span></div>`}).join(''):'<p class="note">Hari mengajar belum diatur.</p>'}</div>
@@ -6654,6 +6695,7 @@ const trialUntil=()=>FBX.me&&FBX.me.role==='teacher'&&+FBX.me.created?+FBX.me.cr
 const inTrial=()=>!isPaid()&&trialUntil()>Date.now();
 const trialLeft=()=>Math.max(0,Math.ceil((trialUntil()-Date.now())/864e5));
 const isPro=()=>isPaid()||inTrial();
+window.proInfo=()=>({paid:isPaid(),trial:inTrial(),left:trialLeft(),until:(FBX.me&&FBX.me.proUntil)?fmtTs(+FBX.me.proUntil):''});
 window.fbPlanLabel=()=>isPaid()?'Pro':inTrial()?`Coba Pro ${trialLeft()} hari`:'Gratis';
 const isT=()=>!!(SESSION&&SESSION.role==='teacher');window.isT=isT;window.FBX=FBX;
 const fbErr=e=>{const c=String((e&&e.code)||'');return /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(c)?'Nama pengguna atau sandi salah.':/too-many/.test(c)?'Terlalu banyak percobaan. Tunggu beberapa menit, lalu coba lagi.':/network|unavailable/.test(c)?'Tidak tersambung ke internet. Periksa koneksi, lalu coba lagi.':/email-already/.test(c)?'Email ini sudah terdaftar. Silakan masuk.':/weak-password/.test(c)?'Sandi minimal 6 karakter.':/requires-recent-login/.test(c)?'Demi keamanan, keluar lalu masuk lagi sebelum mengganti sandi.':/permission/.test(c)?'Akses ditolak.':(e&&e.message)||String(e)};
@@ -7062,12 +7104,20 @@ renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .s
 
 /* ---------- header dasbor: pencarian & lonceng pemberitahuan ---------- */
 const BELL_SVG=`<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>`;
+function tdProf(cls){const t=T()||{},pl=window.fbPlanLabel?fbPlanLabel():'Guru';
+  return `<div class="tdprof ${cls}"><button class="tdpbtn" aria-haspopup="menu" aria-expanded="false"><span class="avatar" style="--av:#26BF66">${esc((t.name||'G')[0].toUpperCase())}</span><span class="tdpn"><b>${esc(t.name||'Guru')}</b><small>${esc(pl)}</small></span><svg class="tdpc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+   <div class="tdpmenu" role="menu" hidden><button data-pm="tset" role="menuitem">⚙️ Pengaturan</button><button data-pm="pro" role="menuitem">👑 Paket Pro</button><button data-pm="keys" role="menuitem">⌨️ Pintasan keyboard</button><button data-pm="out" role="menuitem" class="pmout">↪ Keluar</button></div></div>`}
+document.addEventListener('click',e=>{const pb=e.target.closest('.tdpbtn');document.querySelectorAll('.tdprof .tdpmenu').forEach(m=>{if(!pb||!pb.parentElement.contains(m)){m.hidden=true;m.parentElement.querySelector('.tdpbtn').setAttribute('aria-expanded','false')}});
+  if(pb){const m=pb.parentElement.querySelector('.tdpmenu');m.hidden=!m.hidden;pb.setAttribute('aria-expanded',!m.hidden);return}
+  const it=e.target.closest('[data-pm]');if(!it)return;it.closest('.tdpmenu').hidden=true;const k=it.dataset.pm;
+  if(k==='tset')go('tset');else if(k==='pro')proAsk();else if(k==='keys')keysHelp();else if(k==='out'){const b=document.querySelector('#sideNav [data-tab=texit]');b?b.click():logout()}});
 function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySelector('.thtools'))return;
   const box=v.querySelector(':scope > .nbox');const n=box?box.children.length:0;
   const tools=document.createElement('div');tools.className='thtools';
   tools.innerHTML=`<div class="tsearch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="tdSearch" type="search" placeholder="Cari murid atau menu…" autocomplete="off" aria-label="Cari murid atau menu"><div class="tsres" id="tdRes" hidden></div></div>
    <div class="tbellw"><button class="tbell" id="tdBell" aria-label="Pemberitahuan" aria-expanded="false">${BELL_SVG}<b class="tbn" ${n?'':'hidden'}>${n}</b></button><div class="tbpop" id="tdPop" hidden><div class="tbph"><b>Pemberitahuan</b></div><div class="tbpb"></div></div></div>`;
   const dp=head.querySelector('.datepill');head.insertBefore(tools,dp||null);
+  tools.insertAdjacentHTML('beforeend',tdProf('tdpmini'));const rail=v.querySelector('#tdRail'),main=v.querySelector('.tdmain'),kp=v.querySelector(':scope > .kpis');if(rail){rail.insertAdjacentHTML('afterbegin',tdProf('tdpbig'))}if(main){if(kp)main.prepend(kp);main.prepend(head)}
   const pb=tools.querySelector('.tbpb');if(box&&n){pb.appendChild(box)}else{if(box)box.remove();pb.innerHTML='<p class="note" style="margin:6px 4px">Tidak ada pemberitahuan baru.</p>'}
   const badge=()=>{const k=pb.querySelectorAll('.dnrow').length,b=tools.querySelector('.tbn');b.textContent=k;b.hidden=!k;if(!k&&!pb.querySelector('.note'))pb.innerHTML='<p class="note" style="margin:6px 4px">Tidak ada pemberitahuan baru.</p>'};
   pb.addEventListener('click',e=>{if(e.target.closest('.nx'))setTimeout(badge,0)});
@@ -7888,11 +7938,11 @@ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if
 const navLabel=n=>((n.querySelector('span')||n).textContent||'').trim();
 function navItems(){return [...document.querySelectorAll('#sideNav .nav')].filter(n=>n.offsetParent!==null&&n.dataset.tab!=='texit')}
 function renderSideFoot(){try{window.tclsMount&&tclsMount()}catch(e){}try{window.proNavTag&&proNavTag()}catch(e){}const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
-  if(t&&T()){const plan=typeof window.fbPlanLabel==='function'?window.fbPlanLabel():tCls().full;
-    el.innerHTML=`<div class="who"><span class="avatar" style="--av:#26BF66">${esc((T().name||'G')[0].toUpperCase())}</span><span><b>${esc(T().name||'Guru')}</b><small>Guru · ${esc(plan)}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>${themeSwitch()}`}
+  if(t&&T()){const pi=window.proInfo?proInfo():{paid:false,trial:false};
+    el.innerHTML=`<div class="sfpro ${pi.paid?'on':''}"><div class="sfph"><span class="sfcrown">👑</span><b>${pi.paid?'JELAS Pro aktif':pi.trial?`Coba Pro · ${pi.left} hari lagi`:'Tingkatkan ke Pro'}</b></div><p>${pi.paid?`Semua fitur guru terbuka sampai ${pi.until}.`:'Absensi, Evaluasi di TV, Soal, Rapor, dan murid tanpa batas.'}</p><button class="sfprobtn" data-sf="pro">${pi.paid?'Lihat paket':'Lihat paket Pro'} <span aria-hidden="true">→</span></button></div>${themeSwitch()}`}
   else if(P){el.innerHTML=`<div class="who">${avSpan(P)}<span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>${themeSwitch()}`}
   else{el.innerHTML='';return}
-  el.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{const k=b.dataset.sf;if(k==='out')openModal(`<h3>Keluar dari akun?</h3><p>Datamu sudah tersimpan. Masuk lagi kapan saja dengan akun yang sama.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>{closeModal();logout()});else if(k==='keys')keysHelp();else go(k)});
+  el.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{const k=b.dataset.sf;if(k==='out')openModal(`<h3>Keluar dari akun?</h3><p>Datamu sudah tersimpan. Masuk lagi kapan saja dengan akun yang sama.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>{closeModal();logout()});else if(k==='keys')keysHelp();else if(k==='pro'){window.proAsk?proAsk():go('tset')}else go(k)});
   navItems().forEach((n,i)=>{if(i<9)n.title=`${navLabel(n)} (Alt+${i+1})`})}
 function keysHelp(){const items=navItems().slice(0,9).map((n,i)=>`<tr><td><kbd>Alt</kbd> + <kbd>${i+1}</kbd></td><td>${esc(navLabel(n))}</td></tr>`).join('');
   openModal(`<h3>Pintasan keyboard</h3><table class="ttable" style="font-size:14px"><tbody>${items}
