@@ -258,6 +258,12 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--yellow);outline
 .feedback .msg{flex:1 1 260px;min-width:0}
 .feedback b{font-family:var(--title);font-weight:400;font-size:26px;display:block;line-height:1.1}
 .feedback.ok b{color:var(--ok)} .feedback.bad b{color:var(--bad)}
+#fbText{display:block}
+#fbText .fbx,#fbText .fbpick,#fbText .fbtip{display:block;margin-top:5px;font-size:16px;line-height:1.45}
+#fbText .fbx b,#fbText .fbtip b{display:inline;font-family:inherit;font-weight:800;font-size:inherit;color:inherit;line-height:inherit}
+#fbText .fbpick{color:var(--muted)}
+#fbText .fbtip{background:rgba(255,255,255,.7);border:2px solid var(--line2);border-radius:12px;padding:7px 10px;margin-top:8px}
+#fbText .fbread{margin-top:8px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:800;font-size:14px;color:var(--ink);box-shadow:0 2px 0 var(--line2);cursor:pointer}
 .primary{border:2px solid var(--line);background:var(--green);color:#fff;border-radius:16px;padding:10px 22px;font-family:var(--title);font-size:20px;box-shadow:0 4px 0 var(--line2);text-shadow:0 2px 0 rgba(27,30,61,.4);transition:transform .12s}
 .primary:hover{transform:translateY(-2px)}
 .primary:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line2)}
@@ -2041,14 +2047,14 @@ const UMUM13=[
  ['Alat untuk mengukur waktu adalah …','jam','penggaris','timbangan','termometer']];
 
 /* ---------- SD 4–6 ---------- */
-const sdFrac=()=>{const d=pick([2,3,4,5,10]),k=R(2,12),n=d*k,num=R(1,d-1);return Q(`<span class="formula">${num}/${d} dari ${n} = ?</span>`,numOpts(num*k,k>3?k:4,0),`${n} : ${d} = ${k}, lalu ${k} × ${num} = ${num*k}`)};
-const sdKPK=()=>{let a=pick([4,6,8,9,10,12,15]),b=pick([3,4,5,6,8,9,12]);while(a===b)b=pick([3,4,5,6,8,9,12]);const c=lcm(a,b),w=new Set([c]);[a*b,c*2,Math.max(a,b),c+a,c-b].forEach(v=>{if(w.size<4&&v>0)w.add(v)});return Q(`KPK dari ${a} dan ${b} adalah …`,{opts:shuffle([...w]).map(String),ans:String(c)},`Kelipatan persekutuan terkecil dari ${a} dan ${b} adalah ${c}.`)};
-const sdFPB=()=>{const g=R(2,9);let x=R(2,7),y=R(2,7);while(gcd(x,y)!==1||x===y)y=R(2,7);const a=g*x,b=g*y;const w=new Set([g]);[1,g*2,Math.min(x,y),g+1,a-b>0?a-b:g+2].forEach(v=>{if(w.size<4&&v>0)w.add(v)});let k=3;while(w.size<4)w.add(g+k++);return Q(`FPB dari ${a} dan ${b} adalah …`,{opts:shuffle([...w]).map(String),ans:String(g)},`${a} = ${g} × ${x} dan ${b} = ${g} × ${y}, jadi FPB-nya ${g}.`)};
+const sdFrac=()=>{const d=pick([2,3,4,5,10]),k=R(2,12),n=d*k,num=R(1,d-1);return Q(`<span class="formula">${num}/${d} dari ${n} = ?</span>`,numOpts(num*k,k>3?k:4,0),`Cara mencari ${num}/${d} dari ${n}: bagi dulu dengan penyebut, ${n} : ${d} = ${k}. Lalu kalikan dengan pembilang, ${k} × ${num} = ${num*k}.`)};
+const sdKPK=()=>{let a=pick([4,6,8,9,10,12,15]),b=pick([3,4,5,6,8,9,12]);while(a===b)b=pick([3,4,5,6,8,9,12]);const c=lcm(a,b),w=new Set([c]);[a*b,c*2,Math.max(a,b),c+a,c-b].forEach(v=>{if(w.size<4&&v>0)w.add(v)});return Q(`KPK dari ${a} dan ${b} adalah …`,{opts:shuffle([...w]).map(String),ans:String(c)},`Kelipatan ${a}: ${Array.from({length:c/a},(_,i)=>a*(i+1)).join(', ')}. Kelipatan ${b}: ${Array.from({length:c/b},(_,i)=>b*(i+1)).join(', ')}. Kelipatan bersama yang paling kecil adalah ${c}.`)};
+const sdFPB=()=>{const g=R(2,9);let x=R(2,7),y=R(2,7);while(gcd(x,y)!==1||x===y)y=R(2,7);const a=g*x,b=g*y;const w=new Set([g]);[1,g*2,Math.min(x,y),g+1,a-b>0?a-b:g+2].forEach(v=>{if(w.size<4&&v>0)w.add(v)});let k=3;while(w.size<4)w.add(g+k++);return Q(`FPB dari ${a} dan ${b} adalah …`,{opts:shuffle([...w]).map(String),ans:String(g)},`${a} = ${g} × ${x} dan ${b} = ${g} × ${y}. Faktor terbesar yang dimiliki keduanya adalah ${g}, jadi FPB-nya ${g}.`)};
 const sdArea=()=>{const p=R(4,20),l=R(2,p-1);return Q(`Luas persegi panjang dengan panjang ${p} cm dan lebar ${l} cm adalah …`,numOpts(p*l,8,1,' cm²'),`Luas = p × l = ${p} × ${l} = ${p*l} cm²`)};
 const sdKel=()=>{const s=R(3,25);return Q(`Keliling persegi dengan sisi ${s} cm adalah …`,numOpts(4*s,6,1,' cm'),`Keliling = 4 × s = 4 × ${s} = ${4*s} cm`)};
 const sdVol=()=>{const s=R(2,10);return Q(`Volume kubus dengan rusuk ${s} cm adalah …`,setOpts(s*s*s,[s*s,s*s*6,s*s*s+s*2,s*3],' cm³'),`Volume = s × s × s = ${s}³ = ${s*s*s} cm³`)};
-const sdPct=()=>{const d=pick([[0.25,25],[0.5,50],[0.75,75],[0.2,20],[0.4,40],[0.1,10],[0.05,5],[0.6,60]]);return Q(`<span class="formula">${fmt(d[0])} = … %</span>`,setOpts(d[1],[d[1]/10,d[1]*10,d[1]+5],'%'),`Kalikan 100: ${fmt(d[0])} × 100 = ${d[1]}%`)};
-const sdTime=()=>{const h=R(1,4),m=pick([0,15,30,45]);const tot=h*60+m;return Q(`${h} jam ${m?m+' menit':''} sama dengan berapa menit?`,numOpts(tot,20,1,' menit'),`${h} × 60 + ${m} = ${tot} menit`)};
+const sdPct=()=>{const d=pick([[0.25,25],[0.5,50],[0.75,75],[0.2,20],[0.4,40],[0.1,10],[0.05,5],[0.6,60]]);return Q(`<span class="formula">${fmt(d[0])} = … %</span>`,setOpts(d[1],[d[1]/10,d[1]*10,d[1]+5],'%'),`Persen artinya per seratus. Untuk mengubah desimal ke persen, kalikan 100: ${fmt(d[0])} × 100 = ${d[1]}%.`)};
+const sdTime=()=>{const h=R(1,4),m=pick([0,15,30,45]);const tot=h*60+m;return Q(`${h} jam ${m?m+' menit':''} sama dengan berapa menit?`,numOpts(tot,20,1,' menit'),`1 jam = 60 menit, jadi ${h} jam = ${h} × 60 = ${h*60} menit${m?`, ditambah ${m} menit = ${tot} menit`:''}.`)};
 const IPAS46=[
  ['Proses tumbuhan membuat makanan sendiri disebut …','fotosintesis','respirasi','penyerbukan','evaporasi','Tumbuhan memakai cahaya matahari, air, dan karbon dioksida untuk membuat makanan.'],
  ['Hewan pemakan daging disebut …','karnivora','herbivora','omnivora','insektivora'],
@@ -2099,12 +2105,12 @@ const EN_SD=[
  ['What time is 07.00? It is …',"seven o'clock","eleven o'clock","seven thirty","six o'clock"]];
 
 /* ---------- SMP ---------- */
-const smpLin=()=>{const a=R(2,9),x=R(-9,12),b=R(-15,20),c=a*x+b;const bs=b<0?`− ${-b}`:`+ ${b}`;return Q(`Nilai x dari persamaan berikut adalah …<span class="formula">${a}x ${bs} = ${c}</span>`,numOpts(x,4,-50),`${a}x = ${c} ${b<0?'+ '+(-b):'− '+b} = ${c-b}, maka x = ${c-b} : ${a} = ${x}`)};
+const smpLin=()=>{const a=R(2,9),x=R(-9,12),b=R(-15,20),c=a*x+b;const bs=b<0?`− ${-b}`:`+ ${b}`;return Q(`Nilai x dari persamaan berikut adalah …<span class="formula">${a}x ${bs} = ${c}</span>`,numOpts(x,4,-50),`Pindahkan ${b<0?-b:b} ke ruas kanan (tandanya berubah): ${a}x = ${c} ${b<0?'+ '+(-b):'− '+b} = ${c-b}. Lalu bagi kedua ruas dengan ${a}: x = ${c-b} : ${a} = ${x}.`)};
 const smpPyt=()=>{const t=pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25]]),k=t[0]===3?R(1,4):1;const [a,b,c]=t.map(v=>v*k);if(Math.random()<.5)return Q(`Segitiga siku-siku memiliki sisi tegak ${a} cm dan ${b} cm. Panjang sisi miringnya adalah …`,numOpts(c,4,1,' cm'),`c = √(${a}² + ${b}²) = √${a*a+b*b} = ${c} cm`);return Q(`Sisi miring segitiga siku-siku ${c} cm dan salah satu sisi tegaknya ${a} cm. Panjang sisi tegak lainnya adalah …`,numOpts(b,4,1,' cm'),`b = √(${c}² − ${a}²) = √${c*c-a*a} = ${b} cm`)};
 const smpPct=()=>{const p=pick([10,20,25,30,40,50,15,75]),n=pick([80,120,200,240,400,160,360]);const v=p*n/100;if(Number.isInteger(v)&&Math.random()<.5){return Q(`Harga sepatu Rp${(n*1000).toLocaleString('id-ID')} mendapat diskon ${p}%. Besar diskonnya adalah …`,{...(()=>{const o=numOpts(v,Math.max(4,Math.round(v/3)),1);return {opts:o.opts.map(s=>'Rp'+(Number(s.replace(',','.'))*1000).toLocaleString('id-ID')),ans:'Rp'+(v*1000).toLocaleString('id-ID')}})()},`${p}% × Rp${(n*1000).toLocaleString('id-ID')} = Rp${(v*1000).toLocaleString('id-ID')}`)}
   const p2=pick([10,20,25,50]),n2=pick([40,60,80,120,200]);const v2=p2*n2/100;return Q(`<span class="formula">${p2}% dari ${n2} = ?</span>`,numOpts(v2,6,1),`${p2}/100 × ${n2} = ${v2}`)};
 const smpPow=()=>{const b=R(2,6),e=b<=3?R(2,5):R(2,3);const v=b**e;return Q(`<span class="formula">${b}${sup(e)} = ?</span>`,setOpts(v,[b*e,b**(e-1),v+b,b**(e+1)]),`${b}${sup(e)} = ${Array(e).fill(b).join(' × ')} = ${v}`)};
-const smpMean=()=>{const n=5,m=R(60,90);let arr=Array.from({length:n-1},()=>R(m-12,m+12));const last=m*n-arr.reduce((a,b)=>a+b,0);arr.push(last);if(last<0||last>100)return smpMean();arr=shuffle(arr);return Q(`Nilai ulangan 5 siswa: ${arr.join(', ')}. Rata-ratanya adalah …`,numOpts(m,4,0),`Jumlah = ${m*n}, rata-rata = ${m*n} : ${n} = ${m}`)};
+const smpMean=()=>{const n=5,m=R(60,90);let arr=Array.from({length:n-1},()=>R(m-12,m+12));const last=m*n-arr.reduce((a,b)=>a+b,0);arr.push(last);if(last<0||last>100)return smpMean();arr=shuffle(arr);return Q(`Nilai ulangan 5 siswa: ${arr.join(', ')}. Rata-ratanya adalah …`,numOpts(m,4,0),`Rata-rata = jumlah data : banyak data. Jumlah ${arr.join(' + ')} = ${m*n}, lalu ${m*n} : ${n} = ${m}.`)};
 const smpGrad=()=>{const m=R(-4,5)||2,x1=R(-5,3),y1=R(-5,5),dx=R(1,4),x2=x1+dx,y2=y1+m*dx;return Q(`Gradien garis yang melalui titik (${x1}, ${y1}) dan (${x2}, ${y2}) adalah …`,numOpts(m,3,-20),`m = (y₂ − y₁)/(x₂ − x₁) = (${y2-y1})/(${dx}) = ${m}`)};
 const IPA_SMP=[
  ['Satuan SI untuk massa adalah …','kilogram','gram','newton','liter'],
@@ -2155,7 +2161,7 @@ const EN_SMP=[
  ['We ___ English every Monday.','study','studies','studied','studying']];
 
 /* ---------- SMA / SMK ---------- */
-const smaDer=()=>{const a=R(1,6),b=R(-8,8),c=R(-9,9),k=R(-3,4);const v=2*a*k+b;const fx=`${a===1?'':a}x² ${b<0?'− '+(-b):'+ '+b}x ${c<0?'− '+(-c):'+ '+c}`;return Q(`Jika f(x) = ${fx}, maka nilai f′(${k}) adalah …`,numOpts(v,6,-200),`f′(x) = ${2*a}x ${b<0?'− '+(-b):'+ '+b}, sehingga f′(${k}) = ${2*a}(${k}) ${b<0?'− '+(-b):'+ '+b} = ${v}`)};
+const smaDer=()=>{const a=R(1,6),b=R(-8,8),c=R(-9,9),k=R(-3,4);const v=2*a*k+b;const fx=`${a===1?'':a}x² ${b<0?'− '+(-b):'+ '+b}x ${c<0?'− '+(-c):'+ '+c}`;return Q(`Jika f(x) = ${fx}, maka nilai f′(${k}) adalah …`,numOpts(v,6,-200),`Turunan axⁿ adalah n·a·xⁿ⁻¹ dan turunan konstanta 0, jadi f′(x) = ${2*a}x ${b<0?'− '+(-b):'+ '+b}. Substitusi x = ${k}: f′(${k}) = ${2*a}(${k}) ${b<0?'− '+(-b):'+ '+b} = ${v}`)};
 const smaLog=()=>{const b=pick([2,3,5,10]),n=b===2?R(2,7):b===10?R(1,5):R(2,4);const x=b**n;return Q(`<span class="formula">${b===10?'':sup(b)}log ${x.toLocaleString('id-ID')} = ?</span>`,numOpts(n,3,0),`Karena ${b}${sup(n)} = ${x.toLocaleString('id-ID')}, maka ${b===10?'':sup(b)}log ${x.toLocaleString('id-ID')} = ${n}`)};
 const smaArit=()=>{const a=R(-5,15),d=R(-4,7)||3,n=R(8,30);const v=a+(n-1)*d;return Q(`Barisan aritmetika: ${a}, ${a+d}, ${a+2*d}, ${a+3*d}, … Suku ke-${n} adalah …`,numOpts(v,Math.max(4,Math.abs(d)*2),-500),`Uₙ = a + (n − 1)b = ${a} + ${n-1} × ${d} = ${v}`)};
 const smaGeo=()=>{const a=R(1,5),r=pick([2,3]),n=R(4,6);const v=a*r**(n-1);return Q(`Barisan geometri: ${a}, ${a*r}, ${a*r*r}, … Suku ke-${n} adalah …`,setOpts(v,[a*r**n,a*r**(n-2),v+a*r]),`Uₙ = a·rⁿ⁻¹ = ${a} × ${r}${sup(n-1)} = ${v}`)};
@@ -3490,7 +3496,7 @@ function renderQ(){
   game.sel=null;
   renderHUD();showQText(q);
   $('#feedback').hidden=true;
-  $('#opts').innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${k+1}</span><span class="t">${o}</span></button>`).join('');
+  $('#opts').innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]||k+1}</span><span class="t">${o}</span></button>`).join('');
   const chk=!!(game.lesson&&game.mode==='kuis');
   $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>chk?selectOpt(+b.dataset.k):answer(+b.dataset.k));
   $('#checkBar').hidden=!chk;$('#checkBtn').disabled=true;
@@ -3521,7 +3527,7 @@ function reveal(ok,title){
   const q=game.qs[game.i];setOptsEnabled(false);
   $('#opts').querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add('right')});
   const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');$('#fbTitle').textContent=title;
-  $('#fbText').innerHTML=(ok||q.html?'':`Jawaban: <b style="display:inline;font-size:inherit;font-family:inherit">${q.ans}</b>. `)+(q.exp||'');
+  $('#fbText').innerHTML=ok?(q.exp||''):wrongInfo(q,-1);bindFbRead();
   $('#nextBtn').textContent=game.i>=game.qs.length-1?'Lihat klasemen →':'Soal berikutnya →';
   renderHUD();if(isRebutan())renderBuzz();$('#nextBtn').focus({preventScroll:true});
 }
@@ -3547,13 +3553,28 @@ function answer(k){
   if(game.lesson)renderHUD();
   const fb=$('#feedback');fb.hidden=false;fb.className='feedback '+(ok?'ok':'bad');
   $('#fbTitle').textContent=ok?(team?`${team.name} benar! +${gained}`:game.lesson?pick(PRAISE):pick(PRAISE)+` +${gained}`):(k<0?(game.lesson?'Dilewati':'Waktu habis'):'Belum tepat');
-  const ansTxt=q.html?'':`Jawaban: <b style="display:inline;font-size:inherit;font-family:inherit">${q.ans}</b>. `;
-  $('#fbText').innerHTML=(ok?'':ansTxt)+(q.exp||'');
+  $('#fbText').innerHTML=ok?(q.exp||''):wrongInfo(q,k);bindFbRead();
   const last=game.i===game.qs.length-1||game.lives<=0;
   $('#nextBtn').textContent=game.lesson?(last?'Selesai':'Lanjut'):last?(team?'Lihat klasemen →':'Lihat rapor →'):'Lanjut →';
   if(L.id==='tk')say(ok?'Hebat, benar!':'Ayo coba lagi nanti');
   $('#nextBtn').focus({preventScroll:true});
 }
+const optIdx=k=>/^[1-4]$/.test(k)?+k-1:/^[a-dA-D]$/.test(k)?k.toLowerCase().charCodeAt(0)-97:-1;
+/* Penjelasan saat jawaban salah: jawaban benar, pembahasan, dan pengingat dari materi unit. */
+const FB_STOP=new Set('yang dan adalah ini itu di ke dengan untuk pada atau akan dapat bisa juga kita kamu berikut berapa apa jadi the is are of to in and an a this that which what'.split(' '));
+const fbTok=t=>String(t||'').replace(/<[^>]+>/g,' ').toLowerCase().replace(/[’‘]/g,"'").split(/[^a-z0-9à-ÿ'\u0600-\u06ff²³⁴⁵/]+/).filter(w=>w.length>=3&&!FB_STOP.has(w));
+function unitRef(q){try{const c=CLS(),s=c.subjects.find(x=>x.id===(q._s||SUBJ().id));if(!s)return null;const ui=s.units.findIndex(u=>u.t===q._u);if(ui<0)return null;return {key:`${c.id}/${s.id}/${ui}`,ui,cur:s.id===SUBJ().id}}catch(e){return null}}
+function fbHint(q){const r=unitRef(q),M=window.MATERI;if(!r||!M||!M[r.key])return '';const m=M[r.key];
+  const qt=new Set(fbTok(q.q)),at=fbTok(q.ans),an=String(q.ans||'').replace(/<[^>]+>/g,'').toLowerCase().trim();const cand=[];
+  m.s.forEach(x=>{if(x.p)cand.push(x.p);(x.li||[]).forEach(t=>cand.push(t));(x.tb||[]).slice(1).forEach(row=>cand.push(x.tb[0].map((h,i)=>row[i]?`${h}: ${row[i]}`:'').filter(Boolean).join(' · ')));(x.ex||[]).forEach(e=>cand.push(`${e[0]} → ${e[1]}`))});
+  (m.sum||[]).forEach(t=>cand.push(t));
+  let best=null,bs=0;cand.forEach(c=>{const ct=new Set(fbTok(c)),plain=c.replace(/<[^>]+>/g,'').toLowerCase();let sc=0;qt.forEach(w=>{if(ct.has(w))sc++});
+    const hasA=an&&an.length>1&&plain.includes(an);if(hasA)sc+=3;else if(at.length&&at.every(w=>ct.has(w)))sc+=2;sc-=c.length/600;if(sc>bs){bs=sc;best=c}});
+  if(bs<1)best=(m.sum||[])[0]||'';if(!best)return '';return `<span class="fbtip">📘 <b>Ingat:</b> ${best}</span>`}
+function wrongInfo(q,k){const pk=k>=0&&q.opts&&q.opts[k]!=null&&!q.html?`<span class="fbpick">Kamu memilih <s>${q.opts[k]}</s>.</span> `:'';
+  const ans=q.html?'':`<span class="fbx">Jawaban yang benar: <b>${q.ans}</b>.</span> `;const r=unitRef(q);
+  return pk+ans+(q.exp?`<span class="fbx">${q.exp}</span>`:'')+fbHint(q)+(r&&r.cur&&game&&game.lesson&&!game.group?`<button class="fbread" data-ui="${r.ui}">Baca materi unit ini</button>`:'')}
+function bindFbRead(){const b=document.querySelector('#fbText .fbread');if(b)b.onclick=e=>{e.stopPropagation();openGuide(+b.dataset.ui)}}
 function next(){if(game.lives<=0||game.i>=game.qs.length-1)return finish();game.i++;renderQ()}
 function turnGo(){if($('#turn').hidden)return;startQ()}
 
@@ -5346,7 +5367,7 @@ function beginRun(o){PLAY='solo';L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.
   const usesHearts=o.kind==='lesson'||o.kind==='test';
   game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?3:(usesHearts&&!P.unlimited?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
     lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
-  show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');
+  show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');try{loadMateri().catch(()=>{})}catch(e){}
   $('#turn').hidden=true;$('#buzz').hidden=true;$('#teamBar').hidden=true;$('#feedback').hidden=true;
   if(o.mode==='kuis'){$('#stage').hidden=true;$('#arcHint').hidden=true;$('#qcard').classList.remove('arcade');$('#opts').hidden=false;renderQ()}
   else{$('#checkBar').hidden=true;arcBegin()}}
@@ -7515,10 +7536,11 @@ document.addEventListener('keydown',e=>{
   }
   if(!game)return;
   if(!$('#turn').hidden){if(e.key==='Enter'||e.key===' '){e.preventDefault();turnGo()}return}
-  if(game.lesson&&game.mode==='kuis'){if(!game.locked&&/^[1-4]$/.test(e.key)){selectOpt(+e.key-1);return}if(e.key==='Enter'){e.preventDefault();if(!game.locked&&game.sel!=null)answer(game.sel);else if(game.locked)next()}return}
+  const oi=optIdx(e.key);
+  if(game.lesson&&game.mode==='kuis'){if(!game.locked&&oi>=0){selectOpt(oi);return}if(e.key==='Enter'){e.preventDefault();if(!game.locked&&game.sel!=null)answer(game.sel);else if(game.locked)next()}return}
   if(isRebutan()&&!game.locked&&game.buzz==null){const ti=BUZZ_KEYS.indexOf(e.key.toUpperCase());if(ti>=0&&ti<game.group.teams.length){buzz(ti);return}}
-  if(isRebutan()&&game.buzz!=null&&/^[1-4]$/.test(e.key)){const k=+e.key-1;if(k<game.qs[game.i].opts.length)answer(k);return}
-  if(!game.locked&&/^[1-4]$/.test(e.key)){const k=+e.key-1;if(k<game.qs[game.i].opts.length)answer(k)}
+  if(isRebutan()&&game.buzz!=null&&oi>=0){const k=oi;if(k<game.qs[game.i].opts.length)answer(k);return}
+  if(!game.locked&&oi>=0&&(!isRebutan()||/^[1-4]$/.test(e.key))){const k=oi;if(k<game.qs[game.i].opts.length)answer(k)}
   else if(game.locked&&e.key==='Enter'){e.preventDefault();next()}
 });
 document.addEventListener('keyup',e=>{arc.keys[e.key]=false;if(DUEL){const raw=e.key.length===1?e.key.toLowerCase():e.key;DUEL.sides.forEach((sd,s)=>{const k=DKEYS[s][raw];if(k)sd.arc.keys[k]=false})}});
