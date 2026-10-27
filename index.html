@@ -2220,6 +2220,24 @@ html[data-theme=malam] #onb .onbfoot{background:linear-gradient(180deg,transpare
 html[data-theme=malam] .nbell svg{filter:drop-shadow(0 0 5px rgba(255,230,0,.7))}
 html[data-theme=malam] .ncr{background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.25)}html[data-theme=malam] .ncr.new{background:rgba(255,43,214,.08);border-color:rgba(255,43,214,.5);box-shadow:0 0 14px rgba(255,43,214,.2)}
 html[data-theme=malam] .nci{background:rgba(0,240,255,.08)}html[data-theme=malam] .nbn{background:var(--mg);border-color:#05060F;box-shadow:0 0 8px var(--mg)}
+
+#tBarTools{display:none}
+.tsr b{font-size:15px;font-family:var(--body);font-weight:800}.tbpop .dnrow b,.tbpop .ntx b{font-size:15px}.tbpop .tbph b{font-size:17px}
+@media (max-width:999px){
+ body.teacher #tBarTools{display:flex;align-items:center;margin-left:auto;flex:none}
+ body.teacher #tBarTools .thtools{gap:6px;flex-basis:auto;order:0}
+ body.teacher .tnbar #tClsBar{display:none}
+ body.teacher .tnbar b{flex:1 1 auto}
+ .tbicon{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+ body.teacher #tBarTools .tbell{width:42px;height:42px}
+ body.teacher #tBarTools .tdpmini .tdpbtn{width:42px;height:42px}body.teacher #tBarTools .tdpmini .avatar{width:38px;height:38px}
+ body.teacher #tBarTools .tsearch{display:none;position:fixed;top:calc(64px + env(safe-area-inset-top,0px));left:12px;right:12px;width:auto;z-index:60;background:var(--card);box-shadow:0 10px 26px rgba(0,0,0,.18)}
+ body.teacher #tBarTools .tsearch.open{display:flex}
+ body.teacher #tBarTools .tbpop{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));left:12px;right:12px;width:auto}
+ body.teacher #tBarTools .tdpmenu{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));right:12px}
+ body.teacher .syncpill{top:auto!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;right:12px!important}
+}
+html[data-theme=malam] .tbicon{background:rgba(0,240,255,.04);color:var(--cy);border:1px solid rgba(0,240,255,.45)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -7281,7 +7299,10 @@ function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySel
   tools.innerHTML=`<div class="tsearch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="tdSearch" type="search" placeholder="Cari murid atau menu…" autocomplete="off" aria-label="Cari murid atau menu"><div class="tsres" id="tdRes" hidden></div></div>
    <div class="tbellw"><button class="tbell" id="tdBell" aria-label="Pemberitahuan" aria-expanded="false">${BELL_SVG}<b class="tbn" ${n?'':'hidden'}>${n}</b></button><div class="tbpop" id="tdPop" hidden><div class="tbph"><b>Pemberitahuan</b></div><div class="tbpb"></div></div></div>`;
   const dp=head.querySelector('.datepill');head.insertBefore(tools,dp||null);
-  tools.insertAdjacentHTML('beforeend',tdProf('tdpmini'));const rail=v.querySelector('#tdRail'),main=v.querySelector('.tdmain'),kp=v.querySelector(':scope > .kpis');if(rail){rail.insertAdjacentHTML('afterbegin',tdProf('tdpbig'))}if(main){if(kp)main.prepend(kp);main.prepend(head)}
+  tools.insertAdjacentHTML('beforeend',tdProf('tdpmini'));
+  if(matchMedia('(max-width:999px)').matches){const bar=$('#tBar');if(bar){let tb=$('#tBarTools');if(!tb){bar.insertAdjacentHTML('beforeend','<div id="tBarTools"></div>');tb=$('#tBarTools')}tb.innerHTML='';
+    tools.insertAdjacentHTML('afterbegin','<button class="tbicon" id="tbSearchBtn" aria-label="Cari"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>');tb.appendChild(tools);
+    const sb=tools.querySelector('#tbSearchBtn'),sf=tools.querySelector('.tsearch');sb.onclick=e=>{e.stopPropagation();sf.classList.toggle('open');if(sf.classList.contains('open'))setTimeout(()=>sf.querySelector('input').focus(),30)}}}const rail=v.querySelector('#tdRail'),main=v.querySelector('.tdmain'),kp=v.querySelector(':scope > .kpis');if(rail){rail.insertAdjacentHTML('afterbegin',tdProf('tdpbig'))}if(main){if(kp)main.prepend(kp);main.prepend(head)}
   const pb=tools.querySelector('.tbpb');if(box&&n){pb.appendChild(box)}else{if(box)box.remove();pb.innerHTML='<p class="note" style="margin:6px 4px">Tidak ada pemberitahuan baru.</p>'}
   const badge=()=>{const k=pb.querySelectorAll('.dnrow').length,b=tools.querySelector('.tbn');b.textContent=k;b.hidden=!k;if(!k&&!pb.querySelector('.note'))pb.innerHTML='<p class="note" style="margin:6px 4px">Tidak ada pemberitahuan baru.</p>'};
   pb.addEventListener('click',e=>{if(e.target.closest('.nx'))setTimeout(badge,0)});
@@ -7297,7 +7318,7 @@ function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySel
     res.querySelectorAll('.tsr').forEach(b=>b.onclick=()=>{res.hidden=true;hits[+b.dataset.i].f()})};
   inp.oninput=run;inp.onfocus=()=>{if(inp.value.trim())run()};inp.onkeydown=e=>{if(e.key==='Enter'&&hits[0]){e.preventDefault();res.hidden=true;hits[0].f()}if(e.key==='Escape'){inp.value='';res.hidden=true;inp.blur()}};
   hydrate(tools)}
-document.addEventListener('click',e=>{if(!e.target.closest('.tbellw')){const p=$('#tdPop');if(p&&!p.hidden){p.hidden=true;const b=$('#tdBell');b&&b.setAttribute('aria-expanded','false')}}if(!e.target.closest('.tsearch')){const r=$('#tdRes');if(r)r.hidden=true}});
+document.addEventListener('click',e=>{if(!e.target.closest('.tsearch')&&!e.target.closest('#tbSearchBtn')){const sf=document.querySelector('#tBarTools .tsearch.open');if(sf)sf.classList.remove('open')}if(!e.target.closest('.tbellw')){const p=$('#tdPop');if(p&&!p.hidden){p.hidden=true;const b=$('#tdBell');b&&b.setAttribute('aria-expanded','false')}}if(!e.target.closest('.tsearch')){const r=$('#tdRes');if(r)r.hidden=true}});
 window.proAsk=proAsk;
 window.proNavTag=()=>{const t=$('#navProTag'),n=$('#navPro');if(!t)return;t.textContent=isPaid()?'AKTIF':inTrial()?trialLeft()+' hari':'';n.classList.toggle('on',isPaid())};
 /* ---------- menu Murid versi online ---------- */
