@@ -890,7 +890,7 @@ body.teacher .nav.tnav{display:flex}
 body.teacher .stats,body.teacher .rail,body.teacher .practicefab{display:none!important}
 body.teacher .app{grid-template-areas:"main"}
 body.teacher .main.wrap{max-width:1040px}
-@media (min-width:1000px){body.teacher .app{grid-template-columns:250px minmax(0,1fr);grid-template-areas:"side main"}}
+@media (min-width:1000px){body.teacher .app{grid-template-columns:260px minmax(0,1fr);grid-template-areas:"side main";max-width:none;margin:0;padding-right:clamp(20px,2.5vw,40px);column-gap:clamp(20px,2.5vw,40px)}body.teacher .main.wrap{max-width:1640px;width:100%;box-sizing:border-box}}
 .side .tbadge{display:none}
 body.teacher .side .tbadge{display:block;margin:-6px 6px 10px;background:var(--ink);color:#fff;border-radius:999px;padding:2px 12px;font-size:13px;font-weight:800;text-align:center;letter-spacing:.06em}
 @media (max-width:999px){body.teacher .side .tbadge{display:none}}
