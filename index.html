@@ -1867,6 +1867,19 @@ body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:
 .rrp .rrt{display:flex;flex-direction:column;line-height:1.1;min-width:52px}
 .rrp .rrt b{font-family:var(--display);font-size:13px;white-space:nowrap}.rrp .rrt small{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap}
 .rrbar{display:block;height:4px;border-radius:2px;background:#E5E9F2;margin-top:2px;overflow:hidden}.rrbar>i{display:block;height:100%;background:var(--rc);transition:width .6s}
+
+/* lintasan bersama main berdua */
+.drace{position:relative;border:2px solid var(--line);border-radius:16px;overflow:hidden;height:150px}
+.drace canvas{display:block;width:100%;height:100%}
+@media (min-width:701px){.duel.hasrace .drace{grid-column:1/-1;order:-1;height:180px}}
+@media (max-width:700px){
+ .duel.hasrace{grid-template-rows:1fr auto 1fr!important}
+ body.duelon #vDuel .duel.hasrace .drace{height:24vh;border:0;border-radius:0;border-top:2px solid var(--line);border-bottom:2px solid var(--line)}
+ body.duelon #vDuel:has(.hasrace) .duelbar{left:auto;right:4px;top:50%;transform:translateY(-50%);flex-direction:column;gap:4px}
+ body.duelon #vDuel:has(.hasrace) .duelbar .back{min-height:32px;min-width:34px;padding:2px 6px}
+ .duel.hasrace .dside .dopts{flex:1;min-height:0;grid-auto-rows:1fr;align-content:stretch}
+ .duel.hasrace .dside .dopts .opt{min-height:0;height:100%;font-size:17px}
+}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -4690,8 +4703,8 @@ const DKEYS=[{w:'ArrowUp',a:'ArrowLeft',s:'ArrowDown',d:'ArrowRight',f:' ',' ':'
 const DHELP=['Kiri: sentuh layar kiri · W A S D bergerak · F atau Spasi aksi · 1–4 menjawab','Kanan: sentuh layar kanan · tombol panah bergerak · Enter aksi · 7 8 9 0 menjawab'];
 function withSide(sd,fn){const pa=arc,pg=game,pm=M,pc=CUR,pmo=MODE;arc=sd.arc;game=sd.game;M=sd.M;CUR=sd;if(sd.mode)MODE=sd.mode;try{return fn()}finally{arc=pa;game=pg;M=pm;CUR=pc;MODE=pmo}}
 function startDuel(){
-  const base=buildQs(GROUP.per);const kind=MODE==='kuis'?'kuis':'arcade';
-  DUEL={mode:MODE,kind,sides:[],raf:0,last:0,count:3.6,lastN:null,active:true,rand:kind==='arcade'&&window.DUEL_RAND&&window.DUEL_RAND.length>1?window.DUEL_RAND.slice():null};window.DUEL_RAND=null;
+  const base=buildQs(GROUP.per);const rnd=window.DUEL_RAND&&window.DUEL_RAND.length>1;const race=!rnd&&DUEL_RACE[MODE]?DUEL_RACE[MODE]:null;const kind=MODE==='kuis'||race?'kuis':'arcade';
+  DUEL={mode:MODE,kind,race,sides:[],raf:0,last:0,count:3.6,lastN:null,active:true,rand:kind==='arcade'&&rnd?window.DUEL_RAND.slice():null};window.DUEL_RAND=null;
   $('#duelInfo').textContent=`${L.name} · ${S.name} · ${DUEL.rand?'Acak semua game':modeInfo().name} · ${GROUP.per} soal per pemain`;
   const grid=$('#duelGrid');grid.innerHTML='';show('vDuel');
   for(let s=0;s<2;s++){
@@ -4700,6 +4713,7 @@ function startDuel(){
     el.innerHTML=`<div class="dhead"><span class="dname">${esc(name)}</span><span class="dprog"></span><span class="dscore">0</span></div><div class="dq"></div><div class="timer"><i></i></div>${kind==='arcade'?'<div class="stage dstage"><canvas aria-label="Arena '+esc(name)+'"></canvas></div>':'<div class="opts dopts"></div>'}<p class="dfb"></p><p class="hint">${DHELP[s]}</p><div class="overlay dwait" hidden><div class="box"><b class="ttl" style="color:${color}">Selesai!</b><p>Tunggu lawan menyelesaikan soalnya…</p></div></div>`;
     if(s===0&&isPhone())el.classList.add('flip');
     grid.appendChild(el);
+    if(s===0&&race){grid.insertAdjacentHTML('beforeend','<div class="drace"><canvas aria-label="Lintasan balapan"></canvas></div>');DUEL.rcv=grid.querySelector('.drace canvas')}
     const sd={idx:s,name,color,root:el,el:{q:el.querySelector('.dq'),bar:el.querySelector('.timer i'),stage:el.querySelector('.dstage'),cv:el.querySelector('canvas'),opts:el.querySelector('.dopts'),fb:el.querySelector('.dfb'),prog:el.querySelector('.dprog'),score:el.querySelector('.dscore'),wait:el.querySelector('.dwait')},
       game:{qs:shuffle(base.map(q=>JSON.parse(JSON.stringify(q)))),i:0,score:0,correct:0,streak:0,best:0,results:[],lives:3,mode:MODE},
       arc:{running:true,keys:{},parts:[],banner:null,state:'intro'},M:kind==='arcade'?Object.create(MODES[MODE]):null,mode:MODE,done:false};
@@ -4707,9 +4721,30 @@ function startDuel(){
   }
   for(const sd of DUEL.sides){if(kind==='arcade'){bindDuelCanvas(sd);withSide(sd,()=>duelSize(sd))}withSide(sd,()=>duelShowQ(sd,true))}
   if(kind==='arcade')setTimeout(()=>{if(DUEL)DUEL.sides.forEach(sd=>withSide(sd,()=>{duelSize(sd);M.setup()}))},120);
+  if(race){grid.classList.add('hasrace');setTimeout(duelRaceSize,60)}else grid.classList.remove('hasrace');
   $('#duelCountN').textContent='3';$('#duelCount').hidden=false;
   DUEL.raf=requestAnimationFrame(duelLoop);
 }
+/* Main berdua untuk game balapan: lintasan bersama di tengah layar, jawaban di layar masing-masing. Benar maju, salah mundur sedikit. */
+const DUEL_RACE={pacu:'boat',lari:'run',balap:'car'};
+function duelRaceSize(){if(!DUEL||!DUEL.rcv)return;const cv=DUEL.rcv,W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight||150;const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.width=W+'px';cv.style.height=H+'px';DUEL.rW=W;DUEL.rH=H;DUEL.rctx=cv.getContext('2d');DUEL.rctx.setTransform(dpr,0,0,dpr,0,0)}
+function duelRaceDraw(dt){const D=DUEL;if(!D||!D.race||!D.rctx)return;const c=D.rctx,W=D.rW,H=D.rH,tot=Math.max(1,GROUP.per);D.rph=(D.rph||0)+dt*9;D.rpos=D.rpos||[0,0];
+  const pos=D.sides.map(sd=>{const g=sd.game,wrong=g.results.filter(r=>r===false).length;return Math.max(0,g.correct-.5*wrong)});
+  pos.forEach((p,k)=>{D.rpos[k]+=(p-D.rpos[k])*Math.min(1,dt*3)});const lh=H/2,fx=W-34;
+  if(D.race==='boat'){const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#2196F3');g.addColorStop(1,'#1565C0');c.fillStyle=g;c.fillRect(0,0,W,H);
+    const tm=performance.now()/1000;c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=2;for(let k=0;k<10;k++){const y=(k*29)%H,x=((k*91-tm*60)%(W+60)+W+60)%(W+60)-30;c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x+12,y-4,x+24,y);c.stroke()}}
+  else if(D.race==='car'){c.fillStyle='#5E9F5D';c.fillRect(0,0,W,H);c.fillStyle='#3A3F4B';c.fillRect(0,6,W,H-12);const off=(D.rph*10)%40;c.fillStyle='#FFD54A';for(let x=-off;x<W;x+=40)c.fillRect(x,lh-2,22,4)}
+  else{c.fillStyle='#7FB77E';c.fillRect(0,0,W,H);c.fillStyle='#C8553D';c.fillRect(0,6,W,H-12);const off=(D.rph*8)%40;c.fillStyle='rgba(255,255,255,.25)';for(let x=-off;x<W;x+=40)c.fillRect(x,lh-1,20,2)}
+  c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=2;c.beginPath();c.moveTo(0,lh);c.lineTo(W,lh);c.stroke();
+  for(let y=4;y<H-4;y+=8){c.fillStyle=(y/8|0)%2?'#1E1E24':'#fff';c.fillRect(fx,y,6,8);c.fillStyle=(y/8|0)%2?'#fff':'#1E1E24';c.fillRect(fx+6,y,6,8)}
+  D.sides.forEach((sd,k)=>{const y=lh*k+lh/2,x=28+(fx-70)*Math.min(1,D.rpos[k]/tot),s=clamp(lh/62,.55,1.1);c.save();c.translate(x,y);
+    if(D.race==='boat'){c.scale(s,s);c.fillStyle=sd.color;c.beginPath();c.moveTo(-34,-6);c.lineTo(34,-6);c.quadraticCurveTo(46,-2,40,6);c.lineTo(-30,6);c.quadraticCurveTo(-40,0,-34,-6);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();
+      for(let r=0;r<4;r++){const rx=-20+r*14,sw=Math.sin(D.rph+r+k)*4;c.fillStyle='#F6C9A0';c.beginPath();c.arc(rx,-11,4,0,7);c.fill();c.strokeStyle='#8B5A2B';c.lineWidth=2;c.beginPath();c.moveTo(rx,-8);c.lineTo(rx-6+sw,8);c.stroke()}}
+    else if(D.race==='car'){c.scale(s,s);c.fillStyle=sd.color;rr(c,-30,-12,60,22,8);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();c.fillStyle='#BFE6FF';rr(c,-6,-9,18,16,4);c.fill();c.fillStyle='#1E1E24';[-18,18].forEach(wx=>{c.beginPath();c.arc(wx,11,6,0,7);c.fill()});c.fillStyle='rgba(255,255,255,.5)';for(let k2=0;k2<3;k2++)c.fillRect(-46-k2*10,-6+k2*6,8,2)}
+    else{drawKid(c,0,8*s,s*.9,D.rph+k*2,sd.color)}
+    c.restore();
+    c.save();c.translate(Math.min(x,W-80),k===0?y+lh*.42:y-lh*.36);if(k===0)c.rotate(Math.PI);c.font=`900 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.lineWidth=3;c.strokeStyle='rgba(0,0,0,.45)';c.strokeText(sd.name,0,0);c.fillStyle='#fff';c.fillText(sd.name,0,0);c.restore()})}
+window.addEventListener('resize',()=>{if(DUEL&&DUEL.race)setTimeout(duelRaceSize,120)});
 function duelSize(sd){const z=document.body.classList.contains('tv')?1.3:1;arc.z=z;const cw=sd.el.stage.clientWidth;const W=cw/z;
   let H;
   if(isPhone()){const side=sd.root;H=Math.round(clamp((side.clientHeight-sd.el.stage.offsetTop-14)/z,140,600))}
@@ -4757,6 +4792,7 @@ function duelLoop(ts){
     if(n!==DUEL.lastN){DUEL.lastN=n;tone([n>0?440:880],.12)}
     if(DUEL.count<=0){$('#duelCount').hidden=true;DUEL.sides.forEach(sd=>sd.arc.state='play')}}
   for(const sd of DUEL.sides)withSide(sd,()=>stepSide(sd,dt));
+  if(DUEL&&DUEL.race)duelRaceDraw(dt);
   if(DUEL&&DUEL.active)DUEL.raf=requestAnimationFrame(duelLoop);
 }
 function stopDuel(){if(!DUEL)return;DUEL.active=false;cancelAnimationFrame(DUEL.raf);$('#duelCount').hidden=true;DUEL=null}
