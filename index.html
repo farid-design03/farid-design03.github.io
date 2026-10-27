@@ -8246,7 +8246,7 @@ const AV_PARTS={
  body:{label:'Tubuh',items:[['sedang','Sedang',0],['kurus','Ramping',0],['berisi','Berisi',0],['atletis','Atletis',0]]},
  brow:{label:'Alis',items:[['tipis','Tipis',0],['tebal','Tebal',0],['lengkung','Melengkung',0],['lurus','Lurus',0],['tegas','Tegas',20],['ramah','Ramah',20],['none','Tanpa alis',0]]},
  skin:{label:'Kulit',items:[['s1','Kuning langsat',0,'#FFE0C7'],['s2','Sawo terang',0,'#F6C9A0'],['s3','Sawo matang',0,'#E0A574'],['s4','Cokelat',0,'#B97A4E'],['s5','Cokelat tua',0,'#8A5533']]},
- hair:{label:'Rambut',items:[['pendek','Pendek',0],['poni','Poni',0],['panjang','Panjang',0],['hijab','Hijab',0],['none','Plontos',0],['jabrik','Jabrik',20],['kuncir','Sanggul',20],['kepang','Kepang dua',20],['keriting','Keriting',40],['mohawk','Mohawk',80]]},
+ hair:{label:'Rambut',items:[['pendek','Pendek',0],['poni','Poni',0],['panjang','Panjang',0],['hijab','Hijab',0],['none','Plontos',0],['jabrik','Jabrik',20],['kuncir','Sanggul',20],['kepang','Kepang dua',20],['keriting','Keriting',40],['mohawk','Mohawk',80],['mullet','Mullet',60],['koma','Koma Korea',50],['belah','Belah tengah',40],['twoblock','Two block',50],['crop','French crop',40],['buzz','Buzz cut',20],['wolf','Wolf cut',60],['bob','Bob',40],['kuda','Kuncir kuda',40],['cepol','Cepol dua',50]]},
  hc:{label:'Warna',items:[['h1','Hitam',0,'#2B1D14'],['h2','Cokelat',0,'#5A3820'],['h9','Putih',0,'#F4F4F4'],['h3','Karamel',20,'#A0612D'],['h4','Emas',30,'#E8B547'],['h5','Merah',40,'#E2574C'],['h10','Merah muda',40,'#FF8FC0'],['h6','Biru',60,'#4F7CFF'],['h7','Ungu',60,'#9B6BFF'],['h11','Hijau toska',60,'#22C5B5']]},
  eyes:{label:'Mata',items:[['bulat','Bulat',0],['senyum','Senyum',0],['sipit','Sipit',0],['almond','Almond',0],['lentik','Lentik',20],['ngantuk','Sayu',20],['tajam','Tajam',30],['besar','Berbinar',30],['kedip','Kedip',40],['bintang','Bintang',80]]},
  mouth:{label:'Mulut',items:[['senyum','Senyum',0],['tawa','Tertawa',0],['datar','Tenang',0],['o','Kagum',20],['lidah','Melet',30]]},
@@ -8256,7 +8256,7 @@ const AV_PARTS={
  dunia:{label:'Baju dunia',items:[['none','Tanpa baju dunia',0,'—'],['prancis','Prancis · marinière',0],['hawaii','Hawaii · kemeja aloha',0],['brasil','Brasil · kaus bola',0],['jepang','Jepang · kimono',40],['korea','Korea · hanbok',40],['tiongkok','Tiongkok · changshan',40],['india','India · sari',40],['vietnam','Vietnam · ao dai',50],['thailand','Thailand · chut thai',60],['arab','Arab · gamis & syal',50],['turki','Turki · fez',50],['belanda','Belanda · topi renda',50],['jerman','Jerman · lederhosen',50],['skotlandia','Skotlandia · tartan',60],['koboi','Amerika · koboi',60],['meksiko','Meksiko · sombrero',60],['peru','Peru · chullo',60],['rusia','Rusia · ushanka',70],['kenya','Kenya · Maasai',70],['inggris','Inggris · pengawal raja',90],['mesir','Mesir · firaun',120]]},
  bg:{label:'Latar',items:[['b1','Ungu',0,'#C9B6FF'],['b2','Biru',0,'#A9DEFF'],['b3','Hijau',0,'#B5EBAE'],['b4','Merah muda',0,'#FFC9DF'],['b5','Kuning',20,'#FFE596'],['bintang','Malam berbintang',60],['pelangi','Pelangi',100]]}};
 Object.values(AV_PARTS).forEach(p=>p.items.forEach(x=>{if(typeof x[2]==='number')x[2]=cheap(x[2])}));
-const AV_G={hair:{pendek:'L',jabrik:'L',mohawk:'L',none:'L',panjang:'P',hijab:'P',kuncir:'P',kepang:'P'},acc:{peci:'L'},
+const AV_G={hair:{pendek:'L',jabrik:'L',mohawk:'L',none:'L',mullet:'L',koma:'L',twoblock:'L',crop:'L',buzz:'L',panjang:'P',hijab:'P',kuncir:'P',kepang:'P',bob:'P',kuda:'P',cepol:'P'},acc:{peci:'L'},
  adat:{jawa:'L',sunda:'L',betawi:'L',madura:'L',sasak:'L',batak:'L',melayu:'L',aceh:'L',dayak:'L',banjar:'L',minang:'P',bugis:'P',bima:'P',lampung:'P'},
  dunia:{koboi:'L',arab:'L',turki:'L',jerman:'L',inggris:'L',skotlandia:'L',india:'P',vietnam:'P',belanda:'P'}};
 const avFor=(cat,id,g)=>!g||!AV_G[cat]||!AV_G[cat][id]||AV_G[cat][id]===g;
@@ -8367,6 +8367,11 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
   /* rambut belakang */
   if(a.hair==='panjang')s+=HW(`<path d="M30 54 C28 24 46 18 60 18 C76 18 92 24 90 54 L93 96 C80 100 40 100 27 96Z" fill="${hc}" ${sw}/>`);
   if(a.hair==='kuncir')s+=HW(`<circle cx="60" cy="19" r="10" fill="${hc}" ${sw}/>`);
+  if(a.hair==='mullet')s+=HW(`<path d="M31 50 C29 26 46 19 60 19 C75 19 91 26 89 50 L82 58 L85 86 C80 92 72 91 70 84 L50 84 C48 91 40 92 35 86 L38 58Z" fill="${hc}" ${sw}/>`);
+  if(a.hair==='wolf')s+=HW(`<path d="M30 52 C28 26 46 18 60 18 C75 18 92 26 90 52 L94 80 L86 76 L84 88 L76 80 L44 80 L36 88 L34 76 L26 80Z" fill="${hc}" ${sw}/>`);
+  if(a.hair==='bob')s+=HW(`<path d="M29 56 C27 26 46 18 60 18 C75 18 93 26 91 56 L92 80 C84 84 76 82 72 78 L48 78 C44 82 36 84 28 80Z" fill="${hc}" ${sw}/>`);
+  if(a.hair==='kuda')s+=HW(`<path d="M80 30 C100 32 106 60 96 90 C92 78 86 64 78 50Z" fill="${hc}" ${sw}/>`);
+  if(a.hair==='cepol')s+=HW(`<circle cx="37" cy="27" r="11" fill="${hc}" ${sw}/><circle cx="83" cy="27" r="11" fill="${hc}" ${sw}/>`);
   if(a.hair==='hijab'){s+=`<path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="${hc}" ${sw}/>`;
     if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}h"><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z"/></clipPath><g clip-path="url(#${uid}h)">${AD.hoodPat}</g><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="none" ${sw}/>`}
   /* baju adat */
@@ -8399,6 +8404,16 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
     jabrik:`<path d="M33 50 L29 34 L40 38 L39 22 L50 31 L56 15 L62 29 L70 15 L74 31 L84 22 L82 38 L92 34 L87 50 C80 40 70 36 60 36 C50 36 40 40 33 50Z" fill="${hc}" ${sw}/>`,
     keriting:[[36,40],[42,30],[52,24],[63,22],[74,26],[83,34],[87,45],[33,50]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="${hc}" ${sw}/>`).join('')+`<path d="M38 44 C46 34 74 34 82 44" fill="${hc}"/>`,
     mohawk:`<path d="M53 33 L54 9 L60 15 L66 9 L67 33 C62 31 58 31 53 33Z" fill="${hc}" ${sw}/>`,
+    mullet:`<path d="M32 52 C30 30 44 21 60 21 C76 21 90 30 88 52 C85 44 80 40 76 41 L72 35 L66 40 L60 34 L54 40 L48 35 L44 41 C40 40 35 44 32 52Z" fill="${hc}" ${sw}/>`,
+    koma:`<path d="M31 56 C28 28 45 19 61 19 C78 19 92 29 89 56 C87 48 84 44 79 43 C70 47 58 47 50 44 C44 42 38 46 35 52Z" fill="${hc}" ${sw}/><path d="M53 42 C48 44 49 50 55 48" fill="none" stroke="${K}" stroke-width="7" stroke-linecap="round"/><path d="M53 42 C48 44 49 50 55 48" fill="none" stroke="${hc}" stroke-width="3.5" stroke-linecap="round"/>`,
+    belah:`<path d="M31 56 C28 28 45 20 60 20 C75 20 92 28 89 56 C86 46 80 40 72 38 C66 38 62 34 60 29 C58 34 54 38 48 38 C40 40 34 46 31 56Z" fill="${hc}" ${sw}/>`,
+    twoblock:`<path d="M31 54 C30 42 34 36 40 33 L40 40 C36 42 33 47 32 54Z M89 54 C90 42 86 36 80 33 L80 40 C84 42 87 47 88 54Z" fill="${hc}" opacity=".5"/><path d="M35 45 C32 25 46 16 60 16 C76 16 90 25 85 45 C80 40 72 43 64 40 C56 44 46 41 35 45Z" fill="${hc}" ${sw}/>`,
+    crop:`<path d="M32 50 C30 28 45 21 60 21 C75 21 90 28 88 50 C87 45 86 42 84 40 L36 40 C34 42 33 45 32 50Z" fill="${hc}" ${sw}/><path d="M44 40 l2 -6 M52 40 l2 -7 M60 40 l2 -7 M68 40 l2 -7 M76 40 l2 -6" stroke="${K}" stroke-width="1.6" stroke-linecap="round" opacity=".45"/>`,
+    buzz:`<path d="M32 50 C31 30 45 24 60 24 C75 24 89 30 88 50 C82 38 72 33 60 33 C48 33 38 38 32 50Z" fill="${hc}" opacity=".6"/>`,
+    wolf:`<path d="M31 56 C28 28 45 19 60 19 C76 19 92 28 89 56 L85 46 L80 50 L76 42 L70 47 L66 40 L60 46 L54 40 L50 47 L44 42 L40 50 L35 46Z" fill="${hc}" ${sw}/>`,
+    bob:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L40 44 C36 44 34 47 32 54Z" fill="${hc}" ${sw}/>`,
+    kuda:`<path d="M32 52 C31 30 45 23 60 23 C75 23 89 30 88 52 C83 40 72 35 60 35 C48 35 37 40 32 52Z" fill="${hc}" ${sw}/><rect x="80" y="30" width="7" height="8" rx="2" fill="#FF5C9E" ${sw} transform="rotate(25 83 34)"/>`,
+    cepol:`<path d="M32 52 C31 30 45 23 60 23 C75 23 89 30 88 52 C83 40 72 35 60 35 C48 35 37 40 32 52Z" fill="${hc}" ${sw}/>`,
     hijab:`<path d="M34 50 C37 33 48 28 60 28 C72 28 83 33 86 50 C79 39 70 35 60 35 C50 35 41 39 34 50Z" fill="${hc}" ${sw}/>`};
   s+=a.hair==='hijab'?(HF.hijab||''):HW(HF[a.hair]);
   /* pipi */
