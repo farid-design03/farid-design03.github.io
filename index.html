@@ -783,6 +783,27 @@ body.playing .practicefab{display:none}
 .gb .ex .ee{font-size:14px;color:var(--muted)}
 .gb .tipbox{display:flex;gap:10px;align-items:flex-start;background:#E6F2FF;border:2px solid var(--line);border-radius:16px;padding:10px}
 .gb .tipbox .mascot{width:56px;flex:none}
+.modal.gsheet{padding:0;place-items:stretch}
+.modal.gsheet .mbox{width:min(720px,100%);max-height:none;height:100%;border-radius:0;justify-self:center;padding:0 18px 18px;gap:12px}
+@media (min-width:760px){.modal.gsheet{padding:24px 16px}.modal.gsheet .mbox{border-radius:26px}}
+.modal.gsheet .ghead{position:sticky;top:0;z-index:2;background:#fff;padding:16px 0 10px;border-bottom:2px solid var(--line2);margin:0 0 2px}
+.modal.gsheet #mClose{position:sticky;bottom:0;flex:none}
+.gb .gintro{font-size:17px;line-height:1.55;margin:0}
+.gb .gsec{display:flex;flex-direction:column;gap:8px;padding:12px 0 2px;border-top:2px dashed var(--line2)}
+.gb .gsec h4,.gb .gsum h4,.gb .gexh{font-family:var(--display);font-size:19px;margin:0}
+.gb .gsec p{margin:0;line-height:1.55}
+.gb .gli,.gb .gsum ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:5px;line-height:1.5}
+.gb .gtb{overflow-x:auto;border:2px solid var(--line);border-radius:14px}
+.gb .gtb table{border-collapse:collapse;width:100%;font-size:15px}
+.gb .gtb th{background:#E6F2FF;text-align:left;font-weight:800}
+.gb .gtb th,.gb .gtb td{padding:7px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+.gb .gtb td{overflow-wrap:anywhere}
+@media (max-width:480px){.gb .gtb table{font-size:13.5px}.gb .gtb th,.gb .gtb td{padding:6px 7px}}
+.gb .gtb tr:last-child td{border-bottom:0}
+.gb .gnote{background:#FFF6D9;border:2px solid var(--line);border-radius:14px;padding:9px 12px;font-size:15px}
+.gb .gsum{background:#E8F8EE;border:2px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.gb .gload{color:var(--muted);font-size:15px;padding:6px 0}
+.gb .gexh{margin-top:6px}
 .toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top, 0px));transform:translateX(-50%);z-index:80;background:#fff;border:2px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--line2);padding:10px 16px;display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;animation:popIn .3s;max-width:calc(100vw - 32px)}
 .toast i{width:30px;height:30px;flex:none}
 .onb{position:fixed;inset:0;z-index:90;overflow:auto;background:var(--bg) linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bot) 75%);padding:calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
@@ -4992,7 +5013,7 @@ function heartPop(){openPop($('#heartBtn'),`<h4>Nyawa</h4>${heartsPanel()}`);bin
 
 /* ---------- modal & toast ---------- */
 function openModal(html){$('#mbox').innerHTML=html;$('#modal').hidden=false;hydrate($('#mbox'))}
-function closeModal(){$('#modal').hidden=true;$('#mbox').innerHTML='';try{pinPress=null}catch(e){}}
+function closeModal(){$('#modal').hidden=true;$('#modal').classList.remove('gsheet');$('#mbox').innerHTML='';try{pinPress=null}catch(e){}}
 let toastT=null;
 function toast(icon,text){const t=$('#toast');t.innerHTML=`${ico(icon)}<span>${esc(text)}</span>`;hydrate(t);t.hidden=false;t.style.animation='none';void t.offsetWidth;t.style.animation='';clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)}
 function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div>${heartsPanel()}<button class="ghost" id="mClose">Nanti saja</button>`);bindHeartActs($('#mbox'));$('#mClose').onclick=closeModal}
@@ -5276,6 +5297,7 @@ function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
   $('#path').innerHTML=h;hydrate($('#path'));
   $('#path').querySelectorAll('.node').forEach(b=>b.onclick=e=>{e.stopPropagation();const row=b.parentElement;const open=row.classList.contains('popopen');closePop();if(open)return;if(row.dataset.sport)sportPop(+row.dataset.u,row);else nodePop(+row.dataset.u,+row.dataset.n,row)});
   $('#path').querySelectorAll('.guide').forEach(b=>b.onclick=()=>openGuide(+b.dataset.guide));
+  if(!MATERI_P&&!window.MATERI)setTimeout(()=>{try{loadMateri().catch(()=>{})}catch(e){}},4000);
 }
 function scrollToCurrent(){const n=document.querySelector('.node.cur');if(n&&!$('#vLearn').hidden){const r=n.getBoundingClientRect();window.scrollTo({top:Math.max(0,window.scrollY+r.top-window.innerHeight*.45),behavior:'smooth'})}}
 function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,done=progOf().done;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spPending(ui))st='lock';
@@ -5291,9 +5313,20 @@ function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NOD
   row.querySelector('.npop').onclick=e=>e.stopPropagation();
   {const np=row.querySelector('.npop');const rr=row.getBoundingClientRect(),w=np.offsetWidth,cx=rr.left+rr.width/2,W=document.documentElement.clientWidth,m=12;const r={left:cx-w/2,right:cx+w/2};let dx=0;if(r.left<m)dx=m-r.left;else if(r.right>W-m)dx=W-m-r.right;if(dx)np.style.setProperty('--dx',Math.round(dx)+'px')}
   {const np=row.querySelector('.npop'),rr=row.getBoundingClientRect(),bottom=rr.bottom+18+np.offsetHeight,limit=window.innerHeight-(innerWidth<1000?120:30);if(bottom>limit)window.scrollBy({top:bottom-limit+10,behavior:'smooth'})}}
-function openGuide(ui){const s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);
-  openModal(`<span class="eyebrow">Panduan · Unit ${ui+1}</span><h3>${esc(u.t)}</h3><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><b>Contoh soal</b>`+
-   ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal}
+var MATERI_P=null;
+function loadMateri(){if(window.MATERI&&Object.keys(window.MATERI).length)return Promise.resolve(window.MATERI);if(MATERI_P)return MATERI_P;
+  MATERI_P=new Promise((r,j)=>{const sc=document.createElement('script');sc.src='materi.js?v=1';sc.onload=()=>r(window.MATERI||{});sc.onerror=()=>{sc.remove();MATERI_P=null;j(new Error('materi'))};document.head.appendChild(sc)});return MATERI_P}
+function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?`<p>${x.p}</p>`:'')+
+    (x.li?`<ul class="gli">${x.li.map(t=>`<li>${t}</li>`).join('')}</ul>`:'')+
+    (x.tb?`<div class="gtb"><table><thead><tr>${x.tb[0].map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody>${x.tb.slice(1).map(r=>`<tr>${r.map(t=>`<td>${t}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'')+
+    (x.ex?x.ex.map(e=>`<div class="ex"><div class="qq">${e[0]}</div><div class="aa">${e[1]}</div></div>`).join(''):'')+
+    (x.note?`<div class="gnote">${x.note}</div>`:'')+`</section>`;
+  return `<p class="gintro">${m.intro}</p>`+m.s.map(sec).join('')+(m.sum&&m.sum.length?`<section class="gsum"><h4>Yang perlu diingat</h4><ul>${m.sum.map(t=>`<li>${t}</li>`).join('')}</ul></section>`:'')}
+function openGuide(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=`${c.id}/${s.id}/${ui}`;
+  $('#modal').classList.add('gsheet');
+  openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
+   ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal;
+  loadMateri().then(M=>{const el=$('#gMat');if(!el)return;const m=M[key];el.innerHTML=m?guideBody(m):''}).catch(()=>{const el=$('#gMat');if(el)el.innerHTML='<div class="gload">Materi lengkap belum bisa dimuat. Periksa internet, lalu buka lagi.</div>'})}
 
 /* ---------- starting a level ---------- */
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
