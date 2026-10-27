@@ -1842,6 +1842,18 @@ body:not(.teacher) #tClsBar{display:none}
 body.has-jreq .nav[data-tab=tstud] i{position:relative}
 body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:-3px;top:-3px;width:11px;height:11px;border-radius:50%;background:#F2394B;border:2px solid #fff;z-index:1}
 .wlinv{background:#FFF9E8;border:2px solid var(--line);border-radius:18px;padding:12px 14px;text-align:left;font-weight:600}
+
+/* Main berdua di HP: penuh layar, tanpa kartu */
+@media (max-width:700px){
+ body.duelon #vDuel{position:fixed;inset:0;z-index:40;background:#fff;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);gap:0!important;display:flex!important;flex-direction:column}
+ body.duelon #vDuel[hidden]{display:none!important}
+ body.duelon #vDuel .duel{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr;gap:0}
+ body.duelon #vDuel .dside{height:auto!important;min-height:0;border:0!important;border-top:6px solid var(--tc)!important;border-radius:0!important;box-shadow:none!important;padding:8px 10px}
+ body.duelon #vDuel .duelbar{position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:6;flex-wrap:nowrap;gap:6px}
+ body.duelon #vDuel .duelbar .eyebrow{display:none}
+ body.duelon #vDuel .duelbar .back{min-height:36px;min-width:40px;padding:4px 10px;box-shadow:0 2px 0 var(--line2)}
+ body.duelon #vDuel .dstage{flex:1;min-height:0;border-radius:12px}
+}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -4682,7 +4694,7 @@ function startDuel(){
 }
 function duelSize(sd){const z=document.body.classList.contains('tv')?1.3:1;arc.z=z;const cw=sd.el.stage.clientWidth;const W=cw/z;
   let H;
-  if(isPhone()){const side=sd.root;H=Math.round(clamp((side.clientHeight-sd.el.stage.offsetTop-34)/z,140,600))}
+  if(isPhone()){const side=sd.root;H=Math.round(clamp((side.clientHeight-sd.el.stage.offsetTop-14)/z,140,600))}
   else{H=Math.round(clamp(Math.min((window.innerHeight-(z>1?330:300))/z,W*.85),300,520));if(DUEL.mode==='tikus'&&W<520)H=Math.max(H,430)}
   arc.W=W;arc.H=H;arc.lastW=cw;const dpr=Math.min(2,window.devicePixelRatio||1)*z;const cv=sd.el.cv;
   cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.height=(H*z)+'px';arc.ctx=cv.getContext('2d');arc.ctx.setTransform(dpr,0,0,dpr,0,0);
