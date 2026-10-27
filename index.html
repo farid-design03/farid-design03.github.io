@@ -17,6 +17,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Baloo+2:wght@700;800&family=Orbitron:wght@700;800;900&display=swap">
+<script>window.__bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e;try{window.instReady&&instReady()}catch(_){}});</script>
 <script>(function(){try{var t=localStorage.getItem('jelas-theme')||'siang';if(t==='auto')t=matchMedia('(prefers-color-scheme: dark)').matches?'malam':'siang';document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <style>
 /* Layout: a bright cartoon schoolyard world (sky, sun, drifting clouds, hills) behind chunky sticker-style cards with ink outlines and solid drop shadows; one committed bright look for classroom TVs */
@@ -2127,6 +2128,22 @@ html[data-theme=malam] .feedback.bad{background:linear-gradient(rgba(255,46,99,.
 html[data-theme=malam] .feedback.ok #fbTitle{color:var(--ng)!important;text-shadow:0 0 12px rgba(0,255,156,.6)}html[data-theme=malam] .feedback.bad #fbTitle{color:var(--nr)!important;text-shadow:0 0 12px rgba(255,46,99,.6)}
 html[data-theme=malam] #fbText .fbtip{background:rgba(0,240,255,.05)!important;border:1px solid rgba(0,240,255,.3)!important}
 html[data-theme=malam] ::selection{background:rgba(255,43,214,.45);color:#fff}
+
+.instsheet{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.instbg{position:absolute;inset:0;background:rgba(10,14,40,.45);opacity:0;transition:opacity .25s;pointer-events:auto}
+.instcard{position:relative;width:100%;max-width:520px;background:var(--card);color:var(--ink);border-radius:24px 24px 0 0;border:2px solid var(--line);border-bottom:0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.9,.3,1);pointer-events:auto;box-shadow:0 -10px 30px rgba(0,0,0,.2)}
+.instsheet.on .instbg{opacity:1}.instsheet.on .instcard{transform:none}
+.insthead{display:flex;align-items:center;gap:12px}.instico{width:56px;height:56px;border-radius:14px;flex:none;box-shadow:0 3px 0 var(--line2)}
+.insthead>div{flex:1;display:flex;flex-direction:column}.insthead b{font-family:var(--title);font-size:19px;line-height:1.2}.insthead small{color:var(--muted);font-weight:700}
+.instx{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--muted);font-weight:900;cursor:pointer;flex:none}
+.instben{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px}.instben li{background:var(--tb);border-radius:12px;padding:8px 10px;font-weight:800;font-size:13px}
+.insthowbox{background:var(--ty);border:2px solid var(--line);border-radius:14px;padding:10px 12px}
+.insthow{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
+.instk{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:6px;background:var(--card);border:2px solid var(--line);font-weight:900;padding:0 4px;vertical-align:middle}
+.instacts{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}.instacts button{min-height:48px}
+html[data-theme=malam] .instcard{background:#070C1A;border:1px solid rgba(0,240,255,.45);box-shadow:0 0 30px rgba(0,240,255,.25)}
+html[data-theme=malam] .instben li{background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.25)}
+html[data-theme=malam] .insthowbox{background:rgba(255,230,0,.06);border:1px solid rgba(255,230,0,.35)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -5950,7 +5967,7 @@ function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class
   const rs=()=>{
   el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
    `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
-    ${themeRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
+    ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
   $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();(rs(),renderProfile())};
   $('#sMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();(rs(),renderProfile())};
   $('#sHapT').onclick=()=>{const ok=haptic([200,100,200],true);if(!ok)toast('lock',navigator.vibrate?'HP-mu menolak getaran dari browser. Matikan mode senyap atau hemat baterai, lalu coba lagi.':'Browser ini tidak mendukung getaran (misalnya iPhone). Pakai Chrome di HP Android.')};
@@ -6402,7 +6419,7 @@ function renderTSet(){const t=T();
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
    addStudentBlock()+
    `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
-     ${themeRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser di TV</small></span><button class="smallbtn" id="stFull">Aktifkan</button></div></div>
+     ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser di TV</small></span><button class="smallbtn" id="stFull">Aktifkan</button></div></div>
    ${licCard()}
    <div class="tcard"><h3>Keamanan</h3><div class="tform"><div class="tfield"><label for="stPin">Sandi guru baru</label><input id="stPin" type="password" autocomplete="new-password"></div><div class="tfield"><label for="stPin2">Ulangi sandi baru</label><input id="stPin2" type="password" autocomplete="new-password"></div></div><p class="sub" style="margin:0">Nama pengguna guru: <b>${esc(t.user||'guru')}</b></p><button class="ghost" id="stPinSave" style="align-self:flex-start">Ganti sandi guru</button></div>
    <div class="tcard"><h3>Cadangan data</h3><p class="sub">${GAS?'Data otomatis tersimpan di Google Sheet milikmu: tab Murid, Absensi, Nilai, dan Rapor. Cadangan teks tetap bisa disalin sebagai pengaman tambahan.':'Semua data tersimpan di browser perangkat ini. Salin cadangan secara berkala dan simpan di catatan atau WhatsApp, supaya data bisa dipulihkan jika browser dibersihkan atau pindah perangkat.'}</p>
@@ -7991,6 +8008,39 @@ window.addEventListener('popstate',()=>{BACK.armed=false;if(handleBack())backArm
 const _closeModalB=closeModal;closeModal=function(){const wasExit=!!document.getElementById('exitAsk');_closeModalB.apply(this,arguments);if(wasExit)backArm()};
 window.addEventListener('load',()=>setTimeout(backArm,300));document.addEventListener('pointerdown',backArm,{once:true,capture:true});
 /* ---------- navigasi laptop: kartu akun di menu samping & pintasan keyboard ---------- */
+
+/* ---------- tawaran memasang aplikasi (PWA) di HP ---------- */
+const INST={
+  standalone(){try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}},
+  mobile(){try{return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(matchMedia('(pointer:coarse)').matches&&innerWidth<1000)}catch(e){return false}},
+  ios(){return /iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)},
+  inapp(){return /FBAN|FBAV|Instagram|Line\/|WhatsApp|; wv\)|TikTok|Snapchat/i.test(navigator.userAgent)},
+  snoozed(){try{return (+localStorage.getItem('jelas-inst-skip')||0)>Date.now()}catch(e){return false}},
+  snooze(d){try{localStorage.setItem('jelas-inst-skip',Date.now()+d*864e5)}catch(e){}},
+  shown:false};
+function instBusy(){const b=document.body;return b.classList.contains('playing')||b.classList.contains('lessonmode')||!!document.querySelector('#modal:not([hidden])')||!!document.querySelector('.instsheet')}
+function instHow(){
+  if(INST.ios())return `<ol class="insthow"><li>Tekan tombol <b>Bagikan</b> <span class="instk">⬆︎</span> di bawah layar Safari.</li><li>Gulir lalu pilih <b>Tambahkan ke Layar Utama</b> <span class="instk">＋</span>.</li><li>Tekan <b>Tambah</b>. Ikon JELAS muncul di layar HP.</li></ol>${/CriOS|FxiOS|EdgiOS/i.test(navigator.userAgent)?'<p class="note" style="margin:0">Kalau pilihan itu tidak ada, buka halaman ini di <b>Safari</b> dulu.</p>':''}`;
+  if(INST.inapp())return `<ol class="insthow"><li>Tekan menu <span class="instk">⋮</span> di pojok kanan atas.</li><li>Pilih <b>Buka di Chrome</b> (atau "Buka di browser").</li><li>Di Chrome, tekan <span class="instk">⋮</span> lalu <b>Instal aplikasi</b> / <b>Tambahkan ke layar utama</b>.</li></ol>`;
+  return `<ol class="insthow"><li>Tekan menu <span class="instk">⋮</span> di pojok kanan atas Chrome.</li><li>Pilih <b>Instal aplikasi</b> atau <b>Tambahkan ke layar utama</b>.</li><li>Tekan <b>Instal</b>. Ikon JELAS muncul di layar HP.</li></ol>`}
+function instOffer(force){if(INST.standalone())return;if(!force&&(INST.snoozed()||!INST.mobile()||INST.shown))return;if(!force&&instBusy()){setTimeout(()=>instOffer(),8000);return}INST.shown=true;
+  const can=!!window.__bip;const el=document.createElement('div');el.className='instsheet';el.setAttribute('role','dialog');el.setAttribute('aria-label','Pasang aplikasi JELAS');
+  el.innerHTML=`<div class="instbg"></div><div class="instcard"><div class="insthead"><img src="icons/icon-192.png" alt="" class="instico" onerror="this.style.visibility='hidden'"><div><b>Pasang aplikasi JELAS</b><small>Gratis · ukuran kecil · tanpa Play Store</small></div><button class="instx" aria-label="Tutup">✕</button></div>
+   <ul class="instben"><li>📱 Buka langsung dari layar utama HP</li><li>🖥️ Layar penuh tanpa bar browser</li><li>⚡ Lebih cepat dibuka</li><li>🔔 Pengingat tugas dan tantangan</li></ul>
+   <div class="insthowbox" ${can?'hidden':''}>${instHow()}</div>
+   <div class="instacts"><button class="ghost" data-inst="later">Nanti saja</button>${can?'<button class="primary" data-inst="go">Pasang</button>':'<button class="primary" data-inst="ok">Mengerti</button>'}</div></div>`;
+  document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('on'));
+  const close=d=>{if(d)INST.snooze(d);el.classList.remove('on');setTimeout(()=>el.remove(),250)};
+  el.querySelector('.instx').onclick=()=>close(3);el.querySelector('.instbg').onclick=()=>close(3);
+  el.querySelector('[data-inst=later]').onclick=()=>close(3);
+  const ok=el.querySelector('[data-inst=ok]');if(ok)ok.onclick=()=>close(7);
+  const go=el.querySelector('[data-inst=go]');if(go)go.onclick=async()=>{const e=window.__bip;if(!e){el.querySelector('.insthowbox').hidden=false;return}
+    try{e.prompt();const r=await e.userChoice;window.__bip=null;if(r&&r.outcome==='accepted'){close(0);toast('check','JELAS sedang dipasang di HP-mu.')}else close(3)}catch(err){el.querySelector('.insthowbox').hidden=false}}}
+window.instReady=()=>{const g=document.querySelector('.instsheet [data-inst=ok]');if(g){g.dataset.inst='go';g.textContent='Pasang';const hb=document.querySelector('.instsheet .insthowbox');if(hb)hb.hidden=true;g.onclick=null;g.closest('.instsheet').remove();INST.shown=false;instOffer(true)}};
+window.addEventListener('appinstalled',()=>{document.querySelectorAll('.instsheet').forEach(x=>x.remove());INST.snooze(3650);try{toast('check','Aplikasi JELAS terpasang. Buka dari layar utama HP-mu.')}catch(e){}});
+window.addEventListener('load',()=>setTimeout(()=>instOffer(),3500));
+function instRow(){if(INST.standalone())return '';return `<div class="set"><span><b>Pasang aplikasi</b><small>Buka JELAS dari layar utama HP, layar penuh</small></span><button class="smallbtn" data-instnow>Pasang</button></div>`}
+document.addEventListener('click',e=>{if(e.target.closest('[data-instnow]')){try{closeModal()}catch(_){}INST.shown=false;instOffer(true)}});
 /* ---------- tema siang / malam ---------- */
 const THEME={get(){try{return localStorage.getItem('jelas-theme')||'siang'}catch(e){return 'siang'}},
   eff(){const t=THEME.get();return t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'malam':'siang'):t},
