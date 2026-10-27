@@ -3526,6 +3526,8 @@ const FIT={
  kid:{games:['balon','tikus','katak','pancing','buah','basket','memori','urut','layang','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
  kidSlow:{games:['balon','katak','pancing','basket','memori','urut','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
+/* Semua game boleh dipilih di semua kelas. Game yang paling cocok tetap di urutan atas. Kuis bergambar (jawaban berupa gambar) hanya bisa dimainkan sebagai kuis. */
+const allGames=f=>{f=f||FIT.long;if(f===FIT.picture)return f.games;const rest=MODE_LIST.map(m=>m.id).filter(id=>!f.games.includes(id)&&id!=='kuis');const g=f.games.filter(x=>x!=='kuis').concat(rest);return g.concat(['kuis'])};
 const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/warna':'kidSlow','tk/banyak':'picture','tk/__mix':'kidSlow',
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
@@ -3556,8 +3558,8 @@ function renderHome(){
 }
 function renderModes(){
   const reb=PLAY==='group'&&GROUP.format==='rebutan';const fit=S.fit?FIT[S.fit]:fitOf(L.id,S.id);
-  const ids=reb?['kuis']:fit.games;const last=store.get('last',{})[L.id+'/'+S.id];
-  $('#fitNote').innerHTML=`<b>Kenapa game ini?</b> ${reb?'Format Rebutan memakai Kuis Klasik supaya semua tim bisa berebut menjawab.':fit.note}`;
+  const ids=reb?['kuis']:allGames(fit);const last=store.get('last',{})[L.id+'/'+S.id];
+  $('#fitNote').innerHTML=`<b>Kenapa game ini?</b> ${reb?'Format Rebutan memakai Kuis Klasik supaya semua tim bisa berebut menjawab.':fit.note+(ids.length>fit.games.length?' Game paling cocok ada di urutan atas, tetapi semua game lain juga bisa dimainkan.':'')}`;
   const duoRand=PLAY==='group'&&GROUP.format==='terbagi'&&ids.filter(x=>x!=='kuis'&&MODES[x]).length>1;
   $('#modes').innerHTML=(duoRand?`<button class="mode moderand" data-m="acak" style="--mc:#9B6BFF"><span class="mi" style="font-size:30px">🎲</span><span class="mn">Acak semua game</span><span class="md">Setiap soal memakai game yang berbeda, dipilih acak</span><span class="why">Paling seru untuk main berdua</span><span class="play">Main ▶</span></button>`:'')+ids.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-m="${m.id}" style="--mc:${MCOL[m.id]}">${last===m.id?'<span class="last">Terakhir dimainkan</span>':''}<span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span><span class="why">${WHY[m.id]}</span><span class="play">Main ▶</span></button>`}).join('');
   $('#modes').querySelectorAll('.mode').forEach(b=>b.onclick=()=>{if(b.dataset.m==='acak'){window.DUEL_RAND=ids.filter(x=>x!=='kuis'&&x!=='urut'&&MODES[x]);MODE=pick(window.DUEL_RAND);tone([660,990],.06);launch();return}window.DUEL_RAND=null;MODE=b.dataset.m;store.set('mode',MODE);const l=store.get('last',{});l[L.id+'/'+S.id]=MODE;store.set('last',l);tone([660,990],.06);launch()});
@@ -3575,7 +3577,7 @@ function openGames(sid){
 }
 function openLevel(id){L=LEVELS.find(l=>l.id===id);setLvColor(L);
   $('#subEyebrow').textContent=L.age+(PLAY==='group'?(GROUP.format==='terbagi'?' · Layar terbagi, 2 pemain':` · Main bersama, ${GROUP.n} tim, ${GROUP.format==='giliran'?'bergiliran':'rebutan'}`):' · Main sendiri');$('#subTitle').textContent=L.full;
-  const gc=sid=>{const n=fitOf(L.id,sid).games.length;return n>1?`${n} game cocok`:'Kuis bergambar'};
+  const gc=sid=>{const n=allGames(fitOf(L.id,sid)).length;return n>1?`${n} game cocok`:'Kuis bergambar'};
   const tiles=L.subjects.map((s,si)=>{const p=progress[L.id+'/'+s.id]||{};return `<button class="subj" data-s="${s.id}" style="--sc:${SCOL[si%SCOL.length]}"><span class="glyph">${s.glyph}</span><span class="nm">${s.name}</span><span class="gcount">${gc(s.id)}</span><span class="meta"><span class="stars">${starStr(p.stars||0)}</span><span>${p.best!=null?'Nilai terbaik '+p.best:'Belum main'}</span></span></button>`}).join('');
   $('#subjects').innerHTML=tiles+`<button class="subj mix" data-s="__mix"><span class="glyph">?!</span><span class="nm">Campur Semua</span><span class="gcount">${gc('__mix')}</span><span class="meta"><span>Soal acak dari semua pelajaran ${L.name}</span></span></button>`;
   $('#subjects').querySelectorAll('.subj').forEach(b=>b.onclick=()=>openGames(b.dataset.s));
@@ -3585,7 +3587,7 @@ function buildQs(n){const out=[],seen=new Set();let g=0;while(out.length<n&&g<20
 function startGame(sid){selectSubject(sid);launch()}
 function launch(){
   if(PLAY==='group'&&GROUP.format==='rebutan')MODE='kuis';
-  {const ft=S.fit?FIT[S.fit]:fitOf(L.id,S.id);if(!ft.games.includes(MODE))MODE=ft.games[0]}
+  {const ft=S.fit?FIT[S.fit]:fitOf(L.id,S.id);const ag=allGames(ft);if(!ag.includes(MODE))MODE=ag[0]}
   if(PLAY==='group'&&GROUP.format==='terbagi'&&LIC.features.duel!==false){startDuel();return}
   const group=PLAY==='group';
   const total=group?GROUP.n*GROUP.per:10;
@@ -5600,7 +5602,7 @@ function openChest(idx){const pr=progOf();if(idx!==pr.done)return;const n=R(15,3
 
 /* ---------- team play page ---------- */
 function renderTeam(){renderSetup();const c=CLS();$('#teamCls').textContent=c.name;
-  $('#teamSubjects').innerHTML=c.subjects.map(s=>`<button class="subj" data-s="${s.id}" style="--sc:${s.color}"><span class="glyph">${s.glyph}</span><span class="nm">${esc(s.name)}</span><span class="gcount">${FIT[s.fit].games.length} game cocok · ${s.units.length} unit</span></button>`).join('');
+  $('#teamSubjects').innerHTML=c.subjects.map(s=>`<button class="subj" data-s="${s.id}" style="--sc:${s.color}"><span class="glyph">${s.glyph}</span><span class="nm">${esc(s.name)}</span><span class="gcount">${allGames(FIT[s.fit]).length} game · ${s.units.length} unit</span></button>`).join('');
   $('#teamSubjects').querySelectorAll('.subj').forEach(b=>b.onclick=()=>{const s=c.subjects.find(x=>x.id===b.dataset.s);PLAY='group';L=lvOf();setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
     S={id:s.id,name:s.name,fit:s.fit,make:()=>shuffle(s.units.flatMap(u=>unitQs(u,3)))};openGames()})}
 
@@ -5837,7 +5839,7 @@ const EV_FMTS=[['solo','Satu per satu','Murid maju bergantian, masing-masing men
 function evalSubj(){const c=tCls();return c.subjects.find(s=>s.id===EV.subj)||c.subjects[0]}
 function evalSource(s){if(EV.src&&EV.src.startsWith('b:')){const b=(APP.bank||[]).find(x=>x.id===EV.src.slice(2)&&x.subj===s.id&&x.qs.length);if(b)return {bank:b,title:b.title,fit:bankFit(b),count:b.qs.length}}
   let ui=EV.src&&EV.src.startsWith('u:')?+EV.src.slice(2):0;if(!(ui<s.units.length))ui=0;EV.src='u:'+ui;const u=s.units[ui];return {ui,unit:u,title:u.t,fit:u.fit||s.fit}}
-function renderTEval(){normBank();const c=tCls(),s=evalSubj();EV.subj=s.id;const src=evalSource(s);const games=FIT[src.fit].games;if(!games.includes(EV.game))EV.game=games[0];
+function renderTEval(){normBank();const c=tCls(),s=evalSubj();EV.subj=s.id;const src=evalSource(s);const games=allGames(FIT[src.fit]);if(!games.includes(EV.game))EV.game=games[0];
   const today=dayKey(),sess=sessionOf(today,false);const attFilled=sess&&Object.keys(sess.att).length>0;const list=students();const part=attFilled?list.filter(p=>sess.att[p.id]==='H'):list;
   const todays=sess?sess.evals:[];const banks=bankOf(s.id).filter(b=>b.qs.length);
   $('#vTEval').innerHTML=thead(['Evaluasi Harian','tv'],'')+
@@ -6325,7 +6327,7 @@ function evalWizard(){normBank();const c=tCls();const st={subj:EV.subj&&c.subjec
   wizard({title:'Evaluasi di TV',state:st,steps:[
     {t:'Mata pelajaran apa?',html:s=>wzOpts(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color})),s.subj),pick:(s,v)=>{if(s.subj!==v){s.subj=v;s.src='u:0';s.game=null}}},
     {t:'Materi hari ini',html:s=>{const sb=subj(s),banks=bankOf(sb.id).filter(b=>b.qs.length);return wzOpts(sb.units.map((u,i)=>({v:'u:'+i,l:`Unit ${i+1}: ${u.t}`,s:u.d||''})).concat(banks.map(b=>({v:'b:'+b.id,l:b.title,s:`Soal buatanmu · ${b.qs.length} soal`}))),s.src)},pick:(s,v)=>{if(s.src!==v){s.src=v;s.game=null}}},
-    {t:'Pakai game apa?',html:s=>{const src=srcOf(s),games=FIT[src.fit].games;if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
+    {t:'Pakai game apa?',html:s=>{const src=srcOf(s),games=allGames(FIT[src.fit]);if(!games.includes(s.game))s.game=games[0];return `<div class="modes wzmodes">${games.map(id=>{const m=MODE_LIST.find(x=>x.id===id);return `<button class="mode" data-wv="${id}" style="--mc:${MCOL[id]}" aria-pressed="${id===s.game}"><span class="mi">${m.icon}</span><span class="mn">${m.name}</span><span class="md">${m.desc}</span></button>`}).join('')}</div>`},pick:(s,v)=>s.game=v},
     {t:'Cara bermain',html:s=>wzOpts(EV_FMTS.map(f=>({v:f[0],l:f[1],s:f[2]})),s.fmt),pick:(s,v)=>s.fmt=v},
     {t:'Berapa soal per murid?',auto:false,html:s=>{const src=srcOf(s);return wzOpts([3,5,10].map(n=>({v:n,l:n+' soal'})),s.n,true)+(src.bank&&src.count<s.n?`<p class="note">Paket ini hanya punya ${src.count} soal, jadi setiap murid mendapat ${src.count} soal.</p>`:'')+`<p class="note">${attFilled?`Peserta: ${part.length} murid yang hadir menurut absensi hari ini.`:`Absensi hari ini belum diisi, jadi semua ${list.length} murid ikut.`}</p>`},pick:(s,v)=>s.n=+v}],
    summary:s=>{const src=srcOf(s);return `<b>${esc(subj(s).name)}</b> · ${esc(src.title)} · ${gameName(s.fmt==='rebutan'?'kuis':s.game)} · ${EV_FMTS.find(f=>f[0]===s.fmt)[1]} · ${s.n} soal`},
@@ -7157,11 +7159,11 @@ function roomCreateAsk(){const s=SUBJ(),done=progOf().done,open=Math.max(1,Math.
   let n=5;$('#rmUnit').value=String(open-1);$('#rmN').querySelectorAll('button').forEach(b=>b.onclick=()=>{n=+b.dataset.n;$('#rmN').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{$('#mYes').disabled=true;roomCreate(s,+$('#rmUnit').value,n).then(closeModal).catch(e=>{$('#mYes').disabled=false;$('#rmErr').textContent=window.fbErr?fbErr(e):String(e.message||e)})}}
 const roomMe=()=>({name:P.name,av:P.avatar||null,score:0,c:0,i:0,done:false,t:0,joined:Date.now()});
-function roomGames(s,ui){const u=s.units[ui]||s.units[0];return (FIT[u.fit||s.fit]||FIT.long).games}
+function roomGames(s,ui){const u=s.units[ui]||s.units[0];return allGames(FIT[u.fit||s.fit]||FIT.long)}
 function ajakTriples(){const cls=AJAK.cls||P.cls,sid=AJAK.sid||'acak',ui=AJAK.ui==null?'acak':AJAK.ui;const cs=cls==='acak'?COURSE:COURSE.filter(c=>c.id===cls);const out=[];
   cs.forEach(c=>c.subjects.forEach(sb=>{if(cls!=='acak'&&sid!=='acak'&&sb.id!==sid)return;sb.units.forEach((u,i)=>{if(cls!=='acak'&&sid!=='acak'&&ui!=='acak'&&i!==+ui)return;out.push({c,s:sb,u,i})})}));return out}
 function ajakSpec(){const c=COURSE.find(x=>x.id===AJAK.cls);const sb=c&&AJAK.sid!=='acak'?c.subjects.find(x=>x.id===AJAK.sid):null;const u=sb&&AJAK.ui!=='acak'?sb.units[+AJAK.ui]:null;return {c,s:sb,u,ui:u?+AJAK.ui:null}}
-function ajakGames(){const sp=ajakSpec();if(sp.s)return roomGames(sp.s,sp.ui==null?0:sp.ui);return ['ular','lari','katak','labirin','pancing','penalti','kuis']}
+function ajakGames(){const sp=ajakSpec();if(sp.s)return roomGames(sp.s,sp.ui==null?0:sp.ui);return allGames(FIT.long)}
 function roomGen(n){const sp=ajakSpec(),tri=ajakTriples();let mode=AJAK.mode||'kuis';const games=ajakGames();if(mode!=='acak'&&!games.includes(mode))mode=games[0];
   const pickQs=arcade=>{const out=[],seen=new Set();let g=0;while(out.length<n&&g<n*25){g++;const t=pick(tri);const q=t&&unitQs(t.u,1)[0];if(!q||seen.has(q.q)||(arcade&&q.html))continue;seen.add(q.q);out.push(q)}return out};
   let raw=pickQs(mode!=='kuis');if(raw.length<n){raw=pickQs(false);mode='kuis'}
@@ -8033,7 +8035,7 @@ function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){
   const opts=sc.opts.map(o=>`<button class="phopt" data-ph="${o.id}"><span class="phic">${PH_ICON[o.ic]}</span><span class="grow"><b>${o.t}</b><small>${o.d}</small></span><span class="phchev" aria-hidden="true">›</span></button>`).join('');
   let extra='';
   if(PNAV==='online')extra=`<div class="card phcode"><b>Punya kode tantangan?</b><div class="roomjoin"><input id="phCode" class="fbcodein" maxlength="6" placeholder="KODE" autocomplete="off" autocapitalize="characters"><button class="ghost" id="phJoin">Gabung</button></div></div>`;
-  if(PNAV==='sendiri'){const c=CLS();extra=`<p class="note phnote">Pilih pelajaran ${esc(c.full)}, lalu pilih game.</p><div class="subjects" id="phSubj">${c.subjects.map(s=>`<button class="subj" data-s="${s.id}" style="--sc:${s.color}"><span class="glyph">${s.glyph}</span><span class="nm">${esc(s.name)}</span><span class="gcount">${FIT[s.fit].games.length} game cocok</span></button>`).join('')}</div>`}
+  if(PNAV==='sendiri'){const c=CLS();extra=`<p class="note phnote">Pilih pelajaran ${esc(c.full)}, lalu pilih game.</p><div class="subjects" id="phSubj">${c.subjects.map(s=>`<button class="subj" data-s="${s.id}" style="--sc:${s.color}"><span class="glyph">${s.glyph}</span><span class="nm">${esc(s.name)}</span><span class="gcount">${allGames(FIT[s.fit]).length} game</span></button>`).join('')}</div>`}
   const ph=v.querySelector('.pagehead');if(ph){ph.innerHTML=`${sc.back?`<button class="back phback" id="phBack" aria-label="Kembali">←</button>`:ico('game')}<div><h2>${sc.t}</h2></div>`;hydrate(ph)}
   hub.innerHTML=`<div id="phInv"></div>${opts?`<div class="phopts">${opts}</div>`:''}${extra}`;
   hydrate(hub);
