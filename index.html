@@ -1821,6 +1821,16 @@ body:not(.teacher) #tClsBar{display:none}
 .pausebox{background:#fff;border:2px solid var(--line);border-radius:26px;box-shadow:0 6px 0 var(--line2);padding:22px 20px;width:min(380px,100%);display:flex;flex-direction:column;gap:12px;text-align:center;animation:sheetIn .3s cubic-bezier(.2,1.25,.4,1)}
 .pausebox h3{font-size:26px;margin:0}.pausebox p{margin:0;color:var(--muted)}
 .pausebox .primary{width:100%}
+
+/* Kuis di HP: penuh layar tanpa kartu (seperti Duolingo) */
+@media (max-width:720px){
+ body.playing:not(.arcfs) #vPlay{min-height:100dvh;box-sizing:border-box;background:#fff;margin:-12px calc(50% - 50vw) 0;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 140px;gap:10px!important}
+ body.playing:not(.arcfs) #vPlay .playbar{border:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;padding:4px 0!important}
+ body.playing:not(.arcfs) #vPlay .qcard:not(.arcade){border:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;padding:4px 0 0!important;gap:14px}
+ body.playing:not(.arcfs) #vPlay .qcard:not(.arcade) .q{font-size:22px;line-height:1.3}
+ body.playing:not(.arcfs) #vPlay .qcard:not(.arcade) .opt{min-height:58px;font-size:18px}
+ body.playing:not(.arcfs) .app{background:#fff}
+}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
