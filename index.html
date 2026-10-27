@@ -1861,6 +1861,7 @@ body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:
 .rrlist{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.rrlist::-webkit-scrollbar{display:none}
 .rrp{flex:none;display:flex;align-items:center;gap:5px;border:2px solid var(--line);border-radius:14px;padding:3px 8px 3px 4px;background:#fff}
 .rrp.me{border-color:var(--rc);background:#FFFBEA}
+.rrp.rrleft{opacity:.5}.rrp.rrleft .rrt small{color:var(--bad)}
 .rrp .rrk{font-family:var(--display);font-size:13px;color:var(--muted);min-width:12px;text-align:center}
 .rrp .avatar{width:28px!important;height:28px!important;border:2px solid var(--rc)!important;font-size:12px;flex:none}
 .rrp .rrt{display:flex;flex-direction:column;line-height:1.1;min-width:52px}
@@ -3944,7 +3945,7 @@ const Lari={extra:0,
  room(){return !!(game.lesson&&game.lesson.room&&ROOM.doc&&window.roomPlayers)},
  setup(){const{W,H,ctx}=arc;if(!game.lari||game.lari.qs!==game.qs){game.lari={qs:game.qs,me:0,ai:LARI_AI.map(a=>({p:0,sk:.5+Math.random()*.3})),cam:0,rp:{},ph:0}}this.st=game.lari;
   this.rh=Math.round(H*.56);const bw=(W-36)/2,bh=Math.min(150,(H-this.rh-30)/2-6);this.btns=arc.labels.map((l,k)=>({k,x:12+(k%2)*(bw+12),y:this.rh+14+Math.floor(k/2)*(bh+10),w:bw,h:bh,f:fit(ctx,l,bw-30,bh-10,22,10)}));this.picked=null;this.done=false},
- lanes(){const st=this.st;if(this.room()){const acc=ROOM.acc||{correct:0,done:0};return roomPlayers().slice(0,8).map(p=>{const t=p.me?st.me:Math.max(0,p.c-.5*Math.max(0,p.i-p.c));return {id:p.uid,name:p.me?'KAMU':p.name.split(' ')[0].slice(0,9),col:p.col,me:p.me,t}})}
+ lanes(){const st=this.st;if(this.room()){const acc=ROOM.acc||{correct:0,done:0};return roomPlayers().slice(0,8).map(p=>{const t=p.me?st.me:Math.max(0,p.c-.5*Math.max(0,p.i-p.c));return {id:p.uid,name:p.me?'KAMU':p.name.split(' ')[0].slice(0,9)+(p.left?' (keluar)':''),col:p.left?'#B8BECC':p.col,me:p.me,t}})}
   return [{id:'me',name:'KAMU',col:'#FFC800',me:true,t:st.me}].concat(st.ai.map((a,k)=>({id:'ai'+k,name:LARI_AI[k][0],col:LARI_AI[k][1],me:false,t:a.p})))},
  settle(ok){if(this.done)return;this.done=true;const st=this.st;st.me=ok?st.me+1:Math.max(0,st.me-.5);
   if(!this.room())st.ai.forEach(a=>{if(Math.random()<a.sk)a.p+=1;else a.p=Math.max(0,a.p-.5)});tone(ok?[660,990]:[260,200],.06)},
@@ -4635,7 +4636,7 @@ const Urut={
 /* ---- game 18: Pacu Jalur ---- */
 const Pacu={
  roomLanes(){if(!(game.lesson&&game.lesson.room&&ROOM.doc&&window.roomPlayers))return null;const ps=roomPlayers();if(!ps.length)return null;this.rp=this.rp||{};
-  return ps.slice(0,8).map(p=>{const t=p.me?((ROOM.acc?ROOM.acc.correct:0)+this.st.me):p.c;const cur=this.rp[p.uid]==null?t:this.rp[p.uid];this.rp[p.uid]=cur+(t-cur)*.08;return {p:this.rp[p.uid],c:p.col,me:p.me,name:p.name}})},
+  return ps.slice(0,8).map(p=>{const t=p.me?((ROOM.acc?ROOM.acc.correct:0)+this.st.me):p.c;const cur=this.rp[p.uid]==null?t:this.rp[p.uid];this.rp[p.uid]=cur+(t-cur)*.08;return {p:this.rp[p.uid],c:p.left?'#B8BECC':p.col,me:p.me,name:p.name+(p.left?' (keluar)':'')}})},
  setup(){const{W,H,ctx}=arc,n=arc.labels.length;if(!game.pacu||game.i===0||game.pacu.qs!==game.qs){game.pacu={qs:game.qs,me:0,ai:[0,0,0].map(()=>({p:0,v:.6+Math.random()*.5}))}}this.st=game.pacu;
   this.rh=H*.5;const bw=(W-36)/2,bh=Math.min(150,(H-this.rh-30)/2-6);this.btns=arc.labels.map((l,k)=>({k,x:12+(k%2)*(bw+12),y:this.rh+14+Math.floor(k/2)*(bh+10),w:bw,h:bh,f:fit(ctx,l,bw-30,bh-10,20,10)}));this.boost=0;this.picked=null;this.extra=0},
  choose(b){if(arc.state!=='play')return;this.picked=b.k;if(b.k===arc.ci){this.st.me+=1;this.boost=1;tone([700,1000],.05)}else{this.boost=-1;tone([240],.08)}arcResolve(b.k)},
@@ -7189,7 +7190,7 @@ async function roomJoin(raw){const code=String(raw||'').toUpperCase().replace(/[
   roomOpen(code)}
 function roomOpen(code,bg){roomClose(true);ROOM.code=code;ROOM.shown=false;ROOM.bg=!!bg;try{history.replaceState(history.state,'',location.pathname)}catch(e){}
   let el=$('#room');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="onb roomov" id="room" hidden></div>');el=$('#room')}el.hidden=!!bg;el.innerHTML='<div class="onbin" style="justify-content:center;align-items:center"><p class="note">Membuka ruang…</p></div>';
-  ROOM.unsub=FB.db.doc('rooms/'+code).onSnapshot(s=>{if(!s.exists){roomClose();toast('lock','Ruang tantangan ditutup oleh pembuatnya.');return}ROOM.doc=s.data();roomRender()},e=>{roomClose();toast('lock',fbErr(e))})}
+  ROOM.unsub=FB.db.doc('rooms/'+code).onSnapshot(s=>{if(!s.exists){roomClose();toast('lock','Ruang tantangan ditutup oleh pembuatnya.');return}const prev=ROOM.doc;ROOM.doc=s.data();try{roomLeaveNews(prev,ROOM.doc)}catch(e){}roomRender()},e=>{roomClose();toast('lock',fbErr(e))})}
 function roomClose(silent){if(ROOM.unsub){try{ROOM.unsub()}catch(e){}}ROOM.unsub=null;ROOM.round=null;clearInterval(ROOM.timer);ROOM.timer=null;ROOM.code=null;ROOM.doc=null;ROOM.playing=false;const el=$('#room');if(el)el.hidden=true;const lv=$('#roomRace');if(lv)lv.hidden=true}
 function roomRows(d){return Object.entries(d.players||{}).map(([uid,p])=>Object.assign({uid},p)).sort((a,b)=>(b.done-a.done)||(b.score-a.score)||(a.t||9e9)-(b.t||9e9)||(b.c-a.c))}
 function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.players[uid];if(!me){roomClose();return}const host=d.host===uid;if(ROOM.round!=null&&d.round!==ROOM.round&&!ROOM.playing){ROOM.pendingShow=false;if(!document.body.classList.contains('playing')){el&&(el.hidden=false)}else{game=null;clearInterval(timerId);if(arc.running)arcStop();go('team');el&&(el.hidden=false)}}ROOM.round=d.round;if(ROOM.pendingShow&&!ROOM.playing)return;if(d.status!=='lobby'||Object.keys(d.players||{}).length>1)rememberFriends(d);if(ROOM.bg&&d.status==='lobby'){ajakFoot();return}ROOM.bg=false;
@@ -7201,14 +7202,14 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
    <div class="aved-top"><button class="back" id="rmX" aria-label="Tutup">✕</button><h2 style="flex:1">${lobby?'Ruang tantangan':'Hasil tantangan'}</h2></div>
    <div class="tcard" style="align-items:center;text-align:center;gap:8px"><small style="font-weight:800;color:var(--muted)">${esc(d.subjName)} · ${esc(d.title)} · ${d.n} soal · ${d.mode==='acak'?'Acak semua game':gameName(d.mode||'kuis')}</small><div class="fbcode-big">${ROOM.code}</div>
      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><a class="primary" style="text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Aku menantangmu di JELAS! ${d.subjName}: ${d.title}. Buka ${link} atau masukkan kode ${ROOM.code} di menu Main Bareng.`)}">Kirim lewat WhatsApp</a><button class="ghost" id="rmCopy">Salin kode</button></div></div>
-   <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/${d.max||8})`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
+   <div class="tcard"><h3>${lobby?`Pemain (${rows.length}/${d.max||8})`:'Peringkat'}</h3><div class="roomrows">${rows.map((r,i)=>`<div class="lrow ${r.uid===uid?'me':''}">${lobby?'':`<span class="rk ${i<3&&r.done?'top':''}">${r.done?i+1:'…'}</span>`}${avSpan({name:r.name,avatar:r.av})}<span class="nm">${esc(r.name)}${r.uid===d.host?' <small class="pill mute">pembuat</small>':''}</span><span class="xp">${lobby?'Siap':r.left?`<span class="pill bad">keluar</span> ${r.score||0}`:r.done?`${r.score} · ${fmtSec(r.t)}`:`main… ${r.i||0}/${d.n}`}</span></div>`).join('')}</div>
      ${lobby?`<p class="note" style="margin:0">${host?'Tunggu teman bergabung, lalu tekan Mulai. Teman yang terlambat tetap bisa ikut memainkan soal yang sama.':'Menunggu pembuat tantangan menekan Mulai…'}</p>`:all?'':``}</div>
    ${lobby&&host?`<button class="primary press" id="rmGo" style="font-size:22px;padding:12px">Mulai sekarang</button><button class="ghost" id="rmMore">Ajak teman lagi</button>`:''}
    ${!lobby&&!me.done?`<button class="primary press" id="rmPlay">Main sekarang</button>`:''}
    ${!lobby&&me.done&&host?`<button class="primary press" id="rmAgain" style="font-size:20px;padding:12px">🔁 Main lagi</button><p class="note" style="margin:-6px 0 0;text-align:center"></p>`:''}
    ${!lobby&&me.done&&!host?`<p class="note" style="text-align:center;margin:0">Mau main lagi? Tunggu ${esc(d.hostName||'pembuat')} menekan <b>Main lagi</b>, nanti ronde baru muncul otomatis.</p>`:''}
    </div>`;
-  hydrate(el);$('#rmX').onclick=()=>roomClose();$('#rmCopy').onclick=()=>copyText(ROOM.code);
+  hydrate(el);$('#rmX').onclick=()=>{const dd=ROOM.doc,code=ROOM.code;if(dd&&code&&dd.status==='lobby'&&dd.host!==FBX.user.uid){FB.db.doc('rooms/'+code).update({['players.'+FBX.user.uid]:FV().delete()}).catch(()=>{})}roomClose()};$('#rmCopy').onclick=()=>copyText(ROOM.code);
   const g=$('#rmGo');if(g)g.onclick=()=>{g.disabled=true;FB.db.doc('rooms/'+ROOM.code).update({status:'play',startAt:Date.now()}).catch(e=>{g.disabled=false;toast('lock',fbErr(e))})};
   const pl=$('#rmPlay');if(pl)pl.onclick=roomStart;const ag=$('#rmAgain');if(ag)ag.onclick=()=>{if(!all&&ag.dataset.c!=='1'){ag.dataset.c='1';ag.textContent='Ada yang belum selesai. Tekan lagi untuk mulai';return}roomRematch(ag)};const mo=$('#rmMore');if(mo)mo.onclick=()=>{el.hidden=true;ROOM.bg=true;openAjak()};
   if(!lobby&&all&&rows.length>1&&rows[0].uid===uid&&!(P.roomWins||[]).includes(ROOM.code)){P.roomWins=(P.roomWins||[]).concat(ROOM.code).slice(-50);P.gems+=10;save();renderTop();toast('gem','Juara tantangan! +10 permata');sfx.win&&sfx.win();burstConfetti&&burstConfetti()}}
@@ -7227,16 +7228,21 @@ function roomPush(){if(!ROOM.playing||!game||!game.lesson||!game.lesson.room)ret
 const RR_COL=['#FFC800','#FF4B4B','#1CB0F6','#9B6BFF','#22C55E','#FF8A3D','#FF6FB5','#14B8A6'];
 function roomPlayers(){const d=ROOM.doc;if(!d)return [];const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0};
   return Object.entries(d.players||{}).sort((a,b)=>(a[1].joined||0)-(b[1].joined||0)).map(([u,p],k)=>{const me=u===uid;const i=me?(p.done?d.n:Math.min(d.n,acc.done+((game&&game.i)||0))):(p.i||0);const c=me?(p.done?p.c:acc.correct+((game&&game.correct)||0)):(p.c||0);
-    return {uid:u,name:p.name||'Teman',av:p.av||null,me,i,c,done:!!p.done,col:RR_COL[k%RR_COL.length]}})}
+    return {uid:u,name:p.name||'Teman',av:p.av||null,me,i,c,done:!!p.done,left:!!p.left,col:RR_COL[k%RR_COL.length]}})}
 window.roomPlayers=roomPlayers;
 function roomLive(){const d=ROOM.doc;let el=$('#roomRace');if(!d||!ROOM.playing||MODE==='pacu'||MODE==='lari'){if(el){if(!el.hidden&&(MODE==='pacu'||MODE==='lari'))setTimeout(()=>{try{gameFit()}catch(e){}},80);el.hidden=true}return}
   let fresh=false;if(!el){const pb=$('#vPlay .playbar');if(!pb)return;pb.insertAdjacentHTML('afterend','<div class="roomrace" id="roomRace"><div class="rrlist"></div></div>');el=$('#roomRace');fresh=true}
   if(el.hidden)fresh=true;el.hidden=false;const box=el.querySelector('.rrlist'),n=Math.max(1,d.n||1);
-  const ps=roomPlayers().sort((a,b)=>(b.c-a.c)||(b.i-a.i));const old={};box.querySelectorAll('.rrp').forEach(a=>old[a.dataset.u]=a.getBoundingClientRect().left);
-  box.innerHTML=ps.map((p,k)=>`<span class="rrp ${p.me?'me':''} ${p.done?'done':''}" data-u="${esc(p.uid)}" style="--rc:${p.col}"><b class="rrk">${k+1}</b>${avSpan({name:p.name,avatar:p.av})}<span class="rrt"><b>${esc(p.me?'Kamu':p.name.split(' ')[0])}</b><small>${p.c} benar${p.done?' · selesai':''}</small><i class="rrbar"><i style="width:${Math.round(Math.min(1,p.i/n)*100)}%"></i></i></span></span>`).join('');
+  const ps=roomPlayers().sort((a,b)=>(a.left-b.left)||(b.c-a.c)||(b.i-a.i));const old={};box.querySelectorAll('.rrp').forEach(a=>old[a.dataset.u]=a.getBoundingClientRect().left);
+  box.innerHTML=ps.map((p,k)=>`<span class="rrp ${p.me?'me':''} ${p.done?'rrdone':''} ${p.left?'rrleft':''}" data-u="${esc(p.uid)}" style="--rc:${p.col}"><b class="rrk">${k+1}</b>${avSpan({name:p.name,avatar:p.av})}<span class="rrt"><b>${esc(p.me?'Kamu':p.name.split(' ')[0])}</b><small>${p.c} benar${p.left?' · keluar':p.done?' · selesai':''}</small><i class="rrbar"><i style="width:${Math.round(Math.min(1,p.i/n)*100)}%"></i></i></span></span>`).join('');
   box.querySelectorAll('.rrp').forEach(a=>{const o=old[a.dataset.u];if(o==null)return;const dx=o-a.getBoundingClientRect().left;if(Math.abs(dx)>2){a.animate([{transform:`translateX(${dx}px)`},{transform:'none'}],{duration:450,easing:'cubic-bezier(.3,.9,.3,1)'})}});
   if(fresh)setTimeout(()=>{try{gameFit()}catch(e){}},80)}
-function roomQuit(){const o=game&&game.lesson;try{if(o&&o.room&&FBX.user)roomFinish(o)}catch(e){console.warn(e)}ROOM.pendingShow=false;roomClose(true);game=null;document.body.classList.remove('lessonmode');go('team');toast('team','Kamu keluar dari tantangan.')}
+/* kabar saat teman keluar dari ruang atau tantangan */
+function roomLeaveNews(a,b){if(!a||!b||!FBX.user||a.round!==b.round)return;const me=FBX.user.uid,ap=a.players||{},bp=b.players||{};const out=[];
+  Object.keys(ap).forEach(u=>{if(u===me)return;if(!bp[u])out.push(ap[u].name||'Teman');else if(bp[u].left&&!ap[u].left)out.push(bp[u].name||'Teman')});
+  out.forEach(n=>{toast('team',`${n} keluar dari ${b.status==='lobby'?'ruang tanding':'tantangan'}.`);try{tone([440,330],.08)}catch(e){}});
+  if(out.length&&ROOM.playing){const alive=Object.entries(bp).filter(([u,p])=>u!==me&&!p.left);if(!alive.length)setTimeout(()=>toast('team','Semua temanmu sudah keluar. Kamu tetap bisa menyelesaikan tantangan ini.'),2700)}}
+function roomQuit(){const o=game&&game.lesson;try{if(o&&o.room&&FBX.user){roomFinish(o);const code=o.room,uid=FBX.user.uid;setTimeout(()=>FB.db.doc('rooms/'+code).update({['players.'+uid+'.left']:true}).catch(()=>{}),300)}}catch(e){console.warn(e)}ROOM.pendingShow=false;roomClose(true);game=null;document.body.classList.remove('lessonmode');go('team');toast('team','Kamu keluar dari tantangan.')}
 window.roomQuit=roomQuit;
 function roomFinish(o){const uid=FBX.user.uid,acc=ROOM.acc||{correct:0,done:0,start:o.start},total=acc.done+o.target,ok=Math.min(total,acc.correct+(game.correct||0)),score=Math.round(ok/Math.max(1,total)*100),t=Math.round((Date.now()-(acc.start||o.start))/1000);
   clearInterval(ROOM.timer);ROOM.timer=null;ROOM.playing=false;const lv=$('#roomRace');if(lv)lv.hidden=true;
