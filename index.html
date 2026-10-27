@@ -1813,6 +1813,14 @@ body:not(.teacher) #tClsBar{display:none}
 .tclsgo{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:none;border:0;padding:6px 8px;cursor:pointer;font:inherit;color:var(--ink)}
 .tclsgo b{font-family:var(--display);font-size:17px}.tclsgo small{color:var(--muted);font-weight:600}
 @media (max-width:600px){.thead{flex-wrap:wrap}.thead .tclschip{order:5;flex:1 1 100%;justify-content:center}}
+
+/* Jeda permainan */
+.pausebtn{display:grid;place-items:center;padding:0 12px;min-width:44px}
+.pauseov{position:fixed;inset:0;z-index:125;background:rgba(27,30,61,.62);display:grid;place-items:center;padding:16px}
+.pauseov[hidden]{display:none}
+.pausebox{background:#fff;border:2px solid var(--line);border-radius:26px;box-shadow:0 6px 0 var(--line2);padding:22px 20px;width:min(380px,100%);display:flex;flex-direction:column;gap:12px;text-align:center;animation:sheetIn .3s cubic-bezier(.2,1.25,.4,1)}
+.pausebox h3{font-size:26px;margin:0}.pausebox p{margin:0;color:var(--muted)}
+.pausebox .primary{width:100%}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -1956,7 +1964,7 @@ body.lessonmode .feedback{animation:sheetUp .28s cubic-bezier(.2,.9,.3,1)}
     <!-- PLAY -->
     <section id="vPlay" class="view" hidden style="flex-direction:column;gap:14px">
       <div class="playbar">
-        <button class="back" id="quitBtn" aria-label="Keluar">✕<span class="long"> Keluar</span></button>
+        <button class="back" id="quitBtn" aria-label="Keluar">✕<span class="long"> Keluar</span></button><button class="back pausebtn" id="pauseBtn" aria-label="Jeda permainan" title="Jeda (Esc)"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg></button>
         <div class="dots" id="dots"></div>
         <span class="hearts" id="hearts" aria-label="Nyawa"></span>
         <span class="chip coin" id="scoreChip"><i class="coinic"></i><span id="score">0</span></span>
@@ -1995,7 +2003,7 @@ body.lessonmode .feedback{animation:sheetUp .28s cubic-bezier(.2,.9,.3,1)}
 
     <!-- DUEL -->
     <section id="vDuel" class="view" hidden style="flex-direction:column;gap:12px">
-      <div class="duelbar"><button class="back" id="duelQuit" aria-label="Keluar">✕<span class="long"> Keluar</span></button><span class="eyebrow" id="duelInfo"></span></div>
+      <div class="duelbar"><button class="back" id="duelQuit" aria-label="Keluar">✕<span class="long"> Keluar</span></button><button class="back pausebtn" id="duelPause" aria-label="Jeda permainan" title="Jeda (Esc)"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg></button><span class="eyebrow" id="duelInfo"></span></div>
       <div class="duel" id="duelGrid"></div>
     </section>
 
@@ -3615,7 +3623,7 @@ function renderQ(){
 function startQ(){
   $('#turn').hidden=true;const q=game.qs[game.i];if(q.say)say(q.say);
   if(L.time&&!game.lesson){$('#timer').hidden=false;game.t0=Date.now();const bar=$('#timerBar');bar.style.width='100%';
-    timerId=setInterval(()=>{const left=1-(Date.now()-game.t0)/(L.time*1000);bar.style.width=Math.max(0,left*100)+'%';if(left<=0){clearInterval(timerId);answer(-1)}},200);
+    timerId=setInterval(()=>{if(PAUSE.on)return;const left=1-(Date.now()-game.t0)/(L.time*1000);bar.style.width=Math.max(0,left*100)+'%';if(left<=0){clearInterval(timerId);answer(-1)}},200);
   }else game.t0=Date.now();
 }
 function setOptsEnabled(on){$('#opts').querySelectorAll('.opt').forEach(b=>{b.disabled=!on||b.classList.contains('wrong')})}
@@ -3738,6 +3746,22 @@ function arcSize(){
   arc.ctx=cv.getContext('2d');arc.ctx.setTransform(dpr,0,0,dpr,0,0);
   arc.stars=Array.from({length:70},()=>({x:Math.random()*W,y:Math.random()*H*.85,r:Math.random()*1.8+.5,p:Math.random()*6}));
 }
+/* ---------- JEDA: tombol jeda dan berhenti otomatis saat aplikasi ditinggal ---------- */
+const PAUSE={on:false,at:0};window.PAUSE=PAUSE;
+function pauseCan(){const b=document.body;if(!b.classList.contains('playing'))return false;const v=document.querySelector('section.view:not([hidden])');return !!v&&((v.id==='vPlay'&&!!game)||(v.id==='vDuel'&&!!DUEL))}
+function pauseGame(auto){if(PAUSE.on||!pauseCan())return;PAUSE.on=true;PAUSE.at=Date.now();
+  try{speechSynthesis.cancel()}catch(e){}try{musicStop()}catch(e){}
+  let el=$('#pauseOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="pauseov" id="pauseOv" role="dialog" aria-modal="true" aria-labelledby="pauseT" hidden></div>');el=$('#pauseOv')}
+  el.innerHTML=`<div class="pausebox"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3 id="pauseT">${auto?'Permainan dijeda':'Istirahat sebentar'}</h3><p>${auto?'Kamu meninggalkan aplikasi, jadi permainan berhenti dulu. Waktu dan nyawamu aman.':'Waktu berhenti. Lanjutkan kapan saja kamu siap.'}</p><button class="primary" id="pauseGo">LANJUTKAN</button><button class="ghost" id="pauseQuit">Keluar dari permainan</button></div>`;
+  hydrate(el);el.hidden=false;$('#pauseGo').onclick=resumeGame;$('#pauseQuit').onclick=()=>{const v=document.querySelector('section.view:not([hidden])');resumeGame();(v&&v.id==='vDuel'?$('#duelQuit'):$('#quitBtn')).click()};
+  setTimeout(()=>{const g=$('#pauseGo');if(g)g.focus({preventScroll:true})},60)}
+function resumeGame(){if(!PAUSE.on)return;const d=Date.now()-PAUSE.at;PAUSE.on=false;if(game&&game.t0)game.t0+=d;if(arc)arc.last=0;if(DUEL)DUEL.last=0;
+  const el=$('#pauseOv');if(el)el.hidden=true;try{musicStart()}catch(e){}tone&&tone([523,784],.06)}
+window.pauseGame=pauseGame;window.resumeGame=resumeGame;
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame(true)});
+window.addEventListener('pagehide',()=>pauseGame(true));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').hidden){if(PAUSE.on){e.preventDefault();e.stopImmediatePropagation();resumeGame();return}if(pauseCan()&&document.activeElement&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();e.stopImmediatePropagation();pauseGame(false);return}}
+  if(PAUSE.on){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopImmediatePropagation();resumeGame();return}e.stopImmediatePropagation()}},true);
 function arcBegin(){
   M=MODES[MODE];gameFS(MODE);
   $('#opts').hidden=true;$('#feedback').hidden=true;$('#stage').hidden=false;$('#qcard').classList.add('arcade');
@@ -3765,6 +3789,7 @@ function arcShowQ(){
 }
 function arcLoop(ts){
   if(!arc.running)return;
+  if(PAUSE.on){arc.last=0;arc.raf=requestAnimationFrame(arcLoop);return}
   const dt=arc.last?Math.min(.05,(ts-arc.last)/1000):0;arc.last=ts;
   if(arc.state==='play'){
     arc.t+=dt;M.update(dt);
@@ -4675,7 +4700,8 @@ function stepSide(sd,dt){
   if(!M)return;stepParts(dt);if(arc.banner)arc.banner.t+=dt;const c=arc.ctx;c.clearRect(0,0,arc.W,arc.H);M.draw(c);drawParts(c);drawBanner(c);
 }
 function duelLoop(ts){
-  if(!DUEL||!DUEL.active)return;const dt=DUEL.last?Math.min(.05,(ts-DUEL.last)/1000):0;DUEL.last=ts;
+  if(!DUEL||!DUEL.active)return;
+  if(PAUSE.on){DUEL.last=0;DUEL.raf=requestAnimationFrame(duelLoop);return}const dt=DUEL.last?Math.min(.05,(ts-DUEL.last)/1000):0;DUEL.last=ts;
   if(DUEL.count>0){DUEL.count-=dt;const n=Math.ceil(DUEL.count-.6);$('#duelCountN').textContent=n>0?n:'Mulai!';
     if(n!==DUEL.lastN){DUEL.lastN=n;tone([n>0?440:880],.12)}
     if(DUEL.count<=0){$('#duelCount').hidden=true;DUEL.sides.forEach(sd=>sd.arc.state='play')}}
@@ -7747,6 +7773,7 @@ $('#toBoardBtn').onclick=()=>go('league');
 $('#clearBoard').onclick=()=>{const b=$('#clearBoard');if(b.dataset.c!=='1'){b.dataset.c='1';b.textContent='Yakin? Klik sekali lagi untuk menghapus';return}BOARD={solo:[],match:[]};store.set('board',BOARD);b.dataset.c='';b.textContent='Papan skor dihapus';renderBoard()};
 window.__fs=()=>{try{if(!document.fullscreenElement){const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{$('#fsBtn').textContent='Layar penuh tidak tersedia'})}else document.exitFullscreen()}catch(e){}};
 $('#afNext').onclick=arcNext;
+$('#pauseBtn').onclick=()=>pauseGame(false);$('#duelPause').onclick=()=>pauseGame(false);
 $('#quitBtn').onclick=()=>{if(game&&game.lesson){quitAsk();return}clearInterval(timerId);arcStop();openGames()};
 $('#nextBtn').onclick=next;
 $('#speakBtn').onclick=()=>say(game.qs[game.i].say);
