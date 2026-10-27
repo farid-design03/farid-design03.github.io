@@ -7076,14 +7076,13 @@ const srchNorm=q=>String(q||'').toLowerCase().normalize('NFD').replace(/[\u0300-
 async function userSearch(q){q=srchNorm(q);if(!q)return [];const toks=q.split(/[^a-z0-9_.]+/).filter(Boolean);const me=FBX.user.uid,map=new Map();
   const first=toks.slice().sort((a,b)=>b.length-a.length)[0].replace(/[_.]/g,'')||toks[0];
   try{const qs=await FB.db.collection('handles').where('kw','array-contains',first.slice(0,16)).limit(30).get();qs.docs.forEach(d=>map.set(d.id,Object.assign({user:d.id},d.data())))}catch(e){}
+  // Cadangan untuk akun lama yang belum punya kata kunci: awalan nama pengguna dan awalan nama.
+  const add=qs=>qs.docs.forEach(d=>map.set(d.id,Object.assign({user:d.id},d.data())));const raw=String(q).trim();
+  const range=(f,p)=>FB.db.collection('handles').where(f,'>=',p).where(f,'<',p+'\uf8ff').limit(20).get().then(add).catch(()=>{});
+  const idF=(window.firebase&&firebase.firestore&&firebase.firestore.FieldPath)?firebase.firestore.FieldPath.documentId():'__name__';
+  const cap=raw.charAt(0).toUpperCase()+raw.slice(1);
+  await Promise.all([range(idF,q.replace(/\s+/g,'')),range('name',cap),cap!==raw?range('name',raw):null,range('name',raw.toLowerCase())]);
   try{const ex=await FB.db.doc('handles/'+q.replace(/\s+/g,'')).get();if(ex.exists)map.set(ex.id,Object.assign({user:ex.id},ex.data()))}catch(e){}
-  /* Cadangan untuk akun lama yang belum punya field kw: cari awalan nama pengguna (id dokumen) dan awalan nama. */
-  const addQ=async(ref)=>{try{const qs=await ref.limit(30).get();qs.docs.forEach(d=>{if(!map.has(d.id))map.set(d.id,Object.assign({user:d.id},d.data()))})}catch(e){}};
-  const id0=q.replace(/\s+/g,''),fp=firebase.firestore.FieldPath.documentId(),cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-  await Promise.all([
-    addQ(FB.db.collection('handles').orderBy(fp).startAt(id0).endAt(id0+'')),
-    addQ(FB.db.collection('handles').orderBy('name').startAt(cap(q)).endAt(cap(q)+'')),
-    addQ(FB.db.collection('handles').orderBy('name').startAt(q).endAt(q+''))]);
   const words=x=>(String(x.name||'')+' '+x.user).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/[^a-z0-9]+/).filter(Boolean).concat([x.user]);
   return [...map.values()].filter(x=>x.uid&&x.uid!==me).filter(x=>{const w=words(x);return toks.every(t=>{const tt=t.replace(/[_.]/g,'');return w.some(v=>v.startsWith(t)||v.replace(/[_.]/g,'').startsWith(tt))})})
     .sort((a,b)=>{const sa=String(a.name||'').toLowerCase().startsWith(q)?0:1,sb=String(b.name||'').toLowerCase().startsWith(q)?0:1;return sa-sb||String(a.name).localeCompare(String(b.name))}).slice(0,20)}
