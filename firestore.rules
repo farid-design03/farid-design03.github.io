@@ -122,10 +122,10 @@ service cloud.firestore {
       allow list: if isAdmin();
       allow write: if false;
     }
-    // Nama pengguna murid untuk fitur "Cari teman" (hanya bisa dicari dengan nama persis, tidak bisa didaftar).
+    // Nama pengguna murid untuk fitur "Cari teman" (dicari lewat awalan nama, paling banyak 30 hasil per pencarian).
     match /handles/{username} {
       allow get: if signedIn();
-      allow list: if false;
+      allow list: if signedIn() && request.query.limit <= 30;
       allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
       allow update: if signedIn() && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
       allow delete: if signedIn() && resource.data.uid == request.auth.uid;
