@@ -6769,7 +6769,7 @@ function showLogin(prefill){const el=$('#auth');el.hidden=false;
     <button class="primary press" id="lgGo" style="font-size:20px;padding:12px">MASUK</button><button class="linkbtn" id="lgForgot">Lupa sandi?</button></div>
    <p class="authp" style="text-align:center">Belum punya akun? <button class="linkbtn" id="lgReg">Daftar sekarang</button></p></div>`;
   hydrate(el);$('#lgBack').onclick=showWelcome;$('#lgReg').onclick=()=>startOnboarding(true);
-  setTimeout(()=>(prefill?$('#lgPass'):$('#lgUser')).focus(),60);
+  setTimeout(()=>{const f=prefill?$('#lgPass'):$('#lgUser');if(f)f.focus()},60);
   const go=()=>doLogin($('#lgUser').value,$('#lgPass').value,msg=>{$('#lgErr').textContent=msg;sfx.bad()});
   $('#lgGo').onclick=go;$('#lgPass').onkeydown=e=>{if(e.key==='Enter')go()};$('#lgUser').onkeydown=e=>{if(e.key==='Enter')$('#lgPass').focus()};
   $('#lgForgot').onclick=()=>openModal(`<h3>Lupa sandi?</h3><p><b>Murid:</b> minta guru melihat atau mengganti sandimu di Mode Guru → Murid.</p><p><b>Guru:</b> gunakan pemulihan dengan nama guru, atau minta admin mengatur ulang sandi guru.</p><div class="acts"><button class="ghost" id="mNo">Tutup</button>${T()?'<button class="primary" id="mYes">Pulihkan sandi guru</button>':''}</div>`)&&0||($('#mNo').onclick=closeModal,$('#mYes')&&($('#mYes').onclick=forgotTeacher))}
@@ -6886,8 +6886,8 @@ function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let
   return pr.then(()=>{if(isT())syncPill('ok','Tersimpan online')}).catch(e=>{console.warn(e);if(isT())syncPill('off','Belum tersimpan, dicoba lagi');clearTimeout(FBX.t);FBX.t=setTimeout(fbFlush,15000)})}
 
 /* ---------- masuk otomatis (sekali login, perangkat mengingat) ---------- */
-bootApp=function(){busy(true);FB.auth.onAuthStateChanged(u=>{if(FBX.busy)return;fbRoute(u).catch(e=>{console.error(e);fbOffline(e)})})};
-async function fbRoute(u){fbStop();FBX.user=u;FBX.me=null;FBX.admin=false;
+bootApp=function(){busy(true);try{FB.auth.getRedirectResult().catch(e=>{const c=String(e&&e.code||'');if(c&&!/popup-closed|cancelled/.test(c))toast('lock',fbErr(e))})}catch(e){}FB.auth.onAuthStateChanged(u=>{if(FBX.busy)return;if(u&&FBX.routedUid===u.uid&&Date.now()-(FBX.routedAt||0)<4000)return;fbRoute(u).catch(e=>{console.error(e);fbOffline(e)})})};
+async function fbRoute(u){if(u){FBX.routedUid=u.uid;FBX.routedAt=Date.now()}fbStop();FBX.user=u;FBX.me=null;FBX.admin=false;
   if(!u){busy(false);setSession(null);P=null;document.body.classList.remove('teacher','fb-free');$('#adminPanel').hidden=true;showWelcome();return}
   busy(true);
   if(u.email&&!u.emailVerified&&!(u.email||'').endsWith('@'+MAIL_DOM)){try{await u.reload();if(FB.auth.currentUser&&FB.auth.currentUser.emailVerified)await FB.auth.currentUser.getIdToken(true)}catch(e){}}
@@ -7084,8 +7084,8 @@ function googleOnly(u){return hasGoogle(u)&&!(u.providerData||[]).some(x=>x&&x.p
 function pwMail(u){const x=(u.providerData||[]).find(x=>x&&x.providerId==='password');return (x&&x.email)||u.email}
 const G_ICON='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff" stroke="#E5E5E5" stroke-width="2"/><path d="M16.5 11h-4.3v2.2h2.4c-.3 1.2-1.3 1.9-2.4 1.9a2.9 2.9 0 1 1 1.9-5.1l1.5-1.5A5 5 0 1 0 12.2 17c2.6 0 4.5-1.8 4.5-4.6 0-.5 0-.9-.2-1.4Z" fill="#1CB0F6"/></svg>';
 const gBtnHTML=id=>`<button class="ghost press gbtn" id="${id}">${G_ICON}<span>MASUK DENGAN GOOGLE</span></button>`;
-async function fbGoogle(btn){if(btn)btn.disabled=true;setSession(null);
-  try{await FB.auth.signInWithPopup(gProv())}
+async function fbGoogle(btn){if(btn)btn.disabled=true;setSession(null);FBX.busy=false;
+  try{const t0=Date.now();const r=await FB.auth.signInWithPopup(gProv());const u=r&&r.user;if(u&&!(FBX.routedUid===u.uid&&(FBX.routedAt||0)>=t0)){busy(true);fbRoute(u).catch(e=>{console.error(e);fbOffline(e)})}}
   catch(e){const c=String(e&&e.code||'');
     if(/popup-blocked|operation-not-supported|web-storage-unsupported/.test(c)){try{await FB.auth.signInWithRedirect(gProv());return}catch(x){e=x}}
     if(!/popup-closed|cancelled-popup/.test(c))toast('lock',/unauthorized-domain/.test(c)?'Login Google belum diaktifkan untuk alamat ini. Hubungi pemilik aplikasi.':/operation-not-allowed/.test(c)?'Login Google belum diaktifkan di server.':/account-exists/.test(c)?'Email ini sudah terdaftar dengan sandi. Masuk dengan email dan sandi dulu.':fbErr(e))}
@@ -7432,7 +7432,7 @@ window.ncBadge=ncBadge;
 const FB_ICON='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16.5 24v-9h3l.5-3.6h-3.5V9.2c0-1 .3-1.8 1.8-1.8h1.9V4.2c-.3 0-1.5-.2-2.8-.2-2.8 0-4.6 1.7-4.6 4.8v2.6H9.6V15h3.2v9z" fill="#fff"/></svg>';
 const G_COLOR='<svg viewBox="0 0 48 48" width="26" height="26" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
 async function fbFacebook(btn){if(!firebase.auth.FacebookAuthProvider){toast('lock','Masuk dengan Facebook belum tersedia.');return}if(btn)btn.disabled=true;setSession(null);const prov=new firebase.auth.FacebookAuthProvider();try{prov.addScope('email')}catch(e){}
-  try{await FB.auth.signInWithPopup(prov)}
+  FBX.busy=false;try{const t0=Date.now();const r=await FB.auth.signInWithPopup(prov);const u=r&&r.user;if(u&&!(FBX.routedUid===u.uid&&(FBX.routedAt||0)>=t0)){busy(true);fbRoute(u).catch(e=>{console.error(e);fbOffline(e)})}}
   catch(e){const c=String(e&&e.code||'');
     if(/popup-blocked|operation-not-supported|web-storage-unsupported/.test(c)){try{await FB.auth.signInWithRedirect(prov);return}catch(x){e=x}}
     if(!/popup-closed|cancelled-popup/.test(c))toast('lock',/operation-not-allowed|invalid-api-key|configuration-not-found/.test(c)?'Masuk dengan Facebook belum diaktifkan. Untuk sementara, masuk dengan Google atau nama pengguna.':/account-exists/.test(c)?'Email Facebook ini sudah terdaftar lewat Google atau sandi. Masuk dengan cara itu dulu.':/unauthorized-domain/.test(c)?'Masuk dengan Facebook belum diaktifkan untuk alamat ini.':fbErr(e))}
@@ -7489,7 +7489,7 @@ showLogin=function(pf){_showLoginD(pf);const el=$('#auth');const g=n=>el.querySe
   $('#lgEye').onclick=()=>{const sh=pw.type==='password';pw.type=sh?'text':'password';$('#lgEye').classList.toggle('on',sh)};
   $('#lgBack2').onclick=()=>{ACC.get().length?showBack(false):(WEL.force=true,showWelcome())};
   $('#lgFb').onclick=e=>fbFacebook(e.currentTarget);$('#lgG2').onclick=e=>fbGoogle(e.currentTarget);
-  setTimeout(()=>(pf?pw:u).focus(),80)};
+  setTimeout(()=>{try{if(document.body.contains(pw))(pf?pw:u).focus()}catch(e){}},80)};
 /* ---------- hapus akun (wajib untuk Play Store) ---------- */
 function fbDeleteAsk(){const st=!isT();
   openModal(`<h3>Hapus akun?</h3><p>${st?'Semua progres belajar, XP, dan permatamu akan dihapus permanen.':'Akun guru, kelas, kode kelas, tugas, absensi, dan nilai akan dihapus permanen. Akun murid tetap ada.'} Tindakan ini tidak bisa dibatalkan.</p>
