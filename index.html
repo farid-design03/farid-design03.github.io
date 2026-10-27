@@ -1734,6 +1734,38 @@ body.wzon{overflow:hidden}
 .folb{font-size:14px;padding:8px 14px;letter-spacing:.04em}.folb.sm{flex:none}
 .fllist{padding:6px 14px;display:flex;flex-direction:column}
 
+
+/* liga seperti Duolingo */
+.league:has(.lgx-head){padding:0 0 12px;gap:0;overflow:visible}
+.lgx-head{position:sticky;top:0;z-index:6;background:#fff;padding:18px 18px 8px;border-bottom:2px solid var(--line2);border-radius:inherit}
+.lgx-head h2{font-size:30px;margin:0}
+.lgx-time{display:flex;align-items:center;gap:6px;color:var(--muted);font-family:var(--display);font-weight:800;letter-spacing:.06em;margin-top:2px}
+.lgx-b{position:relative;display:flex;gap:6px;align-items:flex-end;overflow-x:auto;scrollbar-width:none;padding:10px 40% 6px;scroll-behavior:smooth;margin:0 -18px}
+.lgx-b::-webkit-scrollbar{display:none}
+.lgx-bi{flex:none;width:76px;opacity:.95}
+.lgx-bi.cur{width:118px}
+.lgx-list{display:flex;flex-direction:column;padding:6px 8px}
+.lgx-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px}
+.lgx-row.tap{cursor:pointer}.lgx-row.tap:hover{background:#F6F7FA}
+.lgx-row .avatar{width:52px!important;height:52px!important;flex:none}
+.lgx-rk{width:34px;flex:none;text-align:center;font-family:var(--display);font-weight:800;font-size:18px;color:var(--muted)}
+.lgx-medal{width:32px;height:35px;display:block;margin:0 auto}
+.lgx-nm{flex:1;min-width:0;display:flex;flex-direction:column}
+.lgx-nm b{font-family:var(--display);font-weight:800;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lgx-nm small{color:var(--muted);font-size:13px;font-weight:700}
+.lgx-xp{flex:none;color:var(--muted);font-family:var(--display);font-weight:700;font-size:16px}
+.lgx-row.up .lgx-rk{color:#3CA600}
+.lgx-row.dn .lgx-rk{color:#E5283B}
+.lgx-row.me{background:#EEF1F6}
+.lgx-row.me.up{background:#E4F7D4}.lgx-row.me.up .lgx-xp{color:#3CA600}
+.lgx-row.me.dn{background:#FDE1E4}.lgx-row.me.dn .lgx-xp{color:#E5283B}
+.lgx-zone{text-align:center;font-family:var(--display);font-weight:800;letter-spacing:.08em;padding:14px 0;font-size:15px}
+.lgx-zone.up{color:#3CA600}.lgx-zone.dn{color:#E5283B}
+.lgx-empty{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;padding:24px 16px}
+.lgx-empty b{font-family:var(--display);font-size:18px;max-width:340px}
+.lgx-note{padding:6px 12px}
+.lgx-cls{margin:6px 16px 0}
+@media (max-width:420px){.lgx-row{gap:9px;padding:9px 8px}.lgx-row .avatar{width:44px!important;height:44px!important}.lgx-bi{width:62px}.lgx-bi.cur{width:100px}}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -5023,8 +5055,8 @@ const BADGES=[
  {id:'chest',ic:'chest',name:'Pemburu Harta',color:'#C9772B',val:p=>p.stats.chests,lv:[1,5,20],d:n=>`Buka ${n} peti`}];
 const blevel=(b,p)=>b.lv.filter(v=>b.val(p||P)>=v).length;
 const badgeSVG=(b,l)=>`<svg viewBox="0 0 60 66"><path d="M30 3 L55 17 V49 L30 63 L5 49 V17Z" fill="${l?b.color:'#D8DCEC'}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M30 12 L47 22 V44 L30 54 L13 44 V22Z" fill="rgba(255,255,255,.3)"/>${ICONS[b.ic].replace('<svg ','<svg x="15" y="17" width="30" height="32" style="color:#fff" ')}</svg>`;
-const TIERS=[['Perunggu',0,'#CD7F32'],['Perak',150,'#AAB4C8'],['Emas',400,'#FFC23D'],['Safir',900,'#3D8BFF'],['Rubi',1600,'#F2394B'],['Berlian',2600,'#14B8A6']];
-const tierOf=p=>{let t=TIERS[0];TIERS.forEach(x=>{if(p.xp>=x[1])t=x});return t};
+const TIERS=[['Perunggu',0,'#D98A4E'],['Perak',0,'#8FA6C8'],['Emas',0,'#FFC23D'],['Safir',0,'#3D7BFF'],['Rubi',0,'#F23B5B'],['Zamrud',0,'#1FBF6A'],['Kecubung',0,'#A25CF5'],['Mutiara',0,'#F59BCF'],['Obsidian',0,'#4E5465'],['Berlian',0,'#38C9EE']];
+const tierOf=p=>TIERS[Math.min(TIERS.length-1,(p&&p.lg&&p.lg.t)||0)];
 const shield=c=>`<svg viewBox="0 0 48 48"><path d="M24 4 L41 10 V22 C41 33 33 40 24 44 C15 40 7 33 7 22 V10Z" fill="${c}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M24 14 l3 6.5 7 .8 -5.2 4.8 1.4 7 -6.2-3.5 -6.2 3.5 1.4-7 -5.2-4.8 7-.8z" fill="#fff" stroke="${K}" stroke-width="2" stroke-linejoin="round"/></svg>`;
 
 /* ---------- top bar & popovers ---------- */
@@ -5539,7 +5571,7 @@ function renderProfile(){const t=tierOf(P);
 
 /* ---------- right rail (desktop) ---------- */
 function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[...APP.profiles].sort((a,b)=>b.week.xp-a.week.xp);const rank=list.findIndex(p=>p.id===P.id)+1;const gp=Math.min(100,Math.round(P.today.xp/P.goal*100));
-  $('#rail').innerHTML=`<div class="rcard"><h4>Liga ${t[0]}<button data-go="league">Lihat</button></h4><div class="rq"><i>${shield(t[2])}</i><span class="grow">Kamu peringkat ${rank} minggu ini dengan ${P.week.xp} XP.</span></div></div>
+  $('#rail').innerHTML=`<div class="rcard"><h4>Liga ${t[0]}<button data-go="league">Lihat</button></h4><div class="rq"><i>${shield(t[2])}</i><span class="grow">${(()=>{try{if(FBX.user&&!isT())return LG.rank&&lgState().w===weekKey()?`Kamu peringkat ${LG.rank} minggu ini dengan ${P.week.xp} XP.`:P.week.xp?`${P.week.xp} XP minggu ini.`:'Selesaikan satu pelajaran untuk ikut liga minggu ini.'}catch(e){}return `Kamu peringkat ${rank} minggu ini dengan ${P.week.xp} XP.`})()}</span></div></div>
    <div class="rcard"><h4>Target harian<button data-go="quest">Misi</button></h4><div class="rq"><div class="ring" style="--p:${gp};width:60px;height:60px"><span style="width:42px;height:42px;font-size:14px">${gp}%</span></div><span class="grow">${P.today.xp} / ${P.goal} XP hari ini</span></div></div>
    <div class="rcard"><h4>Misi harian<button data-go="quest">Lihat semua</button></h4>${P.quests.list.map(q=>{const d=qdef(q.id),v=qprog(q);return `<div class="rq">${ico(d.icon)}<span class="grow">${d.t(q.goal)}<div class="qbar" style="height:14px"><i style="width:${v/q.goal*100}%"></i></div></span></div>`}).join('')}</div>`;
   hydrate($('#rail'));$('#rail').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go))}
@@ -6310,7 +6342,7 @@ function fbQueue(){if(!FBX.user||FBX.busy||!SESSION)return;clearTimeout(FBX.t);i
 function fbClassData(){return {teacher:APP.teacher,sessions:APP.sessions||[],bank:APP.bank||[],deleted:APP.deleted||[],roster:(APP.profiles||[]).filter(p=>!p._remote)}}
 function fbFlush(){const u=FBX.user;if(!u||!SESSION)return Promise.resolve();let pr;
   if(SESSION.role==='student'&&P){const p=Object.assign({},P);delete p._remote;delete p._uid;delete p._pin;
-    pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}try{fbHandleSync()}catch(e){}try{fbPubSync()}catch(e){}}
+    pr=FB.db.doc('users/'+u.uid).set({name:P.name,cls:P.cls,xp:P.xp||0,lastDay:P.lastDay||null,p:JSON.stringify(p),upd:Date.now()},{merge:true});try{fbBoardPush()}catch(e){}try{lgSync()}catch(e){}try{fbHandleSync()}catch(e){}try{fbPubSync()}catch(e){}}
   else if(SESSION.role==='teacher'&&APP.teacher){const t=APP.teacher;
     pr=FB.db.doc('classes/'+u.uid).set({teacherUid:u.uid,name:t.name||'',school:t.school||'',cls:t.cls||'',data:JSON.stringify(fbClassData()),upd:Date.now()},{merge:true})}
   else return Promise.resolve();
@@ -6802,6 +6834,71 @@ renderLeague=function(){_rL();if(isT()||!FBX.user||!P)return;const m=FBX.me||{},
    .catch(e=>{box.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`})};
 function fbBoardPush(){const m=FBX.me||{},u=FBX.user;if(!m.classId||!u||!P||isT())return;ensureDay(P);const key=m.classId+':'+P.week.id+':'+P.week.xp+':'+P.name+':'+JSON.stringify(P.avatar||'');if(key===FBX.boardKey)return;FBX.boardKey=key;
   FB.db.doc('classes/'+m.classId+'/board/'+u.uid).set({name:P.name,color:P.color,av:P.avatar||null,week:P.week.id,wxp:P.week.xp,upd:Date.now()}).catch(()=>{FBX.boardKey=null})}
+
+/* ---------- LIGA MINGGUAN (seperti Duolingo) ----------
+   Setiap minggu pemain yang sudah mendapat XP masuk ke grup berisi paling banyak 30 orang
+   di liga yang sama. Akhir minggu: peringkat atas naik liga, peringkat bawah turun liga. */
+const LG_SIZE=30;
+const LG={rows:null,g:null,at:0,busy:false,joining:false,rank:0};window.LG=LG;
+const lgState=()=>{P.lg=P.lg||{t:0,w:null,g:null};return P.lg};
+function lgZones(t,n){let up=t>=TIERS.length-1||n<2?0:Math.max(1,Math.round(n*(t===0?10:7)/LG_SIZE));let dn=t===0||n<6?0:Math.max(1,Math.round(n*5/LG_SIZE));up=Math.min(up,n-1);dn=Math.min(dn,n-up-1);return {up,dn:Math.max(0,dn)}}
+function lgLeft(){const d=new Date(),day=(d.getDay()+6)%7,end=new Date(d.getFullYear(),d.getMonth(),d.getDate()+7-day);const ms=end-d,h=Math.floor(ms/3600000);return h>=24?`${Math.floor(h/24)} HARI`:h>=1?`${h} JAM`:`${Math.max(1,Math.ceil(ms/60000))} MENIT`}
+const lgShade=(hex,a)=>{const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const f=v=>Math.round(a<0?v*(1+a):v+(255-v)*a);return '#'+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,'0')).join('')};
+function lgBadge(i,lock){const c=lock?'#D3D7DF':TIERS[i][2],d=lgShade(c,-.28),l=lgShade(c,.45),m=lgShade(c,.2);
+  return `<svg viewBox="0 0 100 112" aria-hidden="true"${lock?' opacity=".75"':''}><path d="M20 96 L30 86 H70 L80 96 L70 106 H30Z" fill="#DCE6F2" stroke="#B9C8DA" stroke-width="3" stroke-linejoin="round"/><path d="M36 92 H64" stroke="#B9C8DA" stroke-width="3" stroke-linecap="round"/><path d="M45 70 H55 L57 88 H43Z" fill="${d}"/>
+   <path d="M50 76 C30 68 10 52 9 32 C8 21 16 12 27 15 C33 6 43 4 50 11 C57 4 67 6 73 15 C84 12 92 21 91 32 C90 52 70 68 50 76Z" fill="${c}" stroke="${d}" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M50 20 L66 30 L60 54 L40 54 L34 30Z" fill="${l}"/><path d="M34 30 L40 54 L20 40Z" fill="${m}"/><path d="M66 30 L80 40 L60 54Z" fill="${d}" opacity=".55"/><path d="M40 54 H60 L50 72Z" fill="${d}" opacity=".7"/><path d="M50 20 L34 30 L27 18 C34 12 42 12 50 20Z" fill="${l}" opacity=".7"/>
+   ${lock?`<g transform="translate(50 42)"><rect x="-9" y="-3" width="18" height="15" rx="3" fill="#fff" opacity=".9"/><path d="M-5 -3 V-7 A5 5 0 0 1 5 -7 V-3" fill="none" stroke="#fff" stroke-width="3" opacity=".9"/></g>`:''}</svg>`}
+function lgMedal(r){const c=['#FFC83D','#C9D3E1','#E8A06A'][r-1],d=lgShade(c,-.3);return `<svg viewBox="0 0 40 44" class="lgx-medal"><path d="M12 30 L8 42 L14 39 L18 43 L20 32Z M28 30 L32 42 L26 39 L22 43 L20 32Z" fill="${d}"/><circle cx="20" cy="18" r="15" fill="${c}" stroke="${d}" stroke-width="3"/><text x="20" y="24" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="17" fill="${d}">${r}</text></svg>`}
+function lgClsLabel(id){const c=COURSE.find(x=>x.id===id);return c?esc(c.full):''}
+async function lgSettle(){const s=lgState();if(!s.w||s.w===weekKey())return;const old=Object.assign({},s);let rows=[];
+  try{if(s.g){const q=await FB.db.collection('lge').where('g','==',s.g).get();rows=q.docs.map(d=>d.data())}}catch(e){return}
+  const uid=FBX.user.uid;rows.sort((a,b)=>(b.xp||0)-(a.xp||0)||(a.upd||0)-(b.upd||0));let rank=rows.findIndex(r=>r.uid===uid)+1;const n=Math.max(rows.length,1);if(!rank)rank=n;
+  const z=lgZones(old.t,n);let to=old.t;if(z.up&&rank<=z.up)to=old.t+1;else if(z.dn&&rank>n-z.dn)to=old.t-1;
+  const gems=[30,20,10][rank-1]||0;if(gems&&n>1)P.gems=(P.gems||0)+gems;
+  P.lg={t:to,w:null,g:null,last:{w:old.w,rank,n,from:old.t,to,gems:n>1?gems:0,seen:false}};LG.rows=null;LG.g=null;save();try{renderTop()}catch(e){}setTimeout(lgResult,400)}
+function lgResult(){const s=P&&P.lg,r=s&&s.last;if(!r||r.seen||!$('#modal').hidden||document.body.classList.contains('playing'))return;r.seen=true;save();
+  const up=r.to>r.from,dn=r.to<r.from,nm=TIERS[r.to][0];
+  openModal(`<div style="text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center"><div style="width:130px">${lgBadge(r.to)}</div>
+   <h3>${up?`Naik ke Liga ${nm}!`:dn?`Turun ke Liga ${nm}`:`Bertahan di Liga ${nm}`}</h3>
+   <p>Minggu lalu kamu peringkat <b>${r.rank}</b> dari ${r.n} pemain.${up?' Hebat, pertahankan semangatmu!':dn?' Ayo kumpulkan XP lebih banyak minggu ini supaya naik lagi.':' Masuk zona promosi minggu ini untuk naik liga.'}</p>
+   ${r.gems?`<p class="pill ok" style="font-size:16px">+${r.gems} permata</p>`:''}<button class="primary" id="mClose" style="width:100%">Lanjut</button></div>`);
+  $('#mClose').onclick=closeModal}
+async function lgJoin(){const s=lgState(),wk=weekKey();if(LG.joining||P.week.xp<=0||(s.w===wk&&s.g))return;LG.joining=true;
+  try{const cid=`${wk}_${s.t}`,ref=FB.db.doc('lgc/'+cid);let n=0;
+    for(let tryi=0;tryi<3;tryi++){const sn=await ref.get();n=sn.exists?(sn.data().n||0):0;try{await ref.set({n:n+1});break}catch(e){if(tryi===2)throw e}}
+    s.w=wk;s.g=`${cid}_${Math.floor(n/LG_SIZE)}`;LG.rows=null;save();await lgPush()}catch(e){}finally{LG.joining=false}}
+function lgPush(){const s=lgState(),u=FBX.user;if(!u||!s.g||s.w!==weekKey())return Promise.resolve();const key=s.g+':'+P.week.xp+':'+P.name+':'+JSON.stringify(P.avatar||'')+P.cls;if(key===LG.pk)return Promise.resolve();LG.pk=key;
+  return FB.db.doc('lge/'+s.w+'_'+u.uid).set({uid:u.uid,w:s.w,t:s.t,g:s.g,name:P.name,color:P.color||null,av:P.avatar||null,cls:P.cls,xp:P.week.xp,upd:Date.now()}).catch(()=>{LG.pk=null})}
+async function lgSync(){if(!FBX.user||isT()||!P||LG.busy)return;LG.busy=true;try{ensureDay(P);const s=lgState();if(s.w&&s.w!==weekKey())await lgSettle();if(P.week.xp>0){if(lgState().w!==weekKey()||!lgState().g)await lgJoin();else await lgPush()}}finally{LG.busy=false}}
+function lgLoad(){const s=lgState();if(!s.g||s.w!==weekKey())return Promise.resolve(null);
+  return FB.db.collection('lge').where('g','==',s.g).get().then(q=>{const me=FBX.user.uid;const rows=q.docs.map(d=>d.data()).filter(r=>r.uid!==me);rows.push({uid:me,name:P.name,color:P.color,av:P.avatar,cls:P.cls,xp:P.week.xp,upd:0});
+    rows.sort((a,b)=>(b.xp||0)-(a.xp||0)||(a.upd||0)-(b.upd||0));LG.rows=rows;LG.g=s.g;LG.at=Date.now();LG.rank=rows.findIndex(r=>r.uid===me)+1;return rows})}
+function lgRowsHtml(rows,meId,t,zones){const n=rows.length,z=zones?lgZones(t,n):{up:0,dn:0};let h='';
+  rows.forEach((r,i)=>{const rk=i+1,zone=z.up&&rk<=z.up?'up':z.dn&&rk>n-z.dn?'dn':'';
+    if(z.dn&&rk===n-z.dn+1)h+=`<div class="lgx-zone dn">▼ ZONA PENURUNAN ▼</div>`;
+    h+=`<div class="lgx-row ${zone} ${r.uid===meId?'me':'tap'}" data-u="${esc(r.uid)}" ${r.uid===meId?'':'role="button" tabindex="0"'}><span class="lgx-rk">${rk<=3?lgMedal(rk):rk}</span>${avSpan({name:r.name,color:r.color,avatar:r.av||null})}<span class="lgx-nm"><b>${esc(r.name||'')}</b>${r.cls?`<small>${lgClsLabel(r.cls)}</small>`:''}</span><span class="lgx-xp">${r.xp||0} XP</span></div>`;
+    if(z.up&&rk===z.up&&n>z.up)h+=`<div class="lgx-zone up">▲ ZONA PROMOSI ▲</div>`});return h}
+function lgHead(t){return `<div class="lgx-head"><h2>Liga ${TIERS[t][0]}</h2><div class="lgx-time"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>${lgLeft()}</div>
+  <div class="lgx-b" id="lgxB">${TIERS.map((x,i)=>`<span class="lgx-bi ${i===t?'cur':''}" title="Liga ${x[0]}">${lgBadge(i,i>t)}</span>`).join('')}</div></div>`}
+function lgCenter(){const f=()=>{const b=$('#lgxB');if(!b)return;const c=b.querySelector('.cur');if(!c)return;b.style.scrollBehavior='auto';b.scrollLeft=c.offsetLeft-b.clientWidth/2+c.offsetWidth/2;b.style.scrollBehavior=''};f();requestAnimationFrame(f)}
+function lgBind(box,rows){box.querySelectorAll('.lgx-row.tap').forEach(el=>el.onclick=()=>{const r=rows.find(x=>x.uid===el.dataset.u);if(r&&window.openUserProfile&&FBX.user)openUserProfile(r.uid,{name:r.name,av:r.av})})}
+renderLeague=function(){const card=$('#leagueCard');if(!card||!P)return;APP.profiles.forEach(p=>ensureDay(p));
+  const online=!!(FBX.user&&!isT()),s=lgState(),t=Math.min(s.t||0,TIERS.length-1);
+  if(!online){const rows=[...APP.profiles].sort((a,b)=>b.week.xp-a.week.xp).map(p=>({uid:p.id,name:p.name,color:p.color,av:p.avatar,cls:p.cls,xp:p.week.xp}));
+    card.innerHTML=lgHead(t)+`<div class="lgx-list">${lgRowsHtml(rows,P.id,t,false)}</div>`+(rows.length<2?'<p class="note lgx-note">Tambahkan profil teman di menu Profil supaya bisa bersaing.</p>':'');lgCenter();renderBoard();return}
+  const joined=s.g&&s.w===weekKey();
+  card.innerHTML=lgHead(t)+`<div class="lgx-list" id="lgxList">${joined?'<p class="note lgx-note">Memuat peringkat…</p>':`<div class="lgx-empty"><div style="width:90px;margin:0 auto">${lgBadge(t)}</div><b>Selesaikan satu pelajaran untuk bergabung ke papan peringkat minggu ini</b><button class="primary" id="lgxGo">Mulai belajar</button></div>`}</div>`+
+   ((FBX.me||{}).classId?`<button class="ghost lgx-cls" id="lgxCls">Lihat peringkat kelasku</button>`:'');
+  lgCenter();const go2=$('#lgxGo');if(go2)go2.onclick=()=>go('learn');const cb=$('#lgxCls');if(cb)cb.onclick=lgClassModal;
+  const paint=rows=>{const box=$('#lgxList');if(!box||!rows)return;box.innerHTML=lgRowsHtml(rows,FBX.user.uid,t,true)+(rows.length<2?'<p class="note lgx-note">Kamu orang pertama di grup ini. Pemain lain akan bergabung saat mereka mulai belajar minggu ini.</p>':'');lgBind(box,rows);
+    const me=box.querySelector('.lgx-row.me');if(me&&LG.scrollMe){LG.scrollMe=false;me.scrollIntoView({block:'center'})}};
+  if(joined){if(LG.rows&&LG.g===s.g)paint(LG.rows);if(Date.now()-LG.at>20000||LG.g!==s.g)lgLoad().then(paint).catch(e=>{const box=$('#lgxList');if(box&&!LG.rows)box.innerHTML=`<p class="note lgx-note">${esc(fbErr(e))}</p>`})}
+  lgSync().then(()=>{if(curTab==='league'&&!joined&&lgState().g&&lgState().w===weekKey())renderLeague();lgResult()})};
+window.lgSync=lgSync;window.lgState=lgState;window.lgBadge=lgBadge;
+function lgClassModal(){const m=FBX.me||{};if(!m.classId)return;openModal(`<span class="eyebrow">Minggu ini</span><h3>Peringkat ${esc(m.clsName||'kelasku')}</h3><div id="lgxClsL" class="lgx-list"><p class="note">Memuat…</p></div><button class="primary" id="mClose">Tutup</button>`);$('#mClose').onclick=closeModal;
+  FB.db.collection('classes/'+m.classId+'/board').where('week','==',weekKey()).get().then(q=>{const me=FBX.user.uid;const rows=q.docs.map(d=>Object.assign({uid:d.id},d.data())).filter(r=>r.uid!==me).map(r=>({uid:r.uid,name:r.name,color:r.color,av:r.av,xp:r.wxp||0}));
+    rows.push({uid:me,name:P.name,color:P.color,av:P.avatar,xp:P.week.xp});rows.sort((a,b)=>b.xp-a.xp);const box=$('#lgxClsL');if(!box)return;box.innerHTML=lgRowsHtml(rows,me,0,false);lgBind(box,rows)}).catch(e=>{const box=$('#lgxClsL');if(box)box.innerHTML=`<p class="note">${esc(fbErr(e))}</p>`})}
 
 
 /* ---------- MAIN BARENG ONLINE: tantang teman dari jarak jauh ---------- */

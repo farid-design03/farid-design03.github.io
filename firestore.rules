@@ -152,6 +152,25 @@ service cloud.firestore {
       allow delete: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
     }
 
+    // Liga mingguan (seperti Duolingo): penghitung isi grup per liga per minggu.
+    match /lgc/{id} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.keys().hasOnly(['n']) && request.resource.data.n == 1;
+      allow update: if signedIn() && request.resource.data.keys().hasOnly(['n']) && request.resource.data.n == resource.data.n + 1;
+      allow delete: if false;
+    }
+
+    // Skor liga tiap pemain per minggu. Hanya pemiliknya yang boleh menulis.
+    match /lge/{id} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.resource.data.uid == request.auth.uid
+        && id == request.resource.data.w + '_' + request.auth.uid
+        && request.resource.data.g is string && request.resource.data.g.matches('^' + request.resource.data.w + '_.*')
+        && request.resource.data.xp is number && request.resource.data.xp >= 0 && request.resource.data.xp < 100000;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
     // Undangan tanding dari teman.
     match /invites/{id} {
       allow read: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
