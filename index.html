@@ -3477,7 +3477,7 @@ function applyTV(){document.body.classList.toggle('tv',TV&&window.innerWidth>=70
 const MODE_LIST=[
  {id:'tembak',name:'Tembak Jawaban',desc:'Bidik dan tembak sasaran yang benar',help:'Ketuk atau klik sasaran untuk menembak. Keyboard: ← → membidik, Spasi menembak. Sasaran pelan-pelan turun, jangan sampai waktunya habis!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="4" fill="currentColor"/><path d="M24 3v9M24 36v9M3 24h9M36 24h9"/></svg>'},
- {id:'lari',name:'Lari Jalur',desc:'Pindah jalur, lewati gerbang yang benar',help:'Ketuk jalur untuk pindah, atau tekan ↑ ↓. Tahan jari/mouse (atau tombol →) untuk lari cepat. Masuki gerbang dengan jawaban benar dan ambil koin untuk poin tambahan.',
+ {id:'lari',name:'Lari Jalur',desc:'Jawab benar untuk menyalip lawan',help:'Ketuk jawaban yang benar. Jawaban benar membuat pelarimu maju menyalip lawan, jawaban salah atau waktu habis membuatmu mundur sedikit. Sampai garis finis duluan!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 14h40M4 34h40"/><path d="M4 24h6M16 24h6M28 24h6" stroke-width="2"/><path d="M34 16l10 8-10 8"/></svg>'},
  {id:'balon',name:'Tangkap Balon',desc:'Geser keranjang, tangkap balon benar',help:'Seret jari/mouse atau tekan ← → untuk menggeser keranjang. Tangkap balon dengan jawaban benar dan hindari balon yang salah. Jangan biarkan balon benar lewat!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="14" rx="10" ry="11"/><path d="M24 25l-2 8"/><path d="M11 34h26l-4 10H15z"/></svg>'},
@@ -3531,7 +3531,7 @@ const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/war
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
  'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
 const WHY={tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
- pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Gerbang lebar muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',penalti:'Kotak gawang lebar, seru seperti adu penalti',basket:'Bidik ring, latih fokus sambil membaca',buah:'Sayat cepat, seru untuk jawaban singkat',labirin:'Jawaban di daftar A–D, kejar-kejaran dengan hantu',memori:'Latih ingatan sambil menjawab',benarsalah:'Cepat menilai setiap jawaban',susun:'Latih ejaan kata dan istilah',kelompok:'Pilah jawaban benar dan salah',urut:'Latih urutan: angka, proses, dan peristiwa',pacu:'Balapan perahu khas Riau, makin benar makin cepat',layang:'Santai, terbangkan layangan ke awan',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
+ pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Tombol jawaban lebar, muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',penalti:'Kotak gawang lebar, seru seperti adu penalti',basket:'Bidik ring, latih fokus sambil membaca',buah:'Sayat cepat, seru untuk jawaban singkat',labirin:'Jawaban di daftar A–D, kejar-kejaran dengan hantu',memori:'Latih ingatan sambil menjawab',benarsalah:'Cepat menilai setiap jawaban',susun:'Latih ejaan kata dan istilah',kelompok:'Pilah jawaban benar dan salah',urut:'Latih urutan: angka, proses, dan peristiwa',pacu:'Balapan perahu khas Riau, makin benar makin cepat',layang:'Santai, terbangkan layangan ke awan',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
 const modeInfo=()=>MODE_LIST.find(m=>m.id===MODE)||MODE_LIST[0];
 const views=['vLearn','vTeam','vGame','vLeague','vQuest','vShop','vProfile','vPlay','vDone','vDuel','vResult','vTDash','vTAtt','vTEval','vTRun','vTRapor','vTStud','vTSet','vTBank'];
@@ -3765,7 +3765,7 @@ function drawBanner(c){const b=arc.banner;if(!b)return;const{W,H}=arc;c.save();c
 const lvHex=()=>CUR?CUR.color:getComputedStyle(document.documentElement).getPropertyValue(L.color).trim()||'#C8102E';
 
 /* ---------- layar penuh saat main game di HP + posisi layar sesuai game ---------- */
-const GAME_ORI={lari:'landscape',ular:'landscape',pancing:'landscape'};
+const GAME_ORI={ular:'landscape',pancing:'landscape'};
 const GFS={on:false,mine:false};
 function isTouchDev(){try{return matchMedia('(pointer:coarse)').matches}catch(e){return false}}
 function gameFS(mode){if(!isTouchDev()||DUEL)return;const ori=GAME_ORI[mode]||'portrait';try{window.scrollTo(0,0)}catch(e){}
@@ -3928,49 +3928,49 @@ function drawKid(c,x,y,s,phase,pants){
   c.fillStyle='#2B1B12';c.beginPath();c.arc(x+1*s,y-32*s,8*s,Math.PI*1.05,Math.PI*2.05);c.fill();
   c.fillStyle='#1A2233';c.beginPath();c.arc(x+5*s,y-30*s,1.4*s,0,7);c.fill();
 }
-const Lari={extra:1,
- setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.n=n;this.top=Math.round(H*.2);this.laneH=(H-this.top)/n;this.px=Math.max(42,W*.12);
-  if(this.lane==null||this.lane>=n)this.lane=Math.floor((n-1)/2);this.py=this.laneY(this.lane);
-  this.gw=Math.min(200,W*.42);this.gh=this.laneH-14;this.run=230*arc.speed;
-  this.order=shuffle([...Array(n).keys()]);
-  this.fits=this.order.map(ai=>fit(ctx,arc.labels[ai],this.gw-20,this.gh-10,22,10));
-  this.coins=[];this.coinT=.4;this.scroll=this.scroll||0;this.boost=false},
- laneY(l){return this.top+this.laneH*(l+.5)},
- gateX(){return this.px+18+this.run*Math.max(0,arc.limit-arc.t)},
- key(k){if(k==='ArrowUp')this.lane=Math.max(0,this.lane-1);if(k==='ArrowDown')this.lane=Math.min(this.n-1,this.lane+1)},
- down(x,y){if(y>this.top)this.lane=clamp(Math.floor((y-this.top)/this.laneH),0,this.n-1)},
- move(x,y,active){if(active&&arc.pdown&&y>this.top)this.lane=clamp(Math.floor((y-this.top)/this.laneH),0,this.n-1)},
- update(dt){
-  this.boost=!!(arc.keys.ArrowRight||arc.pdown);
-  if(this.boost)arc.t+=dt*2;
-  const sp=this.run*(this.boost?3:1);this.scroll+=sp*dt;
-  this.py+=(this.laneY(this.lane)-this.py)*Math.min(1,dt*14);
-  const gx=this.gateX();this.coinT-=dt;
-  if(this.coinT<=0&&gx>arc.W+160){this.coinT=.4+Math.random()*.4;this.coins.push({x:arc.W+12,l:R(0,this.n-1)})}
-  for(const co of this.coins){co.x-=sp*dt;if(!co.got&&Math.abs(co.x-this.px)<20&&Math.abs(this.laneY(co.l)-this.py)<this.laneH*.4){co.got=true;game.score+=2;renderHUD();burst(co.x,this.laneY(co.l),'#FFC93C',8);tone([1320],.05)}}
-  this.coins=this.coins.filter(co=>co.x>-20&&!co.got);
-  if(gx<=this.px+18)arcResolve(this.order[this.lane])},
- idle(dt){this.py+=(this.laneY(this.lane)-this.py)*Math.min(1,dt*14)},
- draw(c){const{W,H}=arc;const top=this.top;
-  const g=c.createLinearGradient(0,0,0,top);g.addColorStop(0,'#7EC8F2');g.addColorStop(1,'#CDEBFA');c.fillStyle=g;c.fillRect(0,0,W,top);
-  c.fillStyle='#FFD45E';c.beginPath();c.arc(W-50,top*.45,top*.25,0,7);c.fill();
-  c.fillStyle='#7FB77E';c.beginPath();c.moveTo(0,top);for(let x=0;x<=W+20;x+=20)c.lineTo(x,top-12-Math.sin((x+this.scroll*.15)*.02)*10);c.lineTo(W,top);c.fill();
-  c.fillStyle='#5E9F5D';c.fillRect(0,top-4,W,4);
-  c.fillStyle='#C8553D';c.fillRect(0,top,W,H-top);
-  c.strokeStyle='rgba(255,255,255,.9)';c.lineWidth=3;for(let l=0;l<=this.n;l++){const y=top+l*this.laneH;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
-  c.fillStyle='rgba(255,255,255,.25)';const off=this.scroll%60;for(let l=0;l<this.n;l++){for(let x=-off;x<W;x+=60)c.fillRect(x,this.laneY(l)-1,24,2)}
-  c.fillStyle='rgba(255,255,255,.85)';c.font=`800 18px ${FONT}`;c.textAlign='left';c.textBaseline='middle';for(let l=0;l<this.n;l++)c.fillText(l+1,8,top+l*this.laneH+14);
-  for(const co of this.coins){const y=this.laneY(co.l);c.fillStyle='#FFC93C';c.beginPath();c.ellipse(co.x,y,9*Math.abs(Math.cos(this.scroll*.02))+2,10,0,0,7);c.fill();c.strokeStyle='#C99400';c.lineWidth=2;c.stroke()}
-  const gx=this.gateX(),pin=W-this.gw-8,bx=Math.min(gx,pin),moving=gx<=pin;const done=arc.state==='resolved';
-  for(let l=0;l<this.n;l++){const ai=this.order[l],y=this.laneY(l)-this.gh/2;
-   let fill='#FFFFFF',edge=lvHex(),txt='#14213D';
-   if(done&&ai===arc.ci){fill='#1C8A57';edge='#0F5C39';txt='#fff'}else if(done&&l===this.lane){fill='#C9362A';edge='#7E1E16';txt='#fff'}
-   if(moving){c.fillStyle='#3A3F4B';c.fillRect(bx-4,top+l*this.laneH+2,6,this.laneH-4);c.fillRect(bx+this.gw-2,top+l*this.laneH+2,6,this.laneH-4)}
-   c.globalAlpha=moving?1:.95;rr(c,bx,y,this.gw,this.gh,10);c.fillStyle=fill;c.fill();c.lineWidth=3;c.strokeStyle=edge;c.stroke();c.globalAlpha=1;
-   drawFit(c,this.fits[l],bx+this.gw/2,y+this.gh/2,txt)}
-  if(!moving&&arc.state==='play'){const m=Math.round((gx-pin)/23);c.font=`700 13px ${FONT}`;const t=`Gerbang: ${m} m`;const w=c.measureText(t).width+16;rr(c,W-w-8,8,w,24,12);c.fillStyle='rgba(26,34,51,.75)';c.fill();c.fillStyle='#fff';c.textAlign='center';c.fillText(t,W-w/2-8,20)}
-  if(this.boost&&arc.state==='play'){c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=2;for(let k=0;k<3;k++){c.beginPath();c.moveTo(this.px-22-k*8,this.py-24+k*10);c.lineTo(this.px-40-k*8,this.py-24+k*10);c.stroke()}}
-  const s=clamp(this.laneH/90,.75,1.3);drawKid(c,this.px,this.py+4*s,s,this.scroll*.06,lvHex());}
+/* Lari Jalur (tegak): semua pelari tampil; jawaban benar maju, salah mundur sedikit. Online: pelari = pemain di ruang. */
+function drawRunnerBack(c,x,y,s,ph,col,me){const sw=Math.sin(ph);c.save();c.translate(x,y);c.scale(s,s);
+  c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(0,20,13,5,0,0,7);c.fill();
+  c.strokeStyle='#C98B5E';c.lineCap='round';c.lineWidth=5;[1,-1].forEach(d=>{c.beginPath();c.moveTo(d*5,8);c.lineTo(d*6,18+d*sw*4);c.stroke()});
+  c.fillStyle='#222';[1,-1].forEach(d=>{c.beginPath();c.ellipse(d*6,19+d*sw*4,3.5,2.5,0,0,7);c.fill()});
+  c.lineWidth=4.5;[1,-1].forEach(d=>{c.beginPath();c.moveTo(d*9,-6);c.lineTo(d*13,4-d*sw*6);c.stroke()});
+  c.fillStyle=col;rr(c,-10,-10,20,20,6);c.fill();c.strokeStyle='#1A2233';c.lineWidth=2;c.stroke();
+  c.fillStyle='#2B1B12';c.beginPath();c.arc(0,-17,8.5,0,7);c.fill();c.fillStyle='#E0A878';c.beginPath();c.arc(-8.3,-16,2.2,0,7);c.arc(8.3,-16,2.2,0,7);c.fill();
+  if(me){c.strokeStyle='#FFC800';c.lineWidth=3;c.beginPath();c.ellipse(0,20,16,6.5,0,0,7);c.stroke()}c.restore()}
+const LARI_AI=[['Rina','#FF4B4B'],['Bayu','#1CB0F6'],['Sari','#9B6BFF']];
+const Lari={extra:0,
+ room(){return !!(game.lesson&&game.lesson.room&&ROOM.doc&&window.roomPlayers)},
+ setup(){const{W,H,ctx}=arc;if(!game.lari||game.lari.qs!==game.qs){game.lari={qs:game.qs,me:0,ai:LARI_AI.map(a=>({p:0,sk:.5+Math.random()*.3})),cam:0,rp:{},ph:0}}this.st=game.lari;
+  this.rh=Math.round(H*.56);const bw=(W-36)/2,bh=Math.min(150,(H-this.rh-30)/2-6);this.btns=arc.labels.map((l,k)=>({k,x:12+(k%2)*(bw+12),y:this.rh+14+Math.floor(k/2)*(bh+10),w:bw,h:bh,f:fit(ctx,l,bw-30,bh-10,22,10)}));this.picked=null;this.done=false},
+ lanes(){const st=this.st;if(this.room()){const acc=ROOM.acc||{correct:0,done:0};return roomPlayers().slice(0,8).map(p=>{const t=p.me?st.me:Math.max(0,p.c-.5*Math.max(0,p.i-p.c));return {id:p.uid,name:p.me?'KAMU':p.name.split(' ')[0].slice(0,9),col:p.col,me:p.me,t}})}
+  return [{id:'me',name:'KAMU',col:'#FFC800',me:true,t:st.me}].concat(st.ai.map((a,k)=>({id:'ai'+k,name:LARI_AI[k][0],col:LARI_AI[k][1],me:false,t:a.p})))},
+ settle(ok){if(this.done)return;this.done=true;const st=this.st;st.me=ok?st.me+1:Math.max(0,st.me-.5);
+  if(!this.room())st.ai.forEach(a=>{if(Math.random()<a.sk)a.p+=1;else a.p=Math.max(0,a.p-.5)});tone(ok?[660,990]:[260,200],.06)},
+ choose(b){if(arc.state!=='play')return;this.picked=b.k;this.settle(b.k===arc.ci);arcResolve(b.k)},
+ down(x,y){const b=this.btns.find(b=>inR(x,y,b));if(b)this.choose(b)},
+ key(k){const m=/^[1-4]$/.test(k)?+k-1:/^[a-dA-D]$/.test(k)?k.toLowerCase().charCodeAt(0)-97:-1;if(m>=0){const b=this.btns.find(b=>b.k===m);if(b)this.choose(b)}},
+ step(dt){const st=this.st;st.ph+=dt*9;const L=this.lanes();L.forEach(l=>{const cur=st.rp[l.id]==null?l.t:st.rp[l.id];st.rp[l.id]=cur+(l.t-cur)*Math.min(1,dt*3)});
+  const me=st.rp[this.room()?(L.find(l=>l.me)||{}).id:'me']||0;st.cam+=(me-st.cam)*Math.min(1,dt*3)},
+ update(dt){this.step(dt);if(arc.t>=arc.limit&&arc.state==='play'){this.settle(false);arcResolve(-1)}},
+ idle(dt){this.step(dt)},
+ draw(c){const{W,H}=arc,rh=this.rh,st=this.st,L=this.lanes(),n=Math.max(4,L.length),tot=this.room()?Math.max(1,ROOM.doc.n||1):Math.max(1,game.qs.length);
+  const unit=rh*.16,base=rh*.74,yOf=p=>base-(p-st.cam)*unit;
+  c.fillStyle='#7FB77E';c.fillRect(0,0,W,rh);const tx=22,tw=W-44;c.fillStyle='#C8553D';c.fillRect(tx,0,tw,rh);
+  const off=((st.cam*unit)%40+40)%40;c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=2;const lw=tw/n;
+  for(let k=1;k<n;k++){const x=tx+lw*k;c.setLineDash([16,24]);c.lineDashOffset=-off;c.beginPath();c.moveTo(x,0);c.lineTo(x,rh);c.stroke()}c.setLineDash([]);
+  c.fillStyle='#5E9F5D';for(let y=-off*2%60-60;y<rh;y+=60){c.beginPath();c.arc(10,y+30,7,0,7);c.arc(W-10,y,7,0,7);c.fill()}
+  const fy=yOf(tot);if(fy>-20&&fy<rh){for(let k=0;k<tw/12;k++){c.fillStyle=k%2?'#1E1E24':'#fff';c.fillRect(tx+k*12,fy-6,12,6);c.fillStyle=k%2?'#fff':'#1E1E24';c.fillRect(tx+k*12,fy,12,6)}c.fillStyle='#fff';c.font=`900 13px ${FONT}`;c.textAlign='center';c.fillText('FINIS',W/2,fy-12)}
+  const sy=yOf(0);if(sy>0&&sy<rh){c.fillStyle='rgba(255,255,255,.9)';c.fillRect(tx,sy+18,tw,4)}
+  const sc=Math.min(1.25,lw/34);
+  L.forEach((l,k)=>{const p=st.rp[l.id]==null?l.t:st.rp[l.id],x=tx+lw*(k+.5);let y=yOf(p);const mv=Math.abs(l.t-p)>.02||arc.state==='play';
+   if(y<16||y>rh-8){const up=y<16;const yy=up?14:rh-14;c.fillStyle=l.col;c.beginPath();if(up){c.moveTo(x,yy-10);c.lineTo(x-9,yy+4);c.lineTo(x+9,yy+4)}else{c.moveTo(x,yy+10);c.lineTo(x-9,yy-4);c.lineTo(x+9,yy-4)}c.fill();
+    const d=(p-st.cam);c.font=`900 11px ${FONT}`;c.textAlign='center';c.fillStyle='#fff';c.fillText(`${l.name} ${d>0?'+':''}${d.toFixed(1)}`,x,up?yy+18:yy-12);return}
+   drawRunnerBack(c,x,y,sc,mv?st.ph+k:0,l.col,l.me);
+   c.font=`900 ${l.me?13:11}px ${FONT}`;c.textAlign='center';c.lineWidth=3;c.strokeStyle='rgba(0,0,0,.45)';c.strokeText(l.name,x,y-30*sc);c.fillStyle=l.me?'#FFE27A':'#fff';c.fillText(l.name,x,y-30*sc)});
+  c.font=`800 12px ${FONT}`;c.textAlign='left';c.fillStyle='rgba(26,34,51,.75)';const rk=1+L.filter(l=>!l.me&&l.t>(L.find(m=>m.me)||{t:0}).t).length;const tt=`Peringkat ${rk} dari ${L.length}`;const w=c.measureText(tt).width+14;rr(c,8,8,w,22,11);c.fill();c.fillStyle='#fff';c.fillText(tt,15,19);
+  c.fillStyle='#fff';c.fillRect(0,rh,W,H-rh);const done=arc.state==='resolved';
+  for(const b of this.btns){let fill='#fff',txt='#14213D',edge='#E5E5E5';if(done&&b.k===arc.ci){fill='#1C8A57';txt='#fff';edge='#0F5C39'}else if(done&&this.picked===b.k){fill='#C9362A';txt='#fff'}
+   rr(c,b.x,b.y+4,b.w,b.h,14);c.fillStyle=edge;c.fill();gBtn(c,b.x,b.y,b.w,b.h,b.f,{fill,txt,edge,r:14,num:b.k+1})}}
 };
 
 /* ---- game 3: Tangkap Balon ---- */
@@ -7227,7 +7227,7 @@ function roomPlayers(){const d=ROOM.doc;if(!d)return [];const uid=FBX.user.uid,a
   return Object.entries(d.players||{}).sort((a,b)=>(a[1].joined||0)-(b[1].joined||0)).map(([u,p],k)=>{const me=u===uid;const i=me?(p.done?d.n:Math.min(d.n,acc.done+((game&&game.i)||0))):(p.i||0);const c=me?(p.done?p.c:acc.correct+((game&&game.correct)||0)):(p.c||0);
     return {uid:u,name:p.name||'Teman',av:p.av||null,me,i,c,done:!!p.done,col:RR_COL[k%RR_COL.length]}})}
 window.roomPlayers=roomPlayers;
-function roomLive(){const d=ROOM.doc;let el=$('#roomRace');if(!d||!ROOM.playing||MODE==='pacu'){if(el){if(!el.hidden&&MODE==='pacu')setTimeout(()=>{try{gameFit()}catch(e){}},80);el.hidden=true}return}
+function roomLive(){const d=ROOM.doc;let el=$('#roomRace');if(!d||!ROOM.playing||MODE==='pacu'||MODE==='lari'){if(el){if(!el.hidden&&(MODE==='pacu'||MODE==='lari'))setTimeout(()=>{try{gameFit()}catch(e){}},80);el.hidden=true}return}
   let fresh=false;if(!el){const pb=$('#vPlay .playbar');if(!pb)return;pb.insertAdjacentHTML('afterend','<div class="roomrace" id="roomRace"><div class="rrlist"></div></div>');el=$('#roomRace');fresh=true}
   if(el.hidden)fresh=true;el.hidden=false;const box=el.querySelector('.rrlist'),n=Math.max(1,d.n||1);
   const ps=roomPlayers().sort((a,b)=>(b.c-a.c)||(b.i-a.i));const old={};box.querySelectorAll('.rrp').forEach(a=>old[a.dataset.u]=a.getBoundingClientRect().left);
