@@ -4759,7 +4759,7 @@ const DUEL_RACE={pacu:'boat',lari:'run',balap:'car'};
 let DLAND={mine:false};
 function duelLand(on){const b=document.body;
   if(on){b.classList.add('duelland');if(!$('#rotHint'))$('#vDuel').insertAdjacentHTML('beforeend','<div class="rothint" id="rotHint"><div><div class="rotph">📱</div><b>Putar HP ke posisi mendatar</b><span>Pemain duduk berdampingan. Lintasan ada di atas, jawaban masing-masing di kiri dan kanan.</span></div></div>');
-    try{const d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen();DLAND.mine=true;r&&r.then&&r.then(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}).catch(()=>{DLAND.mine=false})}else{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}}catch(e){}}
+    try{const r=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');r&&r.catch&&r.catch(()=>{})}catch(e){}}
   else{b.classList.remove('duelland');try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}if(DLAND.mine){DLAND.mine=false;try{if(document.fullscreenElement){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}}
 const duelHold=()=>document.body.classList.contains('duelland')&&matchMedia('(orientation:portrait)').matches;
 window.addEventListener('orientationchange',()=>{if(DUEL&&DUEL.race){setTimeout(duelRaceSize,300);setTimeout(duelRaceSize,800)}});
