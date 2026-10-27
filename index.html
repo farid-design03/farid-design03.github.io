@@ -1880,6 +1880,29 @@ body.has-jreq .nav[data-tab=tstud] i::before{content:'';position:absolute;right:
  .duel.hasrace .dside .dopts{flex:1;min-height:0;grid-auto-rows:1fr;align-content:stretch}
  .duel.hasrace .dside .dopts .opt{min-height:0;height:100%;font-size:17px}
 }
+
+/* Balapan berdua di HP: mendatar */
+.rothint{display:none}
+@media (orientation:portrait){body.duelland #duelCount{display:none!important}body.duelland .rothint{display:grid;position:fixed;inset:0;z-index:200;background:rgba(27,30,61,.92);color:#fff;place-items:center;text-align:center;padding:24px}
+ body.duelland .rothint>div{display:flex;flex-direction:column;gap:10px;max-width:320px}body.duelland .rothint b{font-family:var(--display);font-size:22px}
+ body.duelland .rotph{font-size:64px;animation:rotph 1.8s ease-in-out infinite}}
+@keyframes rotph{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+@media (orientation:landscape){
+ body.duelland.duelon #vDuel{position:fixed!important;inset:0;z-index:40;background:#fff;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)!important;gap:0!important;display:flex!important;flex-direction:column}
+ body.duelland.duelon #vDuel .duel.hasrace{flex:1;min-height:0;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:40% 1fr!important;gap:0!important}
+ body.duelland.duelon #vDuel .duel.hasrace .drace{grid-column:1/-1;order:-1;height:auto!important;border:0;border-radius:0;border-bottom:2px solid var(--line)}
+ body.duelland.duelon #vDuel .duel.hasrace .dside{transform:none!important;height:auto!important;min-height:0;border:0!important;border-top:5px solid var(--tc)!important;border-radius:0!important;box-shadow:none!important;padding:5px 8px;gap:4px}
+ body.duelland.duelon #vDuel .duel.hasrace .dside+.dside{border-left:2px solid var(--line)!important}
+ body.duelland.duelon #vDuel .duel.hasrace .dhead{gap:6px}body.duelland.duelon #vDuel .duel.hasrace .dname{font-size:16px}body.duelland.duelon #vDuel .duel.hasrace .dscore{font-size:18px;padding:0 8px;min-width:40px}
+ body.duelland.duelon #vDuel .duel.hasrace .dq{font-size:13px;min-height:0;max-height:2.7em;overflow:auto}
+ body.duelland.duelon #vDuel .duel.hasrace .hint,body.duelland.duelon #vDuel .duel.hasrace .dfb{display:none}
+ body.duelland.duelon #vDuel .duel.hasrace .timer{height:6px}
+ body.duelland.duelon #vDuel .duel.hasrace .dopts{flex:1;min-height:0;gap:5px;grid-auto-rows:1fr}
+ body.duelland.duelon #vDuel .duel.hasrace .dopts .opt{min-height:0;height:100%;font-size:14px;padding:4px 8px}
+ body.duelland.duelon #vDuel .duelbar{position:absolute;left:6px;top:6px;right:auto;bottom:auto;transform:none;z-index:6;flex-direction:row;gap:6px}
+ body.duelland.duelon #vDuel .duelbar .eyebrow{display:none}
+ body.duelland.duelon #vDuel .duelbar .back{min-height:30px;min-width:34px;padding:2px 8px}
+}
 /* ===== Gelembung konsisten: setiap gelembung muncul di tempatnya sendiri, tidak bergeser =====
    lembar bawah  → naik dari tepi bawah
    notifikasi    → turun dari atas, tetap di tengah
@@ -4711,7 +4734,7 @@ function startDuel(){
     const name=(GROUP.names[s]||'').trim()||TEAM_DEF[s],color=TEAM_COLORS[s];
     const el=document.createElement('div');el.className='dside';el.style.setProperty('--tc',color);
     el.innerHTML=`<div class="dhead"><span class="dname">${esc(name)}</span><span class="dprog"></span><span class="dscore">0</span></div><div class="dq"></div><div class="timer"><i></i></div>${kind==='arcade'?'<div class="stage dstage"><canvas aria-label="Arena '+esc(name)+'"></canvas></div>':'<div class="opts dopts"></div>'}<p class="dfb"></p><p class="hint">${DHELP[s]}</p><div class="overlay dwait" hidden><div class="box"><b class="ttl" style="color:${color}">Selesai!</b><p>Tunggu lawan menyelesaikan soalnya…</p></div></div>`;
-    if(s===0&&isPhone())el.classList.add('flip');
+    if(s===0&&isPhone()&&!race)el.classList.add('flip');
     grid.appendChild(el);
     if(s===0&&race){grid.insertAdjacentHTML('beforeend','<div class="drace"><canvas aria-label="Lintasan balapan"></canvas></div>');DUEL.rcv=grid.querySelector('.drace canvas')}
     const sd={idx:s,name,color,root:el,el:{q:el.querySelector('.dq'),bar:el.querySelector('.timer i'),stage:el.querySelector('.dstage'),cv:el.querySelector('canvas'),opts:el.querySelector('.dopts'),fb:el.querySelector('.dfb'),prog:el.querySelector('.dprog'),score:el.querySelector('.dscore'),wait:el.querySelector('.dwait')},
@@ -4721,12 +4744,20 @@ function startDuel(){
   }
   for(const sd of DUEL.sides){if(kind==='arcade'){bindDuelCanvas(sd);withSide(sd,()=>duelSize(sd))}withSide(sd,()=>duelShowQ(sd,true))}
   if(kind==='arcade')setTimeout(()=>{if(DUEL)DUEL.sides.forEach(sd=>withSide(sd,()=>{duelSize(sd);M.setup()}))},120);
-  if(race){grid.classList.add('hasrace');setTimeout(duelRaceSize,60)}else grid.classList.remove('hasrace');
+  if(race){grid.classList.add('hasrace');if(isTouchDev())duelLand(true);setTimeout(duelRaceSize,60);setTimeout(duelRaceSize,700)}else grid.classList.remove('hasrace');
   $('#duelCountN').textContent='3';$('#duelCount').hidden=false;
   DUEL.raf=requestAnimationFrame(duelLoop);
 }
 /* Main berdua untuk game balapan: lintasan bersama di tengah layar, jawaban di layar masing-masing. Benar maju, salah mundur sedikit. */
 const DUEL_RACE={pacu:'boat',lari:'run',balap:'car'};
+/* Balapan berdua di HP memakai posisi mendatar: lintasan di atas, jawaban pemain kiri dan kanan di bawah. Tidak ada layar terbalik. */
+let DLAND={mine:false};
+function duelLand(on){const b=document.body;
+  if(on){b.classList.add('duelland');if(!$('#rotHint'))$('#vDuel').insertAdjacentHTML('beforeend','<div class="rothint" id="rotHint"><div><div class="rotph">📱</div><b>Putar HP ke posisi mendatar</b><span>Pemain duduk berdampingan. Lintasan ada di atas, jawaban masing-masing di kiri dan kanan.</span></div></div>');
+    try{const d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen){const r=d.requestFullscreen();DLAND.mine=true;r&&r.then&&r.then(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}).catch(()=>{DLAND.mine=false})}else{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}}catch(e){}}
+  else{b.classList.remove('duelland');try{screen.orientation&&screen.orientation.unlock&&screen.orientation.unlock()}catch(e){}if(DLAND.mine){DLAND.mine=false;try{if(document.fullscreenElement){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}}}
+const duelHold=()=>document.body.classList.contains('duelland')&&matchMedia('(orientation:portrait)').matches;
+window.addEventListener('orientationchange',()=>{if(DUEL&&DUEL.race){setTimeout(duelRaceSize,300);setTimeout(duelRaceSize,800)}});
 function duelRaceSize(){if(!DUEL||!DUEL.rcv)return;const cv=DUEL.rcv,W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight||150;const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.width=W+'px';cv.style.height=H+'px';DUEL.rW=W;DUEL.rH=H;DUEL.rctx=cv.getContext('2d');DUEL.rctx.setTransform(dpr,0,0,dpr,0,0)}
 function duelRaceDraw(dt){const D=DUEL;if(!D||!D.race||!D.rctx)return;const c=D.rctx,W=D.rW,H=D.rH,tot=Math.max(1,GROUP.per);D.rph=(D.rph||0)+dt*9;D.rpos=D.rpos||[0,0];
   const pos=D.sides.map(sd=>{const g=sd.game,wrong=g.results.filter(r=>r===false).length;return Math.max(0,g.correct-.5*wrong)});
@@ -4737,13 +4768,13 @@ function duelRaceDraw(dt){const D=DUEL;if(!D||!D.race||!D.rctx)return;const c=D.
   else{c.fillStyle='#7FB77E';c.fillRect(0,0,W,H);c.fillStyle='#C8553D';c.fillRect(0,6,W,H-12);const off=(D.rph*8)%40;c.fillStyle='rgba(255,255,255,.25)';for(let x=-off;x<W;x+=40)c.fillRect(x,lh-1,20,2)}
   c.strokeStyle='rgba(255,255,255,.85)';c.lineWidth=2;c.beginPath();c.moveTo(0,lh);c.lineTo(W,lh);c.stroke();
   for(let y=4;y<H-4;y+=8){c.fillStyle=(y/8|0)%2?'#1E1E24':'#fff';c.fillRect(fx,y,6,8);c.fillStyle=(y/8|0)%2?'#fff':'#1E1E24';c.fillRect(fx+6,y,6,8)}
-  D.sides.forEach((sd,k)=>{const y=lh*k+lh/2,x=28+(fx-70)*Math.min(1,D.rpos[k]/tot),s=clamp(lh/62,.55,1.1);c.save();c.translate(x,y);
+  D.sides.forEach((sd,k)=>{const x0=document.body.classList.contains('duelland')?110:28,y=lh*k+lh/2,x=x0+(fx-x0-42)*Math.min(1,D.rpos[k]/tot),s=clamp(lh/62,.55,1.1);c.save();c.translate(x,y);
     if(D.race==='boat'){c.scale(s,s);c.fillStyle=sd.color;c.beginPath();c.moveTo(-34,-6);c.lineTo(34,-6);c.quadraticCurveTo(46,-2,40,6);c.lineTo(-30,6);c.quadraticCurveTo(-40,0,-34,-6);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();
       for(let r=0;r<4;r++){const rx=-20+r*14,sw=Math.sin(D.rph+r+k)*4;c.fillStyle='#F6C9A0';c.beginPath();c.arc(rx,-11,4,0,7);c.fill();c.strokeStyle='#8B5A2B';c.lineWidth=2;c.beginPath();c.moveTo(rx,-8);c.lineTo(rx-6+sw,8);c.stroke()}}
     else if(D.race==='car'){c.scale(s,s);c.fillStyle=sd.color;rr(c,-30,-12,60,22,8);c.fill();c.strokeStyle='#1E1E24';c.lineWidth=2;c.stroke();c.fillStyle='#BFE6FF';rr(c,-6,-9,18,16,4);c.fill();c.fillStyle='#1E1E24';[-18,18].forEach(wx=>{c.beginPath();c.arc(wx,11,6,0,7);c.fill()});c.fillStyle='rgba(255,255,255,.5)';for(let k2=0;k2<3;k2++)c.fillRect(-46-k2*10,-6+k2*6,8,2)}
     else{drawKid(c,0,8*s,s*.9,D.rph+k*2,sd.color)}
     c.restore();
-    c.save();c.translate(Math.min(x,W-80),k===0?y+lh*.42:y-lh*.36);if(k===0)c.rotate(Math.PI);c.font=`900 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.lineWidth=3;c.strokeStyle='rgba(0,0,0,.45)';c.strokeText(sd.name,0,0);c.fillStyle='#fff';c.fillText(sd.name,0,0);c.restore()})}
+    const land=document.body.classList.contains('duelland');c.save();c.translate(Math.min(x,W-80),k===0&&!land?y+lh*.42:y-lh*.36);if(k===0&&!land)c.rotate(Math.PI);c.font=`900 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.lineWidth=3;c.strokeStyle='rgba(0,0,0,.45)';c.strokeText(sd.name,0,0);c.fillStyle='#fff';c.fillText(sd.name,0,0);c.restore()})}
 window.addEventListener('resize',()=>{if(DUEL&&DUEL.race)setTimeout(duelRaceSize,120)});
 function duelSize(sd){const z=document.body.classList.contains('tv')?1.3:1;arc.z=z;const cw=sd.el.stage.clientWidth;const W=cw/z;
   let H;
@@ -4787,7 +4818,7 @@ function stepSide(sd,dt){
 }
 function duelLoop(ts){
   if(!DUEL||!DUEL.active)return;
-  if(PAUSE.on){DUEL.last=0;DUEL.raf=requestAnimationFrame(duelLoop);return}const dt=DUEL.last?Math.min(.05,(ts-DUEL.last)/1000):0;DUEL.last=ts;
+  if(PAUSE.on||duelHold()){DUEL.last=0;DUEL.raf=requestAnimationFrame(duelLoop);return}const dt=DUEL.last?Math.min(.05,(ts-DUEL.last)/1000):0;DUEL.last=ts;
   if(DUEL.count>0){DUEL.count-=dt;const n=Math.ceil(DUEL.count-.6);$('#duelCountN').textContent=n>0?n:'Mulai!';
     if(n!==DUEL.lastN){DUEL.lastN=n;tone([n>0?440:880],.12)}
     if(DUEL.count<=0){$('#duelCount').hidden=true;DUEL.sides.forEach(sd=>sd.arc.state='play')}}
@@ -4795,7 +4826,7 @@ function duelLoop(ts){
   if(DUEL&&DUEL.race)duelRaceDraw(dt);
   if(DUEL&&DUEL.active)DUEL.raf=requestAnimationFrame(duelLoop);
 }
-function stopDuel(){if(!DUEL)return;DUEL.active=false;cancelAnimationFrame(DUEL.raf);$('#duelCount').hidden=true;DUEL=null}
+function stopDuel(){if(!DUEL)return;if(DUEL.race)duelLand(false);DUEL.active=false;cancelAnimationFrame(DUEL.raf);$('#duelCount').hidden=true;DUEL=null}
 function finishDuel(){if(!DUEL)return;const d=DUEL;stopDuel();
   game={qs:[...d.sides[0].game.qs,...d.sides[1].game.qs],mode:d.mode,results:[],correct:0,lives:3,
     group:{format:'terbagi',teams:d.sides.map(sd=>({name:sd.name,color:sd.color,score:sd.game.score,correct:sd.game.correct})),locked:[]}};
