@@ -16,10 +16,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Orbitron:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap">
 <script>window.__bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e;try{window.instReady&&instReady()}catch(_){}});</script>
 <script>(function(){try{var t=localStorage.getItem('jelas-theme')||'siang';if(t==='auto')t=matchMedia('(prefers-color-scheme: dark)').matches?'malam':'siang';document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <style>
+@font-face{font-family:"Exo 2";src:url(fonts/exo2.woff) format("woff");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Nunito";src:url(fonts/nunito.woff) format("woff");font-weight:200 1000;font-display:swap}
 @font-face{font-family:"Fredoka";src:url(fonts/fredoka.woff) format("woff");font-weight:300 700;font-display:swap}
 /* Layout: a bright cartoon schoolyard world (sky, sun, drifting clouds, hills) behind chunky sticker-style cards with ink outlines and solid drop shadows; one committed bright look for classroom TVs */
@@ -42,13 +43,13 @@
 /* Tampilan malam: biru tua keunguan dengan cahaya ungu lembut, kartu kaca gelap */
 html[data-theme=malam]{
   --cy:#00F0FF; --mg:#FF2BD6; --ye:#FFE600; --ng:#00FF9C; --nr:#FF2E63;
-  --bg:#05060F; --surface:#0A0F1F; --card:#0A1020; --cream:#0B1326; --ink:#E6FBFF; --ink2:#BFEFFF; --muted:#86A9C2; --muted2:#4F6B82;
+  --bg:#05060F; --surface:#0A0F1F; --card:#0A1020; --cream:#0B1326; --ink:#E6FBFF; --ink2:#BFEFFF; --muted:#A3BDD1; --muted2:#6F8CA4;
   --line:rgba(0,240,255,.24); --line2:rgba(0,240,255,.10);
   --tb:rgba(0,240,255,.10); --ty:rgba(255,230,0,.08); --tr:rgba(255,46,99,.12); --tgr:rgba(0,255,156,.10); --tg:rgba(0,240,255,.04); --track:rgba(0,240,255,.14);
   --ok:#00FF9C; --bad:#FF2E63; --ok-bg:rgba(0,255,156,.12); --bad-bg:rgba(255,46,99,.14); --accent:#00F0FF; --purple:#FF2BD6; --blue:#00F0FF; --gold:#FFE600;
   --sky-top:#05060F; --sky-bot:#05060F;
   --outline:0 0 6px rgba(0,240,255,.8),0 0 1px #00F0FF;
-  --title:"Orbitron","Nunito",system-ui,sans-serif;
+  --title:"Exo 2","Nunito",system-ui,sans-serif; --display:"Exo 2","Nunito",system-ui,sans-serif;
   color-scheme:dark;
 }
 html[data-theme=malam] body{background-color:#05060F;background-image:radial-gradient(700px 500px at 0% 0%,rgba(255,43,214,.16),transparent 60%),radial-gradient(800px 600px at 100% 100%,rgba(0,240,255,.14),transparent 60%),linear-gradient(rgba(0,240,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.05) 1px,transparent 1px);background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed}
@@ -2066,7 +2067,7 @@ html[data-theme=malam] .pagehead{background:rgba(10,10,34,.86)!important;backdro
 
 /* ===== tema CYBER (mode malam): neon cyan & magenta, sudut tajam, garis bercahaya ===== */
 html[data-theme=malam] .world,html[data-theme=malam] .doodle{opacity:.08!important;filter:hue-rotate(160deg)}
-html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3,html[data-theme=malam] .sbname,html[data-theme=malam] .kv,html[data-theme=malam] .pagehead h1,html[data-theme=malam] .pagehead h2{font-family:"Orbitron","Nunito",sans-serif!important;letter-spacing:.03em;text-shadow:0 0 14px rgba(0,240,255,.35)}
+html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3,html[data-theme=malam] .sbname,html[data-theme=malam] .kv,html[data-theme=malam] .pagehead h1,html[data-theme=malam] .pagehead h2{font-family:"Exo 2","Nunito",sans-serif!important;letter-spacing:.03em;text-shadow:0 0 14px rgba(0,240,255,.35)}
 html[data-theme=malam] .tn i{background:transparent!important;color:var(--ye)!important;border:1px solid var(--ye);box-shadow:0 0 10px rgba(255,230,0,.45)}
 html[data-theme=malam] .card,html[data-theme=malam] .tcard,html[data-theme=malam] .kpi,html[data-theme=malam] .thead,html[data-theme=malam] .tdpbtn,html[data-theme=malam] .sfpro,html[data-theme=malam] .unit,html[data-theme=malam] .item,html[data-theme=malam] .tstep,html[data-theme=malam] .jrow,html[data-theme=malam] .dnrow{
   background:linear-gradient(180deg,rgba(0,240,255,.05),rgba(0,240,255,.01)),#08101F!important;border:1px solid rgba(0,240,255,.28)!important;border-radius:10px!important;
@@ -2081,7 +2082,7 @@ html[data-theme=malam] .kpi .kv{color:var(--ink)}html[data-theme=malam] .kpi.goo
 html[data-theme=malam] i[data-icon] svg,html[data-theme=malam] .thead>span>svg,html[data-theme=malam] .pagehead svg{filter:grayscale(1) invert(1) brightness(1.2) sepia(1) hue-rotate(140deg) saturate(6) drop-shadow(0 0 4px rgba(0,240,255,.8))}
 html[data-theme=malam] .nav[aria-current="page"] i[data-icon] svg,html[data-theme=malam] .kpi.k1 i[data-icon] svg,html[data-theme=malam] .kpi.k4 i[data-icon] svg{filter:grayscale(1) invert(1) brightness(1.2) sepia(1) hue-rotate(260deg) saturate(8) drop-shadow(0 0 5px rgba(255,43,214,.9))}
 /* tombol */
-html[data-theme=malam] .primary{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;color:#05060F!important;border:0!important;border-radius:8px!important;box-shadow:0 0 18px rgba(0,240,255,.45),0 0 30px rgba(255,43,214,.25)!important;text-shadow:none!important;font-family:"Orbitron","Nunito",sans-serif;letter-spacing:.08em}
+html[data-theme=malam] .primary{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;color:#05060F!important;border:0!important;border-radius:8px!important;box-shadow:0 0 18px rgba(0,240,255,.45),0 0 30px rgba(255,43,214,.25)!important;text-shadow:none!important;font-family:"Exo 2","Nunito",sans-serif;letter-spacing:.08em}
 html[data-theme=malam] .primary:disabled{opacity:.45;box-shadow:none!important}
 html[data-theme=malam] .ghost,html[data-theme=malam] .smallbtn,html[data-theme=malam] .tdnav,html[data-theme=malam] .tbell{background:rgba(0,240,255,.04)!important;color:var(--cy)!important;border:1px solid rgba(0,240,255,.45)!important;border-radius:8px!important;box-shadow:0 0 10px rgba(0,240,255,.12)!important}
 html[data-theme=malam] .tbell{border-radius:50%!important}
@@ -2092,7 +2093,7 @@ html[data-theme=malam] .side{background:rgba(4,6,16,.94)!important;border-color:
 html[data-theme=malam] .nav{color:var(--muted);border-radius:8px!important}
 html[data-theme=malam] .nav:hover{color:var(--cy)}
 html[data-theme=malam] .nav[aria-current="page"]{background:linear-gradient(90deg,rgba(255,43,214,.22),rgba(0,240,255,.06))!important;border:1px solid rgba(255,43,214,.55)!important;color:#fff!important;box-shadow:0 0 18px rgba(255,43,214,.25),inset 3px 0 0 #FF2BD6!important;text-shadow:0 0 8px rgba(255,43,214,.7)}
-html[data-theme=malam] body.teacher .side .tbadge{background:transparent;color:var(--mg);border:1px solid var(--mg);box-shadow:0 0 10px rgba(255,43,214,.4);font-family:"Orbitron",sans-serif;font-size:11px}
+html[data-theme=malam] body.teacher .side .tbadge{background:transparent;color:var(--mg);border:1px solid var(--mg);box-shadow:0 0 10px rgba(255,43,214,.4);font-family:"Exo 2",sans-serif;font-size:11px}
 html[data-theme=malam] .sbname{color:var(--cy)!important}
 html[data-theme=malam] .thead .datepill{background:transparent!important;color:var(--ng)!important;border:1px solid var(--ng);box-shadow:0 0 12px rgba(0,255,156,.35)}
 /* isian */
@@ -2109,7 +2110,7 @@ html[data-theme=malam] .opt{background:rgba(0,240,255,.03)!important;color:var(-
 html[data-theme=malam] .opt[aria-pressed=true],html[data-theme=malam] .opt.sel{border-color:var(--cy)!important;box-shadow:0 0 16px rgba(0,240,255,.45)!important}
 html[data-theme=malam] .opt.right{background:rgba(0,255,156,.10)!important;color:var(--ng)!important;border-color:var(--ng)!important;box-shadow:0 0 18px rgba(0,255,156,.45)!important}
 html[data-theme=malam] .opt.wrong{background:rgba(255,46,99,.10)!important;color:var(--nr)!important;border-color:var(--nr)!important;box-shadow:0 0 18px rgba(255,46,99,.45)!important}
-html[data-theme=malam] .ttable th{background:rgba(0,240,255,.06)!important;color:var(--cy)!important;font-family:"Orbitron",sans-serif;font-size:11px}
+html[data-theme=malam] .ttable th{background:rgba(0,240,255,.06)!important;color:var(--cy)!important;font-family:"Exo 2",sans-serif;font-size:11px}
 html[data-theme=malam] .ttable td{border-color:rgba(0,240,255,.12)!important}
 html[data-theme=malam] .pill{border-radius:6px}
 /* kalender, cincin, juara */
@@ -2120,7 +2121,7 @@ html[data-theme=malam] .tdrsvg .rfg{stroke:#00F0FF!important;filter:drop-shadow(
 html[data-theme=malam] .tdd{background:transparent!important;border:1px solid var(--mg);color:var(--mg)!important;box-shadow:0 0 10px rgba(255,43,214,.35)}
 html[data-theme=malam] .jrow.top1{border-color:var(--ye)!important;box-shadow:0 0 16px rgba(255,230,0,.25)!important}html[data-theme=malam] .jrow.top2{border-color:var(--cy)!important}html[data-theme=malam] .jrow.top3{border-color:var(--mg)!important}
 html[data-theme=malam] .jv{color:var(--cy);text-shadow:0 0 10px rgba(0,240,255,.5)}
-html[data-theme=malam] .fbcode-big{background:rgba(0,240,255,.05)!important;border:1px solid var(--cy)!important;color:var(--cy)!important;box-shadow:0 0 18px rgba(0,240,255,.35)!important;text-shadow:0 0 12px rgba(0,240,255,.8);font-family:"Orbitron",sans-serif!important;border-radius:8px!important}
+html[data-theme=malam] .fbcode-big{background:rgba(0,240,255,.05)!important;border:1px solid var(--cy)!important;color:var(--cy)!important;box-shadow:0 0 18px rgba(0,240,255,.35)!important;text-shadow:0 0 12px rgba(0,240,255,.8);font-family:"Exo 2",sans-serif!important;border-radius:8px!important}
 html[data-theme=malam] .tbn{background:var(--mg);box-shadow:0 0 10px var(--mg);border-color:#05060F}
 html[data-theme=malam] .qbar,html[data-theme=malam] .bar,html[data-theme=malam] .xpbar{background:rgba(0,240,255,.1)!important;box-shadow:inset 0 0 0 1px rgba(0,240,255,.25)}
 html[data-theme=malam] .qbar i{background:linear-gradient(90deg,#00F0FF,#FF2BD6)!important;box-shadow:0 0 10px rgba(0,240,255,.6)}
@@ -2130,6 +2131,34 @@ html[data-theme=malam] .feedback.bad{background:linear-gradient(rgba(255,46,99,.
 html[data-theme=malam] .feedback.ok #fbTitle{color:var(--ng)!important;text-shadow:0 0 12px rgba(0,255,156,.6)}html[data-theme=malam] .feedback.bad #fbTitle{color:var(--nr)!important;text-shadow:0 0 12px rgba(255,46,99,.6)}
 html[data-theme=malam] #fbText .fbtip{background:rgba(0,240,255,.05)!important;border:1px solid rgba(0,240,255,.3)!important}
 html[data-theme=malam] ::selection{background:rgba(255,43,214,.45);color:#fff}
+
+/* ===== mode malam v2: lebih tenang, tanpa blok terang, satu huruf judul ===== */
+html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3,html[data-theme=malam] .sbname,html[data-theme=malam] .pagehead h2{font-weight:700!important;letter-spacing:.01em!important;text-shadow:none!important}
+html[data-theme=malam] .primary{box-shadow:0 0 12px rgba(0,240,255,.28)!important;font-weight:700!important}
+html[data-theme=malam] .ghost,html[data-theme=malam] .smallbtn,html[data-theme=malam] .tdnav,html[data-theme=malam] .tbell{box-shadow:none!important}
+html[data-theme=malam] .card,html[data-theme=malam] .tcard,html[data-theme=malam] .kpi,html[data-theme=malam] .thead,html[data-theme=malam] .tdpbtn,html[data-theme=malam] .unit,html[data-theme=malam] .item,html[data-theme=malam] .jrow,html[data-theme=malam] .dnrow{border-color:rgba(0,240,255,.18)!important;box-shadow:none!important}
+html[data-theme=malam] .kpi.k1,html[data-theme=malam] .kpi.k4,html[data-theme=malam] .sfpro{box-shadow:none!important;border-color:rgba(255,43,214,.35)!important}
+html[data-theme=malam] .kpi.k2,html[data-theme=malam] .kpi.k3{border-color:rgba(0,240,255,.3)!important}
+html[data-theme=malam] .kpi .kic{box-shadow:none!important}
+html[data-theme=malam] .opt{box-shadow:none!important}
+html[data-theme=malam] .modal,html[data-theme=malam] .sheet,html[data-theme=malam] .gsheet,html[data-theme=malam] .tsres,html[data-theme=malam] .tbpop,html[data-theme=malam] .tdpmenu,html[data-theme=malam] .popover{box-shadow:0 20px 50px rgba(0,0,0,.6)!important;border-color:rgba(0,240,255,.3)!important}
+html[data-theme=malam] i[data-icon] svg,html[data-theme=malam] .thead>span>svg,html[data-theme=malam] .pagehead svg{filter:grayscale(1) invert(1) brightness(1.2) sepia(1) hue-rotate(140deg) saturate(6) drop-shadow(0 0 2px rgba(0,240,255,.5))}
+/* kalender: hanya hari ini yang menyala */
+html[data-theme=malam] .tdgrid span.m{background:rgba(0,240,255,.07)!important;box-shadow:none!important}
+html[data-theme=malam] .tdgrid span.t{box-shadow:0 0 10px rgba(255,43,214,.5)!important}
+/* blok berwarna terang -> kaca gelap dengan aksen warna */
+html[data-theme=malam] .uhead{filter:none!important;background:linear-gradient(90deg,color-mix(in srgb,var(--uc) 30%,transparent),color-mix(in srgb,var(--uc) 6%,transparent)),#08101F!important;border:1px solid color-mix(in srgb,var(--uc) 65%,transparent)!important;box-shadow:inset 4px 0 0 var(--uc)!important;color:var(--ink)!important}
+html[data-theme=malam] .uhead .guide{background:rgba(255,255,255,.04)!important;border:1px solid color-mix(in srgb,var(--uc) 60%,transparent)!important;box-shadow:none!important;color:var(--ink)!important}
+html[data-theme=malam] .mqhead{background:linear-gradient(160deg,color-mix(in srgb,var(--mc) 30%,transparent),transparent 75%),#08101F!important;border-bottom:1px solid color-mix(in srgb,var(--mc) 55%,transparent)}
+html[data-theme=malam] .mqtop h2{color:var(--ink)!important}
+html[data-theme=malam] .mqcard{background:rgba(255,255,255,.04)!important;border:1px solid rgba(0,240,255,.2)}
+html[data-theme=malam] .fqart{background:linear-gradient(rgba(0,240,255,.06),rgba(255,43,214,.06)),#0A1428!important;border-bottom:1px solid rgba(0,240,255,.18)}
+html[data-theme=malam] .pban,html[data-theme=malam] .shopav-av{background:linear-gradient(180deg,color-mix(in srgb,var(--av) 32%,#0A1428),#08101F)!important;border-color:rgba(0,240,255,.2)!important}
+html[data-theme=malam] .node.lock,html[data-theme=malam] .node.k-sport.lock{background:#0F1B30!important;color:#6F8CA4!important;box-shadow:0 6px 0 #050A16!important;outline:1px solid rgba(0,240,255,.22)}
+html[data-theme=malam] .node.lock i{filter:none}
+html[data-theme=malam] .rapor .grade,html[data-theme=malam] .rapor .grade *{color:#14162E!important;text-shadow:none!important}
+html[data-theme=malam] .rapor{border:1px solid rgba(0,240,255,.25)!important;box-shadow:none!important}
+html[data-theme=malam] .rapor .head{background:linear-gradient(160deg,color-mix(in srgb,var(--lvc) 34%,transparent),transparent 80%),#08101F!important;border-bottom:1px solid color-mix(in srgb,var(--lvc) 55%,transparent)!important}
 
 .instsheet{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
 .instbg{position:absolute;inset:0;background:rgba(10,14,40,.45);opacity:0;transition:opacity .25s;pointer-events:auto}
@@ -2183,7 +2212,7 @@ html[data-theme=malam] .insthowbox{background:rgba(255,230,0,.06);border:1px sol
 .dsb{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:16px;border:2px solid var(--line);background:var(--card);box-shadow:0 4px 0 var(--line);font-family:var(--title);font-weight:900;font-size:16px;letter-spacing:.05em;cursor:pointer}
 .dsb.fbk{color:#3B5998}.dsb.ggl{color:var(--ink2,#4B4B4B)}
 .dterms{text-align:center;color:var(--muted2,#AFAFAF);font-size:14px;font-weight:600;margin:8px auto 0;max-width:420px}.dterms a{color:inherit;font-weight:900;text-decoration:none}
-html[data-theme=malam] .dlogo{color:var(--cy);text-shadow:0 0 18px rgba(0,240,255,.6);font-family:"Orbitron",sans-serif}
+html[data-theme=malam] .dlogo{color:var(--cy);text-shadow:0 0 18px rgba(0,240,255,.6);font-family:"Exo 2",sans-serif}
 html[data-theme=malam] .dalt{color:var(--cy)!important;background:transparent!important;border:1px solid rgba(0,240,255,.5)!important;box-shadow:0 0 12px rgba(0,240,255,.2)!important}
 html[data-theme=malam] .dacc,html[data-theme=malam] .dinbox,html[data-theme=malam] .dbub,html[data-theme=malam] .dsb{background:#08101F!important;border:1px solid rgba(0,240,255,.35)!important;box-shadow:0 0 16px rgba(0,240,255,.1)!important}
 html[data-theme=malam] .dbub::after{background:#08101F;border-color:rgba(0,240,255,.35)}
@@ -2301,6 +2330,13 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .set>span{flex:1;min-width:0}.set b{display:block}.set .seg{flex:none}.set:has(.seg){flex-direction:column;align-items:stretch;gap:8px}.set:has(.seg) .seg{display:flex}.set:has(.seg) .seg button{flex:1}
 }
 
+@media (min-width:481px){
+ .kpis .kpi{position:relative;display:block!important;padding:14px 16px!important}
+ .kpis .kpi .kic{position:absolute;top:12px;right:12px;width:40px!important;height:40px!important}.kpis .kpi .kic i{width:22px!important;height:22px!important}
+ .kpis .kpi .kl{display:block;padding-right:46px;letter-spacing:.02em!important;font-size:12px!important;line-height:1.25}
+ .kpis .kpi .kv{display:block;margin-top:6px}
+ .kpis .kpi .kn{display:block}
+}
 @media (max-width:480px){
  .kpis .kpi{position:relative;display:block!important;padding:10px 12px!important}
  .kpis .kpi .kic{position:absolute;top:8px;right:8px;width:30px!important;height:30px!important}.kpis .kpi .kic i{width:18px!important;height:18px!important}
@@ -2414,7 +2450,7 @@ b,strong{font-weight:700}
  #qtext{font-size:20px;font-family:var(--body);font-weight:700}
  .opt{font-family:var(--body);font-weight:700;font-size:17px}
 }
-html[data-theme=malam] .primary,html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3{font-family:"Orbitron","Nunito",sans-serif!important}
+html[data-theme=malam] .primary,html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3{font-family:"Exo 2","Nunito",sans-serif!important}
 
 @media (max-width:340px){.notifbar2 .grow{min-width:0}.notifbar2 b{overflow:hidden;text-overflow:ellipsis}.pstats .ps b,.pstats .ps span{min-width:0;overflow:hidden;text-overflow:ellipsis}}
 </style>
@@ -5521,7 +5557,7 @@ function finish(){
   const key=L.id+'/'+S.id;
   if(S.id!=='__mix'){const p=progress[key]||{};progress[key]={stars:Math.max(p.stars||0,stars),best:Math.max(p.best||0,nilai)};store.set('progress',progress)}
   const name=P?P.name:'Pelajar';
-  $('#rTitle').textContent=`${S.name} · ${L.name}`;
+  {const kc=P&&COURSE.find(c=>c.id===P.cls&&c.grade&&(c.grp===L.id||c.lv===L.id||c.full.startsWith(L.name)));$('#rTitle').textContent=`${S.name} · ${kc?kc.name:L.name}`}
   $('#rStars').innerHTML=[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('');
   $('#mascotResult').dataset.mood=stars>=1?'happy':'sad';if(stars>=2)setTimeout(burstConfetti,200);
   $('#rGrade').textContent=gr;$('#rPred').textContent=pred;
