@@ -2435,7 +2435,100 @@ html[data-theme=malam] .qbar i{background:linear-gradient(90deg,#3b82f6,#8b5cf6)
 html[data-theme=malam] .rapor .head{background:linear-gradient(135deg,color-mix(in srgb,var(--lvc) 60%,#111a2e),color-mix(in srgb,var(--lvc) 22%,#111a2e))!important;border-bottom:1px solid #1f2a44!important}
 html[data-theme=malam] .rapor .grade,html[data-theme=malam] .rapor .grade *{color:#241800!important;text-shadow:none!important}
 html[data-theme=malam] .tn i{background:rgba(251,191,36,.13)!important;color:#fbbf24!important;border:0!important;box-shadow:none!important}
-@media (max-width:360px){html[data-theme=malam] .pstats .ps b{font-size:17px!important;letter-spacing:-.02em!important}html[data-theme=malam] .pstats .ps small{font-size:10.5px!important;letter-spacing:-.01em}html[data-theme=malam] .pstats .ps{gap:6px!important;padding-left:8px!important;padding-right:8px!important}html[data-theme=malam] .notifbar2 b{font-size:13px!important;letter-spacing:-.01em!important;white-space:normal!important;overflow:visible!important}html[data-theme=malam] .pstats .ps small,html[data-theme=malam] .pstats .ps span,html[data-theme=malam] .pstats .ps b{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15}}
+@media (max-width:360px){.pstats .ps b{font-size:17px!important;letter-spacing:-.02em!important}.pstats .ps small{font-size:10.5px!important;letter-spacing:-.01em}.pstats .ps{gap:6px!important;padding-left:8px!important;padding-right:8px!important}.notifbar2 b{font-size:13px!important;letter-spacing:-.01em!important;white-space:normal!important;overflow:visible!important}.pstats .ps small,.pstats .ps span,.pstats .ps b{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15}}
+/* ===== dasbor guru: tata letak & grafik ala web monitoring ===== */
+:root{--g1:#1CB0F6;--ggrid:rgba(0,0,0,.07);--gaxis:#E0E0E0;--sh:#58CC02;--si:#FFB800;--ss:#FF8A3D;--sa:#FF4B4B;--gtip:#fff;--dk1:#1CB0F6;--dk2:#9B6BFF;--dk3:#16C2B2;--dk4:#FF6FA8}
+html[data-theme=malam]{--g1:#3987e5;--ggrid:rgba(141,154,179,.14);--gaxis:#2c3a5c;--sh:#22c55e;--si:#fab219;--ss:#ec835a;--sa:#e5484d;--gtip:#1d2742;--dk1:#3b82f6;--dk2:#a855f7;--dk3:#14b8a6;--dk4:#ec4899}
+#vTDash .tdbar{display:flex;align-items:center;gap:10px;padding:10px 12px!important;flex-wrap:nowrap}
+#vTDash .tdbar .thtools{display:contents}
+#vTDash .tdbar .tsearch{order:0;flex:0 1 360px;margin-right:auto}
+#vTDash .tdbar .datepill{order:1;display:inline-flex;align-items:center;gap:8px;line-height:1.2;padding:8px 14px!important;border-radius:10px!important;font-size:13.5px!important}
+#vTDash .tdbar .tbellw{order:2}#vTDash .tdbar .tdpmini{order:3;display:block}
+.dpi{display:inline-flex;width:16px;height:16px}.dpi svg{width:16px;height:16px}
+.dhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 2px 2px}
+.dhead h2{margin:0;font-size:clamp(24px,3vw,30px)}.dhead p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.dhead .dbtn{min-height:40px;padding:8px 16px}
+.kpis.dks{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.kpi.dk{display:block!important;position:relative;padding:16px 18px!important;cursor:pointer;transition:border-color .15s,transform .1s}
+.kpi.dk:hover{border-color:var(--blue)!important}.kpi.dk:active{transform:translateY(1px)}
+.dka{display:flex;align-items:flex-start;gap:12px}
+.dki{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}.dki svg{width:22px;height:22px}
+.k1 .dki{background:linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 8px 20px rgba(37,99,235,.3)}
+.k2 .dki{background:linear-gradient(135deg,#a855f7,#6d28d9);box-shadow:0 8px 20px rgba(124,58,237,.3)}
+.k3 .dki{background:linear-gradient(135deg,#14b8a6,#0f766e);box-shadow:0 8px 20px rgba(13,148,136,.3)}
+.k4 .dki{background:linear-gradient(135deg,#ec4899,#be185d);box-shadow:0 8px 20px rgba(219,39,119,.3)}
+.dkm{flex:1;min-width:0;display:flex;flex-direction:column}
+.kpi.dk .kl{display:block;padding:0!important;font-size:13px!important;text-transform:none!important;letter-spacing:0!important;font-weight:600!important;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.dk .kv{display:block;margin:2px 0 0!important;font-size:26px!important;font-weight:800;line-height:1.15;color:var(--ink)!important}
+.kpi.dk .kv small{font-size:15px;font-weight:600;color:var(--muted);margin-left:3px}
+.dksp{margin-left:auto;width:80px;height:40px;flex:none}.dksp svg{display:block}
+.dkb{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.dkb .dml{margin-left:auto}
+.dup{color:var(--ok);font-weight:700;display:inline-flex;align-items:center;gap:3px}.ddown{color:var(--bad);font-weight:700;display:inline-flex;align-items:center;gap:3px}.dflat{color:var(--ink2,var(--ink));font-weight:600}
+.dgrid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr);align-items:start}
+.dgrail{display:contents}
+@media (min-width:900px){.dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.dgrid>.dwide{grid-column:1/-1}}
+@media (min-width:1280px){.dgrid{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr)}.dgrid>.dwide{grid-column:auto}}
+.dpan{min-width:0;display:flex;flex-direction:column;gap:0!important}
+.dph{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;min-height:32px}
+.dph h3{margin:0;min-width:0}
+.dsel{appearance:auto;background:transparent!important;border:0!important;color:var(--muted)!important;font:inherit;font-size:13px!important;font-weight:600;padding:4px 6px!important;border-radius:8px!important;cursor:pointer;min-height:0!important;width:auto!important;box-shadow:none!important}
+.dsel:hover{background:var(--tg)!important}
+.dmut{font-size:12.5px;color:var(--muted)}
+.dpb{min-width:0}
+.dempty{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--muted);font-size:13.5px;padding:34px 12px}.dempty svg{width:30px;height:30px;opacity:.6}
+.graf{position:relative;width:100%;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y}
+.graf svg{display:block;width:100%;height:auto;overflow:visible}.graf text{font-family:var(--body)}
+.gtip{position:absolute;z-index:5;pointer-events:none;background:var(--gtip);color:var(--ink);border:1px solid var(--line2,var(--line));border-radius:10px;padding:8px 10px;font-size:12px;box-shadow:0 12px 30px rgba(0,0,0,.25);white-space:nowrap;opacity:0;transition:opacity .1s}
+.gtip.on{opacity:1}.gtip b{display:block;font-size:12px;margin-bottom:3px}
+.gtr{display:flex;align-items:center;gap:6px;color:var(--muted)}.gtr span:last-child{margin-left:auto;padding-left:14px;color:var(--ink);font-weight:700}
+.gsq{display:inline-block;width:9px;height:9px;border-radius:2px}
+.gdash{display:inline-block;width:14px;height:0;border-top:2px dashed var(--muted)}
+.glg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:8px;font-size:12px;color:var(--muted)}.glg span{display:inline-flex;align-items:center;gap:6px}
+.gline{stroke-dasharray:1;stroke-dashoffset:1;animation:gDraw 1s ease-out forwards}
+@keyframes gDraw{to{stroke-dashoffset:0}}
+.garea{animation:gFade .9s ease-out both}.gdot{animation:gFade .5s .5s ease-out both}
+@keyframes gFade{from{opacity:0}to{opacity:1}}
+.gbar{transform-box:fill-box;transform-origin:50% 100%;animation:gGrow .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*80ms);transition:opacity .2s}
+.gbar.dim,.gdon .dim{opacity:.32}
+@keyframes gGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.gseg{cursor:pointer;animation:gFade .6s ease-out both;animation-delay:calc(var(--i,0)*120ms);transition:opacity .2s,stroke-width .2s}.gseg:hover{stroke-width:18px}
+.gdon{position:relative;width:100%}
+.gdl{position:absolute;display:grid;gap:1px;transition:opacity .2s}
+.gdl.kiriAtas{left:0;top:0}.gdl.kananAtas{right:0;top:0;text-align:right;justify-items:end}.gdl.kiriBawah{left:0;bottom:0}.gdl.kananBawah{right:0;bottom:0;text-align:right;justify-items:end}
+.gdl.nol{opacity:.55}
+.gdn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap}.gdn i{width:8px;height:8px;border-radius:50%}
+.gdp{font-size:22px;font-weight:800;color:var(--ink);line-height:1.15}.gdp small{font-size:13px;font-weight:600;color:var(--muted)}
+#vTDash .dgrid .tdpbig{display:none}
+#vTDash .dgrid .fbcode{margin:0}
+html[data-theme=malam] .gseg{filter:drop-shadow(0 0 6px currentColor)}
+html[data-theme=malam] .gline{filter:drop-shadow(0 0 5px rgba(110,168,255,.75))}
+html[data-theme=malam] .gdot{filter:drop-shadow(0 0 6px rgba(110,168,255,.9))}
+html[data-theme=malam] .dksp path{filter:drop-shadow(0 0 4px currentColor)}
+html[data-theme=malam] .gdn i{box-shadow:0 0 8px currentColor}
+html[data-theme=malam] .kpi.dk .dki svg{filter:none!important}
+@media (max-width:1199px){.kpis.dks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:999px){#vTDash .tdbar{display:none!important}}
+@media (max-width:559px){
+ .kpis.dks{gap:10px}
+ .kpi.dk{padding:12px!important}
+ .dka{flex-direction:column;gap:8px}
+ .dki{width:36px;height:36px;border-radius:10px}.dki svg{width:18px;height:18px}
+ .dksp{display:none}
+ .kpi.dk .kv{font-size:22px!important}
+ .dkb{margin-top:6px;font-size:11.5px;gap:2px 6px}.dkb .dml{margin-left:0}
+ .dhead .dbtn{display:none}
+}
+.dgno .gline,.dgno .garea,.dgno .gdot,.dgno .gbar,.dgno .gseg{animation:none!important;stroke-dashoffset:0}
+.dgrid{align-items:stretch}
+.dgrid>#p-tren{order:1}.dgrid>#p-stat{order:2}.dgrid>#p-donut{order:3}.dgrid>.dtoday{order:4}.dgrid>.dattn{order:5}.dgrid .fbcode{order:6}.dgrid>#p-nilai{order:7}.dgrid>#tdJuara{order:8}.dgrid .tdcal{order:9}.dgrid .tdnext{order:10}
+.dattn .plist{max-height:330px;overflow:auto}
+.dtoday .today{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dtoday .tstep{display:flex;flex-direction:column;gap:6px}.dtoday .tstep p{flex:1;margin:0}
+.dtoday .tstep button{align-self:flex-start;min-height:40px;padding:8px 16px;font-size:14px}
+.dgrid .tdjuara .tdrh{flex-wrap:wrap;gap:8px}.dgrid .tdjuara .jseg{width:100%;display:flex}.dgrid .tdjuara .jseg button{flex:1}
+@media (min-width:1200px) and (max-width:1499px){.dksp{width:52px}.dka{gap:10px}.dki{width:40px;height:40px}}
+@media (max-width:420px){.dtoday .today{grid-template-columns:1fr}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -6555,44 +6648,149 @@ function tdCalHTML(t){const now=new Date(),b=new Date(now.getFullYear(),now.getM
    <div class="tdgrid">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<i>${x}</i>`).join('')}${cells}</div>
    <div class="tdleg"><span><i class="m"></i>Hari mengajar</span><span><i class="h"></i>Ada pertemuan</span></div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-cal]');if(!b)return;TDCAL+=+b.dataset.cal;const el=$('#tdCal');if(el)el.innerHTML=tdCalHTML(T())});
-function renderTDash(){const t=T(),list=students(),today=dayKey(),sess=sessionOf(today,false),c=tCls();
+/* ---------- dasbor guru: tata letak & statistik interaktif (gaya web monitoring) ---------- */
+const dg$$=s=>[...document.querySelectorAll(s)];
+const DG={ren:+(localStorage.getItem('jk_dg_ren')||10),bln:'ini'};
+const DGI={
+ hadir:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-3.9 3.1-7 7-7 1.5 0 2.9.5 4 1.3"/><path d="m15.5 18.5 2.2 2.2 4.3-4.6"/></svg>',
+ nilai:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 11c0-4 3-6 8-6 0 4-3 6-8 6Z"/><path d="M12 14c0-3-2.2-5-6.5-5 0 3 2.2 5 6.5 5Z"/></svg>',
+ murid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.6"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><circle cx="17" cy="9" r="2.8"/><path d="M17 14c2.8 0 4.5 2 4.5 5"/></svg>',
+ rata:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-7"/></svg>',
+ cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
+ up:'<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+ down:'<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>'};
+function dgData(){const list=students(),n=list.length,ids=new Set(list.map(p=>p.id));
+  const ses=APP.sessions.filter(s=>Object.keys(s.att).length||s.evals.some(e=>Object.keys(e.results).length)).map(s=>{const c={H:0,I:0,S:0,A:0};Object.entries(s.att).forEach(([k,v])=>{if(ids.has(k)&&c[v]!=null)c[v]++});
+    const sc=s.evals.flatMap(e=>Object.entries(e.results).filter(([k])=>ids.has(k)).map(([,r])=>r.score));
+    return {t:s.date,h:c.H,i:c.I,s:c.S,a:c.A,d:c.H+c.I+c.S+c.A,j:n,n:new Set(s.evals.flatMap(e=>Object.keys(e.results))).size,avg:av(sc),att:Object.keys(s.att).length>0}});
+  return {list,n,ses}}
+const dgSc=(m,k)=>{m=Math.max(m,1);let st=m/k;const p=Math.pow(10,Math.floor(Math.log10(st))),f=st/p;st=Math.max(1,(f<=1?1:f<=2?2:f<=5?5:10)*p);return {step:st,max:st*Math.ceil(m/st)}};
+const dgTgl=k=>dOf(k).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const dgTglP=k=>{const d=dOf(k);return d.getDate()+' '+['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.getMonth()]};
+function dgTip(box,html,x,y){let t=box.querySelector('.gtip');if(!t){t=document.createElement('div');t.className='gtip';box.appendChild(t)}t.innerHTML=html;t.classList.add('on');
+  const w=t.offsetWidth,h=t.offsetHeight,W=box.clientWidth;t.style.left=Math.max(0,Math.min(W-w,x-w/2))+'px';t.style.top=Math.max(-8,y-h-12)+'px'}
+const dgTipOff=box=>{const t=box&&box.querySelector('.gtip');if(t)t.classList.remove('on')};
+const dgRow=(c,l,v,dash)=>`<div class="gtr">${dash?'<i class="gdash"></i>':`<i class="gsq" style="background:${c}"></i>`}<span>${esc(l)}</span><span>${v}</span></div>`;
+function dgSpark(v,col,w,h){v=v.filter(x=>x!=null);if(v.length<2)return '';const mx=Math.max(...v),mn=Math.min(...v),r=mx-mn||1;
+  const X=i=>2+i*(w-4)/(v.length-1),Y=x=>h-3-(x-mn)/r*(h-8);return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true" style="color:${col}"><path d="${v.map((x,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(x).toFixed(1)).join('')}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`}
+function dgDelta(now,ref,unit,ket){if(now==null||ref==null)return `<span class="dflat">—</span><span>${ket}</span>`;let d,t;
+  if(unit==='poin'){d=now-ref;t=(d>0?'+':'')+d+' poin'}else{d=ref?Math.round((now-ref)/ref*100):(now?100:0);t=Math.abs(d)+'%'}
+  return `<span class="${d>0?'dup':d<0?'ddown':'dflat'}">${d>0?DGI.up:d<0?DGI.down:''} ${t}</span><span>${ket}</span>`}
+function renderTDash(){const t=T(),today=dayKey(),sess=sessionOf(today,false),c=tCls();const {list,n,ses}=dgData();
+  if(!DG.blnSet){DG.blnSet=1;const cm=today.slice(0,7);if(!ses.some(s=>s.att&&s.t.slice(0,7)===cm)&&ses.some(s=>s.att))DG.bln=ses.some(s=>s.att&&s.t.slice(0,7)===dayKey(new Date(new Date().getFullYear(),new Date().getMonth()-1,1)).slice(0,7))?'lalu':'semua'}
   const hr=new Date().getHours(),greet=hr<11?'Selamat pagi':hr<15?'Selamat siang':hr<18?'Selamat sore':'Selamat malam';
-  const allScores=list.flatMap(p=>evalEntries(p.id).map(e=>e.score));const avgAll=av(allScores);
-  let H=0,N=0;list.forEach(p=>{const a=attOf(p.id);H+=a.H;N+=a.n});const attPct=N?Math.round(H/N*100):null;
-  const below=list.filter(p=>{const a=studentAvg(p.id);return a!=null&&a<t.kkm});
-  const alpa=list.filter(p=>attOf(p.id).A>=2);
   list.forEach(p=>ensureDay(p));const activeWeek=list.filter(p=>p.week.xp>0).length;
   const attFilled=sess&&Object.keys(sess.att).length>0;const hadirToday=sess?Object.values(sess.att).filter(v=>v==='H').length:0;
-  const graded=sess?new Set(sess.evals.flatMap(e=>Object.keys(e.results))).size:0;
-  const teach=isTeachDay();
-  const pts=APP.sessions.filter(s=>s.evals.some(e=>Object.keys(e.results).length)).slice(-10).map(s=>({l:fmtDs(s.date),v:av(s.evals.flatMap(e=>Object.values(e.results).map(r=>r.score)))}));
-  const next=[];{const d=new Date();for(let i=1;i<40&&next.length<5;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i);if(t.days.includes(x.getDay()))next.push(dayKey(x))}}
+  const graded=sess?new Set(sess.evals.flatMap(e=>Object.keys(e.results))).size:0;const teach=isTeachDay();
+  const allScores=list.flatMap(p=>evalEntries(p.id).map(e=>e.score));const avgAll=av(allScores);
+  const below=list.filter(p=>{const a=studentAvg(p.id);return a!=null&&a<t.kkm});const alpa=list.filter(p=>attOf(p.id).A>=2);
   const attention=[...new Map([...below.map(p=>[p.id,p]),...alpa.map(p=>[p.id,p])]).values()];
-  const kpi=(cls,ic,l,v,n)=>`<div class="kpi ${cls}"><div class="kt"><span class="kl">${l}</span><span class="kv">${v}</span><span class="kn">${n}</span></div><span class="kic"><i data-icon="${ic}"></i></span></div>`;
-  const ringP=attFilled&&list.length?Math.round(hadirToday/list.length*100):0,RC=2*Math.PI*44;
-  $('#vTDash').innerHTML=licBanner()+`<div class="thead"><span style="width:56px;height:56px;flex:none">${ICONS.teach}</span><div class="grow"><h2>${greet}, ${esc(t.name)}</h2><p>${esc(t.school||'Sekolah')} · ${t.label?esc(t.label)+' · ':''}${c.full} · ${list.length} murid</p></div><span class="datepill ${teach?'on':''}">${fmtD(today)}<br>${teach?'Hari mengajar':'Bukan jadwal mengajar'}</span></div>
-   <div class="kpis">${kpi('k1','team','Murid',list.length,`${activeWeek} berlatih minggu ini`)}
-    ${kpi('k2 '+(attPct!=null&&attPct<80?'warn':'good'),'check','Kehadiran',attPct==null?'—':attPct+'%',`${APP.sessions.filter(s=>Object.keys(s.att).length).length} pertemuan tercatat`)}
-    ${kpi('k3 '+(avgAll!=null&&avgAll<t.kkm?'warn':'good'),'star','Rata-rata nilai',avgAll==null?'—':avgAll,`KKM ${t.kkm}`)}
-    ${kpi('k4 '+(below.length?'warn':''),'target','Di bawah KKM',below.length,'murid perlu bimbingan')}</div>
-   <div class="tdl"><div class="tdmain">
-   ${list.length?'':`<div class="tcard"><h3>Mulai dengan menambah murid</h3><p class="sub">Daftarkan nama muridmu.</p><button class="primary" data-go="tstud" style="align-self:flex-start">Tambah murid</button></div>`}
-   <div class="tcard"><h3>Pertemuan hari ini</h3>${teach?'':`<p class="sub"></p>`}
-    <div class="today"><div class="tstep ${attFilled?'ok':''}"><div class="tn"><i>1</i>Absensi</div><p>${attFilled?`${hadirToday} dari ${list.length} murid hadir.`:'Belum diisi.'}</p><button class="${attFilled?'ghost':'primary'}" data-go="tatt">${attFilled?'Ubah absensi':'Isi absensi'}</button></div>
+  const next=[];{const d=new Date();for(let i=1;i<40&&next.length<5;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i);if(t.days.includes(x.getDay()))next.push(dayKey(x))}}
+  const prev=ses.filter(s=>s.t<today);const pa=prev.filter(s=>s.att).slice(-10),pg=prev.filter(s=>s.n).slice(-10);
+  const avgH=pa.length?pa.reduce((x,s)=>x+s.h,0)/pa.length:null,avgN=pg.length?pg.reduce((x,s)=>x+s.n,0)/pg.length:null;
+  const lastAvg=(prev.filter(s=>s.avg!=null).slice(-1)[0]||{}).avg;
+  const L=list.filter(p=>p.gender==='L').length,Pr=list.filter(p=>p.gender==='P').length;
+  const note=(filled,v,ref)=>!teach&&!filled?'<span class="dflat">Bukan jadwal mengajar</span>':!filled?'<span class="dflat">Belum ada isian hari ini</span>':dgDelta(v,ref,'','vs rata-rata pertemuan');
+  const kpi=(col,ic,lbl,val,sm,bot,go,sp)=>`<div class="kpi dk ${col}" role="button" tabindex="0" data-go="${go}"><div class="dka"><span class="dki">${DGI[ic]}</span><div class="dkm"><span class="kl">${lbl}</span><span class="kv">${val}${sm?`<small>${sm}</small>`:''}</span></div><span class="dksp" data-sp="${sp}"></span></div><div class="dkb">${bot}</div></div>`;
+  const panel=(id,title,right,cls)=>`<div class="tcard dpan ${cls||''}" id="p-${id}"><div class="dph"><h3>${title}</h3>${right||''}</div><div class="dpb" id="d-${id}"></div></div>`;
+  const sel=(id,opts,v)=>`<select class="dsel" id="${id}" aria-label="Pilih rentang">${opts.map(([k,l])=>`<option value="${k}" ${String(k)===String(v)?'selected':''}>${l}</option>`).join('')}</select>`;
+  $('#vTDash').innerHTML=licBanner()+`<div class="thead tdbar"><span class="datepill ${teach?'on':''}"><i class="dpi">${DGI.cal}</i>${dgTgl(today)}</span></div>
+   <div class="dhead"><div class="grow"><h2>Dasbor</h2><p>${greet}, ${esc(t.name)}. Ringkasan ${esc(c.full)}${t.school?' · '+esc(t.school):''} per ${dgTgl(today)}.</p></div>
+    <button class="ghost dbtn" data-go="tatt">${attFilled?'Ubah absensi':'Isi absensi'}</button></div>
+   <div class="kpis dks">${kpi('k1','hadir','Hadir hari ini',hadirToday,'/ '+n,note(attFilled,hadirToday,avgH),'tatt','h')}
+    ${kpi('k2','nilai','Dinilai hari ini',graded,'/ '+n,note(graded>0||attFilled,graded,avgN),'teval','n')}
+    ${kpi('k3','murid','Murid',n,'',`<span>${activeWeek} berlatih minggu ini</span><span class="dml">♂ ${L} · ♀ ${Pr}</span>`,'tstud','j')}
+    ${kpi('k4','rata','Rata-rata nilai',avgAll==null?'—':avgAll,'',avgAll==null?`<span class="dflat">Belum ada nilai</span><span>KKM ${t.kkm}</span>`:dgDelta(avgAll,lastAvg==null?null:lastAvg,'poin','vs pertemuan lalu'),'trapor','avg')}</div>
+   ${n?'':`<div class="tcard"><h3>Mulai dengan menambah murid</h3><p class="sub">Bagikan kode kelas di bawah ke muridmu.</p><button class="primary" data-go="tstud" style="align-self:flex-start">Tambah murid</button></div>`}
+   <div class="dgrid">
+    ${panel('tren','Tren kehadiran',sel('dgRen',[[10,'10 pertemuan'],[20,'20 pertemuan'],[0,'Semua']],DG.ren),'dwide')}
+    ${panel('stat','Status absensi',sel('dgBln',[['ini','Bulan ini'],['lalu','Bulan lalu'],['semua','Semua']],DG.bln))}
+    ${panel('donut','Ketuntasan murid','')}
+    <div class="tcard dpan dwide dtoday"><div class="dph"><h3>Pertemuan hari ini</h3></div>
+     <div class="today"><div class="tstep ${attFilled?'ok':''}"><div class="tn"><i>1</i>Absensi</div><p>${attFilled?`${hadirToday} dari ${n} murid hadir.`:'Belum diisi.'}</p><button class="${attFilled?'ghost':'primary'}" data-go="tatt">${attFilled?'Ubah absensi':'Isi absensi'}</button></div>
      <div class="tstep ${graded?'ok':''}"><div class="tn"><i>2</i>Evaluasi di TV</div><p>${graded?`${graded} murid sudah dinilai dalam ${sess.evals.length} evaluasi.`:'Mainkan game evaluasi di TV sentuh. Nilai langsung masuk rapor.'}</p><button class="primary" data-go="teval">${graded?'Evaluasi lagi':'Mulai evaluasi'}</button></div></div></div>
-   <div class="tgrid2"><div class="tcard"><h3>Rata-rata nilai per pertemuan</h3>${barChart(pts,t.kkm)}</div>
-    <div class="tcard"><h3>Perlu perhatian</h3>${attention.length?`<div class="plist">${attention.map(p=>{const a=studentAvg(p.id),at=attOf(p.id);return `<div class="pl">${avatarOf(p)}<span class="grow"><b>${esc(p.name)}</b><small>${a!=null&&a<t.kkm?`Rata-rata ${a}`:''}${a!=null&&a<t.kkm&&at.A>=2?' · ':''}${at.A>=2?`Alpa ${at.A} kali`:''}</small></span><button class="smallbtn" data-rep="${p.id}">Rapor</button></div>`}).join('')}</div>`:'<p class="note">Belum ada murid yang perlu perhatian khusus.</p>'}
-</div></div>
-   <div class="tcard tdjuara" id="tdJuara">${juaraHTML('streak')}</div>
-   </div><aside class="tdrail" id="tdRail">
-   <div class="tcard tdcal" id="tdCal">${tdCalHTML(t)}</div>
-   <div class="tcard tdring"><div class="tdrh"><h3>Kehadiran hari ini</h3><button class="tdlink" data-go="tatt">${attFilled?'Ubah':'Isi'}</button></div>
-    <div class="tdrb"><svg viewBox="0 0 100 100" class="tdrsvg"><circle cx="50" cy="50" r="44" class="rbg"/><circle cx="50" cy="50" r="44" class="rfg" stroke-dasharray="${RC*ringP/100} ${RC}"/><text x="50" y="57" text-anchor="middle">${ringP}%</text></svg>
-    <div><b>${attFilled?(ringP>=80?'Kelas ramai!':'Ada yang belum hadir'):'Belum diabsen'}</b><p class="sub" style="margin:0">${attFilled?`${hadirToday} dari ${list.length} murid hadir hari ini.`:teach?'Isi absensi di awal pertemuan.':'Hari ini bukan jadwal mengajar.'}</p></div></div></div>
-   <div class="tcard tdnext"><div class="tdrh"><h3>Jadwal berikutnya</h3><button class="tdlink" data-go="tatt">Atur</button></div>
-    ${next.length?next.map(k=>{const d=new Date(k+'T00:00');return `<div class="tdn"><span class="tdd"><b>${d.getDate()}</b><small>${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</small></span><span class="grow"><b>Pertemuan ${c.name}</b><small>Absensi dan evaluasi</small></span><span class="tdm">${fmtD(k).split(' ').slice(2,3).join(' ')}</span></div>`}).join(''):'<p class="note">Hari mengajar belum diatur.</p>'}</div>
-   </aside></div>`;
-  bindTeacherLinks($('#vTDash'))}
+    ${panel('nilai','Nilai per pertemuan',`<span class="dmut">KKM ${t.kkm}</span>`,'dwide')}
+    <div class="tcard dpan dattn"><div class="dph"><h3>Perlu perhatian</h3><span class="dmut">${attention.length} murid</span></div>${attention.length?`<div class="plist">${attention.map(p=>{const a=studentAvg(p.id),at=attOf(p.id);return `<div class="pl">${avatarOf(p)}<span class="grow"><b>${esc(p.name)}</b><small>${a!=null&&a<t.kkm?`Rata-rata ${a}`:''}${a!=null&&a<t.kkm&&at.A>=2?' · ':''}${at.A>=2?`Alpa ${at.A} kali`:''}</small></span><button class="smallbtn" data-rep="${p.id}">Rapor</button></div>`}).join('')}</div>`:'<p class="note">Belum ada murid yang perlu perhatian khusus.</p>'}</div>
+    <div class="tcard tdjuara dpan" id="tdJuara">${juaraHTML('streak')}</div>
+    <div class="dgrail" id="tdRail">
+     <div class="tcard tdcal dpan" id="tdCal">${tdCalHTML(t)}</div>
+     <div class="tcard tdnext dpan"><div class="tdrh"><h3>Jadwal berikutnya</h3><button class="tdlink" data-go="tatt">Atur</button></div>
+     ${next.length?next.map(k=>{const d=new Date(k+'T00:00');return `<div class="tdn"><span class="tdd"><b>${d.getDate()}</b><small>${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</small></span><span class="grow"><b>Pertemuan ${c.name}</b><small>Absensi dan evaluasi</small></span><span class="tdm">${fmtD(k).split(' ').slice(2,3).join(' ')}</span></div>`}).join(''):'<p class="note">Hari mengajar belum diatur.</p>'}</div>
+    </div></div>`;
+  const v=$('#vTDash');bindTeacherLinks(v);
+  v.querySelectorAll('.kpi.dk').forEach(k=>k.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(k.dataset.go)}});
+  const r=$('#dgRen');if(r)r.onchange=e=>{DG.ren=+e.target.value;try{localStorage.setItem('jk_dg_ren',DG.ren)}catch(x){}dgTren()};
+  const b=$('#dgBln');if(b)b.onchange=e=>{DG.bln=e.target.value;DG.blnSet=1;dgStat()};
+  requestAnimationFrame(()=>dgDraw(true))}
+function dgDraw(first){if(!$('#d-tren'))return;$('#vTDash').classList.toggle('dgno',!first);[dgSparks,dgTren,dgStat,dgDonut,dgNilai].forEach(f=>{try{f()}catch(e){console.warn(e)}});if(first)dgCount()}
+function dgCount(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;dg$$('#vTDash .dk .kv').forEach(n=>{const tn=n.firstChild;if(!tn||tn.nodeType!==3)return;const m=/^(\d+)$/.exec(tn.nodeValue.trim());if(!m)return;const end=+m[1],t0=performance.now();
+  const st=w=>{const p=Math.min(1,(w-t0)/700),e=1-Math.pow(1-p,3);tn.nodeValue=Math.round(end*e);if(p<1&&tn.isConnected)requestAnimationFrame(st)};requestAnimationFrame(st)})}
+function dgSparks(){const {ses}=dgData();const col=k=>getComputedStyle(document.documentElement).getPropertyValue('--dk'+k).trim()||'#3b82f6';
+  dg$$('#vTDash [data-sp]').forEach(sp=>{const k=sp.dataset.sp;let v;if(k==='h')v=ses.filter(s=>s.att).slice(-12).map(s=>s.h);else if(k==='n')v=ses.filter(s=>s.n).slice(-12).map(s=>s.n);else if(k==='avg')v=ses.filter(s=>s.avg!=null).slice(-12).map(s=>s.avg);else v=ses.filter(s=>s.att).slice(-12).map(s=>s.d?Math.round(s.h*100/s.d):null);
+    sp.innerHTML=dgSpark(v,col({h:1,n:2,j:3,avg:4}[k]),sp.clientWidth||80,40)})}
+function dgEmpty(box,msg){box.innerHTML=`<div class="dempty">${DGI.rata}<span>${msg}</span></div>`}
+function dgTren(){const box=$('#d-tren');if(!box)return;let data=dgData().ses.filter(s=>s.att);if(DG.ren)data=data.slice(-DG.ren);
+  if(!data.length)return dgEmpty(box,'Grafik tampil setelah absensi pertemuan pertama diisi.');
+  const W=Math.max(260,box.clientWidth),H=230,pd={l:34,r:10,t:10,b:24},n=data.length,sk=dgSc(Math.max(...data.map(o=>Math.max(o.h,o.j))),4);
+  const X=i=>n===1?(pd.l+W-pd.r)/2:pd.l+i*(W-pd.l-pd.r)/(n-1),Y=v=>pd.t+(H-pd.t-pd.b)*(1-v/sk.max);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Tren kehadiran"><defs><linearGradient id="gTr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--g1)" stop-opacity=".38"/><stop offset="1" stop-color="var(--g1)" stop-opacity="0"/></linearGradient></defs>`;
+  for(let v=0;v<=sk.max;v+=sk.step)s+=`<line x1="${pd.l}" x2="${W-pd.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v?'var(--ggrid)':'var(--gaxis)'}"/><text x="${pd.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}</text>`;
+  const ln=k=>data.map((o,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(o[k]).toFixed(1)).join('');
+  s+=`<path d="${ln('h')}L${X(n-1)} ${Y(0)}L${X(0)} ${Y(0)}Z" fill="url(#gTr)" class="garea"/><path d="${ln('j')}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/><path d="${ln('h')}" fill="none" stroke="var(--g1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" class="gline" pathLength="1"/>`;
+  if(n<=20)data.forEach((o,i)=>{s+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(o.h).toFixed(1)}" r="${n===1?6:4.5}" fill="var(--g1)" stroke="var(--card)" stroke-width="2" class="gdot"/>`});
+  const step=Math.max(1,Math.ceil(n/(W<420?4:6)));data.forEach((o,i)=>{if((n-1-i)%step)return;s+=`<text x="${X(i)}" y="${H-6}" text-anchor="middle" font-size="11" fill="var(--muted)">${dgTglP(o.t)}</text>`});
+  s+=`<g class="gfoc" style="display:none"><line y1="${pd.t}" y2="${H-pd.b}" stroke="var(--gaxis)"/><circle r="5.5" fill="var(--g1)" stroke="var(--card)" stroke-width="2"/></g><rect x="${pd.l-6}" y="0" width="${W-pd.l-pd.r+12}" height="${H}" fill="transparent" class="ghit"/></svg>`;
+  box.innerHTML=`<div class="graf">${s}</div><div class="glg"><span><i class="gsq" style="background:var(--g1)"></i>Hadir</span><span><i class="gdash"></i>Jumlah murid</span><span class="dmut">${n===1?'baru 1 pertemuan, garis muncul mulai pertemuan kedua':'tiap titik = satu pertemuan'}</span></div>`;
+  const g=box.querySelector('.graf'),f=g.querySelector('.gfoc'),hit=g.querySelector('.ghit');
+  const mv=e=>{const r=g.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width,i=Math.max(0,Math.min(n-1,Math.round((px-pd.l)/((W-pd.l-pd.r)/Math.max(1,n-1))))),o=data[i];
+    f.style.display='';f.querySelector('line').setAttribute('x1',X(i));f.querySelector('line').setAttribute('x2',X(i));f.querySelector('circle').setAttribute('cx',X(i));f.querySelector('circle').setAttribute('cy',Y(o.h));
+    dgTip(g,`<b>${esc(dgTgl(o.t))}</b>${dgRow('var(--g1)','Hadir',o.h)}${dgRow('','Jumlah murid',o.j,true)}${dgRow('var(--si)','Izin',o.i)}${dgRow('var(--ss)','Sakit',o.s)}${dgRow('var(--sa)','Alpa',o.a)}<div class="gtr"><span>Dinilai</span><span>${o.n}</span></div>`,X(i)*r.width/W,Y(o.h)*r.height/H)};
+  hit.addEventListener('pointermove',mv);hit.addEventListener('pointerdown',mv);hit.addEventListener('pointerleave',e=>{if(e.pointerType==='touch')return;f.style.display='none';dgTipOff(g)})}
+function dgStat(){const box=$('#d-stat');if(!box)return;const now=new Date(),ym=d=>d.slice(0,7),cur=dayKey(now).slice(0,7),lm=dayKey(new Date(now.getFullYear(),now.getMonth()-1,1)).slice(0,7);
+  const ss=dgData().ses.filter(s=>s.att&&(DG.bln==='semua'||ym(s.t)===(DG.bln==='ini'?cur:lm)));
+  const isi=[['Hadir','h','var(--sh)'],['Izin','i','var(--si)'],['Sakit','s','var(--ss)'],['Alpa','a','var(--sa)']].map(([l,k,c])=>[l,ss.reduce((x,s)=>x+s[k],0),c]);const tot=isi.reduce((x,y)=>x+y[1],0);
+  const W=Math.max(240,box.clientWidth),H=230,pd={l:4,r:4,t:30,b:28},mx=Math.max(1,...isi.map(x=>x[1])),Y=v=>pd.t+(H-pd.t-pd.b)*(1-v/mx),slot=(W-pd.l-pd.r)/4,bw=Math.min(64,slot*.66);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Status absensi"><defs>${isi.map((x,i)=>`<linearGradient id="gSt${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${x[2]};stop-opacity:1"/><stop offset=".55" style="stop-color:${x[2]};stop-opacity:.7"/><stop offset="1" style="stop-color:${x[2]};stop-opacity:.12"/></linearGradient>`).join('')}</defs><line x1="${pd.l}" x2="${W-pd.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--gaxis)"/>`;
+  isi.forEach((x,i)=>{const cx=pd.l+slot*i+slot/2,x0=cx-bw/2,y0=x[1]>0?Math.min(Y(x[1]),Y(0)-6):Y(0)-3,r=Math.min(7,(Y(0)-y0)/2);
+    s+=`<g class="gbar" style="--i:${i};color:${x[2]}${x[1]?'':';opacity:.35'}"><path d="M${x0} ${Y(0)}V${y0+r}Q${x0} ${y0} ${x0+r} ${y0}H${x0+bw-r}Q${x0+bw} ${y0} ${x0+bw} ${y0+r}V${Y(0)}Z" fill="url(#gSt${i})"/>${x[1]?`<path d="M${x0+1} ${y0+r}Q${x0+1} ${y0+1} ${x0+r} ${y0+1}H${x0+bw-r}Q${x0+bw-1} ${y0+1} ${x0+bw-1} ${y0+r}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>`:''}</g>
+     <text x="${cx}" y="${y0-9}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">${x[1]}</text><text x="${cx}" y="${H-8}" text-anchor="middle" font-size="12" fill="var(--muted)">${x[0]}</text><rect x="${cx-slot/2}" y="0" width="${slot}" height="${H}" fill="transparent" data-i="${i}"/>`});
+  box.innerHTML=`<div class="graf">${s}</svg></div><p class="dmut" style="margin:8px 0 0">${DG.bln==='ini'?'Bulan berjalan':DG.bln==='lalu'?'Bulan lalu':'Semua pertemuan'} · ${tot} catatan kehadiran</p>`;
+  const g=box.querySelector('.graf');g.querySelectorAll('rect[data-i]').forEach(rc=>{const on=()=>{const i=+rc.dataset.i,x=isi[i],r=g.getBoundingClientRect(),cx=pd.l+slot*i+slot/2;g.querySelectorAll('.gbar').forEach((b,k)=>b.classList.toggle('dim',k!==i));
+    dgTip(g,`<b>${x[0]}</b>${dgRow(x[2],'Jumlah',x[1])}<div class="gtr"><span>Porsi</span><span>${tot?Math.round(x[1]*100/tot):0}%</span></div>`,cx*r.width/W,Y(x[1])*r.height/H)};
+    rc.addEventListener('pointerenter',on);rc.addEventListener('pointerdown',on);rc.addEventListener('pointerleave',e=>{g.querySelectorAll('.gbar').forEach(b=>b.classList.remove('dim'));if(e.pointerType!=='touch')dgTipOff(g)})})}
+const DG_DON=[['#3b82f6','#6d5cf6'],['#f43f5e','#fb923c'],['#2dd4bf','#22d3ee']];
+function dgDonut(){const box=$('#d-donut');if(!box)return;const t=T(),list=students();let a=0,b=0,c=0;list.forEach(p=>{const v=studentAvg(p.id);if(v==null)c++;else if(v>=t.kkm)a++;else b++});
+  const isi=[['Tuntas',a],['Belum tuntas',b],['Belum dinilai',c]],tot=a+b+c;if(!tot)return dgEmpty(box,'Belum ada murid di kelas ini.');
+  const W=Math.max(250,box.clientWidth||300),D=Math.max(112,Math.min(170,W-176)),SW=15,R=D/2-SW/2-2,H=D+64,cx=W/2,cy=H/2,pc=isi.map(x=>Math.round(x[1]*100/tot));
+  const pt=(g,r)=>[cx+r*Math.cos(g*Math.PI/180),cy+r*Math.sin(g*Math.PI/180)],has=isi.filter(x=>x[1]).length,gap=has>1?3:0;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Ketuntasan murid: ${isi.map((x,i)=>x[0]+' '+pc[i]+'%').join(', ')}"><defs>`,segs='',st=-90;const mid=[];
+  isi.forEach((x,i)=>{if(!x[1]){mid[i]=null;return}const w=x[1]/tot*360,a0=st+gap/2,a1=st+w-gap/2;mid[i]=st+w/2;const p0=pt(a0,R),p1=pt(a1,R);
+    s+=`<linearGradient id="dgd${i}" gradientUnits="userSpaceOnUse" x1="${p0[0].toFixed(1)}" y1="${p0[1].toFixed(1)}" x2="${p1[0].toFixed(1)}" y2="${p1[1].toFixed(1)}"><stop offset="0" stop-color="${DG_DON[i][0]}"/><stop offset="1" stop-color="${DG_DON[i][1]}"/></linearGradient>`;
+    const d=w>=359.9?`M${cx+R} ${cy}A${R} ${R} 0 1 1 ${cx-R} ${cy}A${R} ${R} 0 1 1 ${cx+R} ${cy}`:`M${p0[0].toFixed(2)} ${p0[1].toFixed(2)}A${R} ${R} 0 ${a1-a0>180?1:0} 1 ${p1[0].toFixed(2)} ${p1[1].toFixed(2)}`;
+    segs+=`<path d="${d}" fill="none" stroke="url(#dgd${i})" stroke-width="${SW}" data-i="${i}" class="gseg" style="--i:${i};color:${DG_DON[i][0]}"/>`;st+=w});
+  s+=`</defs><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--track)" stroke-width="${SW}" opacity=".6"/><circle cx="${cx}" cy="${cy}" r="${R-SW/2-6}" fill="none" stroke="var(--line)" stroke-dasharray="2 4"/>${segs}<text x="${cx}" y="${cy+2}" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)">${tot}</text><text x="${cx}" y="${cy+20}" text-anchor="middle" font-size="11" fill="var(--muted)">murid</text></svg>`;
+  const SUD={kananAtas:-45,kananBawah:45,kiriBawah:135,kiriAtas:-135},used={},pos=[],dist=(p,q)=>Math.abs(((p-q)%360+540)%360-180);
+  isi.map((x,i)=>i).sort((p,q)=>isi[q][1]-isi[p][1]).forEach(i=>{const m=mid[i]==null?[-135,135,-45][i]:mid[i];let k=null;Object.keys(SUD).forEach(o=>{if(!used[o]&&(k===null||dist(SUD[o],m)<dist(SUD[k],m)))k=o});used[k]=1;pos[i]=k});
+  box.innerHTML=`<div class="gdon" style="height:${H}px"><div class="graf">${s}</div>${isi.map((x,i)=>`<div class="gdl ${pos[i]}${x[1]?'':' nol'}" data-i="${i}"><div class="gdn"><i style="background:${DG_DON[i][0]}"></i>${x[0]}</div><div class="gdp">${pc[i]}<small>%</small></div><div class="dmut">${x[1]} murid</div></div>`).join('')}</div><p class="dmut" style="text-align:center;margin:12px 0 0">Tuntas: rata-rata nilai ≥ KKM ${t.kkm}</p>`;
+  const g=box.querySelector('.graf'),hi=i=>box.querySelectorAll('[data-i]').forEach(e=>e.classList.toggle('dim',i!==null&&+e.dataset.i!==i));
+  g.querySelectorAll('path[data-i]').forEach(p=>{const on=e=>{const i=+p.dataset.i,r=g.getBoundingClientRect();hi(i);dgTip(g,`<b>${isi[i][0]}</b>${dgRow(DG_DON[i][0],'Murid',isi[i][1]+' ('+pc[i]+'%)')}`,e.clientX-r.left,e.clientY-r.top)};
+    p.addEventListener('pointermove',on);p.addEventListener('pointerdown',on);p.addEventListener('pointerleave',e=>{hi(null);if(e.pointerType!=='touch')dgTipOff(g)})});
+  box.querySelectorAll('.gdl').forEach(l=>{l.addEventListener('pointerenter',()=>hi(+l.dataset.i));l.addEventListener('pointerleave',()=>hi(null))})}
+function dgNilai(){const box=$('#d-nilai');if(!box)return;const kkm=T().kkm;const data=dgData().ses.filter(s=>s.avg!=null).slice(-12);
+  if(!data.length)return dgEmpty(box,'Belum ada nilai evaluasi. Mainkan Evaluasi di TV untuk mengisi grafik ini.');
+  const W=Math.max(260,box.clientWidth),H=220,pd={l:30,r:8,t:24,b:26},n=data.length,Y=v=>pd.t+(H-pd.t-pd.b)*(1-v/100),slot=(W-pd.l-pd.r)/n,bw=Math.min(44,slot*.6);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Rata-rata nilai per pertemuan"><defs><linearGradient id="gNa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--g1)"/><stop offset="1" stop-color="var(--g1)" stop-opacity=".25"/></linearGradient><linearGradient id="gNb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--ss)"/><stop offset="1" stop-color="var(--ss)" stop-opacity=".25"/></linearGradient></defs>`;
+  [0,25,50,75,100].forEach(v=>s+=`<line x1="${pd.l}" x2="${W-pd.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v?'var(--ggrid)':'var(--gaxis)'}"/><text x="${pd.l-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}</text>`);
+  const step=Math.max(1,Math.ceil(n/(W<420?4:8)));
+  data.forEach((o,i)=>{const x=pd.l+i*slot+(slot-bw)/2,y=Y(o.avg),r=Math.min(6,(Y(0)-y)/2);s+=`<g class="gbar" style="--i:${i}"><path d="M${x} ${Y(0)}V${y+r}Q${x} ${y} ${x+r} ${y}H${x+bw-r}Q${x+bw} ${y} ${x+bw} ${y+r}V${Y(0)}Z" fill="url(#${o.avg>=kkm?'gNa':'gNb'})"/></g><text x="${x+bw/2}" y="${y-6}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">${o.avg}</text>${(n-1-i)%step?'':`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)">${dgTglP(o.t)}</text>`}<rect x="${pd.l+i*slot}" y="0" width="${slot}" height="${H}" fill="transparent" data-i="${i}"/>`});
+  s+=`<line x1="${pd.l}" x2="${W-pd.r}" y1="${Y(kkm)}" y2="${Y(kkm)}" stroke="var(--sa)" stroke-width="1.5" stroke-dasharray="6 5"/></svg>`;
+  box.innerHTML=`<div class="graf">${s}</div><div class="glg"><span><i class="gsq" style="background:var(--g1)"></i>Tuntas</span><span><i class="gsq" style="background:var(--ss)"></i>Di bawah KKM</span><span><i class="gdash" style="border-color:var(--sa)"></i>KKM ${kkm}</span></div>`;
+  const g=box.querySelector('.graf');g.querySelectorAll('rect[data-i]').forEach(rc=>{const on=()=>{const i=+rc.dataset.i,o=data[i],r=g.getBoundingClientRect(),cx=pd.l+i*slot+slot/2;g.querySelectorAll('.gbar').forEach((b,k)=>b.classList.toggle('dim',k!==i));
+    dgTip(g,`<b>${esc(dgTgl(o.t))}</b>${dgRow(o.avg>=kkm?'var(--g1)':'var(--ss)','Rata-rata',o.avg)}<div class="gtr"><span>Murid dinilai</span><span>${o.n}</span></div><div class="gtr"><span>Status</span><span>${o.avg>=kkm?'Tuntas':'Di bawah KKM'}</span></div>`,cx*r.width/W,Y(o.avg)*r.height/H)};
+    rc.addEventListener('pointerenter',on);rc.addEventListener('pointerdown',on);rc.addEventListener('pointerleave',e=>{g.querySelectorAll('.gbar').forEach(b=>b.classList.remove('dim'));if(e.pointerType!=='touch')dgTipOff(g)})})}
+document.addEventListener('pointerdown',e=>{if(e.target.closest&&e.target.closest('.graf'))return;dg$$('.graf .gtip.on').forEach(t=>t.classList.remove('on'))});
+document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('.graf'))e.preventDefault()});
+{let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if($('#vTDash')&&!$('#vTDash').hidden)dgDraw(false)},200)})}
 function bindTeacherLinks(root){root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));root.querySelectorAll('[data-rep]').forEach(b=>b.onclick=e=>{e.stopPropagation();RP.pid=b.dataset.rep;go('trapor')});hydrate(root)}
 
 /* ---------- attendance ---------- */
