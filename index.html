@@ -2327,6 +2327,15 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 }
 @media (max-width:360px){.stats .stat{font-size:15px!important;padding:2px 2px!important}.stats .stat i{width:20px!important;height:20px!important}.stats .clspick{padding:5px 8px!important;font-size:12.5px!important}}
 html[data-theme=malam] .stats .clspick{background:rgba(0,240,255,.06)!important;border:1px solid rgba(0,240,255,.3)!important}
+
+/* TK: ramah anak yang belum bisa membaca */
+body.lvl-tk .opt .k{display:none}
+body.lvl-tk #opts .opt{min-height:68px;justify-content:center;font-size:20px}
+#opts.picopts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#opts.picopts .opt{min-height:96px;justify-content:center;font-size:52px;line-height:1;padding:8px}
+#opts.picopts .opt .t{font-size:50px!important;line-height:1.1}#opts.picopts .opt .objs{font-size:26px;flex-wrap:wrap;justify-content:center;gap:2px}
+body.lvl-tk .speak{font-size:18px;padding:10px 16px;border-radius:999px}
+body.lvl-tk .speak::before{content:"🔊 "}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2606,6 +2615,21 @@ const tkShape=()=>{const names=Object.keys(SHAPES),n=pick(names),[cn,ch]=pick(CO
 const tkMore=()=>{const [e,w]=pick(THINGS);let a=R(1,9),b=R(1,9);while(a===b)b=R(1,9);const less=Math.random()<.4;const A=objs(e,a),B=objs(e,b);const ans=less?(a<b?A:B):(a>b?A:B);return Q(`Mana yang lebih <u>${less?'sedikit':'banyak'}</u>?`,{opts:[A,B],ans},`Satu kelompok ada ${a}, kelompok lain ada ${b}. Yang lebih ${less?'sedikit':'banyak'} adalah ${less?Math.min(a,b):Math.max(a,b)}.`,{say:`Mana yang lebih ${less?'sedikit':'banyak'}?`,html:true})};
 const tkAdd=()=>{const [e,w]=pick(THINGS),a=R(1,5),b=R(1,4);return Q(`${a} ${w} ditambah ${b} ${w}, jadi berapa?<span class="objs">${Array(a).fill(e).join('')} <b style="font-size:.7em;align-self:center">+</b> ${Array(b).fill(e).join('')}</span>`,numOpts(a+b,3,1),`${a} + ${b} = ${a+b}`,{say:`${a} ${w} ditambah ${b} ${w}, jadi berapa?`})};
 
+/* TK tanpa membaca: jawaban berupa gambar/emoji, soal & pilihan dibacakan */
+const COLOR_EMO=[['Merah','🔴','#E53935'],['Biru','🔵','#1E88E5'],['Kuning','🟡','#FDD835'],['Hijau','🟢','#43A047'],['Oranye','🟠','#FB8C00'],['Ungu','🟣','#8E24AA'],['Cokelat','🟤','#6D4C41'],['Hitam','⚫','#222222'],['Putih','⚪','#FFFFFF']];
+const SHAPE_EMO=[['Lingkaran','🔵','<circle cx="50" cy="50" r="42"/>'],['Segitiga','🔺','<polygon points="50,8 94,90 6,90"/>'],['Persegi','🟧','<rect x="10" y="10" width="80" height="80"/>'],['Bintang','⭐','<polygon points="50,4 62,38 97,38 69,59 80,94 50,73 20,94 31,59 3,38 38,38"/>'],['Belah ketupat','🔷','<polygon points="50,4 92,50 50,96 8,50"/>'],['Hati','❤️','<path d="M50 90 C14 64 6 40 18 24 C30 10 46 16 50 30 C54 16 70 10 82 24 C94 40 86 64 50 90Z"/>']];
+const optSayMap=list=>Object.fromEntries(list.map(([n,e])=>[e,n.toLowerCase()]));
+const tkColorPick=()=>{const t=pick(COLOR_EMO),o=shuffle([t,...shuffle(COLOR_EMO.filter(c=>c!==t)).slice(0,3)]);
+  if(Math.random()<.5)return Q(`🔊 Mana warna <b>${t[0].toLowerCase()}</b>?`,{opts:o.map(c=>c[1]),ans:t[1]},`Itu warna ${t[0].toLowerCase()}.`,{say:`Mana warna ${t[0].toLowerCase()}?`,optSay:optSayMap(o),pic:true});
+  const obj=pick([['🍎','apel','Merah'],['🍌','pisang','Kuning'],['🍃','daun','Hijau'],['🍊','jeruk','Oranye'],['🍇','anggur','Ungu'],['🐸','katak','Hijau'],['🌽','jagung','Kuning'],['🍓','stroberi','Merah'],['🐻','beruang','Cokelat'],['☁️','awan','Putih']]);const tc=COLOR_EMO.find(c=>c[0]===obj[2]);const o2=shuffle([tc,...shuffle(COLOR_EMO.filter(c=>c!==tc)).slice(0,3)]);
+  return Q(`🔊 ${obj[1][0].toUpperCase()+obj[1].slice(1)} warnanya apa?<span class="big">${obj[0]}</span>`,{opts:o2.map(c=>c[1]),ans:tc[1]},`${obj[1][0].toUpperCase()+obj[1].slice(1)} berwarna ${tc[0].toLowerCase()}.`,{say:`${obj[1]} warnanya apa? Pilih bulatan warnanya.`,optSay:optSayMap(o2),pic:true})};
+const tkShapePick=()=>{const t=pick(SHAPE_EMO),o=shuffle([t,...shuffle(SHAPE_EMO.filter(c=>c!==t)).slice(0,3)]);
+  if(Math.random()<.5)return Q(`🔊 Mana bentuk <b>${t[0].toLowerCase()}</b>?`,{opts:o.map(c=>c[1]),ans:t[1]},`Itu bentuk ${t[0].toLowerCase()}.`,{say:`Mana bentuk ${t[0].toLowerCase()}?`,optSay:optSayMap(o),pic:true});
+  const [cn,ch]=pick(COLORS.slice(0,8));return Q(`🔊 Cari bentuk yang sama!<span class="visual"><svg viewBox="0 0 100 100" aria-hidden="true"><g fill="${ch}" stroke="#1A2233" stroke-width="3">${t[2]}</g></svg></span>`,{opts:o.map(c=>c[1]),ans:t[1]},`Bentuk ini namanya ${t[0].toLowerCase()}.`,{say:`Cari bentuk yang sama. Ini bentuk ${t[0].toLowerCase()}.`,optSay:optSayMap(o),pic:true})};
+const tkFirstPic=()=>{const t=pick(WORDS),o=[t];while(o.length<4){const x=pick(WORDS);if(!o.some(y=>y[1][0]===x[1][0]))o.push(x)}const sh=shuffle(o);
+  return Q(`🔊 Mana yang huruf awalnya <span class="big" style="display:inline-block;font-size:1.6em">${t[1][0]}</span>?`,{opts:sh.map(w=>w[0]),ans:t[0]},`${t[1].toLowerCase()} dimulai dengan huruf ${t[1][0]}.`,{say:`Mana gambar yang huruf awalnya, ${t[1][0]}?`,optSay:Object.fromEntries(sh.map(w=>[w[0],w[1].toLowerCase()])),pic:true})};
+const tkCountPic=()=>{const [e,w]=pick(THINGS),n=R(1,6);const o=numOpts(n,2,1);return Q(`🔊 Pilih yang ada <b>${n}</b> ${w}!<span class="big">${n}</span>`,{opts:o.opts.map(v=>objs(e,+v)),ans:objs(e,n)},`Hitung satu per satu: ada ${n} ${w}.`,{say:`Pilih yang ada ${n} ${w}.`,html:true,pic:true})};
+
 /* ---------- SD 1–3 ---------- */
 const addSub=()=>{const big=Math.random()<.5;if(Math.random()<.5){const a=big?R(10,60):R(1,10),b=big?R(5,39):R(1,10);return Q(`<span class="formula">${a} + ${b} = ?</span>`,numOpts(a+b,big?10:3),`${a} + ${b} = ${a+b}`)}const a=big?R(30,99):R(5,20),b=big?R(5,a-1):R(1,a);return Q(`<span class="formula">${a} − ${b} = ?</span>`,numOpts(a-b,big?10:3),`${a} − ${b} = ${a-b}`)};
 const story=()=>{const n=pick(['Budi','Siti','Rina','Andi','Dewi','Joko']);const a=R(5,25),b=R(2,a-1);return Math.random()<.5?Q(`${n} punya ${a} kelereng, lalu diberi ${b} lagi. Sekarang kelereng ${n} ada berapa?`,numOpts(a+b,5),`${a} + ${b} = ${a+b}`):Q(`${n} membeli ${a} permen, lalu ${b} permen dimakan. Sisa permennya berapa?`,numOpts(a-b,4),`${a} − ${b} = ${a-b}`)};
@@ -2878,15 +2902,15 @@ const U=(t,d,src,extra={})=>Object.assign({t,d},Array.isArray(src)&&typeof src[0
 const COURSE=[
  {id:'tk',name:'TK',full:'Taman Kanak-kanak',lv:'tk',subjects:[
   {id:'hitung',name:'Berhitung',glyph:'123',color:'#FF8A3D',fit:'kid',units:[
-    U('Mengenal angka 1–10','Menghitung benda sampai sepuluh',[tkCount],{tip:'Tunjuk bendanya satu per satu sambil menghitung keras-keras.'}),
+    U('Mengenal angka 1–10','Menghitung benda sampai sepuluh',[tkCount,tkCountPic],{tip:'Tunjuk bendanya satu per satu sambil menghitung keras-keras.'}),
     U('Banyak atau sedikit','Membandingkan dua kelompok benda',[tkMore],{fit:'picture',tip:'Hitung setiap kelompok dulu, lalu bandingkan angkanya.'}),
     U('Tambah pertama','Menggabungkan dua kelompok benda',[tkAdd],{fit:'kidSlow',tip:'Menambah artinya menggabungkan. Hitung semua bendanya bersama-sama.'})]},
   {id:'huruf',name:'Huruf',glyph:'ABC',color:'#3D8BFF',fit:'kid',units:[
-    U('Huruf awal','Menebak huruf pertama nama benda',[tkFirst],{tip:'Ucapkan nama bendanya pelan-pelan. Bunyi pertama adalah huruf awalnya.'}),
+    U('Huruf awal','Menebak huruf pertama nama benda',[tkFirst,tkFirstPic],{tip:'Ucapkan nama bendanya pelan-pelan. Bunyi pertama adalah huruf awalnya.'}),
     U('Urutan huruf','Melengkapi urutan A sampai Z',[tkSeq],{tip:'Nyanyikan lagu A-B-C untuk mengingat urutan huruf.'})]},
   {id:'warna',name:'Warna & Bentuk',glyph:'●▲',color:'#FF5C9E',fit:'kidSlow',units:[
-    U('Mengenal warna','Menyebut nama warna',[tkColor],{tip:'Cari benda di sekitarmu yang warnanya sama.'}),
-    U('Mengenal bentuk','Lingkaran, segitiga, persegi, dan lainnya',[tkShape],{tip:'Hitung sudutnya: segitiga punya 3, persegi punya 4, lingkaran tidak punya sudut.'})]}]},
+    U('Mengenal warna','Memilih warna yang disebut',[tkColorPick],{tip:'Cari benda di sekitarmu yang warnanya sama.'}),
+    U('Mengenal bentuk','Lingkaran, segitiga, persegi, dan lainnya',[tkShapePick],{tip:'Hitung sudutnya: segitiga punya 3, persegi punya 4, lingkaran tidak punya sudut.'})]}]},
  {id:'sd1',name:'Kelas 1–3',full:'SD Kelas 1–3',lv:'sd',subjects:[
   {id:'mtk',name:'Matematika',glyph:'+ −',color:'#F2394B',fit:'num',units:[
     U('Penjumlahan','Menjumlahkan bilangan sampai 100',[add13],{tip:'Jumlahkan satuan dulu, lalu puluhan. Kalau satuan lebih dari 9, simpan 1 ke puluhan.'}),
@@ -2982,11 +3006,11 @@ const PAI_TK=[
  ['Sebelum makan, kita membaca …','Bismillah','Alhamdulillah','Astagfirullah','Amin','Bismillah artinya dengan menyebut nama Allah.'],
  ['Sesudah makan, kita mengucapkan …','Alhamdulillah','Bismillah','Assalamu’alaikum','Insyaallah','Alhamdulillah artinya segala puji bagi Allah.'],
  ['Jawaban salam Assalamu’alaikum adalah …','Wa’alaikumussalam','Alhamdulillah','Bismillah','Masyaallah'],
- ['Kitab suci umat Islam adalah …','Al-Qur’an','Kamus','Buku cerita','Majalah'],
- ['Tempat ibadah umat Islam adalah …','masjid','pasar','taman','kebun'],
+ ['Kitab suci umat Islam adalah …','📖 Al-Qur’an','📕 Kamus','📚 Buku cerita','📰 Majalah'],
+ ['Tempat ibadah umat Islam adalah …','🕌 masjid','🛒 pasar','🌳 taman','🥕 kebun'],
  ['Nabi terakhir adalah …','Nabi Muhammad','Nabi Adam','Nabi Nuh','Nabi Musa'],
- ['Shalat wajib dalam sehari ada … kali','5','3','2','7','Subuh, Zuhur, Asar, Magrib, dan Isya.'],
- ['Sebelum shalat, kita harus …','berwudu','makan','tidur','bermain'],
+ ['Shalat wajib dalam sehari ada … kali','🖐️ 5','3','2','7','Subuh, Zuhur, Asar, Magrib, dan Isya.'],
+ ['Sebelum shalat, kita harus …','💧 berwudu','🍚 makan','😴 tidur','⚽ bermain'],
  ['Huruf hijaiyah yang pertama adalah …','Alif','Ba','Ta','Jim'],
  ['Kalau berbuat salah, kita mengucapkan …','Astagfirullah','Alhamdulillah','Bismillah','Assalamu’alaikum','Astagfirullah artinya aku memohon ampun kepada Allah.']];
 const PAI_SD13=[
@@ -3911,6 +3935,8 @@ function musicStart(){if(!MUS.on||!soundOn||MUS.t)return;try{actx=actx||new (win
     MUS.next+=d;MUS.step++}},90)}catch(e){}}
 function musicStop(){clearInterval(MUS.t);MUS.t=null;try{MUS.gain&&MUS.gain.disconnect()}catch(e){}MUS.gain=null}
 function setMusic(){}
+function qSpeech(q){if(!q)return '';if(q.say)return q.say;if(typeof L==='undefined'||!L||L.id!=='tk')return '';return plainTx(q.q).replace(/\s*…\s*/g,' apa? ').replace(/🔊/g,'').trim()}
+function optSpeech(q,k){const o=q.opts[k];if(q.optSay&&q.optSay[o])return q.optSay[o];const t=plainTx(o).replace(/[^\p{L}\p{N}’' -]/gu,' ').replace(/\s+/g,' ').trim();if(t)return t;const m=String(o).match(/class="objs">([^<]*)</);return m?String([...m[1]].filter(ch=>/\p{Extended_Pictographic}/u.test(ch)).length):''}
 function say(t){if(!soundOn||!t)return;try{const s=window.speechSynthesis;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.rate=.9;s.speak(u)}catch(e){}}
 
 /* ---------- state ---------- */
@@ -4082,7 +4108,7 @@ function renderHUD(){
 function showQText(q){
   $('#qtag').textContent=`${q.subj||S.name} · Soal ${game.i+1} dari ${game.qs.length}`;
   $('#qtext').innerHTML=q.q;
-  $('#speakBtn').hidden=!q.say;
+  $('#speakBtn').hidden=!qSpeech(q);
 }
 function shakeCard(){const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('shake')}
 /* ---------- rekam jawaban per soal (untuk analisis guru) ---------- */
@@ -4121,13 +4147,14 @@ function popFx(el,text){if(!el)return;const r=el.getBoundingClientRect(),x=r.lef
 /* ---------- classic quiz ---------- */
 function renderQ(){
   const q=game.qs[game.i];game.locked=false;game.buzz=null;if(game.group)game.group.locked=[];
-  if(game.i===0)mascot('happy',game.lesson&&game.lesson.who?`Ayo, ${game.lesson.who}!`:game.lesson&&P&&P.stats.lessons===0&&game.mode==='kuis'?'Pilih jawaban, lalu Periksa!':'Ayo mulai!');
+  if(game.i===0)mascot('happy',game.lesson&&game.lesson.who?`Ayo, ${game.lesson.who}!`:L.id==='tk'?'Dengarkan, lalu ketuk jawabannya!':game.lesson&&P&&P.stats.lessons===0&&game.mode==='kuis'?'Pilih jawaban, lalu Periksa!':'Ayo mulai!');
   game.sel=null;
   renderHUD();showQText(q);
   $('#feedback').hidden=true;
   $('#opts').innerHTML=q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]||k+1}</span><span class="t">${o}</span></button>`).join('');
-  const chk=!!(game.lesson&&game.mode==='kuis');
-  $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>chk?selectOpt(+b.dataset.k):answer(+b.dataset.k));
+  const chk=!!(game.lesson&&game.mode==='kuis'&&L.id!=='tk');
+  $('#opts').classList.toggle('picopts',!!q.pic);
+  $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(L.id==='tk'&&chk){const t=optSpeech(q,+b.dataset.k);if(t)say(t)}chk?selectOpt(+b.dataset.k):answer(+b.dataset.k)});
   $('#checkBar').hidden=!chk;$('#checkBtn').disabled=true;
   const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop');
   clearInterval(timerId);$('#timer').hidden=true;
@@ -4137,7 +4164,7 @@ function renderQ(){
   startQ();
 }
 function startQ(){
-  $('#turn').hidden=true;const q=game.qs[game.i];if(q.say)say(q.say);
+  $('#turn').hidden=true;const q=game.qs[game.i];{const sp=qSpeech(q);if(sp)say(sp)}
   if(L.time&&!game.lesson){$('#timer').hidden=false;game.t0=Date.now();const bar=$('#timerBar');bar.style.width='100%';
     timerId=setInterval(()=>{if(PAUSE.on)return;const left=1-(Date.now()-game.t0)/(L.time*1000);bar.style.width=Math.max(0,left*100)+'%';if(left<=0){clearInterval(timerId);answer(-1)}},200);
   }else game.t0=Date.now();
@@ -4185,7 +4212,7 @@ function answer(k){
   $('#fbText').innerHTML=ok?(q.exp||''):wrongInfo(q,k);bindFbRead();
   const last=game.i===game.qs.length-1||game.lives<=0;
   $('#nextBtn').textContent=game.lesson?(last?'Selesai':'Lanjut'):last?(team?'Lihat klasemen →':'Lihat rapor →'):'Lanjut →';
-  if(L.id==='tk')say(ok?'Hebat, benar!':'Ayo coba lagi nanti');
+  if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?optSpeech(q,k):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):`Belum tepat. Jawabannya, ${optSpeech(q,ai)}.`))}
   $('#nextBtn').focus({preventScroll:true});
 }
 const optIdx=k=>/^[1-4]$/.test(k)?+k-1:/^[a-dA-D]$/.test(k)?k.toLowerCase().charCodeAt(0)-97:-1;
@@ -4294,7 +4321,7 @@ function arcIntro(first){
   $('#asText').textContent=first?modeInfo().help:`Soal ${game.i+1} dari ${game.qs.length}. Perwakilan ${t.name} silakan maju.`;
   $('#arcStart').hidden=false;setTimeout(()=>$('#asGo').focus({preventScroll:true}),50);
 }
-function arcGo(){$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);if(arc.q.say)say(arc.q.say)}
+function arcGo(){$('#arcStart').hidden=true;arc.state='play';tone([523,784],.08);{const sp=qSpeech(arc.q);if(sp)say(sp)}}
 function arcShowQ(){
   if(MODE==='urut'&&game.qs[game.i]&&!game.qs[game.i].urut)game.qs[game.i]=urutQ(game.qs[game.i]);
   const q=game.qs[game.i];renderHUD();showQText(q);
@@ -4340,7 +4367,7 @@ function arcNext(){
   if(game.lives<=0||game.i>=game.qs.length-1){arcStop();finish();return}
   game.i++;
   if(isGroup()){arc.state='intro';arcShowQ();arcIntro(false);return}
-  arc.state='play';arcShowQ();if(arc.q.say)say(arc.q.say);
+  arc.state='play';arcShowQ();{const sp=qSpeech(arc.q);if(sp)say(sp)}
   const card=$('#qcard');card.classList.remove('pop','shake');void card.offsetWidth;card.classList.add('pop');
 }
 function arcStop(){arc.running=false;cancelAnimationFrame(arc.raf);$('#arcFb').hidden=true;$('#arcStart').hidden=true}
@@ -8825,7 +8852,7 @@ $('#afNext').onclick=arcNext;
 $('#pauseBtn').onclick=()=>pauseGame(false);$('#duelPause').onclick=()=>pauseGame(false);
 $('#quitBtn').onclick=()=>{if(game&&game.lesson){quitAsk();return}clearInterval(timerId);arcStop();openGames()};
 $('#nextBtn').onclick=next;
-$('#speakBtn').onclick=()=>say(game.qs[game.i].say);
+$('#speakBtn').onclick=()=>say(qSpeech(game.qs[game.i]));
 $('#againBtn').onclick=()=>launch();
 $('#toGameBtn').onclick=()=>openGames();
 $('#backSubj').onclick=()=>go('team');
