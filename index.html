@@ -8569,7 +8569,7 @@ function xpChart(a,b,nb){const t=dayNum(dayKey()),DN=['Min','Sen','Sel','Rab','K
   return {svg:`<svg viewBox="0 0 ${W} ${H}" class="xpchart" role="img" aria-label="Grafik XP 7 hari">${g}${line(vb,'#FF9600')}${line(va,'#1CB0F6')}</svg>`,sa,sb}}
 function dayKeyOf(dt){const o=new Date(dt.getTime());return o.getFullYear()+'-'+String(o.getMonth()+1).padStart(2,'0')+'-'+String(o.getDate()).padStart(2,'0')}
 function fbPubSync(){if(!FBX.user||isT()||!P)return;const d=myPub();const key=JSON.stringify(d);if(FBX.pubKey===key)return;FBX.pubKey=key;
-  FB.db.doc('pub/'+FBX.user.uid).set(Object.assign(d,{upd:Date.now(),seen:Date.now(),on:!document.hidden})).catch(()=>{FBX.pubKey=null})}
+  FB.db.doc('pub/'+FBX.user.uid).set(Object.assign(d,{upd:Date.now(),seen:Date.now(),on:!document.hidden&&(typeof document.hasFocus!=='function'||document.hasFocus())})).catch(()=>{FBX.pubKey=null})}
 window.fbPubSync=fbPubSync;
 const CMP=[['xp','Total XP','bolt'],['wxp','XP minggu ini','bolt'],['streak','Hari beruntun','flame'],['lessons','Pelajaran selesai','check'],['units','Unit selesai','target'],['perfect','Level sempurna','star'],['badges','Level pencapaian','trophy'],['matches','Tanding dimainkan','team']];
 function cmpLine(me,th,name){const lead=CMP.filter(([k])=>me[k]>th[k]).length,lose=CMP.filter(([k])=>me[k]<th[k]);
@@ -8805,16 +8805,19 @@ async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=
 
 /* ---------- status online: titik hijau saat pengguna sedang membuka JELAS ---------- */
 const PRES={c:{},beatAt:0};window.PRES=PRES;
-const presOn=d=>!!d&&d.on!==false&&d.seen&&Date.now()-d.seen<150000;
+const presOn=d=>!!d&&d.on===true&&d.seen&&Date.now()-d.seen<165000;
+const presActive=()=>!document.hidden&&(typeof document.hasFocus!=='function'||document.hasFocus());
 function presAgo(d){if(!d||!d.seen)return '';const m=Math.round((Date.now()-d.seen)/60000);return m<60?`Aktif ${Math.max(1,m)} menit lalu`:m<1440?`Aktif ${Math.round(m/60)} jam lalu`:`Aktif ${Math.round(m/1440)} hari lalu`}
 function presLine(d){if(!d||!d.seen)return '';const on=presOn(d);return `<span class="uonl ${on?'on':''}"><i></i>${on?'Sedang online':presAgo(d)}</span>`}
-async function presGet(uid){const c=PRES.c[uid];if(c&&Date.now()-c.t<40000)return c.d;try{const s=await FB.db.doc('pub/'+uid).get();const d=s.exists?s.data():null;PRES.c[uid]={t:Date.now(),d:d?{seen:d.seen,on:d.on}:null};return PRES.c[uid].d}catch(e){return null}}
+async function presGet(uid){const c=PRES.c[uid];if(c&&Date.now()-c.t<20000)return c.d;try{const s=await FB.db.doc('pub/'+uid).get();const d=s.exists?s.data():null;PRES.c[uid]={t:Date.now(),d:d?{seen:d.seen,on:d.on}:null};return PRES.c[uid].d}catch(e){return null}}
 function presDecorate(root){if(!root||typeof FB==='undefined'||!FBX.user)return;root.querySelectorAll('.ajrow').forEach(r=>{const b=r.querySelector('[data-uid],[data-fr],[data-fq],[data-acc]');const id=b&&(b.dataset.uid||b.dataset.fr||b.dataset.fq);if(!id)return;
   presGet(id).then(d=>{const a=r.querySelector('.avatar');if(!a||!a.isConnected)return;const on=presOn(d);a.classList.toggle('pon',on);if(on)a.title='Sedang online'})})}
-function presBeat(on){try{if(typeof FB==='undefined'||!FBX.user||isT()||!P)return;PRES.beatAt=Date.now();FB.db.doc('pub/'+FBX.user.uid).update({seen:Date.now(),on}).catch(()=>{})}catch(e){}}
-setInterval(()=>{if(!document.hidden)presBeat(true)},60000);
-document.addEventListener('visibilitychange',()=>presBeat(!document.hidden));
-addEventListener('pagehide',()=>presBeat(false));
+function presBeat(on){try{if(typeof FB==='undefined'||!FBX.user||isT()||!P)return;if(on===PRES.last&&on===false)return;PRES.last=on;PRES.beatAt=Date.now();FB.db.doc('pub/'+FBX.user.uid).update({seen:Date.now(),on}).catch(()=>{PRES.last=null})}catch(e){}}
+// online = JELAS sedang terbuka di depan dan dipakai (bukan di latar, gelembung, atau jendela mengambang)
+setInterval(()=>{if(presActive())presBeat(true)},120000);
+document.addEventListener('visibilitychange',()=>presBeat(presActive()));
+addEventListener('focus',()=>presBeat(presActive()));addEventListener('blur',()=>setTimeout(()=>presBeat(presActive()),300));
+addEventListener('pagehide',()=>presBeat(false));addEventListener('freeze',()=>presBeat(false));
 /* ---------- tantangan: berlaku 2 menit, layar tunggu seperti Duolingo ---------- */
 const INV_TTL=120000;
 const CLOCK_SVG='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
