@@ -8579,9 +8579,9 @@ function cmpLine(me,th,name){const lead=CMP.filter(([k])=>me[k]>th[k]).length,lo
 async function openUserProfile(uid,fb){if(!P||!FBX.user)return;fb=fb||{};
   if(uid===FBX.user.uid){go('profile');return}
   openModal(`<div class="uprof"><p class="note" style="text-align:center;padding:30px 0">Membuka profil ${esc(fb.name||'')}…</p></div>`);
-  let th=null;try{const s=await FB.db.doc('pub/'+uid).get();if(s.exists)th=s.data()}catch(e){}
+  let th=null;try{const s=await FB.db.doc('pub/'+uid).get();if(s.exists)th=s.data()}catch(e){}const pres=th?{seen:th.seen,on:th.on}:null;if(th&&!th.name)th=null;
   const box=document.querySelector('#mbox .uprof');if(!box)return;
-  if(!th){box.innerHTML=`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({name:fb.name,avatar:fb.av||null}).replace('class="avatar','class="avatar big')}</div><h3>${esc(fb.name||'Teman')}</h3><p class="note">${esc(fb.name||'Temanmu')} belum membuka JELAS versi terbaru, jadi statistiknya belum bisa dibandingkan.</p></div><div class="acts"><button class="primary" id="upX">Oke</button></div>`;$('#upX').onclick=closeModal;return}
+  if(!th){box.innerHTML=`<div style="text-align:center"><div style="width:96px;margin:0 auto">${avSpan({name:fb.name,avatar:fb.av||null}).replace('class="avatar','class="avatar big')}</div><h3>${esc(fb.name||'Teman')}</h3>${presLine(pres)}<p class="note">${esc(fb.name||'Temanmu')} belum membuka JELAS versi terbaru, jadi statistiknya belum bisa dibandingkan.</p></div><div class="acts"><button class="primary" id="upX">Oke</button></div>`;$('#upX').onclick=closeModal;return}
   const me=myPub();if(th.week!==me.week)th.wxp=0;const gap=dayNum(dayKey())-dayNum(th.lastDay||'2000-01-01');if(gap>2)th.streak=0;
   const cls=(COURSE.find(c=>c.id===th.cls)||{}).full||'';const cap=(CAPS[0]||[])[2]||INK;
   const ch=xpChart(me.xpd,th.xpd||{},th.name);
@@ -8804,17 +8804,21 @@ async function ajakLoadFriends(){const box=$('#ajList');if(!box)return;const me=
 
 
 /* ---------- status online: titik hijau saat pengguna sedang membuka JELAS ---------- */
-const PRES={c:{},beatAt:0};window.PRES=PRES;
+const PRES={c:{},subs:{},beatAt:0};window.PRES=PRES;
 const presOn=d=>!!d&&d.on===true&&d.seen&&Date.now()-d.seen<165000;
 const presActive=()=>!document.hidden&&(typeof document.hasFocus!=='function'||document.hasFocus());
 function presAgo(d){if(!d||!d.seen)return '';const m=Math.round((Date.now()-d.seen)/60000);return m<60?`Aktif ${Math.max(1,m)} menit lalu`:m<1440?`Aktif ${Math.round(m/60)} jam lalu`:`Aktif ${Math.round(m/1440)} hari lalu`}
 function presLine(d){if(!d||!d.seen)return '';const on=presOn(d);return `<span class="uonl ${on?'on':''}"><i></i>${on?'Sedang online':presAgo(d)}</span>`}
 async function presGet(uid){const c=PRES.c[uid];if(c&&Date.now()-c.t<20000)return c.d;try{const s=await FB.db.doc('pub/'+uid).get();const d=s.exists?s.data():null;PRES.c[uid]={t:Date.now(),d:d?{seen:d.seen,on:d.on}:null};return PRES.c[uid].d}catch(e){return null}}
+function presWatch(uid){if(PRES.subs[uid])return;const o=PRES.subs[uid]={d:null,un:null};try{o.un=FB.db.doc('pub/'+uid).onSnapshot(s=>{const d=s.exists?s.data():null;o.d=d?{seen:d.seen,on:d.on}:null;presPaint(uid)},()=>{})}catch(e){}}
+function presPaint(uid){const o=PRES.subs[uid];const on=presOn(o&&o.d);document.querySelectorAll('.avatar[data-pres="'+CSS.escape(uid)+'"]').forEach(a=>{a.classList.toggle('pon',on);a.title=on?'Sedang online':''})}
+setInterval(()=>{Object.keys(PRES.subs).forEach(uid=>{if(!document.querySelector('.avatar[data-pres="'+CSS.escape(uid)+'"]')){try{PRES.subs[uid].un&&PRES.subs[uid].un()}catch(e){}delete PRES.subs[uid]}else presPaint(uid)})},15000);
 function presDecorate(root){if(!root||typeof FB==='undefined'||!FBX.user)return;root.querySelectorAll('.ajrow').forEach(r=>{const b=r.querySelector('[data-uid],[data-fr],[data-fq],[data-acc]');const id=b&&(b.dataset.uid||b.dataset.fr||b.dataset.fq);if(!id)return;
-  presGet(id).then(d=>{const a=r.querySelector('.avatar');if(!a||!a.isConnected)return;const on=presOn(d);a.classList.toggle('pon',on);if(on)a.title='Sedang online'})})}
-function presBeat(on){try{if(typeof FB==='undefined'||!FBX.user||isT()||!P)return;if(on===PRES.last&&on===false)return;PRES.last=on;PRES.beatAt=Date.now();FB.db.doc('pub/'+FBX.user.uid).update({seen:Date.now(),on}).catch(()=>{PRES.last=null})}catch(e){}}
+  const a=r.querySelector('.avatar');if(!a)return;a.dataset.pres=id;presWatch(id);presPaint(id)})}
+
+function presBeat(on){try{if(typeof FB==='undefined'||!FBX.user||isT()||!P)return;if(on===PRES.last&&on===false)return;PRES.last=on;PRES.beatAt=Date.now();FB.db.doc('pub/'+FBX.user.uid).set({seen:Date.now(),on},{merge:true}).catch(()=>{PRES.last=null})}catch(e){}}
 // online = JELAS sedang terbuka di depan dan dipakai (bukan di latar, gelembung, atau jendela mengambang)
-setInterval(()=>{if(presActive())presBeat(true)},120000);
+setInterval(()=>{if(presActive()&&(PRES.last!==true||Date.now()-PRES.beatAt>90000))presBeat(true)},10000);
 document.addEventListener('visibilitychange',()=>presBeat(presActive()));
 addEventListener('focus',()=>presBeat(presActive()));addEventListener('blur',()=>setTimeout(()=>presBeat(presActive()),300));
 addEventListener('pagehide',()=>presBeat(false));addEventListener('freeze',()=>presBeat(false));
