@@ -82,7 +82,7 @@ async function getDoc(path) {
   return fieldsOf(j);
 }
 
-async function pushTo(uid, data) {
+async function pushTo(uid, data, ttl) {
   const user = await getDoc('users/' + uid);
   const tokens = (user && user.push) || [];
   const clean = {};
@@ -91,7 +91,7 @@ async function pushTo(uid, data) {
   for (const token of tokens.slice(-5)) {
     const r = await fetch(`https://fcm.googleapis.com/v1/projects/${SA.project_id}/messages:send`, {
       method: 'POST', headers: { Authorization: 'Bearer ' + await accessToken(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: { token, data: clean, webpush: { headers: { Urgency: 'high', TTL: '86400' } } } }),
+      body: JSON.stringify({ message: { token, data: clean, webpush: { headers: { Urgency: 'high', TTL: String(ttl || 86400) } } } }),
     });
     if (r.ok) sent++;
   }
@@ -317,7 +317,9 @@ export default {
       let sent = 0;
       if (type === 'invite') {
         if (inv.from !== uid) return reply(403, { error: 'Bukan pengirim undangan' }, origin);
-        sent = await pushTo(inv.to, { type: 'invite', inv: id, code: inv.code, title: `${inv.fromName || 'Temanmu'} menantangmu!`, body: `${inv.subjName || ''}${inv.title ? ' · ' + inv.title : ''}. Terima tantangannya?` });
+        const left = Math.max(10, Math.round((120000 - (Date.now() - (inv.created || Date.now()))) / 1000));
+        if (left <= 10) return reply(200, { ok: true, sent: 0, expired: true }, origin);
+        sent = await pushTo(inv.to, { type: 'invite', inv: id, code: inv.code, exp: (inv.created || Date.now()) + 120000, title: `${inv.fromName || 'Temanmu'} menantangmu tanding${inv.subjName ? ' ' + inv.subjName : ''}!`, body: 'Kamu punya 2 menit untuk menerima tantangan' }, left);
       } else if (type === 'answer') {
         if (inv.to !== uid || !inv.status) return reply(403, { error: 'Bukan penerima undangan' }, origin);
         const who = inv.toName || 'Temanmu';

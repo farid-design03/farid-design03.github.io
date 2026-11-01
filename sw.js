@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v104';
+const CACHE = 'jelajah-kelas-v105';
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
@@ -43,7 +43,14 @@ self.addEventListener('push', e => {
   try { const j = e.data ? e.data.json() : {}; d = j.data || j; } catch (_) {}
   const opt = { body: d.body || '', icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: d.inv ? 'inv-' + d.inv : (d.type || 'jelas'),
     renotify: true, vibrate: [200, 100, 200], data: d };
-  if (d.type === 'invite') { opt.requireInteraction = true; opt.actions = [{ action: 'accept', title: 'Terima' }, { action: 'decline', title: 'Tolak' }]; }
+  if (d.type === 'invite') {
+    if (d.exp && Date.now() > +d.exp) return;
+    opt.requireInteraction = true; opt.icon = 'icons/duel.png'; opt.badge = 'icons/badge-72.png'; opt.timestamp = Date.now();
+    opt.actions = [{ action: 'accept', title: 'Terima' }, { action: 'decline', title: 'Tolak' }];
+    // tantangan berlaku 2 menit: tutup sendiri setelah habis
+    e.waitUntil(new Promise(r => setTimeout(r, Math.max(0, Math.min(125000, (+d.exp || Date.now() + 120000) - Date.now())))).then(() =>
+      self.registration.getNotifications({ tag: 'inv-' + d.inv }).then(ns => ns.forEach(n => n.close()))));
+  }
   if (d.type === 'task') { opt.requireInteraction = true; opt.tag = 'task-' + d.tid; opt.actions = [{ action: 'task', title: 'Kerjakan sekarang' }]; }
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
     const open = list.find(c => c.visibilityState === 'visible');
