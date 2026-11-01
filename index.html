@@ -16,10 +16,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Baloo+2:wght@700;800&family=Orbitron:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Orbitron:wght@700;800;900&display=swap">
 <script>window.__bip=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e;try{window.instReady&&instReady()}catch(_){}});</script>
 <script>(function(){try{var t=localStorage.getItem('jelas-theme')||'siang';if(t==='auto')t=matchMedia('(prefers-color-scheme: dark)').matches?'malam':'siang';document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <style>
+@font-face{font-family:"Nunito";src:url(fonts/nunito.woff) format("woff");font-weight:200 1000;font-display:swap}
+@font-face{font-family:"Fredoka";src:url(fonts/fredoka.woff) format("woff");font-weight:300 700;font-display:swap}
 /* Layout: a bright cartoon schoolyard world (sky, sun, drifting clouds, hills) behind chunky sticker-style cards with ink outlines and solid drop shadows; one committed bright look for classroom TVs */
 :root{
   --sky-top:#47BDF5; --sky-bot:#CFF2FF; --grass:#7AD663; --grass2:#4FB84A;
@@ -2391,6 +2393,30 @@ body.lvl-tk .speak::before{content:"🔊 "}
  .stats .clspick{font-size:11.5px!important;padding:4px 7px!important}
  .stats .stat{font-size:13.5px!important;padding:2px 1px!important;gap:2px!important}.stats .stat i,.stats .nbell svg{width:18px!important;height:18px!important}
 }
+
+/* ===== tipografi gaya Duolingo: judul & tombol membulat (Fredoka, pengganti Feather Bold), isi Nunito tebal (pengganti DIN Round) ===== */
+:root{--title:"Fredoka","Nunito",system-ui,sans-serif;--display:"Fredoka","Nunito",system-ui,sans-serif;--body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif}
+body{font-weight:600;font-size:16px}
+h1,h2,h3,.pagehead h2,.wtitle,.dh,.dtt{font-family:var(--title);font-weight:600;letter-spacing:0}
+b,strong{font-weight:700}
+.primary,.ghost,.dsb,.dlink,.sfprobtn{font-family:var(--title)!important;font-weight:600!important;text-transform:uppercase;letter-spacing:.06em!important}
+.smallbtn{font-family:var(--title);font-weight:600}
+.stat,.kv,.tdgrid,.jv,.fbcode-big{font-family:var(--title)!important;font-weight:600}
+.dlogo{font-family:"Fredoka",sans-serif!important;font-weight:700!important}
+@media (max-width:600px){
+ .pagehead h2{font-size:22px!important}
+ .card h2,.view h2:not(.authh){font-size:22px!important}
+ .card h3,.tcard h3,.modal h3{font-size:19px!important}
+ .primary{font-size:16px!important}.ghost{font-size:15px!important}
+ .card small,.item small,.set small{font-size:14px}
+ .qsec h3,.sect,.eyebrow{font-family:var(--title);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+ .stats .stat{font-size:18px!important}
+ #qtext{font-size:20px;font-family:var(--body);font-weight:700}
+ .opt{font-family:var(--body);font-weight:700;font-size:17px}
+}
+html[data-theme=malam] .primary,html[data-theme=malam] h1,html[data-theme=malam] h2,html[data-theme=malam] h3{font-family:"Orbitron","Nunito",sans-serif!important}
+
+@media (max-width:340px){.notifbar2 .grow{min-width:0}.notifbar2 b{overflow:hidden;text-overflow:ellipsis}.pstats .ps b,.pstats .ps span{min-width:0;overflow:hidden;text-overflow:ellipsis}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
