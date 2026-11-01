@@ -3885,6 +3885,8 @@ function renderSetup(){
 }
 function applyTV(){document.body.classList.toggle('tv',TV&&window.innerWidth>=700)}
 const MODE_LIST=[
+ {id:'lompat',name:'Lompat Blok',desc:'Lari, lompat, sundul blok jawaban yang benar',help:'Ketuk blok berisi jawaban yang benar: tokohmu berlari ke bawahnya lalu melompat menyundulnya. Keyboard: ← → berjalan, Spasi atau ↑ melompat, angka 1–4 langsung menuju blok.',
+  icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><rect x="16" y="4" width="16" height="13" rx="3"/><path d="M24 8v5" /><circle cx="24" cy="26" r="4"/><path d="M24 30v6l-5 7M24 36l5 7M18 33l6-3 6 3"/><path d="M4 44h40"/></svg>'},
  {id:'tembak',name:'Tembak Jawaban',desc:'Bidik dan tembak sasaran yang benar',help:'Ketuk atau klik sasaran untuk menembak. Keyboard: ← → membidik, Spasi menembak. Sasaran pelan-pelan turun, jangan sampai waktunya habis!',
   icon:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="4" fill="currentColor"/><path d="M24 3v9M24 36v9M3 24h9M36 24h9"/></svg>'},
  {id:'lari',name:'Lari Jalur',desc:'Jawab benar untuk menyalip lawan',help:'Ketuk jawaban yang benar. Jawaban benar membuat pelarimu maju menyalip lawan, jawaban salah atau waktu habis membuatmu mundur sedikit. Sampai garis finis duluan!',
@@ -3928,12 +3930,12 @@ const MODE_LIST=[
 /* which games suit which subject: short numeric answers suit fast action games,
    word answers suit games with readable cards, long phrases suit games with wide labels or an A–D list */
 const FIT={
- num:{games:['tembak','balap','balon','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
- unit:{games:['tembak','balap','lari','pancing','penalti','basket','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
- word:{games:['pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
- phrase:{games:['ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
+ num:{games:['lompat','tembak','balap','balon','tikus','penalti','basket','buah','memori','benarsalah','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa angka pendek, jadi cocok untuk game cepat yang melatih ketangkasan berhitung.'},
+ unit:{games:['lompat','tembak','balap','lari','pancing','penalti','basket','memori','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya angka dengan satuan (cm, menit, N, J), jadi dipilih game yang kartunya cukup lebar.'},
+ word:{games:['lompat','pancing','katak','lari','tikus','penalti','buah','labirin','memori','benarsalah','susun','kelompok','urut','pacu','layang','kuis'],note:'Jawabannya berupa kata, jadi dipilih game yang memberi waktu membaca sebelum memilih.'},
+ phrase:{games:['lompat','ular','lari','katak','pancing','penalti','labirin','memori','benarsalah','susun','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa istilah atau frasa, jadi dipilih game dengan kartu jawaban lebar.'},
  long:{games:['ular','lari','katak','labirin','benarsalah','kelompok','urut','pacu','kuis'],note:'Jawabannya berupa kalimat atau nama panjang, jadi dipilih game yang menampilkan jawaban dengan jelas dan tidak terburu-buru.'},
- kid:{games:['balon','tikus','katak','pancing','buah','basket','memori','urut','layang','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
+ kid:{games:['lompat','balon','tikus','katak','pancing','buah','basket','memori','urut','layang','kuis'],note:'Untuk anak TK dipilih game yang cukup diketuk atau digeser, dengan gerakan pelan.'},
  kidSlow:{games:['balon','katak','pancing','basket','memori','urut','kuis'],note:'Untuk anak TK dipilih game yang pelan dan cukup diketuk.'},
  picture:{games:['kuis'],note:'Jawabannya berupa gambar, jadi dimainkan sebagai kuis bergambar dengan tombol besar.'}};
 /* Semua game boleh dipilih di semua kelas. Game yang paling cocok tetap di urutan atas. Kuis bergambar (jawaban berupa gambar) hanya bisa dimainkan sebagai kuis. */
@@ -3942,7 +3944,7 @@ const SUBJ_FIT={'tk/hitung':'kid','tk/tambah':'kidSlow','tk/huruf':'kid','tk/war
  'sd/tambahkurang':'num','sd/kalibagi':'num','sd/mtk':'unit','sd/bindo':'word','sd/ipas':'phrase','sd/pancasila':'long','sd/eng':'word','sd/__mix':'phrase',
  'smp/mtk':'num','smp/ipa':'phrase','smp/ips':'long','smp/eng':'long','smp/__mix':'long',
  'sma/mtk':'num','sma/fisika':'unit','sma/kimbio':'phrase','sma/sejarah':'long','sma/eng':'long','sma/tkj':'phrase','sma/__mix':'long','tk/pai':'word','sd/pai':'long','smp/pai':'long','sma/pai':'long'};
-const WHY={tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
+const WHY={lompat:'Seru seperti game petualangan: lari, lompat, sundul blok jawaban',tembak:'Cepat dan seru untuk jawaban singkat',balap:'Pindah jalur ke angka yang benar',balon:'Santai, angka dan kata pendek mudah dibaca',tikus:'Latih refleks dengan jawaban singkat',
  pancing:'Kartu ikan lebar, ada waktu membaca',katak:'Daun berhenti lama, cocok untuk membaca',lari:'Tombol jawaban lebar, muat jawaban panjang',ular:'Jawaban panjang ditulis di daftar A–D',penalti:'Kotak gawang lebar, seru seperti adu penalti',basket:'Bidik ring, latih fokus sambil membaca',buah:'Sayat cepat, seru untuk jawaban singkat',labirin:'Jawaban di daftar A–D, kejar-kejaran dengan hantu',memori:'Latih ingatan sambil menjawab',benarsalah:'Cepat menilai setiap jawaban',susun:'Latih ejaan kata dan istilah',kelompok:'Pilah jawaban benar dan salah',urut:'Latih urutan: angka, proses, dan peristiwa',pacu:'Balapan perahu khas Riau, makin benar makin cepat',layang:'Santai, terbangkan layangan ke awan',kuis:'Lengkap dengan pembahasan, cocok untuk semua soal'};
 const fitOf=(lv,sid)=>FIT[SUBJ_FIT[lv+'/'+sid]||'phrase'];
 const modeInfo=()=>MODE_LIST.find(m=>m.id===MODE)||MODE_LIST[0];
@@ -5091,7 +5093,71 @@ const Layang={
   c.beginPath();c.moveTo(0,-26);c.lineTo(0,26);c.moveTo(-20,0);c.lineTo(20,0);c.stroke();c.strokeStyle=col;c.lineWidth=2;c.beginPath();c.moveTo(0,26);const t=performance.now()/200;for(let k=1;k<6;k++)c.lineTo(Math.sin(t+k)*6,26+k*8);c.stroke();c.restore()}
 };
 
-const MODES={tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular,penalti:Penalti,basket:Basket,buah:Buah,labirin:Labirin,memori:Memori,benarsalah:BenarSalah,susun:Susun,kelompok:Kelompok,urut:Urut,pacu:Pacu,layang:Layang};
+/* ---- game: Lompat Blok (petualangan lompat, tokoh orisinal JELAS) ----
+   Tokoh berlari di tanah dan melompat menyundul blok berisi jawaban. Ketuk blok: tokoh berlari ke bawahnya lalu melompat.
+   Keyboard: ← → berjalan, Spasi/↑ melompat, angka 1–4 langsung menuju blok. */
+const Lompat={
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.G=H-46;this.k=clamp(Math.min(W,H)/360,1,1.45);this.hh=54*this.k;this.grav=2000;
+  const top=Math.max(70,this.G-this.hh-150),gap=10,bw=Math.min(190,(W-16-gap*(n-1))/n),bh=Math.max(54,Math.min(84,this.G-this.hh-100-top));
+  this.bw=bw;this.bh=bh;this.by=this.G-this.hh-118;
+  const tot=n*bw+(n-1)*gap,x0=(W-tot)/2;const order=shuffle([...Array(n).keys()]);
+  this.blocks=order.map((ai,k)=>({i:ai,x:x0+k*(bw+gap),f:fit(ctx,arc.labels[ai],bw-18,bh-16,20,9),bump:0,hit:false,coin:null}));
+  if(!this.hero||this.hero.W!==W)this.hero={x:W/2,y:this.G,vx:0,vy:0,face:1,W,run:0};
+  this.hero.y=this.G;this.hero.vy=0;this.target=null;this.jumpQ=false;this.clouds=this.clouds||Array.from({length:4},(_,k)=>({x:k*W/3+Math.random()*60,y:20+Math.random()*60,s:.6+Math.random()*.6}));this.scroll=this.scroll||0},
+ goTo(b){this.target=b;this.jumpQ=true},
+ down(x,y){const b=this.blocks.find(b=>x>=b.x-4&&x<=b.x+this.bw+4&&y<=this.by+this.bh+40);if(b){this.goTo(b);return}
+  const h=this.hero;if(Math.abs(x-h.x)<40&&y>this.G-90){this.jump();return}this.target={x:x-this.bw/2,walk:true};this.jumpQ=false},
+ key(k){if(/^[1-4]$/.test(k)){const b=this.blocks.find(b=>b.i===+k-1);if(b)this.goTo(b)}else if(k===' '||k==='ArrowUp'||k==='w')this.jump()},
+ jump(){const h=this.hero;if(h.y>=this.G-.5){h.vy=-Math.sqrt(2*this.grav*(118+this.hh*.15));tone([520,780],.05)}},
+ phys(dt,live){const h=this.hero,k=arc.keys,W=arc.W;let ax=0;
+  if(k.ArrowLeft||k.a){ax=-1;this.target=null}if(k.ArrowRight||k.d){ax=1;this.target=null}
+  if(this.target){const tx=this.target.x+this.bw/2,d=tx-h.x;if(Math.abs(d)>6)ax=Math.sign(d);else{ax=0;if(this.jumpQ){this.jumpQ=false;this.jump()}if(this.target.walk)this.target=null}}
+  h.vx=ax*280;if(ax)h.face=ax;h.x=clamp(h.x+h.vx*dt,16,W-16);h.run+=Math.abs(h.vx)*dt;
+  h.vy+=this.grav*dt;const oy=h.y;h.y+=h.vy*dt;if(h.y>=this.G){h.y=this.G;h.vy=0}
+  if(h.vy<0){const head=h.y-this.hh,top=this.by+this.bh;if(head<=top&&oy-this.hh>top-2){const b=this.blocks.find(b=>h.x>b.x+2&&h.x<b.x+this.bw-2);
+    if(b){h.y=top+this.hh;h.vy=160;b.bump=1;if(live&&!b.hit&&arc.state==='play'){b.hit=true;const ok=b.i===arc.ci;b.coin={t:0,ok};burst(b.x+this.bw/2,top,ok?'#FFD54A':'#FF6B5B',22);tone(ok?[880,1320]:[300,200],.08);arcResolve(b.i)}else tone([260],.04)}}}
+  this.blocks.forEach(b=>{b.bump=Math.max(0,b.bump-dt*5);if(b.coin)b.coin.t+=dt});this.clouds.forEach(c=>{c.x-=dt*12*c.s;if(c.x<-80)c.x=W+40})},
+ update(dt){this.phys(dt,true)},idle(dt){this.target=this.target&&this.target.walk?this.target:null;this.phys(dt,false)},
+ drawHero(c){const h=this.hero,x=h.x,y=h.y,f=h.face,run=h.y<this.G-1?0:Math.sin(h.run*.09),air=h.y<this.G-1;
+  c.save();c.translate(x,y);c.scale(f*this.k,this.k);c.lineJoin='round';c.lineCap='round';
+  c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(0,(this.G-y)/this.k+2,16,4,0,0,7);c.fill();
+  // kaki
+  c.strokeStyle='#2B3A67';c.lineWidth=7;c.beginPath();c.moveTo(-5,-16);c.lineTo(-5-run*7,air?-6:0);c.moveTo(5,-16);c.lineTo(5+run*7,air?-8:0);c.stroke();
+  c.fillStyle='#FF8A3D';c.beginPath();c.ellipse(-5-run*7+2,air?-5:-1,6,3.5,0,0,7);c.ellipse(5+run*7+2,air?-7:-1,6,3.5,0,0,7);c.fill();
+  // badan: hoodie hijau toska
+  c.fillStyle='#16B39A';c.strokeStyle='#0E7E6C';c.lineWidth=2.5;c.beginPath();c.roundRect?c.roundRect(-13,-36,26,22,8):c.rect(-13,-36,26,22);c.fill();c.stroke();
+  c.strokeStyle='#16B39A';c.lineWidth=6;c.beginPath();c.moveTo(-11,-31);c.lineTo(-18,air?-44:-22-run*4);c.moveTo(11,-31);c.lineTo(18,air?-46:-22+run*4);c.stroke();
+  c.fillStyle='#F2C29B';c.beginPath();c.arc(-18,air?-46:-21-run*4,4,0,7);c.arc(18,air?-48:-21+run*4,4,0,7);c.fill();
+  // kepala
+  c.fillStyle='#F2C29B';c.strokeStyle='#C98F66';c.lineWidth=2;c.beginPath();c.arc(1,-46,13,0,7);c.fill();c.stroke();
+  c.fillStyle='#2C1B18';c.beginPath();c.arc(1,-50,13,Math.PI*1.02,Math.PI*1.98);c.fill();
+  // topi terbalik ungu
+  c.fillStyle='#7C4DFF';c.beginPath();c.arc(1,-52,12.5,Math.PI,0);c.fill();c.fillRect(-15,-54,8,4);
+  c.fillStyle='#fff';c.beginPath();c.arc(6,-47,3.2,0,7);c.fill();c.fillStyle='#1B1E3D';c.beginPath();c.arc(7,-47,1.8,0,7);c.fill();
+  c.strokeStyle='#1B1E3D';c.lineWidth=1.8;c.beginPath();c.arc(6,-41,3.5,.2,Math.PI-.4);c.stroke();
+  c.restore()},
+ draw(c){const{W,H}=arc,G=this.G,tm=performance.now()/1000;const done=arc.state==='resolved';
+  const sky=c.createLinearGradient(0,0,0,G);sky.addColorStop(0,'#5EC8FF');sky.addColorStop(1,'#C9F0FF');c.fillStyle=sky;c.fillRect(0,0,W,G);
+  // bukit & awan
+  c.fillStyle='#9BE07F';for(let k=0;k<4;k++){const bx=k*W/3-40;c.beginPath();c.ellipse(bx+60,G,90,60+k%2*25,0,Math.PI,0);c.fill()}
+  c.fillStyle='rgba(255,255,255,.95)';this.clouds.forEach(cl=>{c.beginPath();c.arc(cl.x,cl.y,16*cl.s+8,0,7);c.arc(cl.x+20*cl.s,cl.y-8,20*cl.s+6,0,7);c.arc(cl.x+42*cl.s,cl.y,14*cl.s+8,0,7);c.fill()});
+  // tanah bata
+  c.fillStyle='#C8743A';c.fillRect(0,G,W,H-G);c.fillStyle='#6CC24A';c.fillRect(0,G,W,8);c.strokeStyle='rgba(90,40,10,.35)';c.lineWidth=2;
+  for(let y=G+16;y<H;y+=14){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();for(let x=((y/14)%2)*16;x<W;x+=32){c.beginPath();c.moveTo(x,y-14);c.lineTo(x,y);c.stroke()}}
+  // blok jawaban
+  for(const b of this.blocks){const y=this.by-b.bump*10,x=b.x,w=this.bw,h=this.bh;const isC=b.i===arc.ci;
+   let fill='#FFB020',edge='#B86A00',txt='#3A2200';if(done&&isC){fill='#26BF66';edge='#127A3D';txt='#fff'}else if(b.hit&&!isC){fill='#9AA0AE';edge='#5C6270';txt='#fff'}
+   c.save();c.shadowColor='rgba(0,0,0,.25)';c.shadowOffsetY=4;c.shadowBlur=0;rr(c,x,y,w,h,10);c.fillStyle=fill;c.fill();c.restore();
+   c.lineWidth=3;c.strokeStyle=edge;rr(c,x,y,w,h,10);c.stroke();
+   c.fillStyle='rgba(255,255,255,.35)';rr(c,x+5,y+4,w-10,6,3);c.fill();
+   c.fillStyle=edge;[[x+7,y+7],[x+w-7,y+7],[x+7,y+h-7],[x+w-7,y+h-7]].forEach(([px,py])=>{c.beginPath();c.arc(px,py,2.2,0,7);c.fill()});
+   c.fillStyle='#fff';c.beginPath();c.arc(x+w/2,y+h+11,10,0,7);c.fill();c.strokeStyle=edge;c.lineWidth=2;c.stroke();c.fillStyle=edge;c.font=`800 12px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.fillText(b.i+1,x+w/2,y+h+12);
+   drawFit(c,b.f,x+w/2,y+h/2,txt);
+   if(b.coin&&b.coin.t<1.2){const t=b.coin.t,cy=y-10-t*80;c.globalAlpha=Math.max(0,1-t/1.2);if(b.coin.ok){c.fillStyle='#FFD54A';c.strokeStyle='#C99700';c.lineWidth=3;c.beginPath();c.ellipse(x+w/2,cy,12*Math.abs(Math.cos(t*10))+2,13,0,0,7);c.fill();c.stroke()}else{c.fillStyle='#5C6270';c.font=`800 22px ${FONT}`;c.fillText('✖',x+w/2,cy)}c.globalAlpha=1}}
+  if(arc.state==='play'&&!this.target&&this.hero.y>=G-1){c.fillStyle='#fff';c.font=`800 13px ${FONT}`;c.textAlign='center';c.textBaseline='middle';c.shadowColor='rgba(0,0,0,.5)';c.shadowBlur=3;c.fillText('Ketuk blok jawaban untuk melompat',W/2,G+26);c.shadowBlur=0}
+  this.drawHero(c)}};
+
+const MODES={lompat:Lompat,tembak:Tembak,lari:Lari,balon:Balon,tikus:Tikus,balap:Balap,pancing:Pancing,katak:Katak,ular:Ular,penalti:Penalti,basket:Basket,buah:Buah,labirin:Labirin,memori:Memori,benarsalah:BenarSalah,susun:Susun,kelompok:Kelompok,urut:Urut,pacu:Pacu,layang:Layang};
 
 
 /* ---------- split screen (layar terbagi) ---------- */
