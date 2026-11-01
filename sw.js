@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v105';
+const CACHE = 'jelajah-kelas-v106';
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
@@ -45,6 +45,11 @@ self.addEventListener('push', e => {
     renotify: true, vibrate: [200, 100, 200], data: d };
   if (d.type === 'invite') {
     if (d.exp && Date.now() > +d.exp) return;
+    // server lama: ubah teks ke gaya baru
+    if (!d.exp && / menantangmu!$/.test(d.title || '')) {
+      const nm = d.title.replace(/ menantangmu!$/, ''), sj = String(d.body || '').split(' · ')[0].replace(/\. Terima tantangannya\?$/, '');
+      d.title = `${nm} menantangmu tanding${sj ? ' ' + sj : ''}!`; d.body = 'Kamu punya 2 menit untuk menerima tantangan'; opt.body = d.body;
+    }
     opt.requireInteraction = true; opt.icon = 'icons/duel.png'; opt.badge = 'icons/badge-72.png'; opt.timestamp = Date.now();
     opt.actions = [{ action: 'accept', title: 'Terima' }, { action: 'decline', title: 'Tolak' }];
     // tantangan berlaku 2 menit: tutup sendiri setelah habis
