@@ -1,5 +1,5 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v109';
+const CACHE = 'jelajah-kelas-v110';
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
@@ -58,8 +58,11 @@ self.addEventListener('push', e => {
   }
   if (d.type === 'task') { opt.requireInteraction = true; opt.tag = 'task-' + d.tid; opt.actions = [{ action: 'task', title: 'Kerjakan sekarang' }]; }
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-    const open = list.find(c => c.visibilityState === 'visible');
-    if (open) { open.postMessage({ push: d }); return; }
+    // JELAS dianggap sedang dipakai hanya jika jendelanya aktif (fokus).
+    // Di jendela mengambang/gelembung atau layar terbagi, JELAS bisa "terlihat" tapi tidak dipakai: tetap tampilkan notifikasi.
+    const vis = list.filter(c => c.visibilityState === 'visible');
+    vis.forEach(c => c.postMessage({ push: d }));
+    if (list.some(c => c.focused)) return;
     return self.registration.showNotification(d.title || 'JELAS', opt);
   }));
 });
