@@ -2245,6 +2245,21 @@ html[data-theme=malam] .tbicon{background:rgba(0,240,255,.04);color:var(--cy);bo
  body.teacher .side .thsw{width:100%;box-sizing:border-box;padding:8px 6px 0}
  body.teacher .side{overflow-y:auto}
 }
+
+.snavs{display:contents}
+@media (max-width:999px){
+ body.teacher .side{overflow:hidden!important;padding-bottom:0!important}
+ body.teacher .side .snavs{display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow-y:auto;margin:0 -14px;padding:0 14px 10px;overscroll-behavior:contain}
+ body.teacher .side .nav{padding:7px 12px!important;gap:12px!important;min-height:0}
+ body.teacher .side .nav i{width:28px!important;height:28px!important}
+ body.teacher .side .nav span{font-size:16px!important}
+ body.teacher .side .nav[data-tab=texit]{margin-top:4px}
+ body.teacher .side .sbrand{padding-bottom:6px!important}body.teacher .side .sbrand .logo{width:38px!important}
+ body.teacher .side .sfoot{margin-top:auto!important;gap:6px!important}
+ body.teacher .side .sfpro{padding:10px;gap:6px}body.teacher .side .sfpro p{display:none}
+ body.teacher .side .thsw{padding-top:4px!important;align-self:stretch;width:auto!important;display:flex!important;justify-content:space-between!important}
+ body.teacher.tnav-open .syncpill{display:none!important}
+}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2263,13 +2278,14 @@ html[data-theme=malam] .tbicon{background:rgba(0,240,255,.04);color:var(--cy);bo
   <div class="tscrim" id="tScrim"></div>
   <nav class="side" id="sideNav" aria-label="Menu utama">
     <div class="sbrand"><span class="logo mascot" data-mascot></span><b class="sbname">JELAS<small>Jelajah Kelas</small></b></div>
+    <span class="tbadge">MODE GURU</span>
+    <div class="snavs">
     <button class="nav snav" data-tab="learn"><i data-icon="home"></i><span>Belajar</span></button>
     <button class="nav snav" data-tab="team"><i data-icon="game"></i><span>Bermain</span></button>
     <button class="nav snav" data-tab="league"><i data-icon="league"></i><span>Peringkat</span></button>
     <button class="nav snav" data-tab="quest"><i data-icon="quest"></i><span>Misi</span></button>
     <button class="nav snav" data-tab="shop"><i data-icon="shop"></i><span>Toko</span></button>
     <button class="nav snav" data-tab="profile"><i data-icon="user"></i><span>Profil</span></button>
-    <span class="tbadge">MODE GURU</span>
     <button class="nav tnav" data-tab="tdash"><i data-icon="dash"></i><span>Dasbor</span></button>
     <button class="nav tnav" data-tab="tatt"><i data-icon="cal"></i><span>Absensi</span></button>
     <button class="nav tnav" data-tab="teval"><i data-icon="tv"></i><span>Evaluasi</span></button>
@@ -2279,6 +2295,7 @@ html[data-theme=malam] .tbicon{background:rgba(0,240,255,.04);color:var(--cy);bo
     <button class="nav tnav" data-tab="tset"><i data-icon="gear"></i><span>Atur</span></button>
     <button class="nav tnav" data-tab="texit"><i data-icon="exit"></i><span>Keluar</span></button>
     <div class="sfoot" id="sideFoot"></div>
+    </div>
   </nav>
 
   <header class="stats" id="statsBar">
