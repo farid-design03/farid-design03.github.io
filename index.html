@@ -2643,6 +2643,20 @@ html body .dnrow .ntx b{font-size:13.5px}html body .dnrow .ntx span{font-size:12
 @media (min-width:1000px) and (max-height:760px){body.teacher .side .sfpro p{display:none!important}}
 @media (min-width:1000px) and (max-height:600px){body.teacher .side .tbadge{display:none!important}body.teacher .side .sbrand small,body.teacher .side .sbrand .sbsub{display:none}body.teacher .side .nav{font-size:13.5px!important}}
 @media (min-width:1000px) and (max-height:470px){body.teacher .side .sfph{display:none!important}body.teacher .side .nav{height:30px!important}}
+body.teacher .side .nav[data-tab=texit]{display:none!important}
+.avatar.tdav{overflow:hidden;padding:0}.avatar.tdav img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.tpd{display:flex;flex-direction:column;gap:14px;min-width:min(340px,80vw)}
+.tpdh{display:flex;align-items:center;gap:14px}.tpdh .avatar{width:56px!important;height:56px!important;font-size:22px}
+.tpdh b{display:block;font-size:17px;line-height:1.2}.tpdh small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;word-break:break-all}
+.tpdl{display:flex;flex-direction:column;gap:8px}
+.tpdb{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--tg,#F7F7F7);color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-align:left}
+.tpdb i{display:grid;place-items:center;width:18px;height:18px;flex:none;color:var(--muted)}.tpdb i svg{width:17px;height:17px}
+.tpdb:hover{border-color:var(--blue)}
+.tpdb.tpout{background:rgba(239,68,68,.1);border-color:transparent;color:#E5383B}.tpdb.tpout i{color:#E5383B}
+.tpdf{display:flex;justify-content:flex-end;border-top:1px solid var(--line);padding-top:12px}
+.tpdf .ghost{min-height:38px;padding:6px 16px}
+html[data-theme=malam] .tpdb{background:#17213a;border-color:#2c3a5c}
+html[data-theme=malam] .tpdb.tpout{background:rgba(127,29,29,.35);color:#fca5a5}html[data-theme=malam] .tpdb.tpout i{color:#fca5a5}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -7955,11 +7969,36 @@ renderTDash=function(){_rTD();const v=$('#vTDash');v.querySelectorAll('.tcard .s
 
 /* ---------- header dasbor: pencarian & lonceng pemberitahuan ---------- */
 const BELL_SVG=`<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>`;
+
+/* ---------- profil guru: foto profil & menu akun (gaya web monitoring) ---------- */
+const TPI={'cam': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3 7.5 5H5a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3h-2.5L15 3H9Zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2.2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Z"/></svg>', 'trash': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>', 'key': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 2a7 7 0 0 0-6.7 9.1L2 17.4V22h4.6v-2.3h2.3v-2.3h2.3l1.3-1.3A7 7 0 1 0 15 2Zm1.8 3.6a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Z"/></svg>', 'gear': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>', 'crown': '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5L3 7Zm2.3 14h13.4v2H5.3v-2Z"/></svg>', 'kbd': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>', 'out': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>'};
+function tdPhoto(t){t=t||T()||{};const me=(window.FBX&&FBX.me)||{};if(typeof me.photo==='string')return me.photo;if(typeof t.photo==='string')return t.photo;return (window.FBX&&FBX.user&&FBX.user.photoURL)||''}
+function tdPhotoSet(url){const t=T();if(t){t.photo=url;save()}try{if(window.FBX&&FBX.user&&window.FB&&FB.db){FBX.me=Object.assign({},FBX.me||{},{photo:url});FB.db.doc('users/'+FBX.user.uid).set({photo:url},{merge:true}).catch(()=>{})}}catch(e){}tdAvRefresh()}
+function tdAv(t,cls){t=t||T()||{};const ph=tdPhoto(t);return `<span class="avatar tdav ${cls||''}" style="--av:#26BF66">${ph?`<img src="${esc(ph)}" alt="" referrerpolicy="no-referrer">`:esc((t.name||'G')[0].toUpperCase())}</span>`}
+function tdAvRefresh(){document.querySelectorAll('.tdprof .tdav').forEach(a=>{a.outerHTML=tdAv()})}
+function tdPhotoPick(){const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=()=>{const file=f.files&&f.files[0];if(!file)return;
+  if(!/^image\//.test(file.type)){toast('lock','Pilih berkas gambar.');return}
+  const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const S=192,c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d'),m=Math.min(im.width,im.height);
+    x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,S,S);const url=c.toDataURL('image/jpeg',.85);tdPhotoSet(url);toast('check','Foto profil diganti.');openTProfile()};
+    im.onerror=()=>toast('lock','Gambar tidak bisa dibuka.');im.src=rd.result};rd.readAsDataURL(file)};f.click()}
+function openTProfile(){const t=T()||{},u=window.FBX&&FBX.user,pl=window.fbPlanLabel?fbPlanLabel():'Guru',own=!!tdPhoto(t);
+  const row=(k,ic,l,cls)=>`<button class="tpdb ${cls||''}" data-tp="${k}"><i>${TPI[ic]}</i><span>${l}</span></button>`;
+  openModal(`<div class="tpd"><div class="tpdh">${tdAv(t,'tpdav')}<div class="grow"><b>${esc(t.name||'Guru')}</b><small>${esc(u&&u.email?u.email:(t.school||''))} · ${esc(pl)}</small></div></div>
+   <div class="tpdl">${row('photo','cam',own?'Ganti foto profil':'Pasang foto profil')}${own?row('rmphoto','trash','Hapus foto profil'):''}${row('pw','key','Ganti sandi')}${row('tset','gear','Pengaturan')}${row('pro','crown','Paket Pro')}${row('keys','kbd','Pintasan keyboard')}${row('out','out','Keluar','tpout')}</div>
+   <div class="tpdf"><button class="ghost" id="tpClose">Tutup</button></div></div>`);
+  $('#tpClose').onclick=closeModal;
+  document.querySelectorAll('#mbox [data-tp]').forEach(b=>b.onclick=()=>{const k=b.dataset.tp;
+    if(k==='photo')return tdPhotoPick();
+    if(k==='rmphoto'){tdPhotoSet('');toast('check','Foto profil dihapus.');openTProfile();return}
+    closeModal();
+    if(k==='pw'){go('tset');setTimeout(()=>{const e=$('#fbOld')||$('#stPinSave');if(e){e.scrollIntoView({block:'center',behavior:'smooth'});try{e.focus()}catch(x){}}},250)}
+    else if(k==='tset')go('tset');else if(k==='pro')proAsk();else if(k==='keys')keysHelp();
+    else if(k==='out'){const n=document.querySelector('#sideNav [data-tab=texit]');n?n.click():logout()}})}
 function tdProf(cls){const t=T()||{},pl=window.fbPlanLabel?fbPlanLabel():'Guru';
-  return `<div class="tdprof ${cls}"><button class="tdpbtn" aria-haspopup="menu" aria-expanded="false"><span class="avatar" style="--av:#26BF66">${esc((t.name||'G')[0].toUpperCase())}</span><span class="tdpn"><b>${esc(t.name||'Guru')}</b><small>${esc(pl)}</small></span><svg class="tdpc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+  return `<div class="tdprof ${cls}"><button class="tdpbtn" aria-haspopup="menu" aria-expanded="false">${tdAv(t)}<span class="tdpn"><b>${esc(t.name||'Guru')}</b><small>${esc(pl)}</small></span><svg class="tdpc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
    <div class="tdpmenu" role="menu" hidden><button data-pm="tset" role="menuitem">⚙️ Pengaturan</button><button data-pm="pro" role="menuitem">👑 Paket Pro</button><button data-pm="keys" role="menuitem">⌨️ Pintasan keyboard</button><button data-pm="out" role="menuitem" class="pmout">↪ Keluar</button></div></div>`}
 document.addEventListener('click',e=>{const pb=e.target.closest('.tdpbtn');document.querySelectorAll('.tdprof .tdpmenu').forEach(m=>{if(!pb||!pb.parentElement.contains(m)){m.hidden=true;m.parentElement.querySelector('.tdpbtn').setAttribute('aria-expanded','false')}});
-  if(pb){const m=pb.parentElement.querySelector('.tdpmenu');m.hidden=!m.hidden;pb.setAttribute('aria-expanded',!m.hidden);return}
+  if(pb){openTProfile();return}
   const it=e.target.closest('[data-pm]');if(!it)return;it.closest('.tdpmenu').hidden=true;const k=it.dataset.pm;
   if(k==='tset')go('tset');else if(k==='pro')proAsk();else if(k==='keys')keysHelp();else if(k==='out'){const b=document.querySelector('#sideNav [data-tab=texit]');b?b.click():logout()}});
 function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySelector('.thtools'))return;
