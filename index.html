@@ -2529,6 +2529,88 @@ html[data-theme=malam] .kpi.dk .dki svg{filter:none!important}
 .dgrid .tdjuara .tdrh{flex-wrap:wrap;gap:8px}.dgrid .tdjuara .jseg{width:100%;display:flex}.dgrid .tdjuara .jseg button{flex:1}
 @media (min-width:1200px) and (max-width:1499px){.dksp{width:52px}.dka{gap:10px}.dki{width:40px;height:40px}}
 @media (max-width:420px){.dtoday .today{grid-template-columns:1fr}}
+.thseg button.thb{display:inline-grid;place-items:center;min-width:44px;padding:6px 10px!important}
+.thseg .thb-siang{color:#FFB800}.thseg .thb-malam{color:#7C8CFF}.thseg .thb-auto{color:var(--muted)}
+.thseg button.thb[aria-pressed=true]{color:#fff!important}
+.thsw{justify-content:center!important}
+.thpair{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--tg,#F7F7F7);cursor:pointer}
+.thpair span{display:grid;place-items:center;width:34px;height:28px;border-radius:999px;color:var(--muted);transition:background .2s,color .2s}
+.thpair[aria-pressed=false] .thb-siang{background:#FFC800;color:#fff;box-shadow:0 2px 0 #E0A800}
+.thpair[aria-pressed=true] .thb-malam{background:linear-gradient(135deg,#3b82f6,#6d28d9);color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.45)}
+html[data-theme=malam] .thpair{background:#17213a;border-color:#2c3a5c}
+.thbtn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;border:0;background:transparent;cursor:pointer;color:#6D5CF6;flex:none;padding:0}
+.thbtn svg{width:22px;height:22px}
+.thbtn:hover{background:var(--tg,#F2F2F2)}
+html[data-theme=malam] .thbtn{color:#FFC800}
+html[data-theme=malam] .thbtn:hover{background:#17213a}
+#vTDash .tdbar .thbtn{order:3}#vTDash .tdbar .tdpmini{order:4}
+.stats .thbtn{width:34px;height:34px}
+.jrbtns.jric{display:flex!important;flex-wrap:nowrap!important;gap:8px!important;align-items:stretch}
+.jrbtns.jric .primary{flex:1;min-width:0}
+.jrbtns.jric .icb{flex:none;width:48px!important;min-width:48px!important;padding:0!important;display:grid!important;place-items:center}
+.jrbtns.jric .icwa{color:#25A244!important}
+html[data-theme=malam] .jrbtns.jric .icwa{color:#4ade80!important}
+/* bilah atas guru tetap (laptop), penuh seperti web monitoring */
+.ttop{display:none}
+@media (min-width:1000px){
+ body.teacher.ttop-on .ttop{display:flex;position:fixed;top:0;left:260px;right:0;height:64px;z-index:60;align-items:center;padding:0 clamp(20px,2.5vw,40px);background:color-mix(in srgb,var(--bg) 96%,transparent);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+ body.teacher.ttop-on .main.wrap{padding-top:88px!important}
+ body.teacher.ttop-on #vTDash .tdbar{display:none!important}
+ .ttop .thtools{display:flex;align-items:center;gap:10px;width:100%}
+ .ttop .tsearch{position:relative;flex:0 1 380px;margin-right:auto;min-height:40px;border-radius:10px!important;border:1px solid var(--line)!important;box-shadow:none!important}
+ .ttop .tskbd{margin-left:auto;font:700 11px var(--body);color:var(--muted);background:var(--tg,#F2F2F2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;white-space:nowrap}
+ .ttop .datepill{display:inline-flex;align-items:center;gap:8px;height:40px;box-sizing:border-box;padding:0 14px!important;border-radius:10px!important;border:1px solid var(--line)!important;background:var(--card)!important;color:var(--ink)!important;font-size:13.5px!important;font-weight:600!important;box-shadow:none!important;line-height:1}
+ .ttop .tbell{width:40px;height:40px;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:10px!important}
+ .ttop .tbell:hover,.ttop .thbtn:hover{background:var(--tg,#F2F2F2)!important}
+ .ttop .tdpmini{display:block}
+ .ttop .tdpmini .tdpbtn{width:auto!important;height:auto!important;border-radius:12px!important;padding:4px 8px 4px 4px!important;border:0!important;background:transparent!important;gap:10px}
+ .ttop .tdpmini .tdpbtn:hover{background:var(--tg,#F2F2F2)!important}
+ .ttop .tdpmini .tdpn{display:flex!important;flex:none;text-align:left}.ttop .tdpmini .tdpn b{font-size:13.5px;font-weight:700;max-width:180px}.ttop .tdpmini .tdpn small{color:var(--muted);font-weight:600;font-size:11.5px}
+ .ttop .tdpmini .tdpc{display:block!important;transform:none}
+ .ttop .tdpmini .avatar{width:36px;height:36px;font-size:15px}
+ .ttop .tdpmenu{top:calc(100% + 8px)}
+ .ttop .tsres,.ttop .tbpop{top:calc(100% + 8px)}
+}
+html[data-theme=malam] .ttop{background:rgba(10,15,30,.96)!important;border-color:#1f2a44!important}
+html[data-theme=malam] .ttop .tsearch,html[data-theme=malam] .ttop .datepill{background:#111a2e!important;border-color:#2c3a5c!important;color:var(--ink)!important}
+html[data-theme=malam] .ttop .tskbd{background:#17213a;border-color:#2c3a5c}
+html[data-theme=malam] .ttop .tbell:hover,html[data-theme=malam] .ttop .thbtn:hover,html[data-theme=malam] .ttop .tdpmini .tdpbtn:hover{background:#17213a!important}
+body:not(.teacher) .ttop{display:none!important}
+/* ===== skala huruf mengikuti web monitoring (MORUBA): isi 14.5px, judul halaman 24px, judul kartu 16px, tombol 13.5–14px ===== */
+html body{font-size:14.5px;line-height:1.5}
+html body .pagehead h2,html body .dhead h2,html body .thead h2,html body .view>.pagehead h2{font-size:24px!important;line-height:1.2}
+html body .card h2,html body .view h2:not(.authh):not(.dlogo){font-size:20px!important;line-height:1.25}
+html body .card h3,html body .tcard h3,html body .modal h3,html body .dph h3,html body .tdrh h3,html body .shopsec h3{font-size:16px!important;line-height:1.3}
+html body p,html body .note,html body .sub,html body .thead p,html body .dhead p{font-size:14px}
+html body small,html body .card small,html body .item small,html body .set small{font-size:12.5px}
+html body .primary{font-size:14px!important;min-height:42px}
+html body .ghost,html body .smallbtn,html body .buy,html body .claim,html body .ajinv,html body .sfprobtn{font-size:13.5px!important}
+html body input,html body select,html body textarea{font-size:14px}
+html body .set b,html body .item .it b,html body .quest .qt,html body .pl b,html body .tdn b,html body .jrow b{font-size:14.5px!important}
+html body .qsec h3,html body .sect,html body .eyebrow{font-size:12px!important;letter-spacing:.05em!important}
+html body .stats .stat{font-size:15px!important}
+html body .uhead h2{font-size:18px!important}html body .uhead p{font-size:13px!important}html body .uhead .ue{font-size:11px!important}
+html body .mqtop h2{font-size:20px!important}
+html body .rapor .head h2{font-size:24px!important}
+html body .kpi.dk .kv{font-size:26px!important}html body .kpi.dk .kl{font-size:13px!important}
+html body .tn{font-size:14.5px}html body .tstep p{font-size:13.5px}
+html body .tdgrid{font-size:12.5px}html body .tdcal h3{font-size:16px!important}
+html body .fbcode-big{font-size:30px!important}
+html body .pill{font-size:11.5px}
+html body .ttable{font-size:13.5px}html body .ttable th{font-size:12px}
+html body .dnrow .ntx b{font-size:13.5px}html body .dnrow .ntx span{font-size:12.5px}
+@media (min-width:1000px){html body .side .nav{font-size:14px!important}html body .side .nav span{font-size:14px!important}html body .sbname{font-size:18px!important}}
+@media (max-width:600px){
+ html body .pagehead h2,html body .dhead h2,html body .view>.pagehead h2{font-size:20px!important}
+ html body .card h2,html body .view h2:not(.authh):not(.dlogo){font-size:18px!important}
+ html body .card h3,html body .tcard h3,html body .modal h3,html body .dph h3{font-size:15.5px!important}
+ html body .primary{font-size:14px!important}html body .ghost{font-size:13.5px!important}
+ html body .kpi.dk .kv{font-size:22px!important}
+ #qtext{font-size:20px!important}.opt{font-size:17px!important}
+}
+.jrbtns.jric .primary{white-space:nowrap;font-size:13.5px!important;padding-inline:10px!important}
+@media (max-width:340px){body.teacher #tBarTools{gap:2px!important}body.teacher #tBarTools .tbicon,body.teacher #tBarTools .tbell,body.teacher #tBarTools .thbtn,body.teacher #tBarTools .tdpmini .tdpbtn{width:32px!important;height:32px!important}body.teacher #tBarTools .thbtn svg{width:19px;height:19px}body.teacher .tnbar{gap:6px!important}body.teacher .tnbar-menu{width:34px!important;height:34px!important}}
+@media (max-width:340px){body.teacher #tBarTitle{font-size:15px!important;letter-spacing:-.01em}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -2575,6 +2657,7 @@ html[data-theme=malam] .kpi.dk .dki svg{filter:none!important}
     <button class="stat" id="gemBtn" title="Permata"><i data-icon="gem"></i><span id="gemN">0</span></button>
     <button class="stat" id="heartBtn" title="Nyawa"><i data-icon="heart"></i><span id="heartN">5</span></button>
     <button class="stat nbell" id="nBell" hidden title="Pemberitahuan" aria-label="Pemberitahuan"><svg viewBox="0 0 24 24" width="24" height="24" fill="#FFC800" stroke="#E5A100" stroke-width="1.6" stroke-linejoin="round"><path d="M18 9a6 6 0 0 0-12 0c0 6.5-2.6 8.6-2.6 8.6h17.2S18 15.5 18 9Z"/><path d="M10 20.2a2.2 2.2 0 0 0 4 0" fill="none" stroke="#E5A100" stroke-width="2" stroke-linecap="round"/></svg><b class="nbn" id="nBellN" hidden>0</b></button>
+    <button class="stat thbtn" data-thsw aria-pressed="false" aria-label="Ganti ke mode malam" title="Mode malam"></button>
     <span class="stat boostpill" id="boostPill" hidden title="Pengganda XP aktif">⚡2×<small id="boostN"></small></span>
   </header>
   <div class="popover" id="pop" hidden></div>
@@ -6677,7 +6760,7 @@ function dgDelta(now,ref,unit,ket){if(now==null||ref==null)return `<span class="
   if(unit==='poin'){d=now-ref;t=(d>0?'+':'')+d+' poin'}else{d=ref?Math.round((now-ref)/ref*100):(now?100:0);t=Math.abs(d)+'%'}
   return `<span class="${d>0?'dup':d<0?'ddown':'dflat'}">${d>0?DGI.up:d<0?DGI.down:''} ${t}</span><span>${ket}</span>`}
 function renderTDash(){const t=T(),today=dayKey(),sess=sessionOf(today,false),c=tCls();const {list,n,ses}=dgData();
-  if(!DG.blnSet){DG.blnSet=1;const cm=today.slice(0,7);if(!ses.some(s=>s.att&&s.t.slice(0,7)===cm)&&ses.some(s=>s.att))DG.bln=ses.some(s=>s.att&&s.t.slice(0,7)===dayKey(new Date(new Date().getFullYear(),new Date().getMonth()-1,1)).slice(0,7))?'lalu':'semua'}
+  if(!DG.blnSet&&ses.some(s=>s.att)){DG.blnSet=1;const cm=today.slice(0,7);if(!ses.some(s=>s.att&&s.t.slice(0,7)===cm)&&ses.some(s=>s.att))DG.bln=ses.some(s=>s.att&&s.t.slice(0,7)===dayKey(new Date(new Date().getFullYear(),new Date().getMonth()-1,1)).slice(0,7))?'lalu':'semua'}
   const hr=new Date().getHours(),greet=hr<11?'Selamat pagi':hr<15?'Selamat siang':hr<18?'Selamat sore':'Selamat malam';
   list.forEach(p=>ensureDay(p));const activeWeek=list.filter(p=>p.week.xp>0).length;
   const attFilled=sess&&Object.keys(sess.att).length>0;const hadirToday=sess?Object.values(sess.att).filter(v=>v==='H').length:0;
@@ -7803,7 +7886,7 @@ bindLicCard=function(){const b=$('#licGo');if(b)b.onclick=proAsk};
 /* ---------- kartu kode kelas ---------- */
 function fbCodeCard(compact){const code=(FBX.classDoc&&FBX.classDoc.code)||'······';const n=Object.keys(FBX.members||{}).length;
   return `<div class="tcard fbcode"><div class="fbcode-row"><div class="grow"><h3>Kode kelas</h3><p class="sub" style="margin:0">Bagikan ke muridmu.</p></div><div class="fbcode-big" aria-label="Kode kelas">${esc(code)}</div></div>
-   <div class="jrbtns"><button class="primary" data-fb="invite">+ Undang murid</button><button class="ghost" data-fb="wa">Kirim tautan lewat WA</button><button class="ghost" data-fb="link">Salin tautan</button>${compact?'':'<button class="ghost" data-fb="new">Buat kode baru</button>'}</div>
+   <div class="jrbtns jric"><button class="primary" data-fb="invite">+ Undang murid</button><button class="ghost icb icwa" data-fb="wa" title="Kirim tautan lewat WhatsApp" aria-label="Kirim tautan lewat WhatsApp"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5 5 16.1A8.4 8.4 0 1 1 20.5 11.6Z"/><path d="M9 9.2c.3 2.6 2.3 4.6 5.4 5.6l1.2-1.4-2-1-1 .8c-1-.5-1.9-1.4-2.4-2.4l.8-1-1-2Z" fill="currentColor" stroke-width="1"/></svg></button><button class="ghost icb" data-fb="link" title="Salin tautan" aria-label="Salin tautan"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></svg></button>${compact?'':'<button class="ghost icb" data-fb="new" title="Buat kode baru" aria-label="Buat kode baru"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>'}</div>
    <div class="jrbox" data-jr></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="pill mute">${n} murid bergabung${isPro()?'':` dari ${FREE_MAX}`}</span>${isPaid()?'<span class="pill ok">PRO</span>':inTrial()?`<span class="pill ok">Coba Pro · ${trialLeft()} hari lagi</span>`:'<button class="smallbtn" data-fb="pro">Lihat paket Pro</button>'}</div></div>`}
 function fbBindCode(root){if(!root)return;setTimeout(jrPaint,0);root.querySelectorAll('[data-fb]').forEach(b=>b.onclick=()=>{const k=b.dataset.fb,code=FBX.classDoc&&FBX.classDoc.code;
@@ -7853,10 +7936,10 @@ function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySel
   tools.innerHTML=`<div class="tsearch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="tdSearch" type="search" placeholder="Cari murid atau menu…" autocomplete="off" aria-label="Cari murid atau menu"><div class="tsres" id="tdRes" hidden></div></div>
    <div class="tbellw"><button class="tbell" id="tdBell" aria-label="Pemberitahuan" aria-expanded="false">${BELL_SVG}<b class="tbn" ${n?'':'hidden'}>${n}</b></button><div class="tbpop" id="tdPop" hidden><div class="tbph"><b>Pemberitahuan</b></div><div class="tbpb"></div></div></div>`;
   const dp=head.querySelector('.datepill');head.insertBefore(tools,dp||null);
-  tools.insertAdjacentHTML('beforeend',tdProf('tdpmini'));
+  tools.insertAdjacentHTML('beforeend',thBtn()+tdProf('tdpmini'));
   if(matchMedia('(max-width:999px)').matches){const bar=$('#tBar');if(bar){let tb=$('#tBarTools');if(!tb){bar.insertAdjacentHTML('beforeend','<div id="tBarTools"></div>');tb=$('#tBarTools')}tb.innerHTML='';
     tools.insertAdjacentHTML('afterbegin','<button class="tbicon" id="tbSearchBtn" aria-label="Cari"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>');tb.appendChild(tools);
-    const sb=tools.querySelector('#tbSearchBtn'),sf=tools.querySelector('.tsearch');sb.onclick=e=>{e.stopPropagation();sf.classList.toggle('open');if(sf.classList.contains('open'))setTimeout(()=>sf.querySelector('input').focus(),30)}}}const rail=v.querySelector('#tdRail'),main=v.querySelector('.tdmain'),kp=v.querySelector(':scope > .kpis');if(rail){rail.insertAdjacentHTML('afterbegin',tdProf('tdpbig'))}if(main){if(kp)main.prepend(kp);main.prepend(head)}
+    const sb=tools.querySelector('#tbSearchBtn'),sf=tools.querySelector('.tsearch');sb.onclick=e=>{e.stopPropagation();sf.classList.toggle('open');if(sf.classList.contains('open'))setTimeout(()=>sf.querySelector('input').focus(),30)}}}else{let top=$('#tTop');if(!top){const mw=document.querySelector('.main.wrap');if(mw){mw.insertAdjacentHTML('afterbegin','<header id="tTop" class="ttop"></header>');top=$('#tTop')}}if(top){top.innerHTML='';top.appendChild(tools);const dp=head.querySelector('.datepill');if(dp)tools.insertBefore(dp,tools.querySelector('.tbellw')||null);if(!tools.querySelector('.tskbd'))tools.querySelector('.tsearch').insertAdjacentHTML('beforeend','<kbd class="tskbd">Ctrl K</kbd>');document.body.classList.add('ttop-on')}}const rail=v.querySelector('#tdRail'),main=v.querySelector('.tdmain'),kp=v.querySelector(':scope > .kpis');if(rail){rail.insertAdjacentHTML('afterbegin',tdProf('tdpbig'))}if(main){if(kp)main.prepend(kp);main.prepend(head)}
   const pb=tools.querySelector('.tbpb');if(box&&n){pb.appendChild(box)}else{if(box)box.remove();pb.innerHTML='<p class="note" style="margin:6px 4px">Tidak ada pemberitahuan baru.</p>'}
   const badge=()=>{const k=pb.querySelectorAll('.dnrow').length,b=tools.querySelector('.tbn');b.textContent=k;b.hidden=!k;if(!k&&!pb.querySelector('.note'))pb.innerHTML='<p class="note" style="margin:6px 4px">Tidak ada pemberitahuan baru.</p>'};
   pb.addEventListener('click',e=>{if(e.target.closest('.nx'))setTimeout(badge,0)});
@@ -7872,6 +7955,7 @@ function tdTools(v){const head=v.querySelector('.thead');if(!head||head.querySel
     res.querySelectorAll('.tsr').forEach(b=>b.onclick=()=>{res.hidden=true;hits[+b.dataset.i].f()})};
   inp.oninput=run;inp.onfocus=()=>{if(inp.value.trim())run()};inp.onkeydown=e=>{if(e.key==='Enter'&&hits[0]){e.preventDefault();res.hidden=true;hits[0].f()}if(e.key==='Escape'){inp.value='';res.hidden=true;inp.blur()}};
   hydrate(tools)}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&(e.key==='k'||e.key==='K')&&document.body.classList.contains('teacher')){const i=document.querySelector('#tTop #tdSearch')||document.querySelector('#tdSearch');if(i){e.preventDefault();i.focus()}}});
 document.addEventListener('click',e=>{if(!e.target.closest('.tsearch')&&!e.target.closest('#tbSearchBtn')){const sf=document.querySelector('#tBarTools .tsearch.open');if(sf)sf.classList.remove('open')}if(!e.target.closest('.tbellw')){const p=$('#tdPop');if(p&&!p.hidden){p.hidden=true;const b=$('#tdBell');b&&b.setAttribute('aria-expanded','false')}}if(!e.target.closest('.tsearch')){const r=$('#tdRes');if(r)r.hidden=true}});
 window.proAsk=proAsk;
 window.proNavTag=()=>{const t=$('#navProTag'),n=$('#navPro');if(!t)return;t.textContent=isPaid()?'AKTIF':inTrial()?trialLeft()+' hari':'';n.classList.toggle('on',isPaid())};
@@ -8791,18 +8875,22 @@ const THEME={get(){try{return localStorage.getItem('jelas-theme')||'siang'}catch
 function applyUITheme(){const n=THEME.eff();document.documentElement.dataset.theme=n;
   const m=document.querySelector('meta[name="theme-color"]');if(m){if(!m.dataset.day)m.dataset.day=m.content;m.content=n==='malam'?'#0a0f1e':m.dataset.day}
   document.querySelectorAll('[data-thm]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.thm===THEME.get()));
-  document.querySelectorAll('[data-thsw]').forEach(b=>b.setAttribute('aria-pressed',n==='malam'));
+  document.querySelectorAll('[data-thsw]').forEach(b=>{b.setAttribute('aria-pressed',n==='malam');if(b.classList.contains('thbtn')){b.innerHTML=thBtnIn();b.title=n==='malam'?'Mode siang':'Mode malam';b.setAttribute('aria-label',n==='malam'?'Ganti ke mode siang':'Ganti ke mode malam')}});
   try{if(document.body.classList.contains('teacher')&&typeof renderTDash==='function'&&!$('#vTDash').hidden)renderTDash()}catch(e){}}
-function themeRow(){const t=THEME.get();return `<div class="set"><span><b>Tampilan</b><small>Siang cerah, malam gelap, atau ikuti pengaturan HP</small></span><div class="seg small">${[['siang','☀️ Siang'],['malam','🌙 Malam'],['auto','Ikuti HP']].map(([k,l])=>`<button data-thm="${k}" aria-pressed="${k===t}">${l}</button>`).join('')}</div></div>`}
-function themeSwitch(){return `<div class="thsw"><span>🌙 Mode malam</span><button class="tgl" data-thsw aria-label="Mode malam" aria-pressed="${THEME.eff()==='malam'}"></button></div>`}
+const TH_IC={siang:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>',malam:'<svg viewBox="0 0 24 24" width="20" height="20"><path d="M20.5 14.6A8.5 8.5 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1Z" fill="currentColor"/></svg>',auto:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor"/></svg>'};
+function themeRow(){const t=THEME.get();return `<div class="set"><span><b>Tampilan</b><small>Siang cerah, malam gelap, atau ikuti pengaturan HP</small></span><div class="seg small thseg">${[['siang','Siang'],['malam','Malam'],['auto','Ikuti pengaturan HP']].map(([k,l])=>`<button data-thm="${k}" class="thb thb-${k}" aria-pressed="${k===t}" aria-label="${l}" title="${l}">${TH_IC[k]}</button>`).join('')}</div></div>`}
+function thBtnIn(){const m=THEME.eff()==='malam';return m?TH_IC.siang:TH_IC.malam}
+function thBtn(){const m=THEME.eff()==='malam';return `<button class="thbtn" data-thsw aria-pressed="${m}" aria-label="${m?'Ganti ke mode siang':'Ganti ke mode malam'}" title="${m?'Mode siang':'Mode malam'}">${thBtnIn()}</button>`}
+function themeSwitch(){const m=THEME.eff()==='malam';return `<div class="thsw"><button class="thpair" data-thsw aria-label="${m?'Ganti ke mode siang':'Ganti ke mode malam'}" title="${m?'Mode siang':'Mode malam'}" aria-pressed="${m}"><span class="thb-siang">${TH_IC.siang}</span><span class="thb-malam">${TH_IC.malam}</span></button></div>`}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-thm]');if(a){THEME.set(a.dataset.thm);return}const b=e.target.closest('[data-thsw]');if(b)THEME.set(THEME.eff()==='malam'?'siang':'malam')});
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(THEME.get()==='auto')applyUITheme()})}catch(e){}
+document.querySelectorAll('.thbtn').forEach(b=>{const m=THEME.eff()==='malam';b.innerHTML=thBtnIn();b.setAttribute('aria-pressed',m);b.title=m?'Mode siang':'Mode malam';b.setAttribute('aria-label',m?'Ganti ke mode siang':'Ganti ke mode malam')});
 const navLabel=n=>((n.querySelector('span')||n).textContent||'').trim();
 function navItems(){return [...document.querySelectorAll('#sideNav .nav')].filter(n=>n.offsetParent!==null&&n.dataset.tab!=='texit')}
 function renderSideFoot(){try{window.tclsMount&&tclsMount()}catch(e){}try{window.proNavTag&&proNavTag()}catch(e){}const el=$('#sideFoot');if(!el)return;const t=document.body.classList.contains('teacher');
   if(t&&T()){const pi=window.proInfo?proInfo():{paid:false,trial:false};
-    el.innerHTML=`<div class="sfpro ${pi.paid?'on':''}"><div class="sfph"><span class="sfcrown">👑</span><b>${pi.paid?'JELAS Pro aktif':pi.trial?`Coba Pro · ${pi.left} hari lagi`:'Tingkatkan ke Pro'}</b></div><p>${pi.paid?`Semua fitur guru terbuka sampai ${pi.until}.`:'Absensi, Evaluasi di TV, Soal, Rapor, dan murid tanpa batas.'}</p><button class="sfprobtn" data-sf="pro">${pi.paid?'Lihat paket':'Lihat paket Pro'} <span aria-hidden="true">→</span></button></div>${themeSwitch()}`}
-  else if(P){el.innerHTML=`<div class="who">${avSpan(P)}<span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>${themeSwitch()}`}
+    el.innerHTML=`<div class="sfpro ${pi.paid?'on':''}"><div class="sfph"><span class="sfcrown">👑</span><b>${pi.paid?'JELAS Pro aktif':pi.trial?`Coba Pro · ${pi.left} hari lagi`:'Tingkatkan ke Pro'}</b></div><p>${pi.paid?`Semua fitur guru terbuka sampai ${pi.until}.`:'Absensi, Evaluasi di TV, Soal, Rapor, dan murid tanpa batas.'}</p><button class="sfprobtn" data-sf="pro">${pi.paid?'Lihat paket':'Lihat paket Pro'} <span aria-hidden="true">→</span></button></div>`}
+  else if(P){el.innerHTML=`<div class="who">${avSpan(P)}<span><b>${esc(P.name)}</b><small>${esc(CLS().full)}${P.user?' · '+esc(P.user):''}</small></span><button class="sfout" data-sf="out" title="Keluar" aria-label="Keluar">${ICONS.exit}</button></div><button class="keys" data-sf="keys">Pintasan keyboard: tekan <kbd>?</kbd></button>`}
   else{el.innerHTML='';return}
   el.querySelectorAll('[data-sf]').forEach(b=>b.onclick=()=>{const k=b.dataset.sf;if(k==='out')openModal(`<h3>Keluar dari akun?</h3><p>Datamu sudah tersimpan. Masuk lagi kapan saja dengan akun yang sama.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Keluar</button></div>`)||($('#mNo').onclick=closeModal,$('#mYes').onclick=()=>{closeModal();logout()});else if(k==='keys')keysHelp();else if(k==='pro'){window.proAsk?proAsk():go('tset')}else go(k)});
   navItems().forEach((n,i)=>{if(i<9)n.title=`${navLabel(n)} (Alt+${i+1})`})}
