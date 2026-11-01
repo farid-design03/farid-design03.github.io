@@ -2662,19 +2662,20 @@ html[data-theme=malam] .tpdb.tpout{background:rgba(127,29,29,.35);color:#fca5a5}
 .invwait{position:fixed;inset:0;z-index:400;background:#10C98A;color:#fff;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:calc(24px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px));text-align:center;animation:gFade .25s}
 .invwait[hidden]{display:none}
 .iwbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;width:100%;max-width:420px}
-.iwstage{position:relative;width:260px;height:230px}
-.iwav{position:absolute;left:50%;top:0;transform:translateX(-50%);animation:iwBob 2.4s ease-in-out infinite}
-.iwav .avatar{width:150px;height:150px;border:0;font-size:56px;box-shadow:none;background:transparent}
-.iwboard{position:absolute;left:0;right:0;bottom:6px;height:84px;border-radius:22px;transform:perspective(300px) rotateX(38deg);background:repeating-conic-gradient(#fff 0 25%,#d6f5ea 0 50%) 0 0/58px 58px;box-shadow:0 14px 0 #0B9E6C}
-@keyframes iwBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+.iwstage{position:relative;width:220px;height:220px;display:grid;place-items:center}
+.iwav{position:relative;z-index:1;animation:iwBob 2.4s ease-in-out infinite}
+.iwring{position:absolute;inset:20px;border-radius:50%;border:3px solid rgba(255,255,255,.55);animation:iwPulse 2s ease-out infinite}.iwring.r2{animation-delay:1s}
+@keyframes iwPulse{from{transform:scale(.8);opacity:1}to{transform:scale(1.35);opacity:0}}
+html[data-theme=malam] .iwring{border-color:rgba(110,168,255,.6)}
+.iwav .avatar{width:150px;height:150px;border:4px solid #fff;font-size:56px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+@keyframes iwBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .iwt{margin:6px 0 0;color:#fff!important;font-size:26px!important;font-family:var(--title)}
 .iwclock{color:#fff;border-color:rgba(255,255,255,.55);font-size:16px}.iwclock.low{color:#fff;background:rgba(229,56,59,.35);border-color:#fff}
 .iwsub{margin:0;color:rgba(255,255,255,.9);font-size:14px}
 .iwcancel{width:100%;max-width:520px;min-height:52px;border-radius:16px;border:2px solid rgba(255,255,255,.55);background:transparent;color:#fff;font:700 15px var(--title);letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.15)}
 .iwcancel:active{transform:translateY(3px);box-shadow:none}
 html[data-theme=malam] .invwait{background:radial-gradient(600px 400px at 50% 30%,rgba(59,130,246,.25),transparent 70%),#0a0f1e}
-html[data-theme=malam] .iwboard{background:repeating-conic-gradient(#1f2b47 0 25%,#17213a 0 50%) 0 0/58px 58px;box-shadow:0 14px 0 #0c1224}
-html[data-theme=malam] .iwcancel{border-color:#2c3a5c;background:#111a2e}
+html[data-theme=malam] html[data-theme=malam] .iwcancel{border-color:#2c3a5c;background:#111a2e}
 .avatar.pon{position:relative;overflow:visible!important}
 .avatar.pon::after{content:"";position:absolute;right:-1px;bottom:-1px;width:28%;height:28%;min-width:10px;min-height:10px;max-width:22px;max-height:22px;border-radius:50%;background:#22C55E;border:2.5px solid var(--card,#fff);box-sizing:border-box;z-index:2}
 .avatar.avimg.pon svg{clip-path:circle(50%)}
@@ -8812,7 +8813,7 @@ function invPopCheck(){const mb=$('#mbox'),id=mb&&mb.dataset.inv;if(!id||$('#mod
 function invClockTick(){clearInterval(AJAK.clk);const run=()=>{const els=document.querySelectorAll('.invclock[data-exp]');if(!els.length){clearInterval(AJAK.clk);return}
   els.forEach(e=>{const left=+e.dataset.exp-Date.now();e.querySelector('b').textContent='SISA '+invFmt(left);e.classList.toggle('low',left<30000);if(left<=0){if(e.closest('#mbox'))invPopCheck();if(e.closest('#invWait'))invWaitEnd(AJAK.wait&&AJAK.wait.id,'expired')}})};run();AJAK.clk=setInterval(run,500)}
 function invWait(id,f){AJAK.wait={id,f,exp:Date.now()+INV_TTL};let el=$('#invWait');if(!el){document.body.insertAdjacentHTML('beforeend','<div id="invWait" class="invwait" role="dialog" aria-modal="true"></div>');el=$('#invWait')}
-  el.innerHTML=`<div class="iwbody"><div class="iwstage"><div class="iwav">${avSpan({name:f.name,avatar:f.av||null})}</div><div class="iwboard"></div></div>
+  el.innerHTML=`<div class="iwbody"><div class="iwstage"><span class="iwring"></span><span class="iwring r2"></span><div class="iwav">${avSpan({name:f.name,avatar:f.av||null})}</div></div>
    <h2 class="iwt">Menunggu ${esc(f.name)}…</h2><span class="invclock iwclock" data-exp="${AJAK.wait.exp}">${CLOCK_SVG}<b>SISA 2:00</b></span><p class="iwsub">Tantangan terkirim. ${esc(f.name)} punya 2 menit untuk menerima.</p></div>
    <button class="iwcancel" id="iwCancel">BATALKAN</button>`;el.hidden=false;document.body.classList.add('iw-on');invClockTick();
   $('#iwCancel').onclick=()=>{FB.db.doc('invites/'+id).delete().catch(()=>{});AJAK.sent[f.uid]=false;invWaitClose();toast('check','Tantangan dibatalkan.');const b=document.querySelector(`.ajinv[data-uid="${CSS.escape(f.uid)}"]`);if(b){b.disabled=false;b.textContent='UNDANG';b.classList.remove('sent')}}}
