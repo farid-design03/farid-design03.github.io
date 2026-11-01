@@ -2260,6 +2260,16 @@ html[data-theme=malam] .tbicon{background:rgba(0,240,255,.04);color:var(--cy);bo
  body.teacher .side .thsw{padding-top:4px!important;align-self:stretch;width:auto!important;display:flex!important;justify-content:space-between!important}
  body.teacher.tnav-open .syncpill{display:none!important}
 }
+
+.gradepick{display:flex;flex-direction:column;gap:10px}
+.gpg{display:flex;flex-direction:column;gap:6px}.gpl{font-family:var(--title);font-size:15px;color:var(--muted);letter-spacing:.04em}
+.gpr{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.gpb{aspect-ratio:1;max-height:58px;border-radius:14px;border:2px solid var(--line);background:var(--card);box-shadow:0 4px 0 var(--line2);font-family:var(--title);font-weight:900;font-size:20px;color:var(--gc);cursor:pointer;padding:0}
+.gpb[aria-pressed=true]{background:var(--gc);color:#fff;border-color:var(--gc);box-shadow:0 4px 0 color-mix(in srgb,var(--gc) 70%,#000)}
+.pop .gpr,#pop .gpr{gap:6px}#pop .gradepick{min-width:260px;padding:4px}
+.gpb[data-c=tk]{aspect-ratio:auto;height:52px;grid-column:span 2}
+.gpinfo{margin:4px 0 0;padding:10px 12px;border-radius:14px;background:var(--tb);font-size:13.5px;color:var(--muted);line-height:1.4}.gpinfo b{color:var(--ink);font-size:15px}
+html[data-theme=malam] .gpb{background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.35)}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3786,6 +3796,24 @@ const XQ4={
 /* bank soal tambahan per unit supaya tidak banyak pengulangan */
 const XQ=Object.assign({},XQ1,XQ2,XQ3,XQ4);
 COURSE.forEach(c=>c.subjects.forEach(sb=>sb.units.forEach((u,i)=>{const x=XQ[c.id+'/'+sb.id+'/'+i];if(x&&!u.g)u.xb=x})));
+/* ---------- kelas per tingkat: Kelas 1, 2, 3, … 12 ----------
+   Materi tetap ditulis per kelompok; setiap unit diberi tanda kelas sesuai urutan kurikulum, lalu dibentuk kursus per kelas. */
+const GRADE_TAG={
+ sd1:{mtk:[[1,2],[1,2],[2,3],[2,3],[3]],bindo:[[2,3],[1,2],[1,3]],umum:[[1,2],[1,3],[2,3]],pai:[[1],[2],[1,3],[2,3]]},
+ sd2:{mtk:[[4,5],[4],[4,5],[5,6],[5,6],[4,6]],ipas:[[4],[5,6],[4,5],[6]],pancasila:[[4,5],[5,6],[4,6]],eng:[[4],[4,5],[5,6]],pai:[[4],[4,5],[5,6],[6]]},
+ smp:{mtk:[[7],[8],[7],[9],[8,9],[8]],ipa:[[7],[7],[8,9],[8,9]],ips:[[7],[8],[7,9],[8,9]],eng:[[7,8],[8,9],[7,9]],pai:[[7],[8,9],[8],[7,9]]},
+ sma:{mtk:[[11,12],[10],[10,11],[11],[10,12]],fisika:[[10],[10,11],[11],[12]],kimbio:[[10],[11],[11,12],[10,12]],sejarah:[[10,11],[11],[11,12],[12]],eng:[[10,11],[11,12],[10,12]],tkj:[[10],[10,11],[11,12],[10,12]],pai:[[10],[11],[11,12],[10,12]]}};
+const GRADE_GRP=g=>g<=3?'sd1':g<=6?'sd2':g<=9?'smp':'sma';
+COURSE.forEach(c=>c.subjects.forEach(sb=>sb.units.forEach((u,i)=>{if(!u._k)u._k=c.id+'/'+sb.id+'/'+i})));
+['sd1','sd2','smp','sma'].forEach(id=>{const c=COURSE.find(x=>x.id===id);if(c)c.hidden=true});
+for(let g=1;g<=12;g++){const grp=COURSE.find(x=>x.id===GRADE_GRP(g)),tags=GRADE_TAG[grp.id]||{};
+  const subjects=grp.subjects.map(sb=>{const tg=tags[sb.id];const units=tg?sb.units.filter((u,i)=>(tg[i]||[]).includes(g)):sb.units.slice();return units.length?Object.assign({},sb,{units}):null}).filter(Boolean);
+  const lvl=g<=6?'SD':g<=9?'SMP':'SMA/SMK';
+  COURSE.push({id:'k'+g,name:'Kelas '+g,full:lvl+' Kelas '+g,lv:grp.lv,grp:grp.id,grade:g,subjects})}
+{const tk=COURSE.find(x=>x.id==='tk');if(tk){const i=COURSE.indexOf(tk);COURSE.splice(i,1);COURSE.unshift(tk)}}
+const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
+const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
+
 const UNIT_COLORS=['#3D8BFF','#26BF66','#FF8A3D','#9B6BFF','#FF5C9E','#14B8A6'];
 function qKey(t){let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return (h>>>0).toString(36)}
 function unitQs(u,n){const qs=unitQs0(u,n);let sid='';try{sid=SUBJ().id}catch(e){}qs.forEach(q=>{if(q&&!q._u){q._u=u.t;q._s=sid}});return qs}
@@ -4105,7 +4133,7 @@ const optIdx=k=>/^[1-4]$/.test(k)?+k-1:/^[a-dA-D]$/.test(k)?k.toLowerCase().char
 /* Penjelasan saat jawaban salah: jawaban benar, pembahasan, dan pengingat dari materi unit. */
 const FB_STOP=new Set('yang dan adalah ini itu di ke dengan untuk pada atau akan dapat bisa juga kita kamu berikut berapa apa jadi the is are of to in and an a this that which what'.split(' '));
 const fbTok=t=>String(t||'').replace(/<[^>]+>/g,' ').toLowerCase().replace(/[’‘]/g,"'").split(/[^a-z0-9à-ÿ'\u0600-\u06ff²³⁴⁵/]+/).filter(w=>w.length>=3&&!FB_STOP.has(w));
-function unitRef(q){try{const c=CLS(),s=c.subjects.find(x=>x.id===(q._s||SUBJ().id));if(!s)return null;const ui=s.units.findIndex(u=>u.t===q._u);if(ui<0)return null;return {key:`${c.id}/${s.id}/${ui}`,ui,cur:s.id===SUBJ().id}}catch(e){return null}}
+function unitRef(q){try{const c=CLS(),s=c.subjects.find(x=>x.id===(q._s||SUBJ().id));if(!s)return null;const ui=s.units.findIndex(u=>u.t===q._u);if(ui<0)return null;return {key:s.units[ui]._k||`${c.id}/${s.id}/${ui}`,ui,cur:s.id===SUBJ().id}}catch(e){return null}}
 function fbHint(q){const r=unitRef(q),M=window.MATERI;if(!r||!M||!M[r.key])return '';const m=M[r.key];
   const qt=new Set(fbTok(q.q)),at=fbTok(q.ans),an=String(q.ans||'').replace(/<[^>]+>/g,'').toLowerCase().trim();const cand=[];
   m.s.forEach(x=>{if(x.p)cand.push(x.p);(x.li||[]).forEach(t=>cand.push(t));(x.tb||[]).slice(1).forEach(row=>cand.push(x.tb[0].map((h,i)=>row[i]?`${h}: ${row[i]}`:'').filter(Boolean).join(' · ')));(x.ex||[]).forEach(e=>cand.push(`${e[0]} → ${e[1]}`))});
@@ -4260,9 +4288,9 @@ function arcStop(){arc.running=false;cancelAnimationFrame(arc.raf);$('#arcFb').h
 
 /* ---- game 1: Tembak Jawaban ---- */
 const Tembak={
- setup(){const{W,H,ctx}=arc,n=arc.labels.length;const bandH=(H*.5)/n;this.tw=Math.min(W*.46,250);this.th=Math.max(26,Math.min(70,bandH-6));
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;const bandH=(H*.5)/n;this.tw=Math.min(W*.3,170);this.th=Math.max(26,Math.min(54,bandH-10));
   const bands=shuffle([...Array(n).keys()]);
-  this.targets=arc.labels.map((lab,i)=>({i,x:Math.random()*(W-this.tw),y0:10+bands[i]*bandH+(bandH-this.th)/2,y:0,vx:(Math.random()<.5?-1:1)*(35+Math.random()*45)*arc.speed,f:fit(ctx,lab,this.tw-24,this.th-10,22,10),hit:false}));
+  this.targets=arc.labels.map((lab,i)=>{const f=fit(ctx,lab,this.tw-20,this.th-10,22,10);ctx.font=`700 ${f.s}px ${FONT}`;const w=clamp(Math.max(...f.lines.map(l=>ctx.measureText(l).width))+28,64,this.tw);return {i,w,x:Math.random()*(W-w),y0:10+bands[i]*bandH+(bandH-this.th)/2,y:0,vx:(Math.random()<.5?-1:1)*(35+Math.random()*45)*arc.speed,f,hit:false}});
   this.targets.forEach(t=>t.y=t.y0);
   this.bullets=[];this.cool=0;this.cx=W/2;this.cy=H-24;this.ang=-Math.PI/2;this.drop=H*.3;this.recoil=0},
  clampA(){this.ang=clamp(this.ang,-Math.PI+.2,-.2)},
@@ -4273,9 +4301,9 @@ const Tembak={
  update(dt){const{W}=arc,k=arc.keys;
   if(k.ArrowLeft)this.ang-=2.2*dt;if(k.ArrowRight)this.ang+=2.2*dt;this.clampA();
   this.cool-=dt;this.recoil=Math.max(0,this.recoil-dt*6);if(k[' '])this.fire();
-  for(const t of this.targets){t.x+=t.vx*dt;if(t.x<0){t.x=0;t.vx*=-1}if(t.x>W-this.tw){t.x=W-this.tw;t.vx*=-1}t.y=t.y0+(arc.t/arc.limit)*this.drop}
+  for(const t of this.targets){t.x+=t.vx*dt;if(t.x<0){t.x=0;t.vx*=-1}if(t.x>W-t.w){t.x=W-t.w;t.vx*=-1}t.y=t.y0+(arc.t/arc.limit)*this.drop}
   for(const b of this.bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;
-   for(const t of this.targets){if(b.x>t.x&&b.x<t.x+this.tw&&b.y>t.y&&b.y<t.y+this.th){b.dead=true;t.hit=true;burst(b.x,b.y,t.i===arc.ci?'#FFD54A':'#FF6B5B',28);arcResolve(t.i);return}}
+   for(const t of this.targets){if(b.x>t.x&&b.x<t.x+t.w&&b.y>t.y&&b.y<t.y+this.th){b.dead=true;t.hit=true;burst(b.x,b.y,t.i===arc.ci?'#FFD54A':'#FF6B5B',28);arcResolve(t.i);return}}
    if(b.y<-10||b.x<-10||b.x>W+10)b.dead=true}
   this.bullets=this.bullets.filter(b=>!b.dead)},
  draw(c){const{W,H}=arc;const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0B1530');g.addColorStop(1,'#22356A');c.fillStyle=g;c.fillRect(0,0,W,H);
@@ -4286,10 +4314,10 @@ const Tembak={
   for(const t of this.targets){
    const isC=t.i===arc.ci;let fill='#F4F7FB',edge='#7FD3FF',txt='#14213D';
    if(done&&isC){fill='#1C8A57';edge='#9BF2C4';txt='#fff'}else if(t.hit){fill='#C9362A';edge='#FFB3A8';txt='#fff'}
-   c.save();c.shadowColor=edge;c.shadowBlur=14;rr(c,t.x,t.y,this.tw,this.th,14);c.fillStyle=fill;c.fill();c.restore();
-   c.lineWidth=3;c.strokeStyle=edge;rr(c,t.x,t.y,this.tw,this.th,14);c.stroke();
-   for(let k=0;k<3;k++){c.fillStyle=Math.sin(tm*6+k*2+t.i)>0?'#FFD54A':'#FF6B9A';c.beginPath();c.arc(t.x+this.tw/2+(k-1)*14,t.y+this.th+4,3,0,7);c.fill()}
-   drawFit(c,t.f,t.x+this.tw/2,t.y+this.th/2,txt)}
+   c.save();c.shadowColor=edge;c.shadowBlur=14;rr(c,t.x,t.y,t.w,this.th,14);c.fillStyle=fill;c.fill();c.restore();
+   c.lineWidth=3;c.strokeStyle=edge;rr(c,t.x,t.y,t.w,this.th,14);c.stroke();
+   for(let k=0;k<3;k++){c.fillStyle=Math.sin(tm*6+k*2+t.i)>0?'#FFD54A':'#FF6B9A';c.beginPath();c.arc(t.x+t.w/2+(k-1)*14,t.y+this.th+4,3,0,7);c.fill()}
+   drawFit(c,t.f,t.x+t.w/2,t.y+this.th/2,txt)}
   for(const b of this.bullets){c.strokeStyle='rgba(255,213,74,.45)';c.lineWidth=4;c.beginPath();c.moveTo(b.x,b.y);c.lineTo(b.x-b.vx*.03,b.y-b.vy*.03);c.stroke();c.fillStyle='#FFE58A';c.beginPath();c.arc(b.x,b.y,4.5,0,7);c.fill()}
   // aim guide
   if(arc.state==='play'){c.setLineDash([4,8]);c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=2;c.beginPath();c.moveTo(this.cx,this.cy);c.lineTo(this.cx+Math.cos(this.ang)*H*.5,this.cy+Math.sin(this.ang)*H*.5);c.stroke();c.setLineDash([])}
@@ -4489,26 +4517,26 @@ const Balap={extra:1,
 /* ---- game 6: Pancing Ikan ---- */
 const FISHC=['#FFB4A2','#FFD97D','#A0E7E5','#B5EAD7','#CDB4DB'];
 const Pancing={
- setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.wt=Math.round(H*.2);const bandH=(H-this.wt-36)/n;this.fw=Math.min(W*.46,220);
+ setup(){const{W,H,ctx}=arc,n=arc.labels.length;this.wt=Math.round(H*.2);const bandH=(H-this.wt-36)/n;this.fw=Math.min(W*.34,180);
   const bands=shuffle([...Array(n).keys()]);
-  this.fish=arc.labels.map((lab,i)=>{const f=fit(ctx,lab,this.fw-50,Math.min(60,bandH-12),20,10);const fh=Math.max(34,f.lines.length*f.s*1.08+14);const dir=Math.random()<.5?-1:1;
-   return {i,f,fh,dir,x:Math.random()*W,y:this.wt+24+bands[i]*bandH+bandH/2,v:(30+Math.random()*40)*arc.speed,color:FISHC[i%FISHC.length],caught:false}});
+  this.fish=arc.labels.map((lab,i)=>{const f=fit(ctx,lab,this.fw-50,Math.min(60,bandH-12),20,10);const fh=Math.max(34,f.lines.length*f.s*1.08+14);ctx.font=`700 ${f.s}px ${FONT}`;const w=clamp(Math.max(...f.lines.map(l=>ctx.measureText(l).width))+58,96,this.fw);const dir=Math.random()<.5?-1:1;
+   return {i,f,fh,w,dir,x:Math.random()*W,y:this.wt+24+bands[i]*bandH+bandH/2,v:(30+Math.random()*40)*arc.speed,color:FISHC[i%FISHC.length],caught:false}});
   if(this.bx==null||this.bx>W)this.bx=W/2;this.tx=this.bx;this.hy=this.wt-6;this.hs='idle';this.queue=false;this.got=null;
   this.bub=this.bub||Array.from({length:14},()=>({x:Math.random()*W,y:Math.random()*H,v:15+Math.random()*25}))},
  down(x){if(this.hs!=='idle')return;this.tx=clamp(x,30,arc.W-30);this.queue=true},
  key(k){if(k===' '&&this.hs==='idle')this.queue=true},
- moveFish(dt){const W=arc.W;for(const f of this.fish){if(f.caught)continue;f.x+=f.dir*f.v*dt;if(f.dir>0&&f.x-this.fw/2>W)f.x=-this.fw/2;if(f.dir<0&&f.x+this.fw/2<0)f.x=W+this.fw/2}},
+ moveFish(dt){const W=arc.W;for(const f of this.fish){if(f.caught)continue;f.x+=f.dir*f.v*dt;if(f.dir>0&&f.x-f.w/2>W)f.x=-f.w/2;if(f.dir<0&&f.x+f.w/2<0)f.x=W+f.w/2}},
  update(dt){const k=arc.keys;
   if(this.hs==='idle'){if(k.ArrowLeft)this.tx=Math.max(30,this.tx-420*dt);if(k.ArrowRight)this.tx=Math.min(arc.W-30,this.tx+420*dt);
    const d=this.tx-this.bx;this.bx+=Math.sign(d)*Math.min(Math.abs(d),520*dt);
    if(this.queue&&Math.abs(this.bx-this.tx)<3){this.hs='down';this.queue=false;tone([520],.04)}}
   this.moveFish(dt);
   if(this.hs==='down'){this.hy+=300*dt;
-   for(const f of this.fish){if(Math.abs(this.bx-f.x)<this.fw/2-4&&Math.abs(this.hy-f.y)<f.fh/2){f.caught=true;this.got=f;this.hs='up';burst(this.bx,this.hy,f.i===arc.ci?'#FFD54A':'#FF6B5B',20);arcResolve(f.i);return}}
+   for(const f of this.fish){if(Math.abs(this.bx-f.x)<f.w/2-4&&Math.abs(this.hy-f.y)<f.fh/2){f.caught=true;this.got=f;this.hs='up';burst(this.bx,this.hy,f.i===arc.ci?'#FFD54A':'#FF6B5B',20);arcResolve(f.i);return}}
    if(this.hy>arc.H-16)this.hs='up'}
   else if(this.hs==='up'){this.hy-=420*dt;if(this.hy<=this.wt-6){this.hy=this.wt-6;this.hs='idle'}}},
  idle(dt){this.moveFish(dt);if(this.hs!=='idle'){this.hy=Math.max(this.wt-6,this.hy-300*dt);if(this.got){this.got.x=this.bx;this.got.y=this.hy+this.got.fh/2}}},
- drawFish(c,f){const w=this.fw,h=f.fh,x=f.x,y=f.y,d=f.dir;const done=arc.state==='resolved';
+ drawFish(c,f){const w=f.w,h=f.fh,x=f.x,y=f.y,d=f.dir;const done=arc.state==='resolved';
   let body=f.color,edge='#2C3E50',txt='#14213D';if(done&&f.i===arc.ci){body='#1C8A57';edge='#0F5C39';txt='#fff'}else if(f.caught){body='#C9362A';edge='#7E1E16';txt='#fff'}
   c.fillStyle=body;c.beginPath();c.moveTo(x-d*(w/2-18),y);c.lineTo(x-d*w/2,y-h*.45);c.lineTo(x-d*w/2,y+h*.45);c.closePath();c.fill();
   rr(c,x-w/2+(d>0?16:0),y-h/2,w-16,h,h/2);c.fill();c.lineWidth=2;c.strokeStyle=edge;c.stroke();
@@ -5543,7 +5571,7 @@ const HEART_MS=20*60*1000;
 const AV_COLORS=['#9B6BFF','#FF5A5F','#3D8BFF','#26BF66','#FF8A3D','#FF5C9E','#14B8A6'];
 let APP=store.get('app',null)||{profiles:[],cur:null};
 let P=null;
-function newProfile(o){return {id:'p'+Date.now().toString(36)+R(100,999),name:o.name,color:o.color||pick(AV_COLORS),created:Date.now(),cls:o.cls||'sd2',subj:o.subj?{[o.cls]:o.subj}:{},
+function newProfile(o){return {id:'p'+Date.now().toString(36)+R(100,999),name:o.name,color:o.color||pick(AV_COLORS),created:Date.now(),cls:o.cls||'k4',subj:o.subj?{[o.cls]:o.subj}:{},
   xp:0,gems:50,hearts:5,heartsAt:null,streak:0,bestStreak:0,lastDay:null,days:[],freeze:0,goal:o.goal||20,
   today:{day:dayKey(),xp:0,lessons:0,perfect:0,correct:0,games:0,best:0},week:{id:weekKey(),xp:0},prog:{},
   stats:{lessons:0,perfect:0,tests:0,games:[],matches:0,correct:0,chests:0},quests:null,owned:{cap:['ink'],body:['purple']},outfit:{cap:'ink',body:'purple'},unlimited:false,seenBadges:{},gender:o.gender||null,avatar:avDefaultFor(o.gender),avOwned:[],pet:'uli',pets:['uli']}}
@@ -5571,8 +5599,8 @@ const unitColor=ui=>{const c=(typeof P!=='undefined'&&P&&P.cls)?SUBJ().color:nul
 const WORLD_DOODLES={hitung:['1','2','3','+','5','★'],huruf:['A','b','C','d','E','?'],warna:['●','▲','■','★','◆','♥'],mtk:['+','×','÷','=','π','%'],bindo:['Aa','B','“','?','!','k'],umum:['☀','☁','♣','✿','☂','★'],
   ipas:['☘','☀','H₂O','✿','°C','∿'],ipa:['H₂O','☘','°C','∿','O₂','g'],pancasila:['★','◆','✦','♥','✿','⚑'],eng:['Hi!','A','b','?','ok','C'],ips:['⌖','N','↗','⚑','$','✈'],
   fisika:['F=ma','∿','λ','g','Ω','v'],kimbio:['DNA','H₂O','pH','✿','C','O₂'],sejarah:['1945','⚑','✦','★','IV','II'],tkj:['0101','</>','{ }','#','01','IP'],pai:['ا','ب','☪','✦','ت','★']};
-function applyTheme(cls,subj){const W=COURSE.some(c=>c.id===cls)?cls:'sd1';const c=COURSE.find(x=>x.id===W);const s=c.subjects.find(x=>x.id===subj)||null;
-  document.body.dataset.world=W;document.documentElement.style.setProperty('--subj',s?s.color:LEVEL_COL[c.lv]||'#3D8BFF');
+function applyTheme(cls,subj){const W=COURSE.some(c=>c.id===cls)?cls:'k4';const c=COURSE.find(x=>x.id===W);const s=c.subjects.find(x=>x.id===subj)||null;
+  document.body.dataset.world=c.grp||W;document.documentElement.style.setProperty('--subj',s?s.color:LEVEL_COL[c.lv]||'#3D8BFF');
   const g=(s&&WORLD_DOODLES[s.id])||['A','+','★','7','÷','B'];document.querySelectorAll('.world .doodle').forEach((d,i)=>{const t=g[i%g.length];d.textContent=t+(/^[☀-➿]$/.test(t)?'︎':'')})}
 
 /* ---------- quests & badges ---------- */
@@ -5612,8 +5640,18 @@ function openPop(btn,html){closePop();const pop=$('#pop');pop.innerHTML=html;pop
   pop.style.left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2))+'px';pop.style.top=(r.bottom+10)+'px'}
 function subjPop(){const c=CLS();openPop($('#subjBtn'),`<h4>Mata pelajaran · ${c.name}</h4>`+c.subjects.map(s=>{const d=progOf(c.id,s.id).done,t=totalNodes(s);return `<button class="row" data-s="${s.id}" aria-current="${s.id===SUBJ().id}"><span class="sg" style="background:${s.color}">${s.glyph}</span><span class="grow">${s.name}<small>${s.units.length} unit · ${Math.round(d/t*100)}% selesai</small><span class="mini"><i style="width:${d/t*100}%"></i></span></span></button>`}).join(''));
   $('#pop').querySelectorAll('.row').forEach(b=>b.onclick=()=>{P.subj[c.id]=b.dataset.s;save();closePop();renderTop();go(curTab==='team'?'team':'learn')})}
-function clsPop(){openPop($('#clsBtn'),`<h4>Pilih kelas</h4>`+COURSE.map(c=>`<button class="row" data-c="${c.id}" aria-current="${c.id===P.cls}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span class="grow">${c.full}<small>${c.subjects.map(s=>s.name).join(', ')}</small></span></button>`).join(''));
-  $('#pop').querySelectorAll('.row').forEach(b=>b.onclick=()=>{P.cls=b.dataset.c;save();closePop();renderTop();go(curTab==='team'?'team':'learn')})}
+function gradeGridHTML(cur){const grp=[['TK',['tk']],['SD',['k1','k2','k3','k4','k5','k6']],['SMP',['k7','k8','k9']],['SMA / SMK',['k10','k11','k12']]];
+  return `<div class="gradepick">${grp.map(([lab,ids])=>`<div class="gpg"><b class="gpl">${lab}</b><div class="gpr">${ids.map(id=>{const c=COURSE.find(x=>x.id===id);return `<button class="gpb" data-c="${id}" aria-pressed="${cur===id}" style="--gc:${LEVEL_COL[c.lv]}">${id==='tk'?'TK':c.grade}</button>`}).join('')}</div></div>`).join('')}</div>`}
+function clsPop(){openPop($('#clsBtn'),`<h4>Pilih kelas</h4>`+gradeGridHTML(P.cls));
+  $('#pop').querySelectorAll('.gpb').forEach(b=>b.onclick=()=>{P.cls=b.dataset.c;save();closePop();renderTop();go(curTab==='team'?'team':'learn')})}
+/* murid lama yang masih di kelompok kelas (mis. "Kelas 4–6") memilih kelas tunggal; kemajuan dipindahkan */
+function gradeMigrate(){if(!P||document.body.classList.contains('teacher'))return;const c=COURSE.find(x=>x.id===P.cls);if(!c||!c.hidden)return;
+  const ids=COURSE.filter(x=>x.grp===c.id).map(x=>x.id);
+  openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:84px;margin:0 auto"></div><h3>Sekarang kelas dipisah per tingkat</h3><p>Kamu kelas berapa? Materi akan disesuaikan dengan kelasmu.</p></div><div class="gpr" style="grid-template-columns:repeat(${ids.length},1fr)">${ids.map(id=>{const k=COURSE.find(x=>x.id===id);return `<button class="gpb" data-g="${id}" style="--gc:${LEVEL_COL[k.lv]}">${k.grade}</button>`}).join('')}</div>`);
+  hydrate($('#mbox'));$('#mbox').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{const nid=b.dataset.g,nc=COURSE.find(x=>x.id===nid),NL=NODES.length;
+    nc.subjects.forEach(sb=>{const old=P.prog[c.id+'/'+sb.id];if(!old||P.prog[nid+'/'+sb.id])return;const doneU=Math.floor((old.done||0)/NL);let n=0;for(const u of sb.units){const oi=+String(u._k||'').split('/')[2];if(oi<doneU)n++;else break}if(n)P.prog[nid+'/'+sb.id]={done:n*NL}});
+    if(P.subj&&P.subj[c.id]&&nc.subjects.some(x=>x.id===P.subj[c.id]))P.subj[nid]=P.subj[c.id];
+    P.cls=nid;save();closeModal();renderTop();go('learn');toast('check',`Kelasmu sekarang ${nc.full}.`)})}
 const LEVEL_COL={tk:'#FF8A3D',sd:'#F2394B',smp:'#2F5BEA',sma:'#6676B8'};
 function weekStrip(){const t=dayNum(dayKey());const names=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];const d=new Date();const dow=(d.getDay()+6)%7;
   return `<div class="week">`+names.map((n,i)=>{const k=t-dow+i;const on=P.days.some(x=>dayNum(x)===k);return `<div class="${on?'on':''} ${i===dow?'today':''}"><span>${on?'✓':''}</span>${n}</div>`}).join('')+`</div>`}
@@ -5944,7 +5982,7 @@ function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?
     (x.ex?x.ex.map(e=>`<div class="ex"><div class="qq">${e[0]}</div><div class="aa">${e[1]}</div></div>`).join(''):'')+
     (x.note?`<div class="gnote">${x.note}</div>`:'')+`</section>`;
   return `<p class="gintro">${m.intro}</p>`+m.s.map(sec).join('')+(m.sum&&m.sum.length?`<section class="gsum"><h4>Yang perlu diingat</h4><ul>${m.sum.map(t=>`<li>${t}</li>`).join('')}</ul></section>`:'')}
-function openGuide(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=`${c.id}/${s.id}/${ui}`;
+function openGuide(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=u._k||`${c.id}/${s.id}/${ui}`;
   $('#modal').classList.add('gsheet');
   openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
    ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal;
@@ -6126,7 +6164,7 @@ function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[
 
 /* ---------- onboarding (guided first steps) ---------- */
 /* ---------- boot ---------- */
-function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');setTimeout(askGender,900)}
+function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900)}
 function askGender(){if(!P||P.gender||document.body.classList.contains('teacher'))return;const o={gender:null};
   openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px"></p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`);
   $('#mbox').querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{P.gender=b.dataset.gd;const a=avNorm(P.avatar);const bad=Object.keys(AV_G).some(c=>!avFor(c,a[c],P.gender));if(bad){const d=avDefaultFor(P.gender);['hair','hc','brow','eyes','acc','adat','dunia'].forEach(c=>{if(!avFor(c,a[c],P.gender)||c==='hair'||c==='hc')a[c]=d[c]});P.avatar=a;P.color=avBgColor(a)}save();closeModal();renderTop();if(curTab==='profile')renderProfile();toast('check','Tersimpan. Terima kasih!')})}
@@ -6189,7 +6227,7 @@ function teacherSetup(){const el=$('#onb');el.hidden=false;
    <div class="tcard"><div class="tform">
     <div class="tfield"><label for="tsName">Nama guru</label><input id="tsName" placeholder="Contoh: Ibu Rina Lestari" autocomplete="off"></div>
     <div class="tfield"><label for="tsSchool">Nama sekolah</label><input id="tsSchool" placeholder="Contoh: SD Negeri 1 Makassar" autocomplete="off"></div>
-    <div class="tfield"><label for="tsCls">Kelas yang diajar</label><select id="tsCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id==='sd2'?'selected':''}>${c.full}</option>`).join('')}</select></div>
+    <div class="tfield"><label for="tsCls">Kelas yang diajar</label><select id="tsCls">${COURSE_VIS().map(c=>`<option value="${c.id}" ${c.id==='k4'?'selected':''}>${c.full}</option>`).join('')}</select></div>
     <div class="tfield"><label for="tsKkm">KKM (nilai minimal tuntas)</label><input id="tsKkm" type="number" min="0" max="100" value="75"></div>
     <div class="tfield"><label for="tsUser">Nama pengguna guru</label><input id="tsUser" value="guru" autocapitalize="none" spellcheck="false" autocomplete="off"></div><div></div>
     <div class="tfield"><label for="tsPin">Sandi guru (minimal 4 karakter)</label><input id="tsPin" type="password" autocomplete="new-password"></div>
@@ -6535,7 +6573,7 @@ function renderTSet(){const t=T();
   const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   $('#vTSet').innerHTML=thead(['Pengaturan','gear'],'')+
    `<div class="tcard"><h3>Data kelas</h3><div class="tform"><div class="tfield"><label for="stName">Nama guru</label><input id="stName" value="${esc(t.name)}"></div><div class="tfield"><label for="stSchool">Nama sekolah</label><input id="stSchool" value="${esc(t.school||'')}"></div>
-     <div class="tfield"><label for="stLabel">Nama kelas</label><input id="stLabel" maxlength="30" placeholder="Contoh: 5A" value="${esc(t.label||'')}"></div><div class="tfield"><label for="stCls">Jenjang</label><select id="stCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
+     <div class="tfield"><label for="stLabel">Nama kelas</label><input id="stLabel" maxlength="30" placeholder="Contoh: 5A" value="${esc(t.label||'')}"></div><div class="tfield"><label for="stCls">Jenjang</label><select id="stCls">${COURSE.filter(c=>!c.hidden||c.id===t.cls).map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
    addStudentBlock()+
    `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
@@ -6829,12 +6867,13 @@ function forgotTeacher(){openModal(`<h3>Pulihkan sandi guru</h3><p>Ketik nama gu
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{const nm=$('#rpName').value.trim().toLowerCase(),pin=$('#rpPin').value;if(nm!==T().name.trim().toLowerCase()){$('#rpErr').textContent='Nama guru tidak cocok.';return}if(pin.length<4){$('#rpErr').textContent='Sandi minimal 4 karakter.';return}setTeacherPass(pin);save();closeModal();toast('check',`Sandi baru tersimpan. Nama pengguna guru: ${T().user||'guru'}`)}}
 
 /* ---------- sign-up questions (sets the student's module) ---------- */
-function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?String(g.displayName||'').trim().split(/\s+/)[0].slice(0,20):'',cls:(t&&t.cls)||'sd2',subj:null,goal:20,color:pick(AV_COLORS),user:'',pass:'',pass2:'',userEdited:false};{const jc=(window.jrPendingCode&&jrPendingCode())||'';if(jc){o.code=jc;o.via='link'}}const el=$('#onb');el.hidden=false;closeAuth();
+function startOnboarding(first,g){const t=T();const o={step:0,google:!!g,name:g?String(g.displayName||'').trim().split(/\s+/)[0].slice(0,20):'',cls:(t&&t.cls)||'k4',subj:null,goal:20,color:pick(AV_COLORS),user:'',pass:'',pass2:'',userEdited:false};{const jc=(window.jrPendingCode&&jrPendingCode())||'';if(jc){o.code=jc;o.via='link'}}const el=$('#onb');el.hidden=false;closeAuth();
   const steps=6;
   const render=()=>{const s=o.step;let body='',ok=true,btn='Lanjut';if(s>=1)applyTheme(o.cls,s>=2?o.subj:null);
     const talk=(tt,sub)=>`<div class="onbtalk"><div class="mascot" data-mascot data-mood="${s===5?'happy':'idle'}"></div><div class="bubble"><b>${tt}</b>${sub?`<span>${sub}</span>`:''}</div></div>`;
     if(s===0){body=talk('Halo! Siapa namamu?','')+`<input class="onbname" id="onbName" maxlength="20" placeholder="Tulis namamu" value="${esc(o.name)}" autocomplete="off">`+`<p class="onbglbl">Kamu laki-laki atau perempuan?</p>`+`<div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="${o.gender===g}"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`;ok=!!o.name.trim()&&!!o.gender}
-    if(s===1){body=talk('Kamu kelas berapa?','')+`<div class="onbopts">${COURSE.map(c=>`<button class="onbopt" data-c="${c.id}" aria-pressed="${o.cls===c.id}"><span class="sg" style="background:${LEVEL_COL[c.lv]}">${c.name.replace('Kelas ','')}</span><span>${c.full}<small>${c.subjects.length<=3?c.subjects.map(x=>x.name).join(' · '):c.subjects.slice(0,2).map(x=>x.name).join(' · ')+` · +${c.subjects.length-2} pelajaran lain`}</small></span></button>`).join('')}</div>`}
+    if(s===1){const grp=[['TK',['tk']],['SD',['k1','k2','k3','k4','k5','k6']],['SMP',['k7','k8','k9']],['SMA / SMK',['k10','k11','k12']]];
+      body=talk('Kamu kelas berapa?','')+`<div class="gradepick">${grp.map(([lab,ids])=>`<div class="gpg"><b class="gpl">${lab}</b><div class="gpr">${ids.map(id=>{const c=COURSE.find(x=>x.id===id);return `<button class="gpb" data-c="${id}" aria-pressed="${o.cls===id}" style="--gc:${LEVEL_COL[c.lv]}">${id==='tk'?'TK':c.grade}</button>`}).join('')}</div></div>`).join('')}</div>`+(()=>{const c=COURSE.find(x=>x.id===o.cls);return c?`<p class="gpinfo"><b>${c.full}</b><br>${c.subjects.map(x=>x.name).join(' · ')}</p>`:''})()}
     if(s===2){const c=COURSE.find(x=>x.id===o.cls);if(!o.subj||!c.subjects.some(x=>x.id===o.subj))o.subj=c.subjects[0].id;body=talk('Mau belajar apa dulu?','')+`<div class="onbopts onbgrid">${c.subjects.map(x=>`<button class="onbopt" data-s="${x.id}" aria-pressed="${o.subj===x.id}"><span class="sg" style="background:${x.color}">${x.glyph}</span><span>${x.name}<small>${x.units.length} unit</small></span></button>`).join('')}</div>`}
     if(s===3){body=talk('Berapa target harianmu?','')+`<div class="onbopts">${[[10,'Santai','sekitar 1 level sehari'],[20,'Biasa','sekitar 2 level sehari'],[30,'Serius','sekitar 3 level sehari'],[50,'Hebat','5 level atau lebih']].map(g=>`<button class="onbopt" data-g="${g[0]}" aria-pressed="${o.goal===g[0]}"><span class="sg" style="background:var(--orange)">${g[0]}</span><span>${g[1]}<small>${g[0]} XP, ${g[2]}</small></span></button>`).join('')}</div>`}
     if(s===4){if(!o.userEdited)o.user=suggestUser(o.name);const full=licMax()&&APP.profiles.length>=licMax();
@@ -6998,7 +7037,7 @@ function tclsPicker(){const l=tclsList(),cur=tcid();
     $('#mNo').onclick=tclsPicker;$('#mYes').onclick=async()=>{$('#mYes').disabled=true;$('#mYes').textContent='Menghapus…';try{await tclsDelete(c.id);toast('check','Kelas dihapus.');tclsPicker()}catch(e){toast('lock',fbErr(e));tclsPicker()}}})}
 function tclsNewForm(){const t=APP.teacher||{};
   openModal(`<span class="eyebrow">Kelas baru</span><h3>Tambah kelas</h3><div class="tfield"><label for="ncLabel">Nama kelas</label><input id="ncLabel" maxlength="30" placeholder="Contoh: 5A, 7 Merah, X TKJ 2"></div>
-   <div class="tfield"><label for="ncCls">Jenjang</label><select id="ncCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div>
+   <div class="tfield"><label for="ncCls">Jenjang</label><select id="ncCls">${COURSE.filter(c=>!c.hidden||c.id===t.cls).map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div>
    <p class="sub" style="margin:0">Kelas baru punya kode, murid, absensi, tugas, dan nilai sendiri. Bank soalmu ikut tersedia di kelas baru.</p>
    <p class="note" id="ncErr" style="color:var(--bad);font-weight:700;margin:0"></p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Buat kelas</button></div>`);
   setTimeout(()=>{const i=$('#ncLabel');if(i)i.focus()},60);$('#mNo').onclick=tclsPicker;
@@ -7183,7 +7222,7 @@ function fbTeacherForm(existing){const el=$('#onb');el.hidden=false;closeAuth();
    <div class="tcard"><div class="tform">
     <div class="tfield"><label for="tsName">Nama guru</label><input id="tsName" placeholder="Contoh: Ibu Rina Lestari" autocomplete="name"></div>
     <div class="tfield"><label for="tsSchool">Nama sekolah</label><input id="tsSchool" placeholder="Contoh: SD Negeri 1 Makassar" autocomplete="organization"></div>
-    <div class="tfield"><label for="tsCls">Kelas yang diajar</label><select id="tsCls">${COURSE.map(c=>`<option value="${c.id}" ${c.id==='sd2'?'selected':''}>${c.full}</option>`).join('')}</select></div>
+    <div class="tfield"><label for="tsCls">Kelas yang diajar</label><select id="tsCls">${COURSE_VIS().map(c=>`<option value="${c.id}" ${c.id==='k4'?'selected':''}>${c.full}</option>`).join('')}</select></div>
     <div class="tfield"><label for="tsKkm">KKM (nilai minimal tuntas)</label><input id="tsKkm" type="number" min="0" max="100" value="75"></div>
     <div class="tfield"><label for="tsMail">Email</label><input id="tsMail" type="email" autocomplete="email" value="${esc(existing?existing.email:'')}" ${existing?'disabled':''}></div><div></div>
     ${existing?'':`<div class="tfield"><label for="tsPin">Sandi (minimal 6 karakter)</label><input id="tsPin" type="password" autocomplete="new-password"></div>
@@ -7513,7 +7552,7 @@ showWelcome=function(){applyTheme(null,null);const el=$('#auth');el.hidden=false
    <div class="dbtns"><button class="primary press dbig" id="wStart">AYO MULAI</button><button class="ghost press dbig dalt" id="wLogin">AKU SUDAH PUNYA AKUN</button><button class="dlink sm" id="wTeacher">Saya guru, daftarkan kelas</button></div></div>`;
   hydrate(el);$('#wStart').onclick=()=>{tone([660,880],.06);onbIntro(0)};$('#wLogin').onclick=()=>showLogin();$('#wTeacher').onclick=()=>{closeAuth();teacherSetup()}};
 function onbIntro(i){const el=$('#auth');el.hidden=false;
-  const say=[['Hai! Aku <b>Jeli</b>!','happy'],['Hanya <b>6 pertanyaan singkat</b> sebelum kita mulai pelajaran pertamamu!','idle']][i];
+  const say=[['Hai! Aku <b>Uli</b>!','happy'],['Hanya <b>6 pertanyaan singkat</b> sebelum kita mulai pelajaran pertamamu!','idle']][i];
   el.innerHTML=`<div class="onbin dwel dintro"><div class="dtopbar"><button class="dx" id="diBack" aria-label="Kembali">←</button></div><div class="dmid"><div class="dbub">${say[0]}</div><div class="mascot dmas" data-mascot data-mood="${say[1]}"></div></div>
    <div class="dbtns"><button class="primary press dbig" id="diNext">LANJUTKAN</button></div></div>`;
   hydrate(el);$('#diBack').onclick=()=>{if(i)onbIntro(i-1);else{WEL.force=true;showWelcome()}};$('#diNext').onclick=()=>{tone([660,880],.05);if(i<1)onbIntro(i+1);else startOnboarding(true)}}
@@ -7932,7 +7971,7 @@ function ajakWizard(){if(!P)return;ajakInit();const st={cls:AJAK.cls,sid:AJAK.si
   const C=s=>COURSE.find(x=>x.id===s.cls),SB=s=>{const c=C(s);return c&&s.sid!=='acak'?c.subjects.find(x=>x.id===s.sid):null};
   const gamesFor=s=>{const o={cls:AJAK.cls,sid:AJAK.sid,ui:AJAK.ui};Object.assign(AJAK,{cls:s.cls,sid:s.sid,ui:s.ui});const g=ajakGames();Object.assign(AJAK,o);return g};
   wizard({title:AJAK.max===2?'Main berdua online':'Main beberapa orang',state:st,steps:[
-    {t:'Soal kelas berapa?',html:s=>wzOpts([{v:'acak',l:'Kelas acak',g:'🎲',c:'#9B6BFF',s:'Soal dari semua jenjang'}].concat(COURSE.map(c=>({v:c.id,l:c.full,g:c.name.replace('Kelas ',''),c:LEVEL_COL[c.lv]}))),s.cls),pick:(s,v)=>{if(s.cls!==v){s.cls=v;s.sid='acak';s.ui='acak'}}},
+    {t:'Soal kelas berapa?',html:s=>wzOpts([{v:'acak',l:'Kelas acak',g:'🎲',c:'#9B6BFF',s:'Soal dari semua jenjang'}].concat(COURSE_VIS().map(c=>({v:c.id,l:c.full,g:c.name.replace('Kelas ',''),c:LEVEL_COL[c.lv]}))),s.cls),pick:(s,v)=>{if(s.cls!==v){s.cls=v;s.sid='acak';s.ui='acak'}}},
     {t:'Pelajaran apa?',skip:s=>!C(s),html:s=>{const c=C(s);return wzOpts([{v:'acak',l:'Pelajaran acak',g:'🎲',c:'#9B6BFF'}].concat(c.subjects.map(x=>({v:x.id,l:x.name,g:x.glyph,c:x.color}))),s.sid)},pick:(s,v)=>{if(s.sid!==v){s.sid=v;s.ui='acak'}}},
     {t:'Materi yang mana?',skip:s=>!SB(s),html:s=>{const sb=SB(s);return wzOpts([{v:'acak',l:'Semua materi',s:'Soal acak dari semua unit'}].concat(sb.units.map((u,i)=>({v:String(i),l:`Unit ${i+1}: ${u.t}`,s:u.d||''}))),s.ui)},pick:(s,v)=>s.ui=v},
     {t:'Main game apa?',html:s=>{const gs=gamesFor(s);if(s.mode!=='acak'&&!gs.includes(s.mode))s.mode='acak';return `<div class="ajgames wzgames">${[['acak','🎲 Acak semua game']].concat(gs.map(g=>[g,gameName(g)])).map(([id,nm])=>`<button class="ajg" data-wv="${id}" aria-pressed="${s.mode===id}" ${id!=='acak'?`style="--mc:${MCOL[id]||'#9B6BFF'}"`:''}>${esc(nm)}</button>`).join('')}</div>`},pick:(s,v)=>s.mode=v},
