@@ -6663,15 +6663,19 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
 
 /* ---------- profile ---------- */
 function unitsDone(p){let n=0;for(const k in p.prog)n+=Math.floor(p.prog[k].done/NODES.length);return n}
+function notifOff(){try{return localStorage.getItem('jk_notif_off')==='1'}catch(e){return false}}
+function notifIsOn(){try{return !notifOff()&&'Notification' in window&&Notification.permission==='granted'}catch(e){return false}}
 function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class="sethead"><h3 style="margin:0;flex:1">Pengaturan</h3><button class="back" id="setX" aria-label="Tutup">✕</button></div><div class="card settings" id="setBody"></div></div>`);
   $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   const rs=()=>{
-  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
+  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+(window.fbNotifSet?`<div class="set"><span><b>Notifikasi</b><small>Tugas dari guru dan tantangan teman</small></span><button class="tgl" id="sNotif" aria-pressed="${notifIsOn()}" aria-label="Notifikasi"></button></div>`:'')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
    `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
     ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
   $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();(rs(),renderProfile())};
   $('#sMusic').onclick=()=>{MUS.on=!MUS.on;store.set('music',MUS.on);if(MUS.on)musicStart();else musicStop();(rs(),renderProfile())};
   $('#sHapT').onclick=()=>{const ok=haptic([200,100,200],true);if(!ok)toast('lock',navigator.vibrate?'HP-mu menolak getaran dari browser. Matikan mode senyap atau hemat baterai, lalu coba lagi.':'Browser ini tidak mendukung getaran (misalnya iPhone). Pakai Chrome di HP Android.')};
+  {const nb=$('#sNotif');if(nb)nb.onclick=async()=>{const on=nb.getAttribute('aria-pressed')!=='true';nb.disabled=true;const r=await window.fbNotifSet(on);nb.disabled=false;
+    if(r==='on')toast('check','Notifikasi menyala.');else if(r==='off')toast('check','Notifikasi dimatikan.');else if(r==='unsupported')toast('lock','Browser ini belum mendukung notifikasi.');else if(r==='default')toast('lock','Izin notifikasi belum diberikan.');rs()}}
   $('#sHap').onclick=()=>{hapOn=!hapOn;store.set('haptic',hapOn);if(hapOn)haptic([15,40,15]);(rs(),renderProfile())};
   $('#sUnl').onclick=()=>{P.unlimited=!P.unlimited;save();renderTop();(rs(),renderProfile())};
   $('#sTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();(rs(),renderProfile())};
@@ -8836,7 +8840,7 @@ function inviteSeen(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_se
 function inviteMark(id){try{const a=JSON.parse(sessionStorage.getItem('jk_inv_seen')||'[]');a.push(id);sessionStorage.setItem('jk_inv_seen',JSON.stringify(a.slice(-50)))}catch(e){}}
 function inviteAnswer(x,ok){inviteMark(x.id);if(ok&&x.created&&Date.now()-x.created>INV_TTL){AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();toast('lock','Tantangan sudah berakhir (lebih dari 2 menit).');return}FB.db.doc('invites/'+x.id).update({status:ok?'accepted':'declined',toName:P.name,toAv:P.avatar||null}).then(()=>notifyServer('answer',x.id)).catch(()=>{});AJAK.inv=AJAK.inv.filter(i=>i.id!==x.id);if(curTab==='team')inviteBox();if(ok)roomJoin(x.code);else toast('check','Tantangan ditolak.')}
 function inviteAlert(x){inviteMark(x.id);
-  if(document.hidden){try{if('Notification' in window&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(`${x.fromName} menantangmu tanding${x.subjName?' '+x.subjName:''}!`,{body:'Kamu punya 2 menit untuk menerima tantangan',icon:'icons/duel.png',badge:'icons/badge-72.png',tag:'inv-'+x.id,renotify:true,requireInteraction:true,vibrate:[200,100,200],data:{inv:x.id,code:x.code},actions:[{action:'accept',title:'Terima'},{action:'decline',title:'Tolak'}]}))}catch(e){}
+  if(document.hidden){try{if(!notifOff()&&'Notification' in window&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(`${x.fromName} menantangmu tanding${x.subjName?' '+x.subjName:''}!`,{body:'Kamu punya 2 menit untuk menerima tantangan',icon:'icons/duel.png',badge:'icons/badge-72.png',tag:'inv-'+x.id,renotify:true,requireInteraction:true,vibrate:[200,100,200],data:{inv:x.id,code:x.code},actions:[{action:'accept',title:'Terima'},{action:'decline',title:'Tolak'}]}))}catch(e){}
     AJAK.pendingAlert=x;return}
   if(document.body.classList.contains('playing')){toast('team',`${x.fromName} menantangmu! Lihat di Main Bareng.`);return}
   tone&&tone([880,1175,1568],.08);
@@ -8847,7 +8851,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AJAK.pend
 if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{const m=e.data||{};if(m.task){window.fbOpenTask&&fbOpenTask(m.task);return}if(m.push){const d=m.push;if(d.type==='task'){FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();FBX.nagAt=0;taskNag()});return}if(d.type==='accepted')toast('team',d.title);return}if(!m.inv)return;const x=AJAK.inv.find(i=>i.id===m.inv)||{id:m.inv,code:m.code};AJAK.pendingAlert=null;
   if(m.action==='accept')inviteAnswer(x,true);else if(m.action==='decline')inviteAnswer(x,false);else if(AJAK.inv.some(i=>i.id===m.inv))inviteAlert(Object.assign({},x))});
 function notifState(){try{return 'Notification' in window?Notification.permission:'unsupported'}catch(e){return 'unsupported'}}
-function notifBanner(){let el=$('#notifBar');if(isT()||!P||!FBX.user){if(el)el.remove();return}const st=notifState();
+function notifBanner(){let el=$('#notifBar');if(isT()||!P||!FBX.user||notifOff()){if(el)el.remove();return}const st=notifState();
   if(st==='granted'||st==='unsupported'||DISMISS.is('notifbar')){if(el)el.remove();return}
   if(!el){$('#path').insertAdjacentHTML('beforebegin','<div id="notifBar"></div>');el=$('#notifBar')}
   el.innerHTML=`<div class="notifbar2"><span class="nb-ic" aria-hidden="true">🔔</span><span class="grow"><b>Nyalakan pengingat</b><small>Tugas guru &amp; tantangan teman</small></span><button class="smallbtn" id="nbOn">Nyalakan</button><button class="nx" id="nbX" aria-label="Nanti saja">✕</button></div>`;
@@ -8857,7 +8861,7 @@ function notifEnable(){const st=notifState();
     <ol style="margin:0 0 8px;padding-left:20px;line-height:1.7"><li>Ketuk ikon <b>gembok</b> atau <b>⋮</b> di Chrome, lalu <b>Setelan situs</b> (<i>Site settings</i>).</li><li>Pilih <b>Notifikasi</b>, lalu <b>Izinkan</b>.</li><li>Kalau JELAS sudah dipasang di layar utama: tahan ikon JELAS → <b>Info aplikasi</b> → <b>Notifikasi</b> → nyalakan.</li><li>Buka lagi JELAS.</li></ol>
     <div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal;return}
   try{Notification.requestPermission().then(r=>{if(r==='granted'){fbPushRegister();toast('check','Notifikasi menyala!')}else if(r==='denied')notifEnable();notifBanner()})}catch(e){}}
-function notifGate(){if(isT()||!P||!FBX.user||document.body.classList.contains('playing'))return;const st=notifState();if(st==='granted'||st==='unsupported'){notifBanner();return}
+function notifGate(){if(isT()||!P||!FBX.user||notifOff()||document.body.classList.contains('playing'))return;const st=notifState();if(st==='granted'||st==='unsupported'){notifBanner();return}
   notifBanner();if(sessionStorage.getItem('jk_ngate')||!$('#modal').hidden)return;try{sessionStorage.setItem('jk_ngate','1')}catch(e){}
   openModal(`<div style="text-align:center"><div class="mascot" data-mascot data-mood="happy" style="width:100px;margin:0 auto"></div><h3>Nyalakan notifikasi, yuk!</h3><p>Supaya kamu tidak ketinggalan <b>tugas dari guru</b> dan <b>tantangan dari teman</b>.</p></div><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Nyalakan</button></div>`);hydrate($('#mbox'));
   $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();notifEnable()}}
@@ -8886,12 +8890,19 @@ window.fbCheckRoomLink=function(){try{const tg=new URLSearchParams(location.sear
 try{const c=new URLSearchParams(location.search).get('tantang');if(c)sessionStorage.setItem('jk_tantang',c)}catch(e){}
 
 /* ---------- notifikasi gelembung (Firebase Cloud Messaging) ---------- */
-async function fbPushRegister(){try{if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
+async function fbPushRegister(){try{if(notifOff())return;if(!FB.cfg.vapidKey||!firebase.messaging||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted'||!FBX.user||isT())return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg});
   if(!tok)return;FBX.pushTok=tok;const have=(FBX.me&&FBX.me.push)||[];if(have.includes(tok))return;
   await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayUnion(tok)},{merge:true})}catch(e){console.warn('push',e)}}
 async function fbPushUnregister(){try{if(FBX.pushTok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(FBX.pushTok)},{merge:true})}catch(e){}}
 window.fbPushRegister=fbPushRegister;
+async function fbPushOff(){try{let tok=FBX.pushTok;if(!tok&&FB.cfg.vapidKey&&firebase.messaging&&'serviceWorker' in navigator&&Notification.permission==='granted'){const reg=await navigator.serviceWorker.ready;tok=await firebase.messaging().getToken({vapidKey:FB.cfg.vapidKey,serviceWorkerRegistration:reg})}
+  if(tok&&FBX.user)await FB.db.doc('users/'+FBX.user.uid).set({push:firebase.firestore.FieldValue.arrayRemove(tok)},{merge:true});FBX.pushTok=null;
+  try{const reg=await navigator.serviceWorker.ready;(await reg.getNotifications()).forEach(n=>n.close())}catch(e){}}catch(e){console.warn('push off',e)}}
+window.fbNotifSet=async function(on){if(!on){try{localStorage.setItem('jk_notif_off','1')}catch(e){}fbPushOff();notifBanner();return 'off'}
+  try{localStorage.removeItem('jk_notif_off')}catch(e){}const st=notifState();if(st==='unsupported')return 'unsupported';
+  if(st==='granted'){fbPushRegister();notifBanner();return 'on'}if(st==='denied'){notifEnable();return 'denied'}
+  const r=await Notification.requestPermission().catch(()=>'default');if(r==='granted'){fbPushRegister();notifBanner();return 'on'}if(r==='denied')notifEnable();return r};
 async function notifyServer(type,id,extra){try{if(!FB.cfg.pushUrl||!FBX.user)return;const t=await FBX.user.getIdToken();await fetch(FB.cfg.pushUrl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify(Object.assign({type,id},extra||{}))})}catch(e){console.warn('notif',e)}}
 window.notifyServer=(...a)=>notifyServer(...a);
 
