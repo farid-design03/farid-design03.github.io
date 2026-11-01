@@ -2685,6 +2685,15 @@ html[data-theme=malam] html[data-theme=malam] .iwcancel{border-color:#2c3a5c;bac
 .uonl i{width:9px;height:9px;border-radius:50%;background:var(--muted2,#AFAFAF)}
 .uonl.on{color:#16A34A}.uonl.on i{background:#22C55E;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
 html[data-theme=malam] .uonl.on{color:#4ade80}
+/* header murid: selalu muat satu baris di HP sempit */
+@media (max-width:420px){
+ html body .stats{gap:clamp(1px,.8vw,6px)!important}
+ html body .stats .stat{font-size:clamp(13px,4vw,15px)!important;padding:2px clamp(0px,.5vw,3px)!important;gap:2px!important;min-width:0}
+ html body .stats .stat i,html body .stats .nbell svg{width:clamp(18px,5.4vw,22px)!important;height:clamp(18px,5.4vw,22px)!important}
+ html body .stats .clspick{font-size:clamp(11px,3.3vw,13px)!important;padding:4px clamp(6px,2vw,9px)!important;white-space:nowrap}
+ html body .stats .subjpick .sg{min-width:clamp(30px,9.5vw,40px)!important;height:clamp(30px,9vw,36px)!important;font-size:clamp(11px,3.2vw,13px)!important;padding:0 clamp(4px,1.4vw,8px)!important}
+ html body .stats .thbtn{width:clamp(26px,8vw,34px)!important;height:clamp(26px,8vw,34px)!important}html body .stats .thbtn svg{width:clamp(17px,5vw,21px);height:clamp(17px,5vw,21px)}
+}
 </style>
 <style>html,body{margin:0}</style>
 </head>
