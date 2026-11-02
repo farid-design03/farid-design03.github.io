@@ -3022,6 +3022,89 @@ html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad b,html[data-the
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
 html body:not(.teacher) #vProfile .ps{border:0!important;background:transparent!important;box-shadow:none!important;padding-left:0!important}
+/* ===== runtunan teman & lencana bulanan ===== */
+.fsrow{padding:14px!important;display:flex;flex-direction:column;gap:12px}
+.fsslots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.fsslot{display:flex;flex-direction:column;align-items:center;gap:4px;background:none!important;border:0!important;box-shadow:none!important;padding:0;position:relative;min-width:0}
+.fsslot .fsav .avatar{width:56px!important;height:56px!important}
+.fsslot.pend .fsav{opacity:.5}
+.fsslot small{font-weight:700;font-size:12px;color:var(--ink2);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fsn{position:absolute;top:38px;left:50%;margin-left:6px;display:flex;align-items:center;gap:1px;font:900 12px var(--title);font-style:normal;color:#fff;background:#AFAFAF;border:2px solid var(--card);border-radius:999px;padding:1px 6px 1px 3px}
+.fsn i{width:13px;height:14px;display:inline-flex}.fsn i svg{width:100%;height:100%}
+.fsslot.lit .fsn{background:#FF9600}
+.fswait{position:absolute;top:40px;font:800 10px var(--title);font-style:normal;color:var(--muted);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:0 5px}
+.fsplus{width:56px;height:56px;border-radius:50%;border:3px dashed var(--line2,#d0d0d0);display:grid;place-items:center;font-size:28px;font-weight:700;color:var(--muted2,#afafaf)}
+.fsinc{display:flex;align-items:center;gap:10px;background:#FFF4E5;border-radius:14px;padding:8px 10px}
+html[data-theme=malam] .fsinc{background:rgba(255,150,0,.12)}
+.fsinc .grow{display:flex;flex-direction:column;line-height:1.25;min-width:0}.fsinc small{font-size:12.5px;color:var(--ink2)}
+.fsinc .fsav .avatar{width:40px!important;height:40px!important}
+.fsinc .fsyes{padding:8px 12px!important;font-size:13px!important}.fsinc .fsno{padding:8px 10px!important;font-size:13px!important}
+.fslist{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto}
+.fslist .fsav .avatar{width:42px!important;height:42px!important}
+.fsflame{position:relative;width:170px;height:150px;margin:0 auto;color:#FF9600}
+.fsflame>svg{position:absolute;inset:0;width:100%;height:100%}
+.fsflame .fsduo{position:absolute;left:0;right:0;bottom:16px}
+.fsflame.big{width:210px;height:190px}
+.fsduo{display:flex;justify-content:center}.fsduo .fsav+.fsav{margin-left:-14px}
+.fsduo .fsav .avatar{width:64px!important;height:64px!important;border:3px solid #fff;border-radius:50%}
+.fsbig{text-align:center;font:900 54px/1 var(--title);color:#FF9600;margin-top:4px}
+.fsday{display:flex;align-items:center;gap:10px;border:2px solid var(--line);border-radius:14px;padding:8px 10px}
+.fsday span{flex:1;display:flex;flex-direction:column;line-height:1.25}.fsday small{color:var(--muted);font-size:12.5px}
+.fsday .fsav .avatar{width:38px!important;height:38px!important}
+.fsday>i{font-style:normal;font-weight:900;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--track);color:var(--muted2)}
+.fsday.ok>i{background:#58CC02;color:#fff}
+/* lencana bulanan di profil */
+.mbprof{padding:12px!important}
+.mbp{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mbit{display:flex;flex-direction:column;align-items:center;gap:2px;background:none!important;border:0!important;box-shadow:none!important;padding:0}
+.mbit .mbadge{width:100%;max-width:78px;height:auto}
+.mbit small{font-weight:800;font-size:12px;color:var(--ink2)}
+.mbit.miss small,.mbit.now small{color:var(--muted)}
+.mbadge.dim{opacity:1!important;filter:grayscale(1) opacity(.45)!important}
+.mbit.now .mbadge.dim{filter:grayscale(.6) opacity(.7)!important}
+.mbbig{display:grid;place-items:center}.mbbig .mbadge{width:150px;height:165px}
+.mbgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 6px;max-height:58vh;overflow:auto;padding:4px 0}
+.mbcell{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.mbcell .mbadge{width:72px;height:79px}
+.mbcell b{font-size:12.5px;line-height:1.2}.mbcell small{font-size:11.5px;color:var(--muted)}
+.sect.mbh{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.sect.mbh span{font-size:13px;color:var(--blue,#1CB0F6)}
+/* editor avatar: tab terpilih terbaca di mode malam, kaki tanpa pinggir putih */
+html[data-theme=malam] .aved-tabs button[aria-selected="true"]{background:#eaf0fa!important;color:#0a0f1e!important;border-color:#eaf0fa!important}
+.aved-foot,html[data-theme=malam] .aved-foot{background:var(--card)!important;background-image:none!important}
+/* laptop: kartu status di kanan lebih lega, ikon mode sejajar */
+@media (min-width:1000px){
+ .app{row-gap:18px}
+ html body .stats{padding:14px 14px 12px!important;row-gap:14px!important;column-gap:4px!important;flex-wrap:wrap!important;margin-bottom:4px}
+ html body .stats .statgap{display:none!important}
+ html body .stats .clspick{margin-right:auto!important}
+ html body .stats>*:not(.subjpick){flex:none}
+ html body .stats .stat{padding:2px 3px!important;gap:3px!important}
+ html body .stats .thbtn{margin-left:0!important}
+}
+/* ===== Bermain gaya Duolingo ===== */
+.pltop h1{margin:0;font-size:28px;font-weight:900}
+.plstats{display:flex;gap:16px;margin-top:4px}.plst{display:flex;align-items:center;gap:5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted2,#AFAFAF);font-size:14px}
+.plcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.plcard{display:flex;flex-direction:column;align-items:stretch;padding:0!important;border:2px solid var(--line)!important;border-bottom-width:4px!important;border-radius:16px!important;background:var(--card)!important;overflow:hidden;box-shadow:none!important}
+.plcard .plart{display:grid;place-items:end center;height:112px;background:var(--tg);overflow:hidden}
+.plcard .plart>svg,.plcard .plduo svg{width:100%;height:112px;display:block}
+.plcard .plart .mascot{width:86px;margin-bottom:6px}
+.plcard b{padding:8px 4px 9px;font-size:16px;font-weight:800;color:var(--muted);text-align:center}
+.plcard.sel{border-color:#00CD9C!important}.plcard.sel b{color:#00CD9C}.plcard.sel .plart{background:color-mix(in srgb,#00CD9C 12%,var(--card))}
+html body:not(#_x) .plgo{width:100%;margin-top:14px;background:#00CD9C!important;color:#fff!important;font-size:16px!important;padding:14px!important;--lip:#00A47D}
+#vTeam[data-ph=root]>.pagehead{display:none!important}
+.plmore .linkbtn,.pltan{text-decoration:none!important;width:auto!important;display:inline!important;padding:4px 2px!important;background:none!important;border:0!important;box-shadow:none!important}
+
+.plmore{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin:10px 0 2px;color:var(--muted2)}
+.plmore .linkbtn{font-size:13.5px;font-weight:800;color:var(--blue,#1CB0F6)}
+.plhist{display:flex;flex-direction:column}
+.plrow{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:2px solid var(--line)}
+.plrow .avatar{width:52px!important;height:52px!important;flex:none}
+.plrow .grow{flex:1;min-width:0;display:flex;flex-direction:column}.plrow b{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plrow small{font-weight:700;color:var(--muted);font-size:13.5px}.plrow small.r-menang{color:#58A700}.plrow small.r-kalah{color:#EA2B2B}
+.pltan{font-weight:900!important;letter-spacing:.05em;color:#00CD9C!important;font-size:15px!important}
+.plempty{text-align:center;padding:12px 0}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -3132,6 +3215,10 @@ html body:not(.teacher) #vProfile .ps{border:0!important;background:transparent!
       <div id="profileTop" class="card ptop"></div>
       <h3 class="sect">Statistik</h3>
       <div class="pstats" id="pStats"></div>
+      <h3 class="sect" id="fsH" hidden>Runtunan teman</h3>
+      <div class="card fsrow" id="fsRow" hidden></div>
+      <h3 class="sect mbh" id="mbHead">Lencana bulanan<span>LIHAT SEMUA</span></h3>
+      <div class="card mbprof" id="mbRow"></div>
       <h3 class="sect">Pencapaian</h3>
       <div class="card badges" id="badgeList"></div>
       <h3 class="sect" id="myEvalH" hidden>Nilai dari guru</h3>
@@ -7680,7 +7767,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   const streakUp=addXp(xp);P.gems+=gems;
   bump('xp',0);bump('lessons',1);fqTick();if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
   save();renderTop();
-  const screens=[];
+  const screens=[];try{window.fsTick&&fsTick(screens)}catch(e){}
   const title=o.kind==='test'?'Ujian lulus!':o.kind==='game'?'Level game selesai!':o.kind==='practice'?'Latihan selesai!':perfect?'Pelajaran sempurna!':'Pelajaran selesai!';
   const sub=o.kind==='practice'?(heartGain?'Kamu mendapat 1 nyawa tambahan.':'Latihan rutin membuat ingatanmu kuat.'):o.kind==='game'?`Kamu menjawab benar ${g.correct} dari ${o.target} soal di ${MODE_LIST.find(m=>m.id===g.mode).name}.`:perfect?'Tidak ada satu pun jawaban salah. Hebat!':'Soal yang salah sudah kamu ulangi sampai benar.';
   screens.push(`<div class="done"><div class="mascot" data-mascot data-mood="happy"></div><h2 class="gold">${title}</h2><p class="sub">${sub}</p>
@@ -8756,7 +8843,7 @@ async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}ca
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
-  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
+  setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);setTimeout(()=>window.fsNotice&&fsNotice(),6000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;try{jrListenStudent();setTimeout(jrUseLink,1500)}catch(e){console.warn(e)}
   FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
@@ -9616,6 +9703,14 @@ async function roomCreate(s0,ui0,n,bg){const gen=roomGen(n);
   const uid=FBX.user.uid;let code=null,last=null;
   for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set(Object.assign({host:uid,hostName:P.name},gen,{status:'lobby',round:1,max:AJAK.max||8,players:{[uid]:roomMe()},created:Date.now()}));code=c}catch(e){last=e}}
   if(!code)throw last;roomOpen(code,bg)}
+/* Pemain Lain: cari lawan acak sekelas (antrean sederhana mm/{kelas}) */
+window.mmRandom=async function(btn){if(!FBX.user||!P)return;const me=FBX.user.uid,ref=FB.db.doc('mm/'+P.cls);if(btn){btn.disabled=true;btn.textContent='Mencari lawan…'}
+  try{ajakInit();Object.assign(AJAK,{cls:P.cls,sid:'acak',ui:'acak',mode:'kuis',max:2});
+    let d=null;try{const sn=await ref.get();d=sn.exists?sn.data():null}catch(e){}
+    if(d&&d.code&&d.host!==me&&Date.now()-(d.at||0)<120000){try{await ref.delete()}catch(e){}await roomJoin(d.code);return}
+    await roomCreate(null,0,5);if(ROOM.code)await ref.set({code:ROOM.code,host:me,at:Date.now()}).catch(()=>{});toast('team','Menunggu pemain lain bergabung…')}
+  catch(e){toast('lock',fbErr(e))}finally{if(btn){btn.disabled=false;btn.textContent=btn.dataset.lbl||'LAWAN PEMAIN LAIN'}}};
+window.duelFriend=function(f){if(!FBX.user||!P)return;ajakInit();AJAK.max=2;AJAK.sent=AJAK.sent||{};ajakInvite(f,null)};
 /* main lagi dengan pemain yang sama, tanpa mengundang ulang */
 async function roomRematch(btn){const d=ROOM.doc;if(!d||d.host!==FBX.user.uid)return;if(btn){btn.disabled=true;btn.textContent='Menyiapkan soal baru…'}
   if(d.sel){AJAK.cls=d.sel.cls;AJAK.sid=d.sel.sid;AJAK.ui=d.sel.ui;AJAK.mode=d.sel.mode}
@@ -9638,6 +9733,7 @@ function roomRender(){const d=ROOM.doc,el=$('#room'),uid=FBX.user.uid,me=d.playe
   if(d.status==='play'&&!me.done&&!ROOM.playing){roomStart();return}
   if(ROOM.playing){roomLive();return}
   const rows=roomRows(d).filter(r=>!r.left||r.uid===uid),all=rows.every(r=>r.done),lobby=d.status==='lobby';
+  if(!lobby&&all)try{window.mhRecord&&mhRecord(ROOM.code+':'+(d.round||1),rows,uid)}catch(e){}
   const link=`${location.origin}${location.pathname}?tantang=${ROOM.code}`;
   el.hidden=false;el.innerHTML=`<div class="onbin" style="max-width:560px;gap:14px">
    <div class="aved-top"><button class="back" id="rmX" aria-label="Tutup">✕</button><h2 style="flex:1">${lobby?'Ruang tantangan':'Hasil tantangan'}</h2></div>
@@ -10110,6 +10206,114 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
     try{FB.db.collection('users').where('role','==','student').count().get().then(s=>{const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent=s.data().count}).catch(()=>{const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent='—'})}catch(e){const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent='—'}
   }).catch(e=>{$('#adList').innerHTML=`<p class="note" style="color:var(--bad)">${esc(/permission/.test(String(e.code||''))?'Akses admin ditolak. Pastikan email admin sudah diverifikasi (klik tautan di email), lalu muat ulang halaman.':fbErr(e))}</p>`;$('#adStats').innerHTML=''})};
 }
+
+/* ===================================================================
+   RUNTUNAN TEMAN (seperti Duolingo) & LENCANA BULANAN
+   =================================================================== */
+/* ---------- lencana bulanan: gambar khas tiap bulan ---------- */
+const MB_INFO=[['Kembang Api','Tahun baru, semangat baru'],['Sahabat Hati','Belajar bareng sahabat'],['Bunga Mekar','Ilmu tumbuh seperti bunga'],['Si Payung','Tetap belajar walau hujan'],['Pelajar Sejati','Bulan Pendidikan Nasional'],['Si Matahari','Cerah seperti mentari'],['Layang Tinggi','Terbang tinggi menggapai cita'],['Merah Putih','Bulan Kemerdekaan'],['Daun Hijau','Tumbuh setiap hari'],['Batik Nusantara','Bulan Hari Batik'],['Pahlawan','Bulan Hari Pahlawan'],['Bintang Akhir Tahun','Penutup tahun yang bersinar']];
+const MBK='#1B1E3D';
+const MB_ART=[
+ /*Jan*/`<g stroke="${MBK}" stroke-width="3" stroke-linecap="round"><path d="M50 38V24M50 62v14M38 50H24M62 50h14M41 41l-9-9M59 59l9 9M41 59l-9 9M59 41l9-9" stroke="#FFE066"/></g><circle cx="50" cy="50" r="7" fill="#FF6B6B" stroke="${MBK}" stroke-width="3"/><circle cx="30" cy="28" r="3" fill="#fff"/><circle cx="72" cy="70" r="3" fill="#fff"/><circle cx="73" cy="30" r="2.5" fill="#fff"/>`,
+ /*Feb*/`<path d="M50 74C26 58 26 34 40 32c6-1 9 3 10 7 1-4 4-8 10-7 14 2 14 26-10 42Z" fill="#FF4B6E" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M38 40c-3 3-3 8 0 12" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".8"/>`,
+ /*Mar*/`${[0,72,144,216,288].map(a=>`<ellipse cx="50" cy="35" rx="9" ry="13" fill="#FF8FC7" stroke="${MBK}" stroke-width="3" transform="rotate(${a} 50 50)"/>`).join('')}<circle cx="50" cy="50" r="9" fill="#FFD84D" stroke="${MBK}" stroke-width="3"/>`,
+ /*Apr*/`<path d="M24 52a26 24 0 0 1 52 0Z" fill="#4DA3FF" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 28v40c0 6-9 6-9 0" stroke="${MBK}" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M33 52a8 7 0 0 1 17 0M50 52a8 7 0 0 1 17 0" stroke="${MBK}" stroke-width="2.5" fill="none"/><path d="M28 64l-3 6M70 62l-3 6M76 40l-3 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+ /*Mei*/`<path d="M50 36c-8-6-18-6-26-3v34c8-3 18-3 26 3 8-6 18-6 26-3V33c-8-3-18-3-26 3Z" fill="#fff" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 36v34" stroke="${MBK}" stroke-width="3"/><path d="M30 44h12M30 51h12M58 44h12M58 51h12" stroke="#4DA3FF" stroke-width="3" stroke-linecap="round"/>`,
+ /*Jun*/`<g stroke="${MBK}" stroke-width="3" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(a=>`<path d="M50 26v-6" transform="rotate(${a} 50 50)"/>`).join('')}</g><circle cx="50" cy="50" r="17" fill="#FFD23F" stroke="${MBK}" stroke-width="3.5"/><circle cx="44" cy="48" r="2.5" fill="${MBK}"/><circle cx="56" cy="48" r="2.5" fill="${MBK}"/><path d="M44 56c4 4 8 4 12 0" stroke="${MBK}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+ /*Jul*/`<path d="M50 22 70 46 50 70 30 46Z" fill="#FF6B6B" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 22v48M30 46h40" stroke="${MBK}" stroke-width="2.5"/><path d="M50 22 70 46 50 46Z" fill="#FFD84D"/><path d="M50 22 70 46 50 70 30 46Z" fill="none" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M50 70c-4 6 4 8 0 14" stroke="${MBK}" stroke-width="2.5" fill="none"/>`,
+ /*Agu*/`<path d="M32 24v54" stroke="${MBK}" stroke-width="4" stroke-linecap="round"/><path d="M34 28h36v14H34Z" fill="#FF3B3B" stroke="${MBK}" stroke-width="3" stroke-linejoin="round"/><path d="M34 42h36v14H34Z" fill="#fff" stroke="${MBK}" stroke-width="3" stroke-linejoin="round"/>`,
+ /*Sep*/`<path d="M28 70C26 44 44 28 72 28c0 26-14 44-44 42Z" fill="#58CC02" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M28 70 62 38M40 58l-2-10M48 50l8 1" stroke="${MBK}" stroke-width="2.5" stroke-linecap="round" fill="none"/>`,
+ /*Okt*/`<g fill="#C77B30" stroke="${MBK}" stroke-width="3">${[[50,37,0],[50,63,0],[37,50,90],[63,50,90]].map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="8" ry="12" transform="rotate(${r} ${x} ${y})"/>`).join('')}</g><circle cx="50" cy="50" r="4" fill="#FFD84D" stroke="${MBK}" stroke-width="2.5"/><circle cx="32" cy="32" r="3" fill="#FFD84D"/><circle cx="68" cy="32" r="3" fill="#FFD84D"/><circle cx="32" cy="68" r="3" fill="#FFD84D"/><circle cx="68" cy="68" r="3" fill="#FFD84D"/>`,
+ /*Nov*/`<path d="M40 22h20l-4 16h-12Z" fill="#FF4B4B" stroke="${MBK}" stroke-width="3" stroke-linejoin="round"/><path d="M45 22h10l-2 16h-6Z" fill="#fff"/><circle cx="50" cy="56" r="17" fill="#FFC800" stroke="${MBK}" stroke-width="3.5"/><path d="M50 45l3.5 7 7.5 1-5.5 5 1.5 7.5L50 62l-7 3.5 1.5-7.5-5.5-5 7.5-1Z" fill="#fff" stroke="${MBK}" stroke-width="2.2" stroke-linejoin="round"/>`,
+ /*Des*/`<path d="M50 24l7 15 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2Z" fill="#FFD84D" stroke="${MBK}" stroke-width="3.5" stroke-linejoin="round"/><path d="M26 70l2 4 4 2-4 2-2 4-2-4-4-2 4-2Z M74 66l1.5 3 3 1.5-3 1.5-1.5 3-1.5-3-3-1.5 3-1.5Z" fill="#fff"/>`];
+monthBadge=function(k,dim){const [y,m]=k.split('-').map(Number),i=(m-1)%12,c=MCOLS[i],t=monthName(k).slice(0,3).toUpperCase();
+  return `<svg viewBox="0 0 100 110" class="mbadge${dim?' dim':''}" aria-label="Lencana ${esc(monthName(k))} ${y}: ${esc(MB_INFO[i][0])}" role="img"><circle cx="50" cy="50" r="45" fill="${c}" stroke="${MBK}" stroke-width="4"/><circle cx="50" cy="50" r="36" fill="#fff" opacity=".22"/><circle cx="50" cy="50" r="36" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3 5" opacity=".7"/>${MB_ART[i]}<path d="M18 86h64l-6 9 6 9H18l6-9Z" fill="${MBK}"/><text x="50" y="100" text-anchor="middle" font-size="12.5" font-weight="900" fill="#fff" font-family="system-ui,sans-serif" letter-spacing="1">${t} ${String(y).slice(2)}</text></svg>`};
+function mbState(k){ensureMonth();const cur=monthKey();if((P.mbadges||[]).includes(k))return 'got';if(k===cur)return 'now';if(k>cur)return 'next';
+  const jm=monthKey(new Date(P.created||Date.now()));return k<jm?'pre':'miss'}
+function mbRender(){const el=$('#mbRow');if(!el||!P)return;ensureMonth();const now=new Date();const ks=[];for(let i=3;i>=0;i--)ks.push(monthKey(new Date(now.getFullYear(),now.getMonth()-i,1)));
+  const show=ks.filter(k=>mbState(k)!=='pre');
+  el.innerHTML=`<div class="mbp">${show.map(k=>{const s=mbState(k);return `<button class="mbit ${s}" data-mb="${k}">${monthBadge(k,s!=='got')}<small>${s==='got'?esc(monthName(k)):s==='now'?`${P.month.n}/${MQ_GOAL}`:'Terlewat'}</small></button>`}).join('')}</div>`;
+  el.querySelectorAll('[data-mb]').forEach(b=>b.onclick=()=>mbOpen(b.dataset.mb));
+  const h=$('#mbHead');if(h)h.onclick=()=>mbAll()}
+function mbOpen(k){const s=mbState(k),i=+k.split('-')[1]-1;
+  openModal(`<div class="mbbig">${monthBadge(k,s!=='got')}</div><h3 style="text-align:center;margin:0">${esc(MB_INFO[i][0])}</h3><p class="note" style="text-align:center;margin:0">${esc(monthName(k))} ${k.split('-')[0]} · ${esc(MB_INFO[i][1])}</p>
+   <p style="text-align:center">${s==='got'?'Kamu mendapatkan lencana ini dengan menyelesaikan Misi '+esc(monthName(k))+'.':s==='now'?`Selesaikan ${MQ_GOAL} misi harian bulan ini untuk mendapatkannya. Sekarang ${P.month.n} dari ${MQ_GOAL}.`:'Lencana ini terlewat. Jangan sampai lencana bulan ini terlewat juga!'}</p>
+   <div class="acts">${s==='now'?'<button class="primary" id="mbGo">Lihat misi</button>':''}<button class="ghost" id="mbAllB">Semua lencana</button></div>`);
+  const g=$('#mbGo');if(g)g.onclick=()=>{closeModal();go('quest')};$('#mbAllB').onclick=()=>{closeModal();mbAll()}}
+function mbAll(){const y=new Date().getFullYear();const ks=Array.from({length:12},(_,m)=>`${y}-${pad2(m+1)}`);const got=(P.mbadges||[]).length;
+  openModal(`<h3 style="margin:0">Lencana bulanan ${y}</h3><p class="note" style="margin:0">${got} lencana terkumpul. Selesaikan misi bulanan untuk mengoleksi semuanya.</p>
+   <div class="mbgrid">${ks.map(k=>{const s=mbState(k),i=+k.split('-')[1]-1;return `<div class="mbcell ${s}">${monthBadge(k,s!=='got')}<b>${esc(MB_INFO[i][0])}</b><small>${s==='got'?'Didapat':s==='now'?'Bulan ini':s==='next'?'Segera':s==='pre'?'Belum bergabung':'Terlewat'}</small></div>`}).join('')}</div>
+   <div class="acts"><button class="primary" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal}
+
+/* ---------- runtunan teman ---------- */
+const FS={list:null,max:5,shown:0};window.FS=FS;
+const rtOn=()=>typeof FB!=='undefined'&&FB&&window.FBX&&FBX.user&&!isT()&&P;
+const fsYest=()=>dayKey(new Date(Date.now()-864e5));
+const fsOther=x=>x.m.find(u=>u!==FBX.user.uid);
+const fsNum=x=>(x.last===dayKey()||x.last===fsYest())?(x.n||0):0;
+const fsInfo=(x,uid)=>((x.info||{})[uid])||{name:'Teman'};
+const fsMe=()=>({name:P.name,av:P.avatar||null,user:(FBX.me||{}).username||''});
+async function fsLoad(){if(!rtOn())return [];try{const q=await FB.db.collection('fs').where('m','array-contains',FBX.user.uid).get();FS.list=q.docs.map(d=>Object.assign({id:d.id},d.data()))}catch(e){FS.list=FS.list||[]}return FS.list}
+window.fsLoad=fsLoad;
+function fsAv(inf,cls){return `<span class="fsav ${cls||''}">${avSpan({name:inf.name,avatar:inf.av||null})}</span>`}
+function fsRender(){const el=$('#fsRow'),h=$('#fsH');if(!el)return;const on=rtOn();el.hidden=h.hidden=!on;if(!on)return;
+  if(!FS.list){el.innerHTML='<p class="note" style="margin:0">Memuat…</p>';fsLoad().then(fsRender);return}
+  const me=FBX.user.uid,inc=FS.list.filter(x=>x.status==='pending'&&x.from!==me),act=FS.list.filter(x=>x.status==='on'||x.from===me);
+  let html=inc.map(x=>{const o=fsInfo(x,x.from);return `<div class="fsinc">${fsAv(o)}<span class="grow"><b>${esc(o.name)}</b><small>mengajakmu memulai Runtunan Teman</small></span><button class="primary fsyes" data-fsy="${x.id}">Terima</button><button class="ghost fsno" data-fsn="${x.id}" aria-label="Tolak">✕</button></div>`}).join('');
+  const slots=act.slice(0,FS.max).map(x=>{const o=fsInfo(x,fsOther(x)),n=fsNum(x),pend=x.status!=='on',today=(x.d||{})[me]===dayKey()&&(x.d||{})[fsOther(x)]===dayKey();
+    return `<button class="fsslot ${pend?'pend':''} ${today?'lit':''}" data-fs="${x.id}">${fsAv(o)}${pend?'<em class="fswait">Menunggu</em>':`<em class="fsn"><i>${ICONS.flame}</i>${n}</em>`}<small>${esc(String(o.name).split(' ')[0])}</small></button>`});
+  for(let i=slots.length;i<FS.max;i++)slots.push(`<button class="fsslot add" data-fsadd aria-label="Ajak teman"><span class="fsplus">+</span><small>&nbsp;</small></button>`);
+  html+=`<div class="fsslots">${slots.join('')}</div>`;el.innerHTML=html;hydrate(el);
+  el.querySelectorAll('[data-fsadd]').forEach(b=>b.onclick=fsInvitePick);
+  el.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>fsOpen(FS.list.find(x=>x.id===b.dataset.fs)));
+  el.querySelectorAll('[data-fsy]').forEach(b=>b.onclick=()=>fsAccept(b.dataset.fsy,b));
+  el.querySelectorAll('[data-fsn]').forEach(b=>b.onclick=()=>fsEnd(b.dataset.fsn,true))}
+async function fsInvitePick(){if(!rtOn())return;openModal('<h3>Ajak teman</h3><p class="note">Memuat teman…</p>');
+  try{if(!window.FOL||!FOL.following)await folLoad()}catch(e){}if(!FS.list)await fsLoad();
+  const used=new Set(FS.list.map(fsOther)),map=new Map();[...(FOL.following||[]),...(FOL.followers||[])].forEach(f=>{if(!used.has(f.uid)&&!map.has(f.uid))map.set(f.uid,f)});const fr=[...map.values()];
+  const full=FS.list.filter(x=>x.status==='on'||x.from===FBX.user.uid).length>=FS.max;
+  openModal(`<h3 style="margin:0">Mulai Runtunan Teman</h3><p class="note" style="margin:0">Kalian berdua belajar setiap hari untuk menjaga api bersama. Maksimal ${FS.max} teman.</p>
+   ${full?'<p class="note">Runtunan temanmu sudah penuh.</p>':fr.length?`<div class="fslist">${fr.map(f=>`<div class="ajrow">${fsAv(f)}<span class="grow"><b>${esc(f.name||'Teman')}</b><small>${f.user?'@'+esc(f.user):''}</small></span><button class="ajinv" data-fsi="${esc(f.uid)}">AJAK</button></div>`).join('')}</div>`:'<p class="note">Belum ada teman. Ikuti temanmu dulu lewat <b>Tambahkan teman</b> di profil.</p>'}
+   <div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal;
+  document.querySelectorAll('[data-fsi]').forEach(b=>b.onclick=()=>fsInvite(fr.find(f=>f.uid===b.dataset.fsi),b))}
+async function fsInvite(f,b){const me=FBX.user.uid,m=[me,f.uid].sort(),id=m.join('_');b.disabled=true;b.textContent='…';
+  try{await FB.db.doc('fs/'+id).set({m,from:me,status:'pending',info:{[me]:fsMe(),[f.uid]:{name:f.name||'Teman',av:f.av||null,user:f.user||''}},d:{},n:0,last:null,best:0,created:Date.now()});
+    b.textContent='TERKIRIM';FS.list=null;try{notifyServer('fsinv',id)}catch(e){}toast('check',`Ajakan terkirim ke ${f.name||'temanmu'}.`);renderProfile()}
+  catch(e){console.warn('fsInvite',e);b.disabled=false;b.textContent='AJAK';toast('lock','Gagal mengirim ajakan. Coba lagi.')}}
+async function fsAccept(id,b){if(b){b.disabled=true}const me=FBX.user.uid;
+  try{await FB.db.doc('fs/'+id).update({status:'on',['info.'+me]:fsMe(),acc:Date.now()});FS.list=null;await fsLoad();const x=FS.list.find(y=>y.id===id);closeModal();
+    toast('check',`Runtunan Teman dengan ${x?esc(fsInfo(x,x.from).name):'temanmu'} dimulai! Belajar hari ini, ya.`);renderProfile()}
+  catch(e){if(b)b.disabled=false;toast('lock','Gagal menerima ajakan.')}}
+function fsEnd(id,reject){const x=(FS.list||[]).find(y=>y.id===id);const nm=x?fsInfo(x,fsOther(x)).name:'teman';
+  const go_=async()=>{try{await FB.db.doc('fs/'+id).delete()}catch(e){}FS.list=(FS.list||[]).filter(y=>y.id!==id);closeModal();renderProfile()};
+  if(reject){go_();return}
+  openModal(`<h3>Akhiri runtunan?</h3><p>Runtunan Teman dengan <b>${esc(nm)}</b> akan hilang dan tidak bisa dikembalikan.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Akhiri</button></div>`);
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=go_}
+function fsOpen(x){if(!x)return;const me=FBX.user.uid,ou=fsOther(x),o=fsInfo(x,ou),mi=fsInfo(x,me),n=fsNum(x),d=x.d||{},t=dayKey();
+  if(x.status!=='on'){openModal(`<div class="fsduo">${fsAv(mi)}${fsAv(o)}</div><h3 style="text-align:center">Menunggu ${esc(o.name)}</h3><p style="text-align:center">Ajakan Runtunan Teman sudah terkirim. Runtunan dimulai setelah ${esc(o.name)} menerima.</p><div class="acts"><button class="ghost" id="mYes">Batalkan ajakan</button><button class="primary" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=()=>fsEnd(x.id,true);return}
+  const chk=(u,inf)=>`<div class="fsday ${d[u]===t?'ok':''}">${fsAv(inf)}<span><b>${u===me?'Kamu':esc(String(inf.name).split(' ')[0])}</b><small>${d[u]===t?'Sudah belajar hari ini':'Belum belajar hari ini'}</small></span><i>${d[u]===t?'✓':'…'}</i></div>`;
+  openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(mi)}${fsAv(o)}</div></div><div class="fsbig">${n}</div><h3 style="text-align:center;margin:0">hari Runtunan Teman</h3><p class="note" style="text-align:center;margin:0">Kamu dan ${esc(o.name)}${x.best?` · terbaik ${x.best} hari`:''}</p>
+   ${chk(me,mi)}${chk(ou,o)}<p class="note" style="margin:0">Api bertambah setiap hari kalian berdua menyelesaikan minimal satu pelajaran.</p>
+   <div class="acts"><button class="ghost" id="mEnd" style="color:var(--bad)">Akhiri</button><button class="primary" id="mNo">${d[me]===t?'Tutup':'Belajar sekarang'}</button></div>`);
+  $('#mNo').onclick=()=>{closeModal();if(d[me]!==t)go('learn')};$('#mEnd').onclick=()=>fsEnd(x.id,false)}
+/* dipanggil saat pelajaran selesai: catat hari ini, tambah api kalau teman juga sudah */
+async function fsTick(screens){if(!rtOn())return;const me=FBX.user.uid,t=dayKey(),y=fsYest();let list;try{list=await fsLoad()}catch(e){return}
+  for(const x of list.filter(z=>z.status==='on')){const ref=FB.db.doc('fs/'+x.id);
+    try{const res=await FB.db.runTransaction(async tr=>{const s=await tr.get(ref);if(!s.exists)return null;const v=s.data(),d=v.d||{},ou=v.m.find(u=>u!==me);
+      if(d[me]===t)return null;const upd={['d.'+me]:t};let ext=null;
+      if(d[ou]===t&&v.last!==t){const n=v.last===y?(v.n||0)+1:1;upd.n=n;upd.last=t;upd.best=Math.max(v.best||0,n);ext={n,o:(v.info||{})[ou]||{name:'Teman'}}}
+      tr.update(ref,upd);return ext});
+      if(res&&screens){const mi=fsMe();screens.push(`<div class="done"><div class="fsflame big">${ICONS.flame}<div class="fsduo">${fsAv(mi)}${fsAv(res.o)}</div></div><div class="bignum">${res.n}</div><h2>hari Runtunan Teman!</h2><p class="sub">Kamu dan ${esc(res.o.name)} sama-sama belajar hari ini. Pertahankan api kalian!</p><div class="acts"><button class="primary" data-next>Lanjut</button></div></div>`)}}
+    catch(e){console.warn('fsTick',e)}}
+  FS.list=null}
+window.fsTick=fsTick;
+/* ajakan masuk: tampilkan sekali per sesi */
+async function fsNotice(){if(!rtOn())return;try{await fsLoad()}catch(e){return}const me=FBX.user.uid;const inc=(FS.list||[]).filter(x=>x.status==='pending'&&x.from!==me);
+  if(!inc.length||!$('#modal').hidden||document.body.classList.contains('playing'))return;const k='jk_fsn_'+inc.map(x=>x.id).join(',');try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}
+  const x=inc[0],o=fsInfo(x,x.from);openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(o)}${fsAv(fsMe())}</div></div><h3 style="text-align:center">${esc(o.name)} mengajakmu memulai Runtunan Teman!</h3><p style="text-align:center">Kalian berdua belajar setiap hari untuk menjaga api bersama.</p><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Terima</button></div>`);
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=e=>fsAccept(x.id,e.currentTarget)}
+window.fsNotice=fsNotice;
+{const _rP3=renderProfile;renderProfile=function(){_rP3();try{mbRender()}catch(e){console.warn(e)}try{fsRender()}catch(e){console.warn(e)}}}
 
 if(window.__fbFail){bootApp=function(){const el=$('#auth');el.hidden=false;el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="sad"></div><h1 class="wtitle" style="font-size:34px">Belum tersambung</h1><p class="wsub">Aplikasi butuh internet saat pertama kali dibuka. Periksa koneksi, lalu coba lagi.</p></div><div class="wbtns"><button class="primary press" onclick="location.reload()">COBA LAGI</button></div></div>`;hydrate(el)}}
 /* ---------- tombol kembali HP: tidak langsung keluar ---------- */
@@ -10678,7 +10882,7 @@ function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){
   if(PNAV==='online')extra=`<div class="card phcode"><b>Punya kode tantangan?</b><div class="roomjoin"><input id="phCode" class="fbcodein" maxlength="6" placeholder="KODE" autocomplete="off" autocapitalize="characters"><button class="ghost" id="phJoin">Gabung</button></div></div>`;
   if(PNAV==='sendiri'){const c=CLS();extra=`<p class="note phnote">Pilih pelajaran ${esc(c.full)}, lalu pilih game.</p><div class="subjects" id="phSubj">${c.subjects.map(s=>`<button class="subj" data-s="${s.id}" style="--sc:${s.color}"><span class="glyph">${s.glyph}</span><span class="nm">${esc(s.name)}</span><span class="gcount">${allGames(FIT[s.fit]).length} game</span></button>`).join('')}</div>`}
   const ph=v.querySelector('.pagehead');if(ph){ph.innerHTML=`${sc.back?`<button class="back phback" id="phBack" aria-label="Kembali">←</button>`:ico('game')}<div><h2>${sc.t}</h2></div>`;hydrate(ph)}
-  hub.innerHTML=`<div id="phInv"></div>${opts?`<div class="phopts">${opts}</div>`:''}${extra}`;
+  hub.innerHTML=PNAV==='root'?`<div id="phInv"></div>${plRoot()}`:`<div id="phInv"></div>${opts?`<div class="phopts">${opts}</div>`:''}${extra}`;if(PNAV==='root')plBind(hub);
   hydrate(hub);
   const bk=$('#phBack');if(bk)bk.onclick=()=>phGo(sc.back);
   hub.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>phPick(b.dataset.ph));
@@ -10689,6 +10893,35 @@ function playHub(){const v=$('#vTeam');if(!v)return;let hub=$('#phub');if(!hub){
   // tantangan masuk selalu terlihat di halaman awal Bermain dan Main online
   const ib=$('#invBox');if(ib&&(PNAV==='root'||PNAV==='online'||PNAV==='bareng'))$('#phInv').appendChild(ib);
   const fc=$('#friendCard');if(fc&&PNAV==='online')hub.appendChild(fc)}
+
+/* ---------- Bermain gaya Duolingo: Sendiri / Teman / Pemain Lain + riwayat ---------- */
+var PLSEL='sendiri';
+function mhRecord(key,rows,uid){if(!P)return;P.mhk=P.mhk||[];if(P.mhk.includes(key))return;const me=rows.find(r=>r.uid===uid);if(!me)return;
+  const others=rows.filter(r=>r.uid!==uid);if(!others.length)return;P.mhist=P.mhist||[];
+  others.forEach(o=>{const res=(me.score||0)>(o.score||0)?'menang':(me.score||0)<(o.score||0)?'kalah':'seri';P.mhist.unshift({uid:o.uid,name:o.name,av:o.av||null,res,my:me.score||0,their:o.score||0,at:Date.now()})});
+  const best=Math.max(...others.map(o=>o.score||0));if((me.score||0)>best)P.stats.wins=(P.stats.wins||0)+1;
+  P.stats.matches=(P.stats.matches||0)+1;P.mhist=P.mhist.slice(0,30);P.mhk.push(key);P.mhk=P.mhk.slice(-40);save()}
+window.mhRecord=mhRecord;
+function plAgo(t){const m=Math.floor((Date.now()-t)/6e4);if(m<1)return 'baru saja';if(m<60)return m+' menit lalu';const h=Math.floor(m/60);if(h<24)return h+' jam lalu';const d=Math.floor(h/24);return d+' hari lalu'}
+function plRoot(){const on=typeof phOnline==='function'&&phOnline();const s=P.stats||{},hist=(P.mhist||[]);
+  const card=(id,label,art)=>`<button class="plcard ${PLSEL===id?'sel':''}" data-pl="${id}" aria-pressed="${PLSEL===id}"><span class="plart">${art}</span><b>${label}</b></button>`;
+  const friendArt=`<span class="plduo">${avatarSVG(avNorm({hair:'poni',hc:'h2',shirt:'shirtCrewNeck',cc:'c5',bg:'b4'}))}</span>`;
+  const otherArt=avatarSVG(avNorm({hair:'hijab',skin:'s3',cc:'c2',bg:'b3'}));
+  const lbl={sendiri:'MAIN SENDIRI',teman:'TANTANG TEMAN',lain:'LAWAN PEMAIN LAIN'}[PLSEL]+'  +10 XP';
+  const ic=(d,t)=>`<span class="plst"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>${t}</span>`;
+  return `<div class="pltop"><h1>Bermain</h1><div class="plstats">${ic('<path d="M3 12h4l3-8 4 16 3-8h4"/>',`${s.matches||0}x main`)}${ic('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',`${s.wins||0}x menang`)}</div></div>
+   <div class="plcards">${card('sendiri','Sendiri','<div class="mascot" data-mascot data-mood="happy"></div>')}${card('teman','Teman',friendArt)}${card('lain','Pemain Lain',otherArt)}</div>
+   <button class="primary press plgo" id="plGo" data-lbl="${lbl}">${lbl}</button>
+   <div class="plmore"><button class="linkbtn" data-ph="offline">Main di satu HP (offline)</button><span>·</span><button class="linkbtn" data-ph="onN">Ruang sampai 8 pemain</button></div>
+   <h3 class="sect">Riwayat pertandingan</h3>
+   ${hist.length?`<div class="plhist">${hist.slice(0,15).map((h,i)=>`<div class="plrow">${avSpan({name:h.name,avatar:h.av})}<span class="grow"><b>${esc(h.name)}</b><small class="r-${h.res}">${h.res==='menang'?'✓ Menang':h.res==='kalah'?'✕ Kalah':'= Seri'} · ${h.my}–${h.their} · ${plAgo(h.at)}</small></span>${on&&h.uid?`<button class="linkbtn pltan" data-pt="${i}">TANTANG</button>`:''}</div>`).join('')}</div>`:`<p class="note plempty">Belum ada pertandingan. Tantang teman atau pemain lain untuk mulai!</p>`}`}
+function plBind(hub){hub.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{PLSEL=b.dataset.pl;playHub()});
+  const g=$('#plGo');if(g)g.onclick=()=>{if(PLSEL==='sendiri'){phGo('sendiri');return}
+    if(!phOnline()){toast('lock','Masuk ke akun JELAS dulu untuk main online.');return}
+    if(PLSEL==='teman'){phPick('on2');return}window.mmRandom&&mmRandom(g)};
+  hub.querySelectorAll('.plmore [data-ph]').forEach(b=>b.onclick=()=>phPick(b.dataset.ph));
+  hub.querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>{const h=(P.mhist||[])[+b.dataset.pt];if(h&&window.duelFriend)duelFriend({uid:h.uid,name:h.name,av:h.av||null})});
+  hydrate(hub)}
 const _renderTeamH=renderTeam;
 renderTeam=function(){_renderTeamH();try{playHub()}catch(e){console.warn('hub',e)}};
 document.addEventListener('click',e=>{const n=e.target.closest&&e.target.closest('.nav[data-tab="team"]');if(n)PNAV='root'},true);
