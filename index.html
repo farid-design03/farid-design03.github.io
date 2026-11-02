@@ -4254,6 +4254,471 @@ const GRADE_TAG={
  sd2:{mtk:[[4,5],[4],[4,5],[5,6],[5,6],[4,6]],ipas:[[4],[5,6],[4,5],[6]],pancasila:[[4,5],[5,6],[4,6]],eng:[[4],[4,5],[5,6]],pai:[[4],[4,5],[5,6],[6]]},
  smp:{mtk:[[7],[8],[7],[9],[8,9],[8]],ipa:[[7],[7],[8,9],[8,9]],ips:[[7],[8],[7,9],[8,9]],eng:[[7,8],[8,9],[7,9]],pai:[[7],[8,9],[8],[7,9]]},
  sma:{mtk:[[11,12],[10],[10,11],[11],[10,12]],fisika:[[10],[10,11],[11],[12]],kimbio:[[10],[11],[11,12],[10,12]],sejarah:[[10,11],[11],[11,12],[12]],eng:[[10,11],[11,12],[10,12]],tkj:[[10],[10,11],[11,12],[10,12]],pai:[[10],[11],[11,12],[10,12]]}};
+/* ---------- mata pelajaran tambahan sesuai struktur Kurikulum Merdeka ---------- */
+const UB=(t,d,arr,extra)=>U(t,d,[arr,arr.map((x,i)=>i)],extra||{});
+/* ===== SD Kelas 1–3 ===== */
+const PP13_A=[
+ ['Dasar negara Indonesia adalah …','Pancasila','UUD 1945','Garuda','Merah Putih','Pancasila adalah dasar negara kita.'],
+ ['Pancasila terdiri atas … sila','5','4','3','6','Pancasila punya lima sila.'],
+ ['Lambang negara Indonesia adalah …','Garuda Pancasila','Harimau','Komodo','Elang Jawa','Garuda Pancasila adalah lambang negara.'],
+ ['Semboyan pada pita yang dicengkeram Garuda adalah …','Bhinneka Tunggal Ika','Tut Wuri Handayani','Merdeka','Gotong Royong','Artinya berbeda-beda tetapi tetap satu.'],
+ ['Lambang bintang ada pada sila ke …','1','2','3','4','Bintang melambangkan Ketuhanan Yang Maha Esa.'],
+ ['Lambang padi dan kapas ada pada sila ke …','5','4','3','1','Padi dan kapas melambangkan keadilan sosial.'],
+ ['Warna bendera Indonesia adalah …','merah dan putih','merah dan kuning','putih dan biru','hijau dan putih','Bendera kita Sang Merah Putih.'],
+ ['Lagu kebangsaan Indonesia adalah …','Indonesia Raya','Garuda Pancasila','Hari Merdeka','Tanah Airku','Indonesia Raya diciptakan W.R. Supratman.'],
+ ['Sikap saat lagu Indonesia Raya dinyanyikan adalah …','berdiri tegak','duduk santai','berlari','bercanda','Berdiri tegak tanda hormat.']];
+const PP13_B=[
+ ['Aturan di rumah dibuat supaya …','rumah tertib dan nyaman','kita dimarahi','tidak ada yang bermain','rumah jadi sepi','Aturan membuat hidup teratur.'],
+ ['Contoh aturan di sekolah adalah …','datang tepat waktu','membuang sampah di kelas','mencoret meja','berteriak saat belajar','Datang tepat waktu termasuk tata tertib sekolah.'],
+ ['Jika melanggar aturan, sebaiknya kita …','meminta maaf dan tidak mengulangi','pura-pura tidak tahu','menyalahkan teman','marah','Akui kesalahan dan perbaiki.'],
+ ['Sebelum pergi bermain, kita sebaiknya …','berpamitan kepada orang tua','diam-diam keluar','mengunci adik','tidak bilang siapa pun','Berpamitan agar orang tua tidak khawatir.'],
+ ['Kewajiban anak di rumah adalah …','membantu orang tua','bermain terus','tidur seharian','menonton televisi sepanjang hari','Membantu orang tua contoh kewajiban anak.'],
+ ['Hak anak di sekolah adalah …','mendapat pelajaran','membersihkan kelas','menaati guru','piket','Mendapat pelajaran adalah hak. Piket adalah kewajiban.'],
+ ['Rambu lalu lintas berwarna merah berarti …','berhenti','jalan terus','hati-hati','belok','Merah berarti berhenti.'],
+ ['Saat menyeberang jalan, kita sebaiknya lewat …','zebra cross','tengah jalan raya','belakang bus','jalan tol','Zebra cross adalah tempat menyeberang.']];
+const PP13_C=[
+ ['Indonesia terdiri atas banyak suku. Sikap kita adalah …','saling menghormati','mengejek suku lain','hanya berteman dengan satu suku','menjauhi teman','Perbedaan membuat kita kaya.'],
+ ['Rumah adat dari Sumatra Barat adalah …','Rumah Gadang','Joglo','Honai','Tongkonan','Rumah Gadang atapnya runcing seperti tanduk.'],
+ ['Rumah adat Papua yang berbentuk bulat adalah …','Honai','Rumah Gadang','Joglo','Lamin','Honai beratap jerami berbentuk kubah.'],
+ ['Tari Kecak berasal dari …','Bali','Aceh','Papua','Jakarta','Kecak dibawakan banyak penari pria dari Bali.'],
+ ['Tari Saman berasal dari …','Aceh','Bali','Sulawesi','Maluku','Saman terkenal dengan gerakan tangan yang cepat.'],
+ ['Temanmu berbeda agama. Sikap yang benar adalah …','menghormati ibadahnya','mengganggunya','menjauhinya','memaksanya ikut','Menghormati agama lain sesuai sila pertama.'],
+ ['Gotong royong artinya …','bekerja bersama-sama','bekerja sendirian','bermain sendiri','tidak mau membantu','Contoh: kerja bakti membersihkan kampung.'],
+ ['Contoh gotong royong di sekolah adalah …','membersihkan kelas bersama','menyontek bersama','membolos bersama','membiarkan kelas kotor','Membersihkan kelas bersama adalah gotong royong.']];
+const PJOK13_A=[
+ ['Berlari, melompat, dan melempar termasuk gerak …','lokomotor dan manipulatif','diam','tidur','duduk','Berlari dan melompat lokomotor (berpindah), melempar manipulatif (memakai benda).'],
+ ['Gerak berpindah tempat seperti berjalan disebut gerak …','lokomotor','nonlokomotor','manipulatif','diam','Lokomotor = berpindah tempat.'],
+ ['Membungkuk dan memutar badan tanpa berpindah disebut gerak …','nonlokomotor','lokomotor','manipulatif','berlari','Nonlokomotor = bergerak di tempat.'],
+ ['Menendang bola termasuk gerak …','manipulatif','lokomotor','nonlokomotor','pemanasan','Manipulatif = menggerakkan benda.'],
+ ['Sebelum berolahraga kita harus …','pemanasan','langsung lari kencang','makan banyak','tidur','Pemanasan mencegah cedera.'],
+ ['Setelah berolahraga sebaiknya kita …','pendinginan','langsung tidur','minum es banyak sekali','berlari lagi','Pendinginan membuat otot kembali rileks.'],
+ ['Saat lompat jauh, kita mendarat dengan …','kedua kaki','kepala','tangan saja','punggung','Mendarat dengan kedua kaki lebih aman.'],
+ ['Permainan kucing dan tikus melatih …','kelincahan','tidur','membaca','menyanyi','Berlari menghindar melatih kelincahan.']];
+const PJOK13_B=[
+ ['Kita mandi sebaiknya … kali sehari','2','1','5','0','Mandi pagi dan sore.'],
+ ['Menggosok gigi dilakukan pagi dan sebelum …','tidur','bermain','sekolah saja','makan siang saja','Gosok gigi sebelum tidur mencegah gigi berlubang.'],
+ ['Kuku yang panjang sebaiknya …','dipotong','dibiarkan','digigit','dicat','Kuku panjang menyimpan kotoran.'],
+ ['Sebelum makan kita harus …','mencuci tangan dengan sabun','bermain tanah','memegang hewan','menggaruk kepala','Cuci tangan membersihkan kuman.'],
+ ['Makanan yang menyehatkan adalah …','sayur dan buah','permen setiap saat','gorengan setiap hari','minuman bersoda','Sayur dan buah kaya vitamin.'],
+ ['Anak-anak perlu tidur sekitar … jam setiap malam','9–11','2–3','4','15–18','Tidur cukup membuat tubuh segar.'],
+ ['Pakaian yang basah karena keringat sebaiknya …','diganti','dipakai terus','dijemur sambil dipakai','disimpan di lemari','Pakaian bersih membuat badan sehat.'],
+ ['Minum air putih yang cukup membuat tubuh …','tidak kekurangan cairan','lemas','sakit perut','mengantuk','Air menjaga tubuh tetap segar.']];
+const SENI13_A=[
+ ['Warna primer adalah merah, kuning, dan …','biru','hijau','ungu','oranye','Warna primer tidak bisa dibuat dari campuran warna lain.'],
+ ['Merah dicampur kuning menghasilkan warna …','oranye','hijau','ungu','cokelat','Merah + kuning = oranye (jingga).'],
+ ['Biru dicampur kuning menghasilkan warna …','hijau','ungu','oranye','merah muda','Biru + kuning = hijau.'],
+ ['Merah dicampur biru menghasilkan warna …','ungu','hijau','oranye','kuning','Merah + biru = ungu.'],
+ ['Gambar yang memperlihatkan pemandangan alam disebut gambar …','pemandangan','ilustrasi wajah','dekoratif','huruf','Contohnya gunung, sawah, dan pantai.'],
+ ['Alat untuk mewarnai dengan air adalah …','cat air','pensil 2B','penggaris','penghapus','Cat air dicampur air sebelum dipakai.'],
+ ['Kolase adalah karya yang dibuat dengan cara …','menempel potongan bahan','melipat kertas saja','menyanyi','menari','Contoh: menempel potongan kertas, daun, atau biji.'],
+ ['Melipat kertas menjadi bentuk tertentu disebut …','origami','kolase','mozaik','batik','Origami seni melipat kertas dari Jepang.']];
+const SENI13_B=[
+ ['Lagu "Indonesia Raya" diciptakan oleh …','W.R. Supratman','Ibu Sud','A.T. Mahmud','Ismail Marzuki','Wage Rudolf Supratman.'],
+ ['Lagu anak "Pelangi-Pelangi" diciptakan oleh …','A.T. Mahmud','W.R. Supratman','Ismail Marzuki','C. Simanjuntak','A.T. Mahmud banyak mencipta lagu anak.'],
+ ['Tinggi rendahnya nada disebut …','nada','tempo','ritme','dinamika','Nada bisa tinggi atau rendah.'],
+ ['Cepat lambatnya lagu disebut …','tempo','nada','syair','tangga nada','Tempo mengatur kecepatan lagu.'],
+ ['Alat musik yang dipukul contohnya …','gendang','seruling','gitar','biola','Gendang dimainkan dengan dipukul.'],
+ ['Alat musik yang ditiup contohnya …','seruling','gendang','kolintang','angklung','Seruling dimainkan dengan ditiup.'],
+ ['Angklung berasal dari …','Jawa Barat','Papua','Bali','Aceh','Angklung terbuat dari bambu dan digoyangkan.'],
+ ['Sasando adalah alat musik dari …','Nusa Tenggara Timur','Kalimantan','Sumatra Utara','Jawa Tengah','Sasando berasal dari Pulau Rote.']];
+const EN13=[
+ ['"Good morning" diucapkan pada …','pagi hari','malam hari','sore hari','tengah malam','Morning = pagi.'],
+ ['"Thank you" artinya …','terima kasih','maaf','selamat tinggal','tolong','Jawabannya "You are welcome".'],
+ ['Angka "three" adalah …','3','2','13','30','One, two, three.'],
+ ['Angka "ten" adalah …','10','2','12','100','Ten = sepuluh.'],
+ ['Warna "red" artinya …','merah','biru','kuning','hijau','Red = merah.'],
+ ['Warna "yellow" artinya …','kuning','hijau','putih','hitam','Yellow = kuning.'],
+ ['Bahasa Inggris dari "kucing" adalah …','cat','dog','bird','fish','Cat = kucing, dog = anjing.'],
+ ['"Book" artinya …','buku','pensil','meja','tas','Book = buku.'],
+ ['"What is your name?" artinya …','Siapa namamu?','Berapa umurmu?','Di mana rumahmu?','Apa kabar?','Jawab: "My name is …".'],
+ ['Bagian tubuh "eye" artinya …','mata','telinga','hidung','tangan','Eye = mata, ear = telinga.']];
+/* ===== SD Kelas 4–6 ===== */
+const BI46_A=[
+ ['Sinonim kata "gembira" adalah …','senang','sedih','marah','takut','Sinonim = persamaan kata.'],
+ ['Antonim kata "rajin" adalah …','malas','tekun','pandai','giat','Antonim = lawan kata.'],
+ ['Kata baku yang benar adalah …','apotek','apotik','aktifitas','nasehat','Bentuk baku: apotek, aktivitas, nasihat.'],
+ ['Kata baku yang benar adalah …','risiko','resiko','sistim','praktek','Bentuk baku: risiko, sistem, praktik.'],
+ ['Kata "membaca" berasal dari kata dasar …','baca','membaca','bacaan','dibaca','Imbuhan me- ditambahkan pada kata dasar.'],
+ ['Kata berimbuhan pe-an dari "tanam" adalah …','penanaman','tanaman','menanam','ditanam','pe-an + tanam = penanaman.'],
+ ['Makna kata "bergotong royong" adalah …','bekerja sama','berlari bersama','bermain sendiri','berlomba','Gotong royong = bekerja bersama-sama.'],
+ ['Kata yang termasuk kata sifat adalah …','cantik','berlari','meja','dia','Kata sifat menerangkan keadaan.']];
+const BI46_B=[
+ ['Penulisan huruf kapital yang benar adalah …','Saya tinggal di Bandung.','saya tinggal di bandung.','Saya Tinggal Di bandung.','saya tinggal di Bandung.','Huruf kapital di awal kalimat dan nama kota.'],
+ ['Tanda baca di akhir kalimat tanya adalah …','tanda tanya (?)','titik (.)','koma (,)','seru (!)','Contoh: Kamu mau ke mana?'],
+ ['Kalimat perintah biasanya diakhiri tanda …','seru (!)','tanya (?)','koma (,)','titik dua (:)','Contoh: Buanglah sampah pada tempatnya!'],
+ ['Tanda koma dipakai untuk …','memisahkan unsur dalam perincian','mengakhiri kalimat','menandai pertanyaan','menggantikan huruf','Contoh: Ibu membeli apel, jeruk, dan mangga.'],
+ ['Kalimat efektif yang benar adalah …','Para siswa berbaris di lapangan.','Para siswa-siswa berbaris di lapangan.','Para para siswa berbaris di lapangan.','Siswa-siswa para berbaris di lapangan.','"Para" sudah bermakna jamak, tidak perlu kata ulang.'],
+ ['Kalimat "Adik sedang membaca buku" — subjeknya adalah …','Adik','sedang','membaca','buku','Subjek adalah pelaku.'],
+ ['Pada kalimat "Ayah membeli koran", kata "membeli" berfungsi sebagai …','predikat','subjek','objek','keterangan','Predikat menyatakan perbuatan subjek.'],
+ ['Kalimat "Kami belajar di perpustakaan" — "di perpustakaan" adalah keterangan …','tempat','waktu','cara','alat','Menjawab pertanyaan "di mana".']];
+const BI46_C=[
+ ['Gagasan utama sebuah paragraf disebut …','ide pokok','kalimat penjelas','judul','kesimpulan','Ide pokok biasanya ada di kalimat utama.'],
+ ['Paragraf yang kalimat utamanya di awal disebut paragraf …','deduktif','induktif','campuran','naratif','Deduktif: umum ke khusus.'],
+ ['Paragraf yang kalimat utamanya di akhir disebut paragraf …','induktif','deduktif','deskriptif','persuasif','Induktif: khusus ke umum.'],
+ ['Teks yang menceritakan peristiwa secara berurutan disebut teks …','narasi','eksposisi','deskripsi','persuasi','Narasi bercerita, biasanya ada tokoh dan alur.'],
+ ['Teks yang menggambarkan objek seolah-olah pembaca melihatnya disebut teks …','deskripsi','narasi','prosedur','persuasi','Deskripsi menggambarkan dengan rinci.'],
+ ['Teks yang berisi langkah-langkah membuat sesuatu disebut teks …','prosedur','narasi','deskripsi','biografi','Contoh: cara membuat teh.'],
+ ['Pertanyaan 5W+1H terdiri atas apa, siapa, kapan, di mana, mengapa, dan …','bagaimana','berapa','yang mana','sejak kapan','5W+1H dipakai untuk menggali informasi.'],
+ ['Tokoh utama dalam cerita disebut …','protagonis','antagonis','figuran','narator','Antagonis adalah tokoh penentang.']];
+const BI46_D=[
+ ['Pantun terdiri atas … baris setiap bait','4','2','3','6','Pantun: 4 baris, bersajak a-b-a-b.'],
+ ['Baris pertama dan kedua pantun disebut …','sampiran','isi','rima','larik akhir','Sampiran pengantar, isi di baris 3 dan 4.'],
+ ['Rima pantun yang benar adalah …','a-b-a-b','a-a-b-b','a-b-b-a','a-a-a-a','Pantun bersajak silang a-b-a-b.'],
+ ['Puisi yang terikat aturan jumlah baris dan rima disebut puisi …','lama','bebas','modern','kontemporer','Contoh puisi lama: pantun dan syair.'],
+ ['Syair setiap baitnya bersajak …','a-a-a-a','a-b-a-b','a-a-b-b','a-b-c-d','Syair: 4 baris, semua isi, rima a-a-a-a.'],
+ ['Surat untuk teman atau keluarga disebut surat …','pribadi','dinas','resmi','lamaran','Bahasa surat pribadi lebih santai.'],
+ ['Bagian surat yang berisi nama dan tanda tangan pengirim ada di …','penutup','pembuka','isi','tanggal','Penutup diakhiri salam dan nama pengirim.'],
+ ['Majas yang membandingkan dengan kata "seperti" disebut majas …','perumpamaan','personifikasi','hiperbola','metafora','Contoh: Wajahnya seperti bulan purnama.']];
+const PJOK46_A=[
+ ['Permainan sepak bola dimainkan oleh … pemain setiap tim','11','5','6','9','Termasuk penjaga gawang.'],
+ ['Bola voli dimainkan oleh … pemain setiap tim','6','5','11','7','Voli: 6 pemain di lapangan.'],
+ ['Bola basket dimainkan oleh … pemain setiap tim','5','6','7','11','Basket: 5 pemain di lapangan.'],
+ ['Pukulan pertama dalam bola voli disebut …','servis','smes','blok','passing','Servis memulai permainan.'],
+ ['Memantulkan bola basket sambil berjalan disebut …','dribble','shooting','passing','rebound','Dribble = menggiring bola.'],
+ ['Kasti dan rounders termasuk permainan bola …','kecil','besar','air','tangan','Memakai bola kecil dan alat pemukul.'],
+ ['Gaya renang yang paling dasar dan mirip katak adalah gaya …','dada','bebas','punggung','kupu-kupu','Gaya dada disebut juga gaya katak.'],
+ ['Start yang dipakai lari jarak pendek adalah start …','jongkok','berdiri','melayang','duduk','Start jongkok untuk sprint.']];
+const PJOK46_B=[
+ ['Push up melatih kekuatan otot …','lengan','kaki','leher','jari kaki','Push up menguatkan lengan dan dada.'],
+ ['Sit up melatih kekuatan otot …','perut','lengan','leher','betis','Sit up untuk otot perut.'],
+ ['Lari bolak-balik (shuttle run) melatih …','kelincahan','kelenturan','kesabaran','kekuatan jari','Shuttle run melatih kelincahan.'],
+ ['Gizi seimbang berisi makanan pokok, lauk, sayur, buah, dan …','air putih','permen','soda','gorengan','Isi Piringku: makanan pokok, lauk, sayur, buah, dan air.'],
+ ['Zat gizi pembangun tubuh adalah …','protein','gula','lemak berlebih','garam','Protein ada di telur, ikan, tempe.'],
+ ['Rokok berbahaya karena mengandung …','nikotin','vitamin C','kalsium','protein','Nikotin membuat kecanduan.'],
+ ['Jika terluka ringan, luka sebaiknya …','dibersihkan dengan air bersih','dibiarkan kotor','ditutup tanah','digaruk','Luka bersih mencegah infeksi.'],
+ ['Masa puber ditandai dengan …','perubahan tubuh','berhenti tumbuh','tidak bisa olahraga','mengecilnya tubuh','Masa puber adalah masa perubahan menuju dewasa.']];
+const SENI46_A=[
+ ['Batik adalah warisan budaya Indonesia yang diakui UNESCO pada tahun …','2009','1945','1998','2020','Diperingati sebagai Hari Batik Nasional 2 Oktober.'],
+ ['Alat untuk membatik tulis adalah …','canting','kuas besar','pahat','gergaji','Canting dipakai untuk menorehkan lilin (malam).'],
+ ['Bahan perintang warna pada batik adalah …','malam (lilin)','cat minyak','lem','tanah liat','Malam menutup bagian yang tidak diwarnai.'],
+ ['Gambar ilustrasi berfungsi untuk …','memperjelas cerita','mengganti tulisan seluruhnya','mewarnai saja','membuat huruf','Ilustrasi membantu memahami isi bacaan.'],
+ ['Karya seni tiga dimensi memiliki …','panjang, lebar, dan tinggi','panjang dan lebar saja','warna saja','garis saja','Contoh: patung dan vas.'],
+ ['Patung termasuk karya seni rupa …','tiga dimensi','dua dimensi','musik','tari','Patung dapat dilihat dari berbagai sisi.'],
+ ['Mozaik dibuat dengan menempel potongan bahan yang …','disusun rapat membentuk gambar','dibiarkan berantakan','dicat saja','dilipat','Potongan disusun rapi membentuk gambar.'],
+ ['Wayang kulit berasal dari …','Jawa','Papua','Kalimantan','Maluku','Wayang kulit dimainkan oleh dalang.']];
+const SENI46_B=[
+ ['Tangga nada do-re-mi-fa-sol-la-si-do disebut tangga nada …','diatonis mayor','pentatonis','minor','kromatis','Diatonis mayor punya 7 nada berbeda.'],
+ ['Tangga nada pelog dan slendro termasuk tangga nada …','pentatonis','diatonis','mayor','minor','Pentatonis memakai 5 nada.'],
+ ['Tanda tempo "allegro" artinya …','cepat','lambat','sedang','berhenti','Allegro = cepat, andante = sedang, largo = lambat.'],
+ ['Tanda dinamika "forte" (f) artinya …','keras','lembut','cepat','lambat','Forte = keras, piano = lembut.'],
+ ['Gamelan berasal dari …','Jawa dan Bali','Papua','Sumatra Barat','Maluku','Gamelan terdiri atas saron, bonang, gong, dan lainnya.'],
+ ['Tari Jaipong berasal dari …','Jawa Barat','Bali','Aceh','Papua','Jaipong diciptakan Gugum Gumbira.'],
+ ['Tari Piring berasal dari …','Sumatra Barat','Jawa Tengah','Sulawesi Selatan','Bali','Penari membawa piring di telapak tangan.'],
+ ['Gerak tari yang tidak bermakna tertentu, hanya untuk keindahan, disebut gerak …','murni','maknawi','imitatif','berpindah','Gerak maknawi punya arti tertentu.']];
+const KKA56_A=[
+ ['Urutan langkah untuk menyelesaikan masalah disebut …','algoritma','komputer','aplikasi','internet','Contoh: langkah menggosok gigi juga algoritma.'],
+ ['Memecah masalah besar menjadi bagian kecil disebut …','dekomposisi','abstraksi','pengenalan pola','debugging','Dekomposisi memudahkan menyelesaikan masalah.'],
+ ['Menemukan kesamaan atau hal yang berulang disebut …','pengenalan pola','dekomposisi','abstraksi','algoritma','Pola membantu kita menebak langkah berikutnya.'],
+ ['Mengambil hal penting dan mengabaikan yang tidak penting disebut …','abstraksi','dekomposisi','pengulangan','percabangan','Contoh: peta hanya menampilkan jalan penting.'],
+ ['Mencari dan memperbaiki kesalahan program disebut …','debugging','coding','mengunggah','mengetik','Bug = kesalahan dalam program.'],
+ ['Perintah "ulangi 4 kali" dalam program disebut …','perulangan','percabangan','variabel','urutan','Perulangan (loop) mengulang perintah.'],
+ ['Perintah "jika hujan, bawa payung" adalah contoh …','percabangan','perulangan','urutan','variabel','Percabangan (if) memilih langkah sesuai kondisi.'],
+ ['Scratch adalah contoh bahasa pemrograman …','blok visual','teks rumit','mesin','bahasa daerah','Program disusun dengan menyambung blok.']];
+const KKA56_B=[
+ ['AI adalah singkatan dari …','Artificial Intelligence','Automatic Internet','Application Input','Advanced Image','Artinya kecerdasan artifisial (buatan).'],
+ ['Contoh penggunaan AI sehari-hari adalah …','asisten suara di HP','pensil','penggaris','sepeda','Asisten suara memahami perintah kita.'],
+ ['AI belajar dari banyak …','data','tanah','air','kertas kosong','Semakin banyak data, AI semakin terlatih.'],
+ ['Jawaban AI sebaiknya …','diperiksa kebenarannya','selalu dipercaya','disebarkan tanpa dibaca','diabaikan','AI bisa salah, jadi cek ke sumber lain.'],
+ ['Kata sandi (password) yang kuat adalah …','gabungan huruf, angka, dan simbol','tanggal lahir','nama sendiri','123456','Sandi kuat sulit ditebak orang lain.'],
+ ['Berita bohong di internet disebut …','hoaks','fakta','iklan','artikel','Periksa sumber sebelum membagikan berita.'],
+ ['Jika ada orang asing di internet meminta alamat rumah, kita …','tidak memberikannya dan memberi tahu orang tua','langsung memberikan','mengirim foto rumah','mengajaknya bertemu','Jaga data pribadi.'],
+ ['Menggunakan karya orang lain tanpa izin atau menyebut sumber disebut …','plagiarisme','kolaborasi','inspirasi','kreativitas','Selalu sebutkan sumber karya orang lain.']];
+/* ===== SMP Kelas 7–9 ===== */
+const BI79_A=[
+ ['Teks deskripsi bertujuan untuk …','menggambarkan objek secara rinci','meyakinkan pembaca membeli produk','menjelaskan langkah kerja','menceritakan riwayat hidup','Struktur deskripsi: identifikasi, deskripsi bagian, simpulan/kesan.'],
+ ['Struktur teks deskripsi adalah identifikasi, deskripsi bagian, dan …','simpulan/kesan','orientasi','komplikasi','reorientasi','Identifikasi memperkenalkan objek.'],
+ ['Struktur cerita fantasi adalah orientasi, komplikasi, dan …','resolusi','identifikasi','tesis','rekomendasi','Resolusi adalah penyelesaian masalah.'],
+ ['Teks prosedur menggunakan banyak kalimat …','perintah','tanya','seru','pengandaian','Contoh: "Masukkan gula, lalu aduk."'],
+ ['Teks yang melaporkan hasil pengamatan disebut teks …','laporan hasil observasi','narasi','eksplanasi','ulasan','Isinya fakta hasil pengamatan.'],
+ ['Fabel adalah cerita yang tokohnya …','hewan','manusia sakti','benda mati saja','tokoh sejarah','Fabel mengandung pesan moral.'],
+ ['Pesan moral dalam cerita disebut juga …','amanat','tema','latar','alur','Amanat adalah pesan yang ingin disampaikan pengarang.'],
+ ['Biografi adalah kisah hidup seseorang yang ditulis oleh …','orang lain','tokoh itu sendiri','pembaca','penerbit saja','Jika ditulis sendiri disebut autobiografi.']];
+const BI79_B=[
+ ['Teks berita disusun dengan unsur …','5W+1H','pantun','rima','majas','Apa, siapa, kapan, di mana, mengapa, bagaimana.'],
+ ['Bagian berita yang berisi inti berita di awal disebut …','teras berita (lead)','ekor berita','judul saja','tubuh berita','Teras berita memuat hal terpenting.'],
+ ['Iklan bertujuan untuk …','membujuk orang','menceritakan sejarah','menjelaskan proses alam','mendeskripsikan tempat','Iklan bersifat persuasif.'],
+ ['Teks eksposisi berisi …','gagasan yang didukung argumen dan fakta','cerita khayalan','langkah membuat sesuatu','puisi','Struktur: tesis, argumentasi, penegasan ulang.'],
+ ['Bagian akhir teks eksposisi disebut …','penegasan ulang','orientasi','resolusi','koda','Penegasan ulang menguatkan tesis.'],
+ ['Teks persuasi diakhiri dengan …','ajakan','orientasi','identifikasi','komplikasi','Persuasi mengajak atau membujuk pembaca.'],
+ ['Teks ulasan (resensi) menilai sebuah …','karya','cuaca','tempat wisata saja','resep','Contoh: ulasan buku atau film.'],
+ ['Kalimat fakta yang benar adalah …','Indonesia merdeka pada 17 Agustus 1945.','Film itu sangat membosankan.','Rasa nasi goreng ini paling enak.','Lagu itu pasti disukai semua orang.','Fakta dapat dibuktikan; opini adalah pendapat.']];
+const BI79_C=[
+ ['Penulisan kata depan yang benar adalah …','di rumah','dirumah','di tulis','ke dalam nya','Kata depan "di" dipisah dari kata tempat.'],
+ ['Penulisan imbuhan yang benar adalah …','ditulis','di tulis','di-tulis','dit ulis','Awalan "di-" pada kata kerja ditulis serangkai.'],
+ ['Kalimat yang mempunyai dua klausa atau lebih disebut kalimat …','majemuk','tunggal','perintah','seru','Contoh: Ibu memasak dan ayah membaca.'],
+ ['Konjungsi "tetapi" menyatakan hubungan …','pertentangan','sebab','waktu','tujuan','Contoh: Ia pintar, tetapi malas.'],
+ ['Konjungsi "karena" menyatakan hubungan …','sebab','akibat','waktu','pertentangan','Karena menunjukkan alasan.'],
+ ['Kata "kami" dan "kita" bedanya, "kita" …','termasuk lawan bicara','tidak termasuk lawan bicara','hanya satu orang','orang ketiga','"Kami" tidak termasuk lawan bicara.'],
+ ['Kalimat pasif dari "Andi membaca buku" adalah …','Buku dibaca Andi.','Andi dibaca buku.','Buku membaca Andi.','Andi buku membaca.','Pasif: objek menjadi subjek, predikat berawalan di-.'],
+ ['Singkatan yang ditulis benar menurut EYD adalah …','dll.','Dll','d.l.l','dll,','Dan lain-lain disingkat "dll."']];
+const BI79_D=[
+ ['Majas "Angin berbisik di telingaku" adalah majas …','personifikasi','hiperbola','metafora','litotes','Benda mati dianggap seperti manusia.'],
+ ['Majas "Tangisannya membanjiri seluruh desa" adalah majas …','hiperbola','personifikasi','litotes','simile','Hiperbola melebih-lebihkan.'],
+ ['Majas "Dia adalah bintang kelas" adalah majas …','metafora','simile','personifikasi','ironi','Metafora membandingkan langsung tanpa kata "seperti".'],
+ ['Pengulangan bunyi di akhir baris puisi disebut …','rima','diksi','bait','tipografi','Rima = persamaan bunyi.'],
+ ['Pilihan kata dalam puisi disebut …','diksi','rima','majas','amanat','Diksi yang tepat memperindah puisi.'],
+ ['Gurindam terdiri atas … baris setiap bait','2','4','3','6','Gurindam 2 baris: baris 1 sebab, baris 2 akibat.'],
+ ['Drama yang berakhir sedih disebut …','tragedi','komedi','melodrama','sendratari','Komedi berakhir lucu/gembira.'],
+ ['Percakapan antartokoh dalam drama disebut …','dialog','monolog','prolog','epilog','Monolog = bicara sendiri.']];
+const PP79_A=[
+ ['Pancasila ditetapkan sebagai dasar negara pada …','18 Agustus 1945','17 Agustus 1945','1 Juni 1945','22 Juni 1945','Ditetapkan PPKI bersama UUD 1945.'],
+ ['Rumusan Pancasila dalam Piagam Jakarta disusun pada …','22 Juni 1945','1 Juni 1945','18 Agustus 1945','29 Mei 1945','Disusun Panitia Sembilan.'],
+ ['Istilah "Pancasila" pertama kali diusulkan oleh …','Ir. Soekarno','Moh. Yamin','Soepomo','Moh. Hatta','Dalam pidato 1 Juni 1945.'],
+ ['Hari Lahir Pancasila diperingati setiap tanggal …','1 Juni','1 Oktober','17 Agustus','28 Oktober','1 Oktober adalah Hari Kesaktian Pancasila.'],
+ ['Pancasila sebagai pandangan hidup bangsa artinya Pancasila menjadi …','pedoman bersikap sehari-hari','lagu kebangsaan','lambang negara','bendera negara','Nilai Pancasila dipakai dalam kehidupan sehari-hari.'],
+ ['Perubahan kalimat sila pertama Piagam Jakarta dilakukan demi …','persatuan bangsa','kepentingan satu golongan','permintaan Belanda','kemauan Jepang','Agar seluruh rakyat Indonesia bersatu.'],
+ ['Badan yang dibentuk untuk menyelidiki persiapan kemerdekaan adalah …','BPUPKI','PPKI','KNIP','DPR','BPUPKI diketuai dr. Radjiman Wedyodiningrat.'],
+ ['Ketua PPKI adalah …','Ir. Soekarno','Moh. Hatta','Radjiman Wedyodiningrat','Ahmad Soebardjo','Wakil ketuanya Moh. Hatta.']];
+const PP79_B=[
+ ['Hukum dasar tertulis negara Indonesia adalah …','UUD NRI Tahun 1945','Pancasila','Keputusan Presiden','Peraturan Daerah','UUD 1945 adalah konstitusi.'],
+ ['UUD 1945 telah diamendemen sebanyak … kali','4','2','3','5','Amendemen dilakukan 1999–2002.'],
+ ['Lembaga yang berwenang mengubah UUD adalah …','MPR','DPR','Presiden','MA','Sesuai Pasal 37 UUD 1945.'],
+ ['Lembaga yang membentuk undang-undang bersama presiden adalah …','DPR','MA','BPK','KY','DPR memegang kekuasaan membentuk UU.'],
+ ['Urutan tertinggi dalam peraturan perundang-undangan adalah …','UUD NRI 1945','Undang-Undang','Peraturan Pemerintah','Perda','Diatur dalam UU No. 12 Tahun 2011.'],
+ ['Norma yang berasal dari Tuhan disebut norma …','agama','kesopanan','hukum','kesusilaan','Norma agama berisi perintah dan larangan Tuhan.'],
+ ['Norma yang sanksinya tegas dan dibuat negara adalah norma …','hukum','kesopanan','kesusilaan','kebiasaan','Contoh sanksi: denda dan penjara.'],
+ ['Hak dan kewajiban harus dijalankan secara …','seimbang','mendahulukan hak','mengabaikan kewajiban','sesuka hati','Hak dan kewajiban saling berkaitan.']];
+const PP79_C=[
+ ['Semboyan "Bhinneka Tunggal Ika" berasal dari kitab …','Sutasoma','Negarakertagama','Arjunawiwaha','Pararaton','Ditulis Mpu Tantular.'],
+ ['Sumpah Pemuda diikrarkan pada …','28 Oktober 1928','20 Mei 1908','17 Agustus 1945','10 November 1945','Isinya satu tanah air, satu bangsa, satu bahasa.'],
+ ['Hari Kebangkitan Nasional diperingati setiap …','20 Mei','28 Oktober','2 Mei','10 November','Berdirinya Budi Utomo tahun 1908.'],
+ ['Wilayah Negara Kesatuan Republik Indonesia ditetapkan dalam Deklarasi …','Djuanda','Bogor','Balfour','Kairo','Deklarasi Djuanda 1957 menyatukan laut Nusantara.'],
+ ['Sikap menghargai keberagaman disebut …','toleransi','diskriminasi','etnosentrisme','primordialisme','Etnosentrisme menganggap budaya sendiri paling baik.'],
+ ['Contoh ancaman di bidang ideologi adalah …','paham yang bertentangan dengan Pancasila','banjir','kemarau','kenaikan harga','Ancaman ideologi menggoyahkan dasar negara.'],
+ ['Gotong royong di masyarakat mencerminkan sila ke …','3 dan 5','1','2 saja','4 saja','Persatuan dan keadilan sosial.'],
+ ['Musyawarah untuk mufakat mencerminkan sila ke …','4','1','2','5','Kerakyatan yang dipimpin oleh hikmat kebijaksanaan.']];
+const INF79_A=[
+ ['Perangkat yang berfungsi sebagai otak komputer adalah …','CPU','monitor','keyboard','speaker','CPU memproses data.'],
+ ['Contoh perangkat masukan (input) adalah …','keyboard','printer','monitor','speaker','Mouse dan scanner juga input.'],
+ ['Contoh perangkat keluaran (output) adalah …','printer','mouse','mikrofon','scanner','Monitor dan speaker juga output.'],
+ ['Sistem operasi contohnya …','Android','Microsoft Word','Google Chrome','WhatsApp','Contoh lain: Windows, Linux, iOS.'],
+ ['1 byte terdiri atas … bit','8','2','10','16','1 byte = 8 bit.'],
+ ['1 KB sama dengan … byte','1024','1000000','100','8','Dalam sistem biner 1 KB = 1024 byte.'],
+ ['Jaringan yang mencakup satu gedung atau sekolah disebut …','LAN','WAN','MAN','PAN','LAN = Local Area Network.'],
+ ['Internet adalah contoh jaringan …','WAN','LAN','PAN','Bluetooth','WAN mencakup wilayah sangat luas.']];
+const INF79_B=[
+ ['Berpikir komputasional terdiri atas dekomposisi, pengenalan pola, abstraksi, dan …','algoritma','animasi','desain','mengetik','Empat fondasi berpikir komputasional.'],
+ ['Simbol diagram alir (flowchart) berbentuk belah ketupat berarti …','keputusan','mulai/selesai','proses','input/output','Keputusan memiliki pilihan ya/tidak.'],
+ ['Simbol flowchart berbentuk oval berarti …','mulai atau selesai','proses','keputusan','input','Oval = terminator.'],
+ ['Tempat menyimpan nilai dalam program disebut …','variabel','perulangan','fungsi','komentar','Contoh: skor = 10.'],
+ ['Struktur "for" atau "while" dipakai untuk …','perulangan','percabangan','menyimpan data','menampilkan gambar','Loop mengulang perintah.'],
+ ['Struktur "if–else" dipakai untuk …','percabangan','perulangan','penjumlahan','penyimpanan','Memilih perintah sesuai kondisi.'],
+ ['Mengurutkan data dari kecil ke besar disebut …','sorting','searching','debugging','hacking','Searching = mencari data.'],
+ ['Data berbentuk tabel dapat diolah dengan aplikasi …','lembar kerja (spreadsheet)','pengolah gambar','pemutar musik','peramban','Contoh: Excel, Google Sheets.']];
+const INF79_C=[
+ ['Hoaks adalah …','informasi palsu','berita resmi','iklan sah','surat elektronik','Cek kebenaran sebelum membagikan.'],
+ ['Jejak digital adalah …','rekam aktivitas kita di internet','sidik jari di layar','alamat rumah','nomor HP saja','Jejak digital sulit dihapus.'],
+ ['Phishing adalah upaya …','mencuri data dengan menyamar','memancing ikan online','memperbaiki komputer','membuat aplikasi','Jangan klik tautan mencurigakan.'],
+ ['Verifikasi dua langkah berguna untuk …','mengamankan akun','mempercepat internet','menghemat baterai','membuat foto','Selain sandi, perlu kode tambahan.'],
+ ['Perundungan di dunia maya disebut …','cyberbullying','cybersecurity','streaming','blogging','Laporkan perundungan kepada orang dewasa.'],
+ ['Lisensi yang mengizinkan karya dipakai dengan syarat tertentu adalah …','Creative Commons','plagiarisme','pembajakan','spam','Selalu cantumkan sumber.'],
+ ['Pesan berisi iklan massal yang tidak diminta disebut …','spam','phishing','virus','firewall','Spam memenuhi kotak masuk.'],
+ ['Program jahat yang dapat merusak komputer disebut …','malware','antivirus','firewall','browser','Contoh malware: virus, worm, trojan.']];
+const PJOK79=[
+ ['Lapangan bola voli berukuran …','18 m × 9 m','28 m × 15 m','100 m × 64 m','13,4 m × 6,1 m','13,4 × 6,1 m adalah lapangan bulu tangkis ganda.'],
+ ['Tinggi net bola voli putra adalah …','2,43 m','2,24 m','1,55 m','3,05 m','Putri 2,24 m; ring basket 3,05 m.'],
+ ['Tinggi ring basket adalah …','3,05 m','2,43 m','2,5 m','3,5 m','Sekitar 10 kaki.'],
+ ['Dalam bulu tangkis, servis yang sah dipukul dari …','bawah pinggang','atas kepala','samping bahu','depan wajah','Kok dipukul di bawah pinggang.'],
+ ['Tolak peluru menggunakan gaya …','O’Brien atau menyamping','gaya dada','gaya kupu-kupu','gaya punggung','O’Brien: membelakangi arah tolakan.'],
+ ['Pencak silat adalah bela diri asli …','Indonesia','Jepang','Korea','Tiongkok','Diakui UNESCO tahun 2019.'],
+ ['Denyut nadi normal orang dewasa saat istirahat sekitar … per menit','60–100','20–40','150–200','5–10','Denyut naik saat berolahraga.'],
+ ['Narkoba dapat merusak …','otak dan organ tubuh','hanya rambut','hanya kuku','tidak berbahaya','Hindari narkoba dalam bentuk apa pun.']];
+const SBP79=[
+ ['Seni rupa terapan adalah karya yang dibuat untuk …','digunakan sehari-hari','dipajang saja','dinyanyikan','ditarikan','Contoh: keramik, tas anyaman.'],
+ ['Gambar bentuk adalah menggambar objek dengan memperhatikan …','proporsi, gelap-terang, dan perspektif','warna saja','huruf','ritme','Contoh: menggambar vas bunga.'],
+ ['Poster yang baik memiliki ciri …','singkat, jelas, dan menarik','penuh tulisan kecil','tanpa gambar','tidak berwarna','Poster harus terbaca dari jauh.'],
+ ['Lagu daerah "Rasa Sayange" berasal dari …','Maluku','Bali','Aceh','Papua','Lagu ini populer di Maluku.'],
+ ['Lagu "Ampar-Ampar Pisang" berasal dari …','Kalimantan Selatan','Jawa Timur','Riau','Sulawesi Utara','Lagu daerah Banjar.'],
+ ['Teater tradisional Betawi adalah …','lenong','ludruk','ketoprak','mamanda','Ludruk dari Jawa Timur, ketoprak dari Jawa Tengah.'],
+ ['Kerajinan dari bahan bambu, rotan, atau pandan yang dianyam disebut …','anyaman','batik','ukiran','keramik','Contoh: tikar, keranjang.'],
+ ['Pengolahan pangan dengan cara fermentasi contohnya …','tempe','keripik','kerupuk','dodol','Tempe dibuat dengan bantuan jamur Rhizopus.']];
+/* ===== SMA/SMK Kelas 10–12 ===== */
+const BI1012_A=[
+ ['Teks yang menjelaskan proses terjadinya fenomena alam atau sosial disebut teks …','eksplanasi','anekdot','negosiasi','hikayat','Struktur: pernyataan umum, deretan penjelas, interpretasi.'],
+ ['Teks anekdot berisi …','cerita lucu yang mengandung sindiran','langkah kerja','laporan penelitian','surat lamaran','Anekdot sering mengkritik layanan publik.'],
+ ['Struktur teks anekdot adalah abstraksi, orientasi, krisis, reaksi, dan …','koda','tesis','resolusi','simpulan','Koda adalah penutup.'],
+ ['Hikayat termasuk prosa …','lama','baru','modern','kontemporer','Ciri hikayat: istana sentris dan kemustahilan.'],
+ ['Teks yang berisi proses tawar-menawar untuk mencapai kesepakatan disebut teks …','negosiasi','debat','eksposisi','biografi','Struktur: orientasi, pengajuan, penawaran, persetujuan, penutup.'],
+ ['Teks debat melibatkan tim afirmasi, tim oposisi, dan …','tim netral','penonton saja','moderator saja','narator','Moderator memimpin jalannya debat.'],
+ ['Teks laporan hasil observasi bersifat …','objektif','subjektif','fiktif','imajinatif','Isinya sesuai fakta hasil pengamatan.'],
+ ['Teks editorial (tajuk rencana) berisi …','pendapat redaksi tentang isu aktual','iklan produk','cerita bersambung','resep makanan','Editorial mewakili sikap media massa.']];
+const BI1012_B=[
+ ['Karya ilmiah menggunakan bahasa yang …','baku dan objektif','santai dan gaul','penuh majas','emosional','Bahasa ilmiah lugas dan tidak ambigu.'],
+ ['Bagian karya ilmiah yang memuat latar belakang masalah adalah …','pendahuluan','daftar pustaka','lampiran','kesimpulan','Pendahuluan berisi latar belakang, rumusan masalah, dan tujuan.'],
+ ['Penulisan daftar pustaka diurutkan berdasarkan …','abjad nama belakang penulis','tahun terbit saja','tebal buku','judul buku','Nama penulis dibalik: nama belakang dahulu.'],
+ ['Kutipan langsung yang panjangnya lebih dari 4 baris ditulis …','terpisah dari teks dengan spasi rapat','di dalam paragraf dengan tanda kutip','dengan huruf kapital semua','tanpa sumber','Kutipan panjang ditulis menjorok ke dalam.'],
+ ['Surat lamaran pekerjaan termasuk surat …','resmi','pribadi','niaga','undangan teman','Gunakan bahasa baku dan santun.'],
+ ['Kalimat efektif yang benar adalah …','Mahasiswa itu sedang menulis skripsi.','Mahasiswa itu sedang menulis-nulis skripsi.','Bagi mahasiswa itu sedang menulis skripsi.','Mahasiswa-mahasiswa itu para sedang menulis skripsi.','Kalimat efektif hemat dan logis.'],
+ ['Kata serapan yang baku adalah …','kualitas','kwalitas','kwalitet','kualitet','Serapan dari quality.'],
+ ['Kata baku yang benar adalah …','analisis','analisa','analisys','analisah','Bentuk baku: analisis.']];
+const BI1012_C=[
+ ['Unsur intrinsik novel meliputi tema, tokoh, alur, latar, sudut pandang, gaya bahasa, dan …','amanat','biografi pengarang','latar sosial pengarang','penerbit','Unsur ekstrinsik berasal dari luar karya.'],
+ ['Alur yang menceritakan kejadian masa lalu di tengah cerita disebut alur …','mundur (sorot balik)','maju','lurus','tunggal','Flashback = sorot balik.'],
+ ['Sudut pandang orang pertama ditandai dengan kata ganti …','aku','dia','mereka','ia','Contoh: "Aku berjalan ke sekolah."'],
+ ['Novel "Laskar Pelangi" ditulis oleh …','Andrea Hirata','Tere Liye','Pramoedya Ananta Toer','Habiburrahman El Shirazy','Terbit tahun 2005.'],
+ ['Pengarang tetralogi "Bumi Manusia" adalah …','Pramoedya Ananta Toer','Andrea Hirata','Sapardi Djoko Damono','Chairil Anwar','Bumi Manusia terbit 1980.'],
+ ['Puisi "Aku" ditulis oleh …','Chairil Anwar','W.S. Rendra','Taufiq Ismail','Sapardi Djoko Damono','Chairil Anwar pelopor Angkatan 45.'],
+ ['Cerpen berbeda dari novel karena cerpen …','lebih singkat dan konfliknya sedikit','selalu berakhir sedih','tidak memiliki tokoh','tidak ada alur','Cerpen biasanya selesai sekali baca.'],
+ ['Resensi buku berisi identitas buku, sinopsis, kelebihan, dan …','kekurangan','daftar isi lengkap','biodata penerbit','harga kertas','Resensi menilai sebuah karya.']];
+const PP1012_A=[
+ ['Pancasila sebagai ideologi terbuka artinya …','nilai dasarnya tetap, penerapannya mengikuti zaman','boleh diganti kapan saja','hanya untuk golongan tertentu','tertutup dari perkembangan','Nilai dasar tetap, nilai instrumental dapat berkembang.'],
+ ['Nilai dasar, nilai instrumental, dan nilai praksis adalah dimensi …','Pancasila sebagai ideologi','UUD 1945','bendera','lagu kebangsaan','Nilai praksis adalah penerapan nyata.'],
+ ['Sistem pemerintahan Indonesia adalah …','presidensial','parlementer','monarki absolut','komunis','Presiden sebagai kepala negara dan kepala pemerintahan.'],
+ ['Masa jabatan presiden Indonesia adalah …','5 tahun dan dapat dipilih kembali satu kali','seumur hidup','4 tahun tanpa batas','10 tahun','Diatur dalam Pasal 7 UUD 1945.'],
+ ['Pemilu di Indonesia berasaskan …','luber jurdil','musyawarah','perwakilan','penunjukan','Langsung, umum, bebas, rahasia, jujur, dan adil.'],
+ ['Lembaga yang menguji undang-undang terhadap UUD adalah …','Mahkamah Konstitusi','Mahkamah Agung','DPR','Komisi Yudisial','MK dibentuk tahun 2003.'],
+ ['Lembaga yang memeriksa keuangan negara adalah …','BPK','KPK','BPS','OJK','Badan Pemeriksa Keuangan.'],
+ ['Otonomi daerah memberi kewenangan kepada daerah untuk …','mengatur urusan pemerintahannya sendiri','mencetak uang','membuat tentara sendiri','mengatur politik luar negeri','Urusan absolut tetap milik pusat.']];
+const PP1012_B=[
+ ['Hak asasi manusia (HAM) diatur dalam UU Nomor …','39 Tahun 1999','12 Tahun 2011','20 Tahun 2003','23 Tahun 2002','UU 39/1999 tentang HAM.'],
+ ['Lembaga yang menangani pelanggaran HAM adalah …','Komnas HAM','KPU','BPK','Bawaslu','Komisi Nasional Hak Asasi Manusia.'],
+ ['Pelanggaran hukum yang berkaitan dengan kepentingan umum termasuk hukum …','pidana','perdata','adat','internasional','Contoh: pencurian.'],
+ ['Hukum yang mengatur hubungan antarindividu, misalnya warisan, adalah hukum …','perdata','pidana','tata negara','militer','Perdata mengatur kepentingan perseorangan.'],
+ ['Wawasan Nusantara adalah cara pandang bangsa Indonesia tentang …','diri dan lingkungannya','negara lain','luar angkasa','budaya asing','Mewujudkan persatuan wilayah dan bangsa.'],
+ ['Politik luar negeri Indonesia bersifat …','bebas aktif','blok barat','blok timur','tertutup','Bebas tidak memihak, aktif menjaga perdamaian dunia.'],
+ ['Organisasi kerja sama negara-negara Asia Tenggara adalah …','ASEAN','NATO','OPEC','Uni Eropa','ASEAN berdiri 8 Agustus 1967.'],
+ ['Integrasi nasional artinya …','penyatuan berbagai kelompok menjadi satu bangsa','perpecahan wilayah','pemisahan suku','penjajahan','Dasarnya Pancasila dan Bhinneka Tunggal Ika.']];
+const EKO_A=[
+ ['Kelangkaan terjadi karena kebutuhan manusia tidak terbatas, sedangkan alat pemuas …','terbatas','berlimpah','gratis','tidak diperlukan','Kelangkaan adalah inti masalah ekonomi.'],
+ ['Biaya peluang (opportunity cost) adalah …','nilai pilihan terbaik yang dikorbankan','harga barang','keuntungan usaha','biaya sewa','Setiap pilihan memiliki pengorbanan.'],
+ ['Hukum permintaan: jika harga naik, jumlah barang yang diminta …','turun','naik','tetap','hilang','Harga dan jumlah diminta berbanding terbalik.'],
+ ['Hukum penawaran: jika harga naik, jumlah barang yang ditawarkan …','naik','turun','tetap','nol','Produsen ingin menjual lebih banyak saat harga tinggi.'],
+ ['Harga keseimbangan terjadi saat …','permintaan sama dengan penawaran','permintaan nol','penawaran nol','harga paling mahal','Titik ekuilibrium pasar.'],
+ ['Pasar yang hanya memiliki satu penjual disebut pasar …','monopoli','persaingan sempurna','oligopoli','monopsoni','Monopsoni = satu pembeli.'],
+ ['Pelaku ekonomi yang menggunakan barang dan jasa disebut …','konsumen','produsen','distributor','pemerintah','Konsumen memakai hasil produksi.'],
+ ['Sistem ekonomi Indonesia berlandaskan Pasal … UUD 1945','33','27','28','31','Perekonomian disusun sebagai usaha bersama berdasar asas kekeluargaan.']];
+const EKO_B=[
+ ['Lembaga yang bertugas menjaga kestabilan nilai rupiah adalah …','Bank Indonesia','OJK','BUMN','koperasi','BI adalah bank sentral.'],
+ ['Kenaikan harga barang secara umum dan terus-menerus disebut …','inflasi','deflasi','devaluasi','resesi','Deflasi = penurunan harga umum.'],
+ ['Pajak yang bebannya dapat dialihkan kepada pihak lain, misalnya PPN, disebut pajak …','tidak langsung','langsung','daerah','progresif','Pajak penghasilan (PPh) adalah pajak langsung.'],
+ ['APBN adalah singkatan dari …','Anggaran Pendapatan dan Belanja Negara','Aset Pembangunan dan Bisnis Nasional','Anggaran Pajak dan Bea Nasional','Aturan Pendapatan Bank Negara','Disusun pemerintah dan disetujui DPR.'],
+ ['Koperasi di Indonesia berasaskan …','kekeluargaan','keuntungan pribadi','persaingan bebas','kepemilikan negara','Bapak Koperasi Indonesia: Moh. Hatta.'],
+ ['Bapak Koperasi Indonesia adalah …','Moh. Hatta','Soekarno','Ki Hajar Dewantara','Sutan Sjahrir','Hari Koperasi 12 Juli.'],
+ ['Kegiatan menjual barang ke luar negeri disebut …','ekspor','impor','investasi','subsidi','Impor = membeli dari luar negeri.'],
+ ['Persamaan dasar akuntansi adalah aset = liabilitas + …','ekuitas','pendapatan','beban','kas','Harta = utang + modal.']];
+const GEO_A=[
+ ['Lapisan atmosfer tempat terjadinya cuaca adalah …','troposfer','stratosfer','mesosfer','termosfer','Troposfer adalah lapisan paling bawah.'],
+ ['Lapisan ozon terdapat pada lapisan …','stratosfer','troposfer','eksosfer','ionosfer','Ozon menahan sinar ultraviolet.'],
+ ['Garis khayal yang menghubungkan kutub utara dan selatan disebut …','garis bujur','garis lintang','khatulistiwa','kontur','Garis bujur menentukan waktu.'],
+ ['Perbedaan waktu tiap 15° bujur adalah …','1 jam','15 menit','4 menit','2 jam','Bumi berotasi 360° dalam 24 jam.'],
+ ['Indonesia terletak di antara dua benua, yaitu …','Asia dan Australia','Asia dan Afrika','Eropa dan Asia','Amerika dan Australia','Juga di antara Samudra Hindia dan Pasifik.'],
+ ['Gempa bumi yang disebabkan pergerakan lempeng disebut gempa …','tektonik','vulkanik','runtuhan','buatan','Gempa vulkanik akibat aktivitas gunung api.'],
+ ['Skala peta 1 : 100.000 artinya 1 cm di peta sama dengan … di lapangan','1 km','100 m','10 km','100 km','100.000 cm = 1 km.'],
+ ['Hujan yang terjadi karena udara naik di lereng gunung disebut hujan …','orografis','zenithal','frontal','buatan','Hujan zenithal terjadi di daerah khatulistiwa.']];
+const GEO_B=[
+ ['Pertumbuhan penduduk dipengaruhi kelahiran, kematian, dan …','migrasi','cuaca','pariwisata','pajak','Migrasi = perpindahan penduduk.'],
+ ['Perpindahan penduduk dari desa ke kota disebut …','urbanisasi','transmigrasi','emigrasi','imigrasi','Transmigrasi: pulau padat ke pulau jarang penduduk.'],
+ ['Piramida penduduk berbentuk kerucut (ekspansif) menunjukkan …','angka kelahiran tinggi','penduduk tua banyak','pertumbuhan nol','kelahiran sangat rendah','Banyak penduduk usia muda.'],
+ ['Sumber daya alam yang dapat diperbarui adalah …','hutan','minyak bumi','batu bara','emas','Hutan dapat ditanami kembali.'],
+ ['Sistem informasi geografis (SIG) digunakan untuk …','mengolah data berbasis lokasi','mengirim surat','membuat lagu','menghitung pajak','Contoh: peta rawan bencana.'],
+ ['Pengambilan data tanpa kontak langsung, misalnya dari satelit, disebut …','penginderaan jauh','survei lapangan','wawancara','observasi langsung','Remote sensing.'],
+ ['Mitigasi bencana adalah upaya …','mengurangi risiko bencana','menyebabkan bencana','menghitung korban saja','memindahkan gunung','Contoh: membangun tanggul.'],
+ ['Indonesia rawan gempa karena berada di pertemuan tiga lempeng, yaitu Indo-Australia, Eurasia, dan …','Pasifik','Afrika','Antartika','Amerika Selatan','Juga dilalui Cincin Api Pasifik.']];
+const SOS_A=[
+ ['Bapak sosiologi dunia adalah …','Auguste Comte','Karl Marx','Max Weber','Emile Durkheim','Ia memperkenalkan istilah sosiologi.'],
+ ['Syarat terjadinya interaksi sosial adalah kontak sosial dan …','komunikasi','konflik','persaingan','kekuasaan','Keduanya harus ada.'],
+ ['Proses penanaman nilai dan norma kepada individu disebut …','sosialisasi','akulturasi','asimilasi','mobilitas','Agen sosialisasi pertama adalah keluarga.'],
+ ['Agen sosialisasi yang pertama dan utama adalah …','keluarga','sekolah','media massa','teman sebaya','Anak belajar pertama kali di keluarga.'],
+ ['Perpaduan dua budaya tanpa menghilangkan ciri budaya asli disebut …','akulturasi','asimilasi','amalgamasi','akomodasi','Contoh: Menara Kudus.'],
+ ['Perpindahan status seseorang dalam masyarakat disebut …','mobilitas sosial','stratifikasi sosial','diferensiasi','integrasi','Mobilitas bisa naik atau turun.'],
+ ['Pengelompokan masyarakat secara bertingkat disebut …','stratifikasi sosial','diferensiasi sosial','mobilitas sosial','asimilasi','Diferensiasi bersifat horizontal.'],
+ ['Perilaku yang menyimpang dari norma disebut …','penyimpangan sosial','konformitas','sosialisasi','integrasi','Konformitas = menyesuaikan diri dengan norma.']];
+const SOS_B=[
+ ['Konflik yang terjadi antarkelompok disebut konflik …','antarkelompok','pribadi','batin','internasional saja','Contoh: tawuran antarsekolah.'],
+ ['Cara penyelesaian konflik dengan bantuan pihak ketiga yang netral tetapi tidak memutuskan disebut …','mediasi','arbitrase','koersi','ajudikasi','Arbitrase: pihak ketiga memberi keputusan.'],
+ ['Kelompok sosial yang anggotanya akrab dan saling mengenal disebut …','paguyuban (gemeinschaft)','patembayan (gesellschaft)','kerumunan','massa','Contoh: keluarga, rukun tetangga.'],
+ ['Perubahan sosial yang terjadi dengan cepat disebut …','revolusi','evolusi','akulturasi','difusi','Evolusi berlangsung lambat.'],
+ ['Globalisasi ditandai dengan …','kemudahan arus informasi antarnegara','tertutupnya negara','tidak adanya teknologi','hilangnya perdagangan','Globalisasi membawa dampak positif dan negatif.'],
+ ['Penelitian sosial yang datanya berupa angka disebut penelitian …','kuantitatif','kualitatif','naratif','historis','Kualitatif menggunakan data deskriptif.'],
+ ['Pemberdayaan komunitas bertujuan untuk …','meningkatkan kemandirian masyarakat','membuat masyarakat bergantung','menghapus budaya lokal','menambah konflik','Masyarakat dilibatkan secara aktif.'],
+ ['Kearifan lokal Subak di Bali adalah sistem …','pengairan sawah','perdagangan','pernikahan','pemilihan pemimpin','Subak diakui UNESCO tahun 2012.']];
+const PJOK1012=[
+ ['Lapangan sepak bola standar internasional berukuran sekitar …','105 m × 68 m','50 m × 30 m','28 m × 15 m','18 m × 9 m','28 × 15 m adalah lapangan basket.'],
+ ['Pelanggaran keras dalam sepak bola dapat dihukum kartu …','merah','hijau','biru','putih','Kartu kuning untuk peringatan.'],
+ ['Dalam bola basket, tembakan dari luar garis 6,75 m bernilai … poin','3','2','1','4','Tembakan di dalam garis bernilai 2.'],
+ ['Lompat tinggi gaya flop disebut juga gaya …','Fosbury','gunting','guling','straddle','Diperkenalkan Dick Fosbury tahun 1968.'],
+ ['Jarak lari maraton adalah …','42,195 km','21 km','10 km','100 km','Setengah maraton 21,0975 km.'],
+ ['Komponen kebugaran yang diukur dengan sit and reach adalah …','kelenturan','kekuatan','kecepatan','daya tahan','Sit and reach mengukur kelenturan otot.'],
+ ['Pertolongan pertama pada keseleo adalah metode RICE: istirahat, es, kompresi, dan …','elevasi','olahraga','pijat keras','air panas','Elevation = meninggikan bagian yang cedera.'],
+ ['Penyakit menular seksual dapat dicegah dengan …','menjaga diri dan menghindari pergaulan bebas','minum vitamin saja','olahraga saja','mandi air hangat','Pendidikan kesehatan reproduksi penting bagi remaja.']];
+const SENI1012=[
+ ['Aliran seni lukis yang menampilkan objek apa adanya disebut …','realisme','kubisme','surealisme','abstrak','Contoh tokoh realisme Indonesia: S. Sudjojono.'],
+ ['Pelukis "Penangkapan Pangeran Diponegoro" adalah …','Raden Saleh','Affandi','Basuki Abdullah','Sudjojono','Raden Saleh pelukis abad ke-19.'],
+ ['Affandi terkenal dengan aliran lukisan …','ekspresionisme','realisme','kubisme','naturalisme','Ia melukis langsung dengan tube cat.'],
+ ['Akord C mayor terdiri atas nada …','C–E–G','C–D–E','C–F–A','C–Eb–G','Akord mayor: nada 1, 3, 5.'],
+ ['Ansambel musik yang memainkan alat musik sejenis disebut ansambel …','sejenis','campuran','orkestra','band','Contoh: ansambel recorder.'],
+ ['Tari Kecak dibawakan oleh penari yang menyuarakan …','"cak"','"tek"','"dong"','"ling"','Kecak mengisahkan Ramayana.'],
+ ['Pementasan teater membutuhkan naskah, sutradara, pemain, dan …','penonton','juri','wasit','kurator saja','Unsur utama teater juga meliputi tata panggung.'],
+ ['Kewirausahaan kerajinan menekankan nilai …','kreativitas dan inovasi','meniru tanpa izin','harga semahal mungkin','produksi tanpa rencana','Produk harus memiliki nilai jual dan ciri khas.']];
+(function(){const add=(cid,sub)=>{const c=COURSE.find(x=>x.id===cid);if(c&&!c.subjects.some(s=>s.id===sub.id))c.subjects.push(sub)};
+ add('sd1',{id:'pancasila',name:'Pendidikan Pancasila',glyph:'★',color:'#C8102E',fit:'long',units:[
+  UB('Pancasila dan lambang negara','Sila, Garuda Pancasila, bendera, dan lagu kebangsaan',PP13_A,{tip:'Pancasila punya 5 sila. Lambang negara kita Garuda Pancasila dengan semboyan Bhinneka Tunggal Ika.'}),
+  UB('Aturan di rumah dan sekolah','Hak, kewajiban, dan tata tertib',PP13_B,{tip:'Aturan dibuat supaya hidup tertib. Hak adalah yang kita terima, kewajiban adalah yang harus kita lakukan.'}),
+  UB('Keberagaman dan gotong royong','Suku, budaya, agama, dan kerja sama',PP13_C,{tip:'Indonesia punya banyak suku dan budaya. Kita saling menghormati dan bergotong royong.'})]});
+ add('sd1',{id:'pjok',name:'PJOK',glyph:'PJOK',color:'#0EA5E9',fit:'phrase',units:[
+  UB('Gerak dasar','Lokomotor, nonlokomotor, dan manipulatif',PJOK13_A,{tip:'Lokomotor = berpindah tempat. Nonlokomotor = bergerak di tempat. Manipulatif = memainkan benda.'}),
+  UB('Hidup bersih dan sehat','Kebersihan diri, makanan sehat, dan istirahat',PJOK13_B,{tip:'Cuci tangan pakai sabun, gosok gigi pagi dan sebelum tidur, makan sayur dan buah.'})]});
+ add('sd1',{id:'seni',name:'Seni Budaya',glyph:'Seni',color:'#EC4899',fit:'phrase',units:[
+  UB('Warna dan karya rupa','Warna primer, campuran warna, kolase, dan origami',SENI13_A,{tip:'Warna primer: merah, kuning, biru. Merah + kuning = oranye, biru + kuning = hijau, merah + biru = ungu.'}),
+  UB('Musik dan lagu anak','Nada, tempo, dan alat musik Nusantara',SENI13_B,{tip:'Nada = tinggi rendah bunyi, tempo = cepat lambat lagu. Angklung digoyang, seruling ditiup.'})]});
+ add('sd1',{id:'eng',name:'Bahasa Inggris',glyph:'Hi!',color:'#3D8BFF',fit:'word',units:[
+  UB('First English words','Salam, angka, warna, hewan, dan benda',EN13,{tip:'Good morning = selamat pagi, thank you = terima kasih, red = merah, cat = kucing.'})]});
+ add('sd2',{id:'bindo',name:'Bahasa Indonesia',glyph:'Aa',color:'#22B85C',fit:'long',units:[
+  UB('Kosakata dan kata baku','Sinonim, antonim, imbuhan, dan kata baku',BI46_A,{tip:'Sinonim = persamaan kata, antonim = lawan kata. Kata baku: apotek, risiko, aktivitas, nasihat.'}),
+  UB('Kalimat dan tanda baca','Huruf kapital, tanda baca, dan unsur kalimat',BI46_B,{tip:'Subjek = pelaku, predikat = perbuatan, objek = yang dikenai perbuatan, keterangan = tempat/waktu/cara.'}),
+  UB('Membaca dan memahami teks','Ide pokok, jenis paragraf, dan jenis teks',BI46_C,{tip:'Ide pokok ada di kalimat utama. Deduktif: kalimat utama di awal. Induktif: di akhir.'}),
+  UB('Pantun, puisi, dan surat','Sastra dan menulis surat',BI46_D,{tip:'Pantun 4 baris bersajak a-b-a-b: 2 baris sampiran dan 2 baris isi. Syair bersajak a-a-a-a.'})]});
+ add('sd2',{id:'pjok',name:'PJOK',glyph:'PJOK',color:'#0EA5E9',fit:'phrase',units:[
+  UB('Permainan bola dan atletik','Sepak bola, voli, basket, renang, dan lari',PJOK46_A,{tip:'Pemain per tim: sepak bola 11, voli 6, basket 5. Lari jarak pendek memakai start jongkok.'}),
+  UB('Kebugaran dan kesehatan','Latihan kebugaran, gizi, dan menjaga diri',PJOK46_B,{tip:'Push up untuk lengan, sit up untuk perut, shuttle run untuk kelincahan.'})]});
+ add('sd2',{id:'seni',name:'Seni Budaya',glyph:'Seni',color:'#EC4899',fit:'phrase',units:[
+  UB('Seni rupa Nusantara','Batik, ilustrasi, patung, dan wayang',SENI46_A,{tip:'Batik diakui UNESCO tahun 2009. Alat membatik tulis adalah canting dengan bahan malam (lilin).'}),
+  UB('Musik dan tari daerah','Tangga nada, tempo, gamelan, dan tari daerah',SENI46_B,{tip:'Allegro = cepat, forte = keras. Jaipong dari Jawa Barat, Tari Piring dari Sumatra Barat.'})]});
+ add('sd2',{id:'kka',name:'Koding & KA',glyph:'</>',color:'#7C3AED',fit:'phrase',units:[
+  UB('Berpikir komputasional','Algoritma, pola, abstraksi, dan pemrograman blok',KKA56_A,{tip:'Algoritma = urutan langkah. Perulangan mengulang perintah, percabangan memilih sesuai kondisi.'}),
+  UB('Kenali AI dan etika digital','Kecerdasan artifisial dan aman di internet',KKA56_B,{tip:'AI belajar dari data dan bisa salah. Jaga data pribadi dan periksa kebenaran berita.'})]});
+ add('smp',{id:'bindo',name:'Bahasa Indonesia',glyph:'Aa',color:'#22B85C',fit:'long',units:[
+  UB('Teks deskripsi, cerita, dan prosedur','Struktur dan ciri berbagai teks',BI79_A,{tip:'Deskripsi: identifikasi – deskripsi bagian – kesan. Cerita: orientasi – komplikasi – resolusi.'}),
+  UB('Berita, iklan, dan eksposisi','Teks informasi dan argumentasi',BI79_B,{tip:'Berita memakai 5W+1H. Eksposisi: tesis – argumentasi – penegasan ulang.'}),
+  UB('Kalimat dan ejaan','Kata depan, konjungsi, dan kalimat majemuk',BI79_C,{tip:'"di" kata depan dipisah (di rumah), "di-" awalan disambung (ditulis).'}),
+  UB('Puisi, majas, dan drama','Unsur puisi, majas, dan teks drama',BI79_D,{tip:'Personifikasi: benda seperti manusia. Hiperbola: melebih-lebihkan. Metafora: perbandingan langsung.'})]});
+ add('smp',{id:'pancasila',name:'Pendidikan Pancasila',glyph:'★',color:'#C8102E',fit:'long',units:[
+  UB('Sejarah perumusan Pancasila','BPUPKI, Piagam Jakarta, dan penetapan',PP79_A,{tip:'1 Juni 1945 pidato Soekarno, 22 Juni Piagam Jakarta, 18 Agustus 1945 Pancasila ditetapkan.'}),
+  UB('UUD 1945 dan norma','Konstitusi, lembaga negara, dan norma',PP79_B,{tip:'UUD 1945 diamendemen 4 kali (1999–2002). Norma hukum sanksinya tegas.'}),
+  UB('Bhinneka Tunggal Ika dan NKRI','Keberagaman, persatuan, dan wilayah negara',PP79_C,{tip:'Bhinneka Tunggal Ika dari kitab Sutasoma karya Mpu Tantular. Sumpah Pemuda 28 Oktober 1928.'})]});
+ add('smp',{id:'informatika',name:'Informatika',glyph:'0101',color:'#9B6BFF',fit:'phrase',units:[
+  UB('Sistem komputer dan jaringan','Perangkat keras, sistem operasi, dan jaringan',INF79_A,{tip:'Input: keyboard, mouse. Output: monitor, printer. 1 byte = 8 bit.'}),
+  UB('Algoritma dan pemrograman','Berpikir komputasional dan flowchart',INF79_B,{tip:'Flowchart: oval = mulai/selesai, persegi panjang = proses, belah ketupat = keputusan.'}),
+  UB('Dampak sosial dan keamanan digital','Hoaks, jejak digital, dan keamanan akun',INF79_C,{tip:'Jangan klik tautan mencurigakan, gunakan sandi kuat, dan aktifkan verifikasi dua langkah.'})]});
+ add('smp',{id:'pjok',name:'PJOK',glyph:'PJOK',color:'#0EA5E9',fit:'phrase',units:[
+  UB('Olahraga dan kesehatan','Permainan bola, atletik, bela diri, dan kesehatan',PJOK79,{tip:'Net voli putra 2,43 m, ring basket 3,05 m. Pencak silat bela diri asli Indonesia.'})]});
+ add('smp',{id:'seni',name:'Seni Budaya & Prakarya',glyph:'Seni',color:'#EC4899',fit:'phrase',units:[
+  UB('Seni dan prakarya Nusantara','Seni rupa, lagu daerah, teater, dan kerajinan',SBP79,{tip:'Seni rupa terapan dipakai sehari-hari. Lenong dari Betawi, ludruk dari Jawa Timur.'})]});
+ add('sma',{id:'bindo',name:'Bahasa Indonesia',glyph:'Aa',color:'#22B85C',fit:'long',units:[
+  UB('Ragam teks','Eksplanasi, anekdot, negosiasi, debat, dan editorial',BI1012_A,{tip:'Anekdot: abstraksi – orientasi – krisis – reaksi – koda. Eksplanasi menjelaskan proses.'}),
+  UB('Karya ilmiah dan kebahasaan','Bahasa baku, kutipan, dan daftar pustaka',BI1012_B,{tip:'Bahasa ilmiah baku dan objektif. Kata baku: analisis, kualitas, praktik.'}),
+  UB('Sastra Indonesia','Novel, cerpen, puisi, dan resensi',BI1012_C,{tip:'Laskar Pelangi – Andrea Hirata, Bumi Manusia – Pramoedya, puisi "Aku" – Chairil Anwar.'})]});
+ add('sma',{id:'pancasila',name:'Pendidikan Pancasila',glyph:'★',color:'#C8102E',fit:'long',units:[
+  UB('Ideologi dan sistem pemerintahan','Ideologi terbuka, lembaga negara, dan pemilu',PP1012_A,{tip:'Indonesia menganut sistem presidensial. Pemilu berasaskan luber jurdil.'}),
+  UB('HAM, hukum, dan wawasan nusantara','Hak asasi, sistem hukum, dan hubungan internasional',PP1012_B,{tip:'HAM diatur UU 39/1999. Politik luar negeri Indonesia bebas aktif.'})]});
+ add('sma',{id:'ekonomi',name:'Ekonomi',glyph:'Rp',color:'#16A34A',fit:'long',units:[
+  UB('Konsep dasar dan pasar','Kelangkaan, permintaan, penawaran, dan pasar',EKO_A,{tip:'Harga naik → permintaan turun, penawaran naik. Keseimbangan saat permintaan = penawaran.'}),
+  UB('Bank, pajak, dan perdagangan','Kebijakan ekonomi, koperasi, dan akuntansi',EKO_B,{tip:'Inflasi = kenaikan harga umum. Aset = liabilitas + ekuitas.'})]});
+ add('sma',{id:'geografi',name:'Geografi',glyph:'🌏',color:'#0891B2',fit:'long',units:[
+  UB('Bumi dan atmosfer','Atmosfer, peta, waktu, dan bencana',GEO_A,{tip:'Cuaca terjadi di troposfer. Tiap 15° bujur berbeda waktu 1 jam.'}),
+  UB('Penduduk dan sumber daya','Kependudukan, SDA, SIG, dan mitigasi',GEO_B,{tip:'Urbanisasi: desa ke kota. Transmigrasi: pulau padat ke pulau jarang penduduk.'})]});
+ add('sma',{id:'sosiologi',name:'Sosiologi',glyph:'👥',color:'#DB2777',fit:'long',units:[
+  UB('Interaksi dan sosialisasi','Interaksi, sosialisasi, dan struktur sosial',SOS_A,{tip:'Interaksi butuh kontak dan komunikasi. Agen sosialisasi pertama: keluarga.'}),
+  UB('Konflik dan perubahan sosial','Konflik, kelompok, perubahan, dan penelitian sosial',SOS_B,{tip:'Mediasi: pihak ketiga membantu, arbitrase: pihak ketiga memutuskan.'})]});
+ add('sma',{id:'pjok',name:'PJOK',glyph:'PJOK',color:'#0EA5E9',fit:'phrase',units:[
+  UB('Olahraga dan kesehatan','Permainan, atletik, kebugaran, dan kesehatan',PJOK1012,{tip:'Basket: tembakan dari luar 6,75 m bernilai 3. Maraton 42,195 km.'})]});
+ add('sma',{id:'seni',name:'Seni Budaya',glyph:'Seni',color:'#EC4899',fit:'phrase',units:[
+  UB('Seni rupa, musik, tari, dan teater','Aliran seni, akord, ansambel, dan pementasan',SENI1012,{tip:'Raden Saleh melukis Penangkapan Pangeran Diponegoro. Akord C mayor: C–E–G.'})]});
+})();
+Object.assign(GRADE_TAG.sd1,{pancasila:[[1,2],[1,2,3],[2,3]],pjok:[[1,2,3],[1,2,3]],seni:[[1,2,3],[1,2,3]],eng:[[1,2,3]]});
+Object.assign(GRADE_TAG.sd2,{bindo:[[4,5],[4,5,6],[5,6],[4,5,6]],pjok:[[4,5,6],[4,5,6]],seni:[[4,5],[5,6]],kka:[[5,6],[5,6]]});
+Object.assign(GRADE_TAG.smp,{bindo:[[7],[8],[7,8,9],[8,9]],pancasila:[[7],[8,9],[7,9]],informatika:[[7],[8,9],[7,8,9]],pjok:[[7,8,9]],seni:[[7,8,9]]});
+Object.assign(GRADE_TAG.sma,{bindo:[[10,11],[11,12],[10,12]],pancasila:[[10,11],[11,12]],ekonomi:[[10,11],[10,12]],geografi:[[10],[11,12]],sosiologi:[[10,11],[11,12]],pjok:[[10,11,12]],seni:[[10,11,12]]});
 const GRADE_GRP=g=>g<=3?'sd1':g<=6?'sd2':g<=9?'smp':'sma';
 COURSE.forEach(c=>c.subjects.forEach(sb=>sb.units.forEach((u,i)=>{if(!u._k)u._k=c.id+'/'+sb.id+'/'+i})));
 ['sd1','sd2','smp','sma'].forEach(id=>{const c=COURSE.find(x=>x.id===id);if(c)c.hidden=true});
@@ -4262,6 +4727,7 @@ for(let g=1;g<=12;g++){const grp=COURSE.find(x=>x.id===GRADE_GRP(g)),tags=GRADE_
   const lvl=g<=6?'SD':g<=9?'SMP':'SMA/SMK';
   COURSE.push({id:'k'+g,name:'Kelas '+g,full:lvl+' Kelas '+g,lv:grp.lv,grp:grp.id,grade:g,subjects})}
 {const tk=COURSE.find(x=>x.id==='tk');if(tk){const i=COURSE.indexOf(tk);COURSE.splice(i,1);COURSE.unshift(tk)}}
+{const ORD=['mtk','bindo','pancasila','pai','umum','ipas','ipa','ips','fisika','kimbio','ekonomi','geografi','sosiologi','sejarah','eng','informatika','tkj','kka','pjok','seni'];COURSE.filter(c=>c.grade).forEach(c=>c.subjects.sort((a,b)=>{const i=ORD.indexOf(a.id),j=ORD.indexOf(b.id);return (i<0?99:i)-(j<0?99:j)}))}
 const COURSE_VIS=()=>COURSE.filter(c=>!c.hidden);
 const clsGrp=id=>{const c=COURSE.find(x=>x.id===id);return c&&c.grp||id};
 
