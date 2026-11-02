@@ -2876,6 +2876,26 @@ body:not(.teacher) #vProfile .ptop{border:0!important;background:transparent!imp
 @media (max-width:999px){body:not(.teacher) #vProfile .ptop .pban{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0}
  body:not(.teacher) #vQuest .mqhead{margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;border-radius:0!important}}
 body:not(.teacher) #fbTasks .fbtask,body:not(.teacher) .notifbar2{box-shadow:none!important}
+/* ===== desain Canva: jalur level tersambung garis, nav bawah berlabel ===== */
+.nodes{isolation:isolate}
+.nlinks{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+.nlinks path{fill:none;stroke:#E5E5E5;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.nlinks path.d{stroke:var(--uc);opacity:.45}
+html[data-theme=malam] .nlinks path{stroke:#1f2b47}html[data-theme=malam] .nlinks path.d{stroke:var(--uc);opacity:.5}
+.unit.locked .nlinks{opacity:.6}
+.node.k-chest,.node.k-chest.lock,html[data-theme=malam] .node.k-chest.lock{background:transparent!important;box-shadow:none!important;border:0!important}
+.uhead{border:0!important;box-shadow:0 5px 0 rgba(0,0,0,.14)!important;background-image:none!important}
+.uhead h2{text-shadow:none!important}
+.uhead .guide{border:2px solid rgba(255,255,255,.8)!important;box-shadow:none!important;background:rgba(255,255,255,.12)!important}
+.node.k-chest.lock i{filter:grayscale(1) brightness(1.18)!important}
+@media (max-width:999px){
+ body:not(.teacher) .side .nav span{display:block!important;font-size:10.5px;font-weight:700;margin-top:1px;letter-spacing:0}
+ body:not(.teacher) .side .nav{padding:6px 0 3px!important;border-color:transparent!important;background:transparent!important}
+ body:not(.teacher) .side .nav i{width:30px!important;height:30px!important}
+ body:not(.teacher) .side .nav[aria-current="page"]{color:var(--red,#FF4B4B)!important}
+ body:not(.teacher) .side .nav[aria-current="page"] i{transform:scale(1.08)}
+ html[data-theme=malam] body:not(.teacher) .side .nav[aria-current="page"]{color:#ff6b6b!important}
+}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -7166,6 +7186,11 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
    addXp(10);P.gems=(P.gems||0)+5;save();try{sfx.win()}catch(e){}st.phase='end';render();setTimeout(()=>{try{burstConfetti()}catch(e){}},200)};
   st.phase='intro';render();el.hidden=false;el.scrollTop=0;document.body.classList.add('sporting')}
 
+function pathLinks(){const P_=$('#path');if(!P_)return;P_.querySelectorAll('.nodes').forEach(ns=>{let sv=ns.querySelector(':scope>.nlinks');if(!sv){ns.insertAdjacentHTML('afterbegin','<svg class="nlinks" aria-hidden="true"></svg>');sv=ns.firstElementChild}
+  const R=ns.getBoundingClientRect();if(!R.width)return;const pts=[...ns.querySelectorAll(':scope>.nrow>.node')].map(n=>{const r=n.getBoundingClientRect();return{x:r.left-R.left+r.width/2,y:r.top-R.top+r.height/2,d:n.classList.contains('done')}});
+  let o='';for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],my=(a.y+b.y)/2;o+=`<path class="${a.d&&(b.d||1)?'d':''}" d="M${a.x.toFixed(1)} ${a.y.toFixed(1)}C${a.x.toFixed(1)} ${my.toFixed(1)} ${b.x.toFixed(1)} ${my.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}"/>`}
+  sv.setAttribute('viewBox',`0 0 ${R.width.toFixed(1)} ${R.height.toFixed(1)}`);sv.innerHTML=o})}
+(()=>{let t;const q=()=>{clearTimeout(t);t=setTimeout(pathLinks,60)};addEventListener('resize',q);try{new ResizeObserver(q).observe(document.getElementById('path')||document.body)}catch(e){}})();
 function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
   s.units.forEach((u,ui)=>{const base=ui*NODES.length,locked=done<base,sign=ui%2?-1:1;
     h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}" aria-label="Panduan">${ico('book')}<span class="gl">Panduan</span></button></div><div class="nodes">`;
@@ -7175,7 +7200,7 @@ function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
       if(ni===1){const ss=spD?'done':spP?'cur':'lock';h+=`<div class="nrow sprow" style="--x:${-OFFS[ni]*sign*.3}px" data-u="${ui}" data-sport="1">${ss==='cur'?'<span class="starttip">OLAHRAGA</span>':''}<button class="node ${ss} k-sport" aria-label="Level olahraga"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="29" cy="8" r="4.5" fill="currentColor" stroke="none"/><path d="M16 22l8-6 6 4 6 6M24 16l-4 12 8 6-2 10M20 28l-6 10H8"/></svg></button></div>`}});
     h+=`<div class="deco ${sign>0?'r':'l'}" style="--dy:${24+ui%3*10}%"><div class="mascot" data-mascot data-mood="idle"></div></div></div></div>`});
   if(done>=totalNodes(s))h+=`<div class="pathend">Semua unit ${esc(s.name)} selesai! Pilih mata pelajaran lain di kiri atas.</div>`;
-  $('#path').innerHTML=h;hydrate($('#path'));
+  $('#path').innerHTML=h;hydrate($('#path'));pathLinks();
   $('#path').querySelectorAll('.node').forEach(b=>b.onclick=e=>{e.stopPropagation();const row=b.parentElement;const open=row.classList.contains('popopen');closePop();if(open)return;if(row.dataset.sport)sportPop(+row.dataset.u,row);else nodePop(+row.dataset.u,+row.dataset.n,row)});
   $('#path').querySelectorAll('.guide').forEach(b=>b.onclick=()=>openGuide(+b.dataset.guide));
   if(!MATERI_P&&!window.MATERI)setTimeout(()=>{try{loadMateri().catch(()=>{})}catch(e){}},4000);
