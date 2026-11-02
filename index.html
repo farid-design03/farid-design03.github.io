@@ -2783,6 +2783,69 @@ p.vpara{margin:0;font-size:16.5px;line-height:1.55;font-weight:600}
 .vill.k-title .vglyph{min-width:120px;height:120px;font-size:42px}
 .vill.k-end{display:none}
 .vbtn svg{display:block}
+/* ===== video belajar v2 ===== */
+.vx{position:fixed;inset:0;z-index:350;display:flex;flex-direction:column;background:#0b1020;color:#fff;font-family:var(--body)}
+.vx[hidden]{display:none}
+.xscene{position:relative;flex:1;min-height:0;margin:0 10px;border-radius:22px;overflow:hidden;background:linear-gradient(165deg,color-mix(in srgb,var(--vc) 80%,#fff),color-mix(in srgb,var(--vc) 55%,#1b1e3d));display:flex;flex-direction:column}
+.xscene.xslide{animation:xSlide .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes xSlide{from{transform:translateX(30px);opacity:.3}to{transform:none;opacity:1}}
+.xtitle{position:relative;z-index:2;text-align:center;font:800 clamp(18px,5vw,26px) var(--title);padding:14px 16px 4px;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.xtitle.xin{animation:vEmo .5s cubic-bezier(.3,1.6,.5,1)}
+.xstage{position:relative;z-index:2;flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:6px 14px}
+.xask{position:absolute;left:10px;right:10px;bottom:132px;z-index:6;background:#fff;color:#1b1e3d;border-radius:18px;padding:12px;box-shadow:0 14px 34px rgba(0,0,0,.3);animation:vCard .35s cubic-bezier(.2,.9,.3,1.2)}
+.xask[hidden]{display:none}
+.xq{font:800 16px var(--title);text-align:center;margin-bottom:8px}.xq.xtap{margin:0;color:color-mix(in srgb,var(--vc) 80%,#000);animation:xPulse 1.2s ease-in-out infinite}
+@keyframes xPulse{50%{transform:scale(1.04)}}
+.xopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.xo{min-height:48px;border-radius:14px;border:2px solid #e2e6f0;background:#fff;font:800 18px var(--title);color:#1b1e3d;cursor:pointer;box-shadow:0 4px 0 #e2e6f0;padding:6px}
+.xo:active{transform:translateY(3px);box-shadow:none}.xo.right{background:#dcfce7;border-color:#22c55e;box-shadow:0 4px 0 #22c55e;animation:vEmo .4s}.xo.wrong{background:#fee2e2;border-color:#ef4444;box-shadow:0 4px 0 #ef4444;animation:xShake .4s}
+@keyframes xShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.xcast{position:relative;z-index:5;display:flex;align-items:flex-end;gap:6px;padding:0 6px 8px;min-height:120px}
+.xch{position:relative;width:92px;flex:none;transform-origin:50% 100%;transition:transform .3s}
+.xch .mascot{width:100%}.xch svg{width:100%;height:auto;display:block}
+.xch-bimo{width:88px}
+.xch.talk{animation:xTalk .3s ease-in-out infinite alternate}
+@keyframes xTalk{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(1.05,.95) rotate(2deg)}}
+.xch[data-m=think]{transform:rotate(-6deg)}.xch[data-m=wow]{transform:scale(1.08)}.xch[data-m=sad]{transform:translateY(4px) scale(.97)}.xch[data-m=happy]{animation:xHop .5s ease 2}
+@keyframes xHop{50%{transform:translateY(-10px)}}
+.xem{position:absolute;top:-8px;right:-4px;font-size:30px;z-index:2;opacity:0}.xem.xpop{animation:xEm 1.8s ease forwards}
+@keyframes xEm{0%{opacity:0;transform:scale(.3)}15%{opacity:1;transform:scale(1.2)}25%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.xbub{flex:1;min-width:0;align-self:center;background:#fff;color:#1b1e3d;border-radius:18px;padding:8px 12px;font-size:14.5px;line-height:1.4;font-weight:600;position:relative;max-height:110px;overflow:auto;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.xbub:empty{visibility:hidden}.xbub b{display:block;font:800 12px var(--title);letter-spacing:.06em;text-transform:uppercase;color:var(--vc)}
+.xbub.from-bimo b{color:#E5383B}.xbub.from-bimo{background:#FFF7E0}
+.xbub.xin{animation:vCard .3s ease-out}
+.xbig{background:rgba(255,255,255,.96);color:#1b1e3d;border-radius:18px;padding:10px 16px;font:800 clamp(18px,5vw,26px) var(--title);text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.2);animation:vEmo .5s cubic-bezier(.3,1.6,.5,1)}
+.xbig b{color:color-mix(in srgb,var(--vc) 85%,#000)}.xbig.b2{background:#FFF7E0}
+.xbig.xidea,.xbig.xli,.xbig.xexq,.xbig.xexa,.xbig.xtbl{font:600 16.5px/1.45 var(--body);text-align:left;width:100%;max-width:560px;animation:vIn .45s ease-out both}
+.xbig.xidea.dim{opacity:.55;transform:scale(.97);transition:all .3s}
+.xbig.xli{display:flex;gap:10px;align-items:flex-start}.xn{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--vc);color:#fff;font:800 13px var(--title)}
+.xbig.xexa{background:#dcfce7}.xbig.xemo1{font-size:72px;background:none;box-shadow:none}
+.xglyph{display:grid;place-items:center;min-width:120px;height:120px;padding:0 16px;border-radius:30px;color:var(--vc);font:800 42px var(--title)}
+.xrow{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;max-width:520px}.xrow .xit{font-size:34px;animation:vEmo .4s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i)*.06s)}
+.xrow.xsmall .xit{font-size:26px}.xrow.xnew .xit{filter:drop-shadow(0 0 6px #fff)}.xrow.xemo .xit{font-size:44px}
+.xp{display:flex;flex-direction:column;align-items:center;gap:6px}.xpz{width:min(56vw,230px);height:auto;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+.xpz .xw{cursor:pointer;transition:fill .25s,transform .25s;transform-origin:110px 110px}.xpz .xw.xon{transform:scale(1.04)}
+.xlbl{min-height:28px;font:700 17px var(--title);background:rgba(255,255,255,.95);color:#1b1e3d;border-radius:12px;padding:3px 12px}.xlbl:empty{visibility:hidden}
+.xfr{font-size:30px}.xfr sup,.xfr sub{font-size:22px}
+.xnl{width:100%;max-width:560px;padding:38px 16px 22px}.xnlb{position:relative;height:4px;background:#fff;border-radius:2px}
+.xtk{position:absolute;top:-6px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;cursor:pointer}.xtk i{width:3px;height:16px;background:#fff;border-radius:2px}.xtk b{margin-top:4px;font:800 14px var(--title);background:rgba(0,0,0,.18);border-radius:8px;padding:1px 5px;min-width:18px;text-align:center}
+.xtk.hit b{background:#FFC800;color:#1b1e3d}.xtk.hit2 b{background:#22c55e;color:#fff}.xtk.no b{background:#ef4444}
+.xfrog{position:absolute;top:-36px;left:0;transform:translateX(-50%);font-size:30px;transition:left .38s ease}.xfrog.jump{animation:xJump .38s ease}
+@keyframes xJump{50%{top:-62px}}
+.xgrid{display:grid;grid-template-columns:repeat(var(--c),1fr);gap:4px;position:relative;padding:6px}
+.xg{width:clamp(26px,8vw,42px);aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.25);display:grid;place-items:center;font-size:clamp(18px,5vw,26px);transition:all .3s;opacity:.35}
+.xg.on{background:#fff;opacity:1;transform:scale(1.05)}
+.xgrid.walk::after{content:"🐜";position:absolute;font-size:22px;animation:xAnt 2.6s linear forwards}
+@keyframes xAnt{0%{left:-10px;top:-14px}25%{left:calc(100% - 14px);top:-14px}50%{left:calc(100% - 14px);top:calc(100% - 12px)}75%{left:-10px;top:calc(100% - 12px)}100%{left:-10px;top:-14px}}
+.xgrid.walk{outline:3px dashed #FFC800;outline-offset:2px;border-radius:10px}
+.xshare{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:560px}.xpile{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;min-height:30px}
+.xs{font-size:24px;transition:all .3s}.xs.gone{opacity:0;transform:translateY(30px) scale(.4)}.xs.in{animation:vEmo .35s cubic-bezier(.3,1.6,.5,1)}
+.xbox{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.xb{background:rgba(255,255,255,.95);border-radius:14px;padding:6px;min-width:76px;display:flex;flex-direction:column;align-items:center}.xbn{font-size:26px}.xbi{display:flex;flex-wrap:wrap;justify-content:center;max-width:90px;min-height:26px}
+.xclk svg{width:min(52vw,200px);height:auto;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}.xclk line{transform-origin:100px 100px;transition:transform 1.4s cubic-bezier(.3,.9,.3,1)}
+.xhun{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;width:min(64vw,230px);background:rgba(255,255,255,.3);padding:4px;border-radius:10px}.xhun span{aspect-ratio:1;border-radius:2px;background:rgba(255,255,255,.55)}.xhun span.on{background:#FFC800}
+.xcube{display:flex;flex-direction:column-reverse;gap:3px;perspective:400px}.xlay{display:grid;grid-template-columns:repeat(var(--s),26px);gap:2px;transform:rotateX(55deg) rotateZ(-30deg);opacity:0;transition:all .4s;margin-top:-30px}.xlay.on{opacity:1}.xlay span{width:26px;height:26px;background:#FFC800;border:2px solid #E5A100;border-radius:4px}
+@media (min-width:900px){.xscene{max-width:1100px;width:calc(100% - 40px);margin:0 auto}.xch{width:120px}.xch-bimo{width:112px}.xask{left:18%;right:18%}}
+html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam] .xbub{background:#fff}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -7178,8 +7241,184 @@ function vpCheer(){try{tone&&tone([660,880,1100],.06)}catch(e){}const st=$('#vpS
 function vpEndBtns(){const body=$('#vpCard .vbody');if(!body||body.querySelector('.vend'))return;body.insertAdjacentHTML('beforeend',`<div class="vend"><button class="ghost" id="vpAgain">Tonton lagi</button><button class="primary" id="vpGoPlay">Mulai berlatih</button></div>`);
   $('#vpAgain').onclick=()=>{VP.play=true;$('#vpPlay').innerHTML=VP_IC.pause;vpGo(0)};$('#vpGoPlay').onclick=()=>{const ui=VP.ui;closeVideo();try{const pr=progOf(),idx=Math.min(pr.done,ui*NODES.length+NODES.length-1),u0=Math.floor(idx/NODES.length);if(u0===ui)startNode(ui,idx%NODES.length);else startNode(ui,0)}catch(e){}}}
 function closeVideo(){VP.on=false;VP.tok++;clearTimeout(VP.timer);clearInterval(VP.wtimer);try{speechSynthesis.cancel()}catch(e){}const el=$('#vp');if(el){el.hidden=true;el.innerHTML=''}document.body.classList.remove('vp-on')}
-document.addEventListener('keydown',e=>{if(!VP.on)return;if(e.key===' '){e.preventDefault();vpToggle()}else if(e.key==='Escape')closeVideo();else if(e.key==='ArrowRight')vpGo(Math.min(VP.sc.length-1,VP.i+1));else if(e.key==='ArrowLeft')vpGo(Math.max(0,VP.i-1))});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&VP.on&&VP.play)vpToggle()});
+document.addEventListener('keydown',e=>{if(!VP.on)return;if(VX.open){if(e.key===' '){e.preventDefault();vxToggle()}else if(e.key==='Escape')closeVideo();else if(e.key==='ArrowRight')vxGo(Math.min(VX.sc.length-1,VX.i+1));else if(e.key==='ArrowLeft')vxGo(Math.max(0,VX.i-1));return}if(e.key===' '){e.preventDefault();vpToggle()}else if(e.key==='Escape')closeVideo();else if(e.key==='ArrowRight')vpGo(Math.min(VP.sc.length-1,VP.i+1));else if(e.key==='ArrowLeft')vpGo(Math.max(0,VP.i-1))});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&VX.open&&!VX.paused){vxToggle();return}if(document.hidden&&VP.on&&VP.play&&!VX.open)vpToggle()});
+
+/* ---------- VIDEO BELAJAR v2: alat peraga animasi, dialog Uli & Bimo, interaksi di tengah video ---------- */
+const VX={tok:0,paused:false,gate:null,open:false};
+const VXCancel={};
+const vxRnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function vxAlive(t){if(t!==VX.tok)throw VXCancel}
+async function vxWait(t,ms){const end=Date.now()+ms;while(true){vxAlive(t);if(VX.paused){await new Promise(r=>VX.gate=r);continue}const left=end-Date.now();if(left<=0)return;await new Promise(r=>setTimeout(r,Math.min(left,120)))}}
+function vxSpeakOnce(text,who){return new Promise(res=>{const raw=vpSay(text);const est=Math.max(900,raw.length*70/VP.rate+300);if(!soundOn||!('speechSynthesis' in window)||!raw){setTimeout(res,est);return}
+  let done=false;const fin=()=>{if(!done){done=true;res()}};try{const u=new SpeechSynthesisUtterance(raw);u.lang='id-ID';const v=vpVoice();if(v)u.voice=v;u.rate=(who==='bimo'?1.02:.95)*VP.rate;u.pitch=who==='bimo'?1.45:1.12;u.onend=fin;u.onerror=fin;speechSynthesis.speak(u)}catch(e){fin()}setTimeout(fin,est*2.2+3000)})}
+function vxCtx(t){const $s=s=>document.querySelector('#vx '+s);
+  const ctx={t,stage:$s('.xstage'),
+    async say(who,text,mood){vxAlive(t);const ch=$s('.xch-'+who),other=$s('.xch-'+(who==='uli'?'bimo':'uli'));if(other)other.classList.remove('talk');
+      const bub=$s('.xbub');bub.className='xbub from-'+who;bub.innerHTML=`<b>${who==='uli'?'Uli':'Bimo'}</b>${esc(vpStrip(text))}`;bub.classList.remove('xin');void bub.offsetWidth;bub.classList.add('xin');
+      if(mood)ctx.mood(who,mood);ch&&ch.classList.add('talk');const parts=(vpSay(text).match(/[^.!?]+[.!?]*/g)||[text]);
+      for(const p of parts){let again=true;while(again){vxAlive(t);while(VX.paused){await new Promise(r=>VX.gate=r);vxAlive(t)}try{speechSynthesis.cancel()}catch(e){}await vxSpeakOnce(p,who);vxAlive(t);again=VX.paused}}
+      ch&&ch.classList.remove('talk');await vxWait(t,250)},
+    mood(who,m){const ch=$s('.xch-'+who);if(!ch)return;if(who==='uli'){const ms=ch.querySelector('.mascot');if(ms){ms.dataset.mood=m==='think'||m==='wow'?'idle':m;ch.dataset.m=m}}else{ch.dataset.m=m}
+      const em={think:'🤔',wow:'😮',happy:'😄',sad:'😟',idea:'💡'}[m];const e=ch.querySelector('.xem');if(e){e.textContent=em||'';e.classList.remove('xpop');void e.offsetWidth;if(em)e.classList.add('xpop')}},
+    wait:ms=>vxWait(t,ms),
+    sfx(k){try{tone&&tone({pop:[660],ok:[660,880,1175],no:[300,220],whoosh:[300,500,800],tick:[1200]}[k]||[600],k==='tick'?.03:.06)}catch(e){}},
+    cheer(){ctx.sfx('ok');vpCheerAt($s('.xstage'))},
+    title(h){const el=$s('.xtitle');el.innerHTML=h;el.classList.remove('xin');void el.offsetWidth;el.classList.add('xin')},
+    clear(){ctx.stage.innerHTML='';$s('.xask').innerHTML='';$s('.xask').hidden=true},
+    /* pilihan jawaban di tengah video; menunggu murid mengetuk */
+    async choose(prompt,opts,ci,hint){vxAlive(t);const box=$s('.xask');box.hidden=false;let tries=0;
+      while(true){box.innerHTML=`<div class="xq">${prompt}</div><div class="xopts">${opts.map((o,i)=>`<button class="xo" data-i="${i}">${o}</button>`).join('')}</div>`;
+        const pick=await new Promise(res=>{box.querySelectorAll('.xo').forEach(b=>b.onclick=()=>res(+b.dataset.i));VX.wake=()=>res(-1)});vxAlive(t);
+        if(pick===ci){box.querySelectorAll('.xo')[ci].classList.add('right');ctx.cheer();ctx.mood('uli','happy');await ctx.wait(500);box.hidden=true;return true}
+        box.querySelectorAll('.xo')[pick]&&box.querySelectorAll('.xo')[pick].classList.add('wrong');ctx.sfx('no');tries++;
+        if(tries>=2){box.querySelectorAll('.xo')[ci].classList.add('right');await ctx.say('uli',`Jawabannya ${opts[ci]}. ${hint||''}`,'happy');box.hidden=true;return false}
+        await ctx.say('uli',hint?`Hampir! ${hint} Coba lagi, ya.`:'Hampir! Coba lagi, ya.','sad')}},
+    /* tugas ketuk di peraga: fn(done) memasang interaksi, resolve saat benar */
+    async task(prompt,setup){vxAlive(t);const box=$s('.xask');box.hidden=false;box.innerHTML=`<div class="xq xtap">👆 ${prompt}</div>`;await new Promise(res=>{VX.wake=res;setup(res)});vxAlive(t);box.hidden=true;ctx.cheer();ctx.mood('uli','happy')}};
+  return ctx}
+function vpCheerAt(st){if(!st)return;for(let k=0;k<16;k++){const c=document.createElement('i');c.className='vconf';c.style.cssText=`left:${10+Math.random()*80}%;background:hsl(${Math.random()*360},90%,60%);animation-delay:${Math.random()*.3}s;--dx:${(Math.random()-.5)*120}px`;st.appendChild(c);setTimeout(()=>c.remove(),1600)}}
+/* ===== alat peraga ===== */
+const VXP={
+ pizza(ctx,n,color){const R=90,cx=110,cy=110;let s=`<svg viewBox="0 0 220 220" class="xpz"><circle cx="${cx}" cy="${cy}" r="${R+8}" fill="#E8B26A"/>`;
+   for(let i=0;i<n;i++){const a0=(i/n)*2*Math.PI-Math.PI/2,a1=((i+1)/n)*2*Math.PI-Math.PI/2,x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);
+     s+=`<path class="xw" data-i="${i}" d="M${cx} ${cy}L${x0.toFixed(1)} ${y0.toFixed(1)}A${R} ${R} 0 ${n===1?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}Z" fill="#FFE29A" stroke="#C47A2C" stroke-width="3"/>`}
+   for(let k=0;k<7;k++){const a=Math.random()*6.28,r=Math.random()*60+15;s+=`<circle cx="${cx+r*Math.cos(a)}" cy="${cy+r*Math.sin(a)}" r="7" fill="#E5383B" opacity=".8" pointer-events="none"/>`}
+   s+='</svg>';ctx.stage.insertAdjacentHTML('beforeend',`<div class="xp">${s}<div class="xlbl"></div></div>`);const el=ctx.stage.lastElementChild,w=[...el.querySelectorAll('.xw')];
+   return {el,w,async color(k){for(let i=0;i<k;i++){w[i].style.fill=color||'#FF8A3D';w[i].classList.add('xon');ctx.sfx('pop');await ctx.wait(380)}},label(h){el.querySelector('.xlbl').innerHTML=h},
+     tap(k,done){let c=0;w.forEach(p=>p.onclick=()=>{if(p.classList.contains('xon'))return;p.style.fill=color||'#FF8A3D';p.classList.add('xon');ctx.sfx('pop');c++;el.querySelector('.xlbl').innerHTML=`<b>${c}</b> dari ${n} potong`;if(c>=k){w.forEach(q=>q.onclick=null);done()}})}}},
+ row(ctx,items,cls){ctx.stage.insertAdjacentHTML('beforeend',`<div class="xrow ${cls||''}">${items.map((x,i)=>`<span class="xit" style="--i:${i}">${x}</span>`).join('')}</div>`);return ctx.stage.lastElementChild},
+ big(ctx,h,cls){ctx.stage.insertAdjacentHTML('beforeend',`<div class="xbig ${cls||''}">${h}</div>`);return ctx.stage.lastElementChild},
+ line(ctx,from,to){const n=to-from;let s=`<div class="xnl"><div class="xnlb">`;for(let i=from;i<=to;i++)s+=`<span class="xtk" data-v="${i}" style="left:${(i-from)/n*100}%"><i></i><b>${i}</b></span>`;s+=`<span class="xfrog">🐸</span></div></div>`;
+   ctx.stage.insertAdjacentHTML('beforeend',s);const el=ctx.stage.lastElementChild,fr=el.querySelector('.xfrog');const pos=v=>`${(v-from)/n*100}%`;
+   return {el,async put(v){fr.style.left=pos(v);await ctx.wait(300)},async hop(v,step){fr.classList.remove('jump');void fr.offsetWidth;fr.classList.add('jump');fr.style.left=pos(v);ctx.sfx('pop');el.querySelector(`[data-v="${v}"]`)?.classList.add('hit');await ctx.wait(step||420)},
+     tap(v,done){el.querySelectorAll('.xtk').forEach(k=>k.onclick=()=>{if(+k.dataset.v===v){done()}else{k.classList.add('no');ctx.sfx('no');setTimeout(()=>k.classList.remove('no'),500)}})}}},
+ grid(ctx,r,c,emo){ctx.stage.insertAdjacentHTML('beforeend',`<div class="xgrid" style="--c:${c}">${Array.from({length:r*c},(_,i)=>`<span class="xg" data-r="${Math.floor(i/c)}">${emo||''}</span>`).join('')}</div>`);const el=ctx.stage.lastElementChild,g=[...el.children];
+   return {el,g,async fillRows(ms){for(let i=0;i<r;i++){el.querySelectorAll(`[data-r="${i}"]`).forEach(x=>x.classList.add('on'));ctx.sfx('pop');await ctx.wait(ms||520)}},async fillAll(ms){for(const x of g){x.classList.add('on');await ctx.wait(ms||60)}},
+     async walk(ms){el.classList.add('walk');await ctx.wait(ms||1800)}}},
+ groups(ctx,total,k,emo){ctx.stage.insertAdjacentHTML('beforeend',`<div class="xshare"><div class="xpile">${Array.from({length:total},()=>`<span class="xs">${emo}</span>`).join('')}</div><div class="xbox">${Array.from({length:k},(_,i)=>`<div class="xb" data-b="${i}"><span class="xbn">${['🧒','👧','👦','🧑','👩','👨'][i%6]}</span><div class="xbi"></div></div>`).join('')}</div></div>`);
+   const el=ctx.stage.lastElementChild,pile=[...el.querySelectorAll('.xs')],boxes=[...el.querySelectorAll('.xbi')];
+   return {el,async deal(){for(let i=0;i<pile.length;i++){const s=pile[i];s.classList.add('gone');boxes[i%k].insertAdjacentHTML('beforeend',`<span class="xs in">${emo}</span>`);ctx.sfx('tick');await ctx.wait(Math.max(110,520-total*14))}}}},
+ clock(ctx,h,m){const ha=(h%12)*30+m*.5,ma=m*6;ctx.stage.insertAdjacentHTML('beforeend',`<div class="xclk"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#1B1E3D" stroke-width="6"/>${Array.from({length:12},(_,i)=>{const a=(i+1)*30*Math.PI/180;return `<text x="${100+72*Math.sin(a)}" y="${100-72*Math.cos(a)+7}" text-anchor="middle" font-size="18" font-weight="800" fill="#1B1E3D">${i+1}</text>`}).join('')}<line class="xhh" x1="100" y1="100" x2="100" y2="52" stroke="#E5383B" stroke-width="8" stroke-linecap="round" style="transform:rotate(0deg)"/><line class="xmh" x1="100" y1="100" x2="100" y2="28" stroke="#1CB0F6" stroke-width="5" stroke-linecap="round" style="transform:rotate(0deg)"/><circle cx="100" cy="100" r="7" fill="#1B1E3D"/></svg></div>`);
+   const el=ctx.stage.lastElementChild;return {el,async go(){await ctx.wait(200);el.querySelector('.xhh').style.transform=`rotate(${ha}deg)`;el.querySelector('.xmh').style.transform=`rotate(${ma+360}deg)`;await ctx.wait(1600)}}},
+ hundred(ctx,p){ctx.stage.insertAdjacentHTML('beforeend',`<div class="xhun">${Array.from({length:100},(_,i)=>`<span data-i="${i}"></span>`).join('')}</div><div class="xlbl xhl"></div>`);const el=ctx.stage.querySelector('.xhun'),c=[...el.children],lb=ctx.stage.querySelector('.xhl');
+   return {el,async fill(){for(let i=0;i<p;i++){c[i].classList.add('on');if(i%5===4){lb.innerHTML=`<b>${i+1}</b> dari 100`;await ctx.wait(70)}}lb.innerHTML=`<b>${p}</b> dari 100 = <b>${p}%</b>`}}},
+ cube(ctx,s){ctx.stage.insertAdjacentHTML('beforeend',`<div class="xcube" style="--s:${s}">${Array.from({length:s},(_,z)=>`<div class="xlay" style="--z:${z}">${Array.from({length:s*s},()=>'<span></span>').join('')}</div>`).join('')}</div>`);const el=ctx.stage.lastElementChild;
+   return {el,async build(){for(const l of el.children){l.classList.add('on');ctx.sfx('pop');await ctx.wait(650)}}}}
+};
+/* ===== naskah per jenis materi (angka diacak setiap diputar) ===== */
+const VX_SCRIPTS=[
+ {re:/pecahan/i,run:async ctx=>{const n=[4,6,8][vxRnd(0,2)],k=vxRnd(1,n-1);
+   ctx.title('Apa itu pecahan?');await ctx.say('bimo','Uli, aku punya satu pizza. Bagaimana caranya dibagi rata?','think');
+   const pz=VXP.pizza(ctx,n);await ctx.say('uli',`Kita potong menjadi ${n} bagian yang sama besar. Setiap potong disebut satu per ${n}.`,'happy');
+   pz.label(`1 potong = <b>1/${n}</b>`);await ctx.wait(600);
+   await ctx.say('bimo',`Kalau aku makan ${k} potong, berarti?`,'wow');await pz.color(k);pz.label(`<b class="xfr"><sup>${k}</sup>/<sub>${n}</sub></b>`);
+   await ctx.say('uli',`Kamu makan ${k} per ${n} pizza. Angka atas disebut pembilang, angka bawah disebut penyebut.`,'happy');
+   ctx.clear();ctx.title('Giliranmu!');const m=[2,4,6,8].filter(x=>x!==n)[vxRnd(0,2)],q=vxRnd(1,m-1);const pz2=VXP.pizza(ctx,m,'#26BF66');
+   await ctx.say('uli',`Sekarang kamu yang mewarnai. Ketuk ${q} potong untuk membuat ${q} per ${m}.`);await ctx.task(`Ketuk ${q} potong pizza`,d=>pz2.tap(q,d));
+   await ctx.say('uli',`Hebat! Itu ${q} per ${m}.`,'happy');
+   ctx.clear();ctx.title('Pecahan dari sebuah bilangan');const tot=[12,20,24,30][vxRnd(0,3)],den=[2,3,4,6].filter(x=>tot%x===0)[vxRnd(0,1)],num=vxRnd(1,den-1);
+   await ctx.say('bimo',`Bagaimana kalau ${num} per ${den} dari ${tot} kelereng?`,'think');const g=VXP.groups(ctx,tot,den,'🔵');
+   await ctx.say('uli',`Bagi dulu ${tot} kelereng menjadi ${den} kelompok sama banyak.`);await g.deal();
+   await ctx.say('uli',`Setiap kelompok berisi ${tot/den}. Kita ambil ${num} kelompok, jadi ${num} kali ${tot/den} sama dengan ${num*tot/den}.`,'happy');
+   await vxChoose(ctx,`${num}/${den} dari ${tot} = ?`,num*tot/den,[tot/den,num*tot/den+den],`${tot} : ${den} = ${tot/den}, lalu × ${num} = ${num*tot/den}.`)}},
+ {re:/perkalian/i,run:async ctx=>{const r=vxRnd(2,4),c=vxRnd(3,5);ctx.title('Perkalian = penjumlahan berulang');
+   await ctx.say('bimo','Ibu menata apel di meja. Berapa semuanya, ya?','think');const g=VXP.grid(ctx,r,c,'🍎');
+   await ctx.say('uli',`Ada ${r} baris. Setiap baris berisi ${c} apel.`);await g.fillRows(700);
+   await ctx.say('uli',`Daripada menghitung satu-satu, jumlahkan: ${Array(r).fill(c).join(' tambah ')} sama dengan ${r*c}.`);VXP.big(ctx,`${r} × ${c} = <b>${r*c}</b>`);
+   await ctx.say('uli',`Itulah perkalian. ${r} kali ${c} sama dengan ${r*c}.`,'happy');
+   ctx.clear();const r2=vxRnd(2,5),c2=vxRnd(2,5);const g2=VXP.grid(ctx,r2,c2,'⭐');await g2.fillRows(350);await vxChoose(ctx,`Ada ${r2} baris, tiap baris ${c2} bintang. Berapa semuanya?`,r2*c2,[r2+c2,r2*c2+c2],`${r2} × ${c2} = ${r2*c2}.`)}},
+ {re:/pembagian|membagi/i,run:async ctx=>{const k=vxRnd(2,4),each=vxRnd(2,5),tot=k*each;ctx.title('Pembagian = membagi sama rata');
+   await ctx.say('bimo',`Aku punya ${tot} permen untuk ${k} teman. Bagaimana supaya adil?`,'think');const g=VXP.groups(ctx,tot,k,'🍬');
+   await ctx.say('uli','Bagikan satu-satu bergiliran sampai habis.');await g.deal();
+   await ctx.say('uli',`Setiap teman mendapat ${each} permen. Jadi ${tot} dibagi ${k} sama dengan ${each}.`,'happy');VXP.big(ctx,`${tot} : ${k} = <b>${each}</b>`);
+   await ctx.say('uli',`Ingat, pembagian kebalikan perkalian, karena ${k} kali ${each} sama dengan ${tot}.`);
+   ctx.clear();const k2=vxRnd(2,5),e2=vxRnd(2,6);VXP.row(ctx,Array(k2*e2).fill('🍪'),'xsmall');await vxChoose(ctx,`${k2*e2} kue dibagi rata untuk ${k2} anak. Setiap anak dapat?`,e2,[e2+1,k2],`${k2*e2} : ${k2} = ${e2}.`)}},
+ {re:/penjumlahan|tambah pertama/i,run:async ctx=>{const a=vxRnd(3,8),b=vxRnd(2,6);ctx.title('Menjumlahkan dengan garis bilangan');
+   await ctx.say('bimo',`Berapa ${a} tambah ${b}?`,'think');const nl=VXP.line(ctx,0,a+b+3);await nl.put(0);
+   await ctx.say('uli',`Ayo bantu katak melompat! Mulai dari ${a}.`);await nl.hop(a,700);
+   await ctx.say('uli',`Lalu lompat ke kanan ${b} kali.`);for(let i=1;i<=b;i++)await nl.hop(a+i);
+   await ctx.say('uli',`Katak berhenti di ${a+b}. Jadi ${a} tambah ${b} sama dengan ${a+b}.`,'happy');
+   ctx.clear();const c=vxRnd(2,7),d=vxRnd(2,5);const n2=VXP.line(ctx,0,c+d+3);await n2.put(c);await ctx.say('uli',`Sekarang katak di ${c} dan akan melompat ${d} kali ke kanan. Ketuk angka tempat katak berhenti!`);
+   await ctx.task(`Ketuk angka hasil ${c} + ${d}`,dn=>n2.tap(c+d,dn));for(let i=1;i<=d;i++)await n2.hop(c+i,250);await ctx.say('uli',`Betul! ${c} tambah ${d} sama dengan ${c+d}.`,'happy')}},
+ {re:/pengurangan/i,run:async ctx=>{const a=vxRnd(8,12),b=vxRnd(2,6);ctx.title('Mengurangi dengan garis bilangan');
+   await ctx.say('bimo',`Berapa ${a} kurang ${b}?`,'think');const nl=VXP.line(ctx,0,a+2);await nl.put(a);
+   await ctx.say('uli',`Katak mulai di ${a}. Mengurangi artinya melompat ke kiri ${b} kali.`);for(let i=1;i<=b;i++)await nl.hop(a-i);
+   await ctx.say('uli',`Katak berhenti di ${a-b}. Jadi ${a} kurang ${b} sama dengan ${a-b}.`,'happy');
+   ctx.clear();const c=vxRnd(9,14),d=vxRnd(3,7);const n2=VXP.line(ctx,0,c+1);await n2.put(c);await ctx.say('uli',`Katak di ${c}, melompat ke kiri ${d} kali. Ketuk tempat katak berhenti!`);
+   await ctx.task(`Ketuk angka hasil ${c} − ${d}`,dn=>n2.tap(c-d,dn));for(let i=1;i<=d;i++)await n2.hop(c-i,250);await ctx.say('uli',`Tepat! ${c} kurang ${d} sama dengan ${c-d}.`,'happy')}},
+ {re:/soal cerita/i,run:async ctx=>{const a=vxRnd(4,9),b=vxRnd(2,5);ctx.title('Membaca soal cerita');
+   await ctx.say('bimo',`Siti punya ${a} kelereng, lalu diberi lagi ${b}. Aku harus tambah atau kurang?`,'think');VXP.row(ctx,Array(a).fill('🔴'));
+   await ctx.say('uli','Kata "diberi lagi" artinya bertambah. Jadi kita jumlahkan.');VXP.row(ctx,Array(b).fill('🟢'),'xnew');await ctx.wait(500);
+   VXP.big(ctx,`${a} + ${b} = <b>${a+b}</b>`);await ctx.say('uli',`Semuanya ${a+b} kelereng.`,'happy');
+   await ctx.say('bimo','Kalau kata "dimakan" atau "hilang"?','think');await ctx.say('uli','Itu artinya berkurang. Kita kurangkan.','idea');
+   ctx.clear();const c=vxRnd(8,12),d=vxRnd(2,5);VXP.row(ctx,Array(c).fill('🍌'));await vxChoose(ctx,`Ada ${c} pisang, dimakan monyet ${d}. Sisa berapa?`,c-d,[c+d,d],`Dimakan artinya dikurangi: ${c} − ${d} = ${c-d}.`)}},
+ {re:/luas|keliling/i,run:async ctx=>{const p=vxRnd(3,6),l=vxRnd(2,4);ctx.title('Luas dan keliling');
+   await ctx.say('bimo','Apa bedanya luas dan keliling?','think');const g=VXP.grid(ctx,l,p,'');
+   await ctx.say('uli',`Luas adalah banyaknya persegi yang menutupi bangun. Hitung ${l} baris kali ${p} kotak.`);await g.fillRows(500);
+   VXP.big(ctx,`Luas = ${p} × ${l} = <b>${p*l}</b> persegi`);await ctx.say('uli',`Luasnya ${p*l} persegi satuan.`,'happy');
+   await ctx.say('uli','Keliling adalah panjang jalan di tepi bangun. Lihat semut berjalan mengelilinginya!');await g.walk(2600);
+   VXP.big(ctx,`Keliling = ${p}+${l}+${p}+${l} = <b>${2*(p+l)}</b>`,'b2');await ctx.say('uli',`Kelilingnya ${2*(p+l)} satuan.`,'happy');
+   ctx.clear();const s=vxRnd(3,7);VXP.grid(ctx,s,s,'').fillAll(15);await vxChoose(ctx,`Persegi bersisi ${s}. Berapa luasnya?`,s*s,[4*s,2*s],`Luas persegi = sisi × sisi = ${s} × ${s} = ${s*s}.`)}},
+ {re:/volume|kubus/i,run:async ctx=>{const s=vxRnd(2,3);ctx.title('Volume kubus');await ctx.say('bimo','Berapa kubus kecil untuk membuat kubus besar ini?','think');
+   const c=VXP.cube(ctx,s);await ctx.say('uli',`Satu lapis berisi ${s} kali ${s} sama dengan ${s*s} kubus kecil.`);await c.build();
+   await ctx.say('uli',`Ada ${s} lapis. Jadi volumenya ${s} kali ${s} kali ${s} sama dengan ${s*s*s}.`,'happy');VXP.big(ctx,`V = s × s × s = <b>${s*s*s}</b>`);
+   await vxChoose(ctx,'Kubus dengan sisi 4 cm, volumenya?',64,[16,12],'4 × 4 × 4 = 64 cm³.')}},
+ {re:/waktu|jam/i,run:async ctx=>{const h=vxRnd(1,11),m=[0,15,30,45][vxRnd(0,3)];ctx.title('Membaca jam');await ctx.say('bimo','Bagaimana cara membaca jam?','think');
+   const c=VXP.clock(ctx,h,m);await ctx.say('uli','Jarum pendek menunjukkan jam. Jarum panjang menunjukkan menit.');await c.go();
+   await ctx.say('uli',`Jarum pendek di dekat ${h}, jarum panjang di angka ${m?m/5:12}. Jadi pukul ${h}${m?' lewat '+m+' menit':' tepat'}.`,'happy');
+   await ctx.say('uli','Ingat, satu jam sama dengan enam puluh menit.','idea');await vxChoose(ctx,'2 jam = berapa menit?',120,[60,200],'2 × 60 = 120 menit.')}},
+ {re:/persen|desimal/i,run:async ctx=>{const p=[25,40,50,75][vxRnd(0,3)];ctx.title('Persen artinya per seratus');await ctx.say('bimo','Apa arti persen?','think');
+   const h=VXP.hundred(ctx,p);await ctx.say('uli',`Bayangkan seratus kotak. Kalau ${p} kotak diwarnai, itu ${p} persen.`);await h.fill();
+   await ctx.say('uli',`${p} persen sama dengan ${p} per seratus, atau nol koma ${String(p).replace(/0$/,'')}.`,'happy');
+   await vxChoose(ctx,'0,5 = berapa persen?',50,[5,0.5],'Kalikan 100: 0,5 × 100 = 50%.')}},
+ {re:/kpk|fpb|kelipatan/i,run:async ctx=>{const a=vxRnd(2,4),b=a+vxRnd(1,3);ctx.title('Kelipatan persekutuan');await ctx.say('bimo',`Kapan lampu ${a} detik dan lampu ${b} detik menyala bersama?`,'think');
+   const L=a*b/(function g(x,y){return y?g(y,x%y):x})(a,b);const nl=VXP.line(ctx,0,L+2);await ctx.say('uli',`Katak merah melompat tiap ${a}.`);for(let v=a;v<=L;v+=a)await nl.hop(v,350);
+   nl.el.classList.add('b2');await ctx.say('uli',`Sekarang lompat tiap ${b}.`);for(let v=b;v<=L;v+=b){nl.el.querySelector(`[data-v="${v}"]`)?.classList.add('hit2');ctx.sfx('pop');await ctx.wait(350)}
+   await ctx.say('uli',`Angka pertama yang dilewati keduanya adalah ${L}. Itulah KPK dari ${a} dan ${b}.`,'happy');VXP.big(ctx,`KPK(${a}, ${b}) = <b>${L}</b>`);
+   await vxChoose(ctx,'KPK dari 4 dan 6 adalah?',12,[24,2],'Kelipatan 4: 4, 8, 12. Kelipatan 6: 6, 12. Sama pertama: 12.')}}];
+async function vxChoose(ctx,prompt,ans,wrongs,hint){const opts=[ans];[...wrongs,ans+1,ans+2,Math.max(0,ans-1)].forEach(w=>{if(opts.length<3&&!opts.some(o=>String(o)===String(w)))opts.push(w)});const sh=opts.map(String).sort(()=>Math.random()-.5);
+  await ctx.say('uli',prompt.replace(/<[^>]+>/g,''),'think');return ctx.choose(prompt,sh,sh.indexOf(String(ans)),hint)}
+/* adegan umum dari materi teks: dialog Uli–Bimo, satu ide per layar, emoji besar */
+function vxSplit(t){const s=vpStrip(t).match(/[^.!?]+[.!?]*/g)||[];return s.map(x=>x.trim()).filter(Boolean)}
+function vxGeneric(u,s,m,ex){const sc=[];
+  sc.push({title:u.t,run:async ctx=>{VXP.big(ctx,`<span class="xglyph">${esc(s.glyph||'★')}</span>`);await ctx.say('bimo',`Uli, hari ini kita belajar apa?`,'think');await ctx.say('uli',`Kita belajar ${u.t}. ${m?vxSplit(m.intro)[0]||'':u.d}`,'happy')}});
+  if(m)m.s.forEach(x=>sc.push({title:x.h,run:async ctx=>{const emo=vpEmo([x.h,x.p,(x.li||[]).join(' ')].join(' '));if(emo.length)VXP.row(ctx,emo,'xemo');
+    await ctx.say('bimo',/\?$/.test(x.h)?x.h:`Uli, jelaskan tentang ${x.h.toLowerCase()}, dong!`,'think');
+    for(const sen of vxSplit(x.p||'')){const b=VXP.big(ctx,`<span>${sen}</span>`,'xidea');await ctx.say('uli',sen);b.classList.add('dim')}
+    for(const [i,li] of (x.li||[]).entries()){VXP.big(ctx,`<span class="xn">${i+1}</span><span>${li}</span>`,'xli');await ctx.say('uli',li)}
+    if(x.tb){VXP.big(ctx,`<div class="vtb"><table><thead><tr>${x.tb[0].map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody>${x.tb.slice(1).map(r=>`<tr>${r.map(t=>`<td>${t}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`,'xtbl');await ctx.say('uli','Perhatikan tabel ini baik-baik.')}
+    for(const e of (x.ex||[])){ctx.clear();VXP.big(ctx,`<span class="vtag">Contoh</span><div class="vq">${e[0]}</div>`,'xexq');await ctx.say('bimo',vpStrip(e[0]),'think');await ctx.say('uli','Coba pikirkan dulu…','idea');await ctx.wait(1200);VXP.big(ctx,`<span class="vtag ok">Jawaban</span> ${e[1]}`,'xexa');ctx.sfx('ok');await ctx.say('uli',e[1],'happy')}}}));
+  else sc.push({title:'Tips dari Uli',run:async ctx=>{VXP.big(ctx,'💡','xemo1');await ctx.say('bimo','Ada tips supaya mudah?','think');for(const sen of vxSplit(u.tip||u.d)){VXP.big(ctx,sen,'xidea');await ctx.say('uli',sen,'happy')}}});
+  (ex||[]).slice(0,2).forEach((q,k)=>sc.push({title:`Ayo coba! (${k+1})`,run:async ctx=>{VXP.big(ctx,`<div class="vq">${q.q}</div>`,'xexq');const ci=q.opts.indexOf(q.ans);await ctx.say('uli',vpStrip(q.q)+' Pilih jawabanmu!','think');await ctx.choose('Pilih jawaban yang benar',q.opts,ci,q.exp?vpStrip(q.exp):'')}}));
+  if(m&&m.sum&&m.sum.length)sc.push({title:'Yang perlu diingat',run:async ctx=>{for(const t of m.sum){VXP.big(ctx,`<span>✅</span><span>${t}</span>`,'xli');ctx.sfx('pop');await ctx.say('uli',t)}}});
+  return sc}
+function openVideo(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const key=u._k||`${c.id}/${s.id}/${ui}`;const ex=unitQs(u,2);
+  let el=$('#vx');if(!el){document.body.insertAdjacentHTML('beforeend','<div id="vx" class="vx" role="dialog" aria-modal="true" aria-label="Video belajar" hidden></div>');el=$('#vx')}
+  const BIMO={hair:'pendek',hc:'h1',shirt:'merah',bg:'b3',skin:'s3',mouth:'senyum'};
+  el.style.setProperty('--vc',s.color||'#3D8BFF');el.hidden=false;document.body.classList.add('vp-on');VX.open=true;VP.on=true;VP.ui=ui;VX.paused=false;
+  el.innerHTML=`<div class="vtop"><button class="vbtn" id="vxX" aria-label="Tutup video">✕</button><div class="vtt"><small>Video belajar · Unit ${ui+1}</small><b>${esc(u.t)}</b></div><button class="vbtn" id="vxTxt" title="Baca versi teks">Teks</button></div>
+   <div class="xscene"><div class="vbg"><i></i><i></i><i></i><i></i></div><div class="xtitle"></div><div class="xstage"></div><div class="xask" hidden></div>
+    <div class="xcast"><div class="xch xch-uli" data-m="happy"><span class="xem"></span><div class="mascot" data-mascot data-mood="happy"></div></div><div class="xbub"></div><div class="xch xch-bimo" data-m="happy"><span class="xem"></span>${avatarSVG(BIMO,{nobg:true})}</div></div>
+    <div class="vbig" id="vxBig" hidden>${VP_IC.play}</div></div>
+   <div class="vctl"><div class="vbar" id="vxBar"></div><div class="vrow"><button class="vbtn" id="vxPrev" aria-label="Adegan sebelumnya">${VP_IC.prev}</button><button class="vbtn vplay" id="vxPlay" aria-label="Jeda">${VP_IC.pause}</button><button class="vbtn" id="vxNext" aria-label="Adegan berikutnya">${VP_IC.next}</button><span class="vtime" id="vxTime"></span><button class="vbtn" id="vxRate" title="Kecepatan">${VP.rate}×</button></div></div>`;
+  hydrate(el);try{speechSynthesis.getVoices()}catch(e){}
+  $('#vxX').onclick=closeVideo;$('#vxTxt').onclick=()=>{closeVideo();openGuideText(ui)};$('#vxPlay').onclick=vxToggle;
+  $('#vxPrev').onclick=()=>vxGo(Math.max(0,VX.i-1));$('#vxNext').onclick=()=>vxGo(Math.min(VX.sc.length-1,VX.i+1));
+  $('#vxRate').onclick=()=>{VP.rate=VP.rate>=1.5?.75:VP.rate+.25;$('#vxRate').textContent=VP.rate+'×'};
+  loadMateri().catch(()=>({})).then(M=>{if(!VX.open)return;const m=(M||{})[key];const sp=VX_SCRIPTS.find(x=>x.re.test(u.t)&&(s.id==='mtk'||/hitung/.test(s.id)));
+    VX.sc=[];if(sp)VX.sc.push({title:u.t,run:sp.run});VX.sc.push(...vxGeneric(u,s,m,ex).slice(sp?1:0));
+    VX.sc.push({title:'Selesai!',run:async ctx=>{VXP.big(ctx,'🏆','xemo1');ctx.cheer();await ctx.say('bimo','Asyik, aku jadi paham!','happy');await ctx.say('uli','Hebat! Sekarang ayo berlatih supaya makin jago.','happy');
+      $('#vx .xask').hidden=false;$('#vx .xask').innerHTML=`<div class="vend"><button class="ghost" id="vxAgain">Tonton lagi</button><button class="primary" id="vxGoPlay">Mulai berlatih</button></div>`;
+      $('#vxAgain').onclick=()=>vxGo(0);$('#vxGoPlay').onclick=()=>{const ui0=VP.ui;closeVideo();try{const pr=progOf(),idx=Math.min(pr.done,ui0*NODES.length+NODES.length-1);startNode(ui0,Math.floor(idx/NODES.length)===ui0?idx%NODES.length:0)}catch(e){}}}});
+    $('#vxBar').innerHTML=VX.sc.map((x,k)=>`<button class="vseg" data-k="${k}" aria-label="Adegan ${k+1}"><i></i></button>`).join('');$('#vxBar').querySelectorAll('.vseg').forEach(b=>b.onclick=()=>vxGo(+b.dataset.k));vxGo(0)})}
+async function vxGo(i){VX.tok++;const t=VX.tok;VX.i=i;try{speechSynthesis.cancel()}catch(e){}if(VX.gate){VX.gate();VX.gate=null}if(VX.wake){VX.wake(-1);VX.wake=null}VX.paused=false;$('#vxPlay').innerHTML=VP_IC.pause;$('#vxBig').hidden=true;
+  const sc=VX.sc[i];if(!sc)return;const ctx=vxCtx(t);ctx.clear();ctx.title(sc.title);$('#vx .xbub').innerHTML='';$('#vxTime').textContent=`${i+1} / ${VX.sc.length}`;
+  $('#vxBar').querySelectorAll('.vseg').forEach((b,k)=>{b.querySelector('i').style.width=k<i?'100%':k===i?'50%':'0'});
+  const sceneEl=$('#vx .xscene');sceneEl.classList.remove('xslide');void sceneEl.offsetWidth;sceneEl.classList.add('xslide');ctx.sfx('whoosh');
+  try{await sc.run(ctx);vxAlive(t);$('#vxBar').querySelectorAll('.vseg')[i].querySelector('i').style.width='100%';await ctx.wait(900);if(i<VX.sc.length-1)vxGo(i+1)}catch(e){if(e!==VXCancel)console.warn(e)}}
+function vxToggle(){VX.paused=!VX.paused;$('#vxPlay').innerHTML=VX.paused?VP_IC.play:VP_IC.pause;$('#vxBig').hidden=!VX.paused;if(VX.paused){try{speechSynthesis.cancel()}catch(e){}}else if(VX.gate){const g=VX.gate;VX.gate=null;g()}}
+const _closeVideo1=closeVideo;closeVideo=function(){VX.open=false;VX.tok++;if(VX.gate){VX.gate();VX.gate=null}if(VX.wake){VX.wake(-1);VX.wake=null}const el=$('#vx');if(el){el.hidden=true;el.innerHTML=''}_closeVideo1()};
 
 /* ---------- starting a level ---------- */
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
