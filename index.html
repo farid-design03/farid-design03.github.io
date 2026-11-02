@@ -2977,6 +2977,44 @@ body:not(.teacher) #vDone .acts .primary{animation:tileIn .4s .8s both}
 body:not(.teacher) .bigflame{animation:popIn .5s,flick 1.2s .5s ease-in-out infinite!important;transform-origin:50% 100%}
 @keyframes flick{0%,100%{transform:scale(1,1) rotate(0)}30%{transform:scale(1.04,.97) rotate(-2deg)}60%{transform:scale(.97,1.04) rotate(2deg)}}
 @media (prefers-reduced-motion:reduce){body:not(.teacher) #vDone *,body:not(.teacher) #feedback,body:not(.teacher) .bigflame{animation:none!important}}
+/* ===== jalur belajar sesuai referensi Duolingo (clone react-duolingo + video) ===== */
+html body:not(#_x) .node:not(.k-chest){width:70px!important;height:57px!important;border-radius:50%!important;border:0!important;box-shadow:0 8px 0 color-mix(in srgb,var(--uc) 72%,#000)!important}
+html body:not(#_x) .node.k-test{width:70px!important;height:57px!important;border-radius:50%!important}
+html body:not(#_x) .node:not(.k-chest) i,html body:not(#_x) .node:not(.k-chest) svg{width:32px!important;height:32px!important;filter:none!important}
+html body:not(#_x) .node.lock:not(.k-chest){background:#E5E5E5!important;color:#AFAFAF!important;box-shadow:0 8px 0 #B7B7B7!important}
+html[data-theme=malam] body:not(#_x) .node.lock:not(.k-chest){background:#37464F!important;color:#52656D!important;box-shadow:0 8px 0 #202F36!important}
+html body:not(#_x) .node.done::after{display:none!important}
+html body:not(#_x) .node:not(.k-chest):active{transform:translateY(8px)!important}
+html body:not(#_x) .nrow.sprow{--uc:#FF9600}
+html body:not(#_x) .node.k-sport.done{background:#FF9600!important}
+html body:not(#_x) .nodes{gap:42px!important}
+/* cincin: diam, mengelilingi tombol dan alasnya */
+html body:not(#_x) .nrow:has(>.node.cur:not(.k-chest))::before{top:-15px!important;bottom:-23px!important;left:-15px!important;right:-15px!important;border-width:7px!important;border-color:color-mix(in srgb,var(--uc) 30%,#fff)!important;animation:none!important}
+html[data-theme=malam] body:not(#_x) .nrow:has(>.node.cur:not(.k-chest))::before{border-color:color-mix(in srgb,var(--uc) 35%,#131f24)!important}
+html body:not(#_x) .nrow{margin-bottom:6px}
+/* label MULAI: kotak putih bergaris abu, teks warna unit, memantul */
+html body:not(#_x) .starttip{border:2px solid #E5E5E5!important;border-radius:10px!important;box-shadow:none!important;font-size:14px!important;font-weight:800!important;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px!important;line-height:1.4;bottom:calc(100% + 16px)!important;animation:tipBounce 1s ease-in-out infinite!important}
+html body:not(#_x) .starttip::after{border-right:2px solid #E5E5E5!important;border-bottom:2px solid #E5E5E5!important;width:10px!important;height:10px!important;bottom:-7px!important}
+@keyframes tipBounce{0%,100%{translate:0 0}50%{translate:0 -5px}}
+/* popup level */
+html body:not(#_x) .npop{border-radius:14px!important;border:0!important;box-shadow:none!important;padding:16px!important;gap:6px!important}
+html body:not(#_x) .npop b{font-size:18px!important;font-weight:800!important}
+html body:not(#_x) .npop .primary{background:#fff!important;color:var(--uc)!important;box-shadow:0 4px 0 #E5E5E5!important;border-radius:12px!important;margin-top:8px}
+html body:not(#_x) .npop.lock{background:#F7F7F7!important;border:2px solid #E5E5E5!important;color:#AFAFAF!important}
+html body:not(#_x) .npop.lock::before{background:#F7F7F7!important;border-left:2px solid #E5E5E5!important;border-top:2px solid #E5E5E5!important}
+html body:not(#_x) .npop.lock b{color:#AFAFAF!important}
+html body:not(#_x) .npop .nplock{background:#E5E5E5!important;color:#AFAFAF!important;box-shadow:none!important}
+html[data-theme=malam] body:not(#_x) .npop.lock,html[data-theme=malam] body:not(#_x) .npop.lock::before{background:#131f24!important;border-color:#37464F!important}
+html[data-theme=malam] body:not(#_x) .npop .nplock{background:#37464F!important;color:#52656D!important}
+/* umpan balik warna resmi Duolingo */
+html body:not(#_x):not(.teacher) .feedback.ok{background:#D7FFB8!important}
+html body:not(#_x):not(.teacher) .feedback.bad{background:#FFDFE0!important}
+html body:not(#_x):not(.teacher) .feedback.ok b,html body:not(#_x):not(.teacher) .feedback.ok #fbText{color:#58A700!important}
+html body:not(#_x):not(.teacher) .feedback.bad b{color:#EA2B2B!important}
+html body:not(#_x):not(.teacher) .feedback.bad #fbText{color:#EA2B2B}
+html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.ok{background:#202F36!important}html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad{background:#202F36!important}
+html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.ok b,html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.ok #fbText{color:#79B933!important}
+html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad b,html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad #fbText{color:#EE5555!important}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -7013,7 +7051,7 @@ function go(tab){curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
 /* ---------- learning path ---------- */
-const OFFS=[0,-58,-88,-58,0];
+const OFFS=[0,-45,-70,-45,0];
 function nodeTitle(s,ui,ni){const nd=NODES[ni];return nd.k==='lesson'?`Pelajaran ${nd.n}`:nd.k==='game'?(MODE_LIST.find(m=>m.id===gameFor(s,ui))||{name:'Game'}).name:nd.k==='chest'?'Peti hadiah':'Ujian unit'}
 /* =========================================================
    LEVEL OLAHRAGA: diselipkan di setiap unit jalur belajar.
@@ -7300,7 +7338,7 @@ function nodePop(ui,ni,row){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NOD
   if(nd.k==='test'){t=`Ujian Unit ${ui+1}`;p='8 soal dari unit ini dan unit sebelumnya. Lulus dengan 70% benar.';btn=st==='done'?'Ulangi ujian +8 XP':'Mulai ujian +15 XP'}
   if(st==='lock'){p='Selesaikan semua level di atasnya untuk membuka level ini.';btn=''}
   if(ni===2&&spPending(ui)&&st!=='done'){p='Selesaikan dulu level olahraga di atasnya, sebentar saja kok!';btn=''}
-  row.insertAdjacentHTML('beforeend',`<div class="npop ${st==='lock'?'lock':''}"><b>${esc(t)}</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:''}</div>`);row.classList.add('popopen');
+  row.insertAdjacentHTML('beforeend',`<div class="npop ${st==='lock'?'lock':''} ${st==='done'?'done':''}"><b>${esc(t)}</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:st==='lock'?'<button class="primary nplock" disabled>Terkunci</button>':''}</div>`);row.classList.add('popopen');
   const g=$('#nodeGo');if(g)g.onclick=e=>{e.stopPropagation();closePop();startNode(ui,ni)};
   row.querySelector('.npop').onclick=e=>e.stopPropagation();
   {const np=row.querySelector('.npop');const rr=row.getBoundingClientRect(),w=np.offsetWidth,cx=rr.left+rr.width/2,W=document.documentElement.clientWidth,m=12;const r={left:cx-w/2,right:cx+w/2};let dx=0;if(r.left<m)dx=m-r.left;else if(r.right>W-m)dx=W-m-r.right;if(dx)np.style.setProperty('--dx',Math.round(dx)+'px')}
