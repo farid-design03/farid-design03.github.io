@@ -2856,7 +2856,7 @@ html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam]
 #leagueCard .lgx-cls{margin:10px 18px 0}
 #leagueCard .lgx-empty,#leagueCard .lgx-note{padding-left:18px;padding-right:18px}
 @media (max-width:999px){#leagueCard{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw)!important;margin-right:0!important;margin-top:-14px!important}
- #leagueCard .lgx-head{top:var(--stickTop,0)}}
+ #leagueCard .lgx-head{top:0!important}}
 html[data-theme=malam] #leagueCard .lgx-head{background:#0a0f1e!important;border-color:#1f2a44!important}
 /* ===== gaya Duolingo: gambar tanpa garis hitam tebal, kotak abu tipis tanpa bayangan ===== */
 /* garis tepi gambar: hitam tipis (lebih tipis dari aslinya) */
@@ -9563,7 +9563,7 @@ renderLeague=function(){const card=$('#leagueCard');if(!card||!P)return;APP.prof
   if(!online){const rows=[...APP.profiles].sort((a,b)=>b.week.xp-a.week.xp).map(p=>({uid:p.id,name:p.name,color:p.color,av:p.avatar,cls:p.cls,xp:p.week.xp}));
     card.innerHTML=lgHead(t)+`<div class="lgx-list">${lgRowsHtml(rows,P.id,t,false)}</div>`+(rows.length<2?'<p class="note lgx-note">Tambahkan profil teman di menu Profil supaya bisa bersaing.</p>':'');lgCenter();renderBoard();return}
   const joined=s.g&&s.w===weekKey();
-  card.innerHTML=lgHead(t)+`<div class="lgx-list" id="lgxList">${joined?'<p class="note lgx-note">Memuat peringkat…</p>':`<div class="lgx-empty"><div style="width:90px;margin:0 auto">${lgBadge(t)}</div><b>Selesaikan satu pelajaran untuk bergabung ke papan peringkat minggu ini</b><button class="primary" id="lgxGo">Mulai belajar</button></div>`}</div>`+
+  card.innerHTML=lgHead(t)+`<div class="lgx-list" id="lgxList">${joined?'<p class="note lgx-note">Memuat peringkat…</p>':`<div class="lgx-empty"><b>Selesaikan satu pelajaran untuk bergabung ke papan peringkat minggu ini</b><button class="primary" id="lgxGo">Mulai belajar</button></div>`}</div>`+
    ((FBX.me||{}).classId?`<button class="ghost lgx-cls" id="lgxCls">Lihat peringkat kelasku</button>`:'');
   lgCenter();const go2=$('#lgxGo');if(go2)go2.onclick=()=>go('learn');const cb=$('#lgxCls');if(cb)cb.onclick=lgClassModal;
   const paint=rows=>{const box=$('#lgxList');if(!box||!rows)return;box.innerHTML=lgRowsHtml(rows,FBX.user.uid,t,true)+(rows.length<2?'<p class="note lgx-note">Kamu orang pertama di grup ini. Pemain lain akan bergabung saat mereka mulai belajar minggu ini.</p>':'');lgBind(box,rows);
