@@ -3121,6 +3121,17 @@ html body:not(#_x) .plgo{width:100%;margin-top:14px;background:#00CD9C!important
 @media (prefers-reduced-motion:reduce){.mmrings i{animation:none;opacity:.4}}
 .wzgames .ajg{position:relative}.wzgames .ajck{display:none;position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#58CC02;color:#fff;font-style:normal;font-size:12px;font-weight:900;place-items:center;border:2px solid var(--card)}
 .wzgames .ajg[aria-pressed="true"] .ajck{display:grid}.wzgn{text-align:center;margin:10px 0 0;font-weight:700}
+/* Bermain: bagian atas menempel saat riwayat digulir; teks rapi di HP */
+.plstick{position:sticky;top:0;z-index:5;background:var(--bg,#fff);padding:calc(10px + env(safe-area-inset-top,0px)) 0 8px;margin-top:-10px;border-bottom:2px solid var(--line)}
+@media (max-width:999px){.plstick{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}}
+html[data-theme=malam] .plstick{background:#0a0f1e}
+.plcard b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(13px,3.6vw,16px)!important}
+.plcard .plart{height:clamp(84px,26vw,112px)!important}.plcard .plart>svg,.plcard .plduo svg{height:clamp(84px,26vw,112px)!important}
+.plcard .plart .mascot{width:clamp(64px,20vw,86px)!important}
+.plmore{flex-wrap:nowrap!important;gap:8px!important;margin:10px 0 0!important}
+.plchip{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:transparent;border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:8px 6px;font:800 13px var(--title);color:var(--blue,#1CB0F6);letter-spacing:.02em}
+.plrow small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plrow .pltan{flex:none}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -10948,17 +10959,17 @@ function mhRecord(key,rows,uid){if(!P)return;P.mhk=P.mhk||[];if(P.mhk.includes(k
   const best=Math.max(...others.map(o=>o.score||0));if((me.score||0)>best)P.stats.wins=(P.stats.wins||0)+1;
   P.stats.matches=(P.stats.matches||0)+1;P.mhist=P.mhist.slice(0,30);P.mhk.push(key);P.mhk=P.mhk.slice(-40);save()}
 window.mhRecord=mhRecord;
-function plAgo(t){const m=Math.floor((Date.now()-t)/6e4);if(m<1)return 'baru saja';if(m<60)return m+' menit lalu';const h=Math.floor(m/60);if(h<24)return h+' jam lalu';const d=Math.floor(h/24);return d+' hari lalu'}
+function plAgo(t){const m=Math.floor((Date.now()-t)/6e4);if(m<1)return 'baru';if(m<60)return m+' mnt';const h=Math.floor(m/60);if(h<24)return h+' jam';const d=Math.floor(h/24);return d+' hr'}
 function plRoot(){const on=typeof phOnline==='function'&&phOnline();const s=P.stats||{},hist=(P.mhist||[]);
   const card=(id,label,art)=>`<button class="plcard ${PLSEL===id?'sel':''}" data-pl="${id}" aria-pressed="${PLSEL===id}"><span class="plart">${art}</span><b>${label}</b></button>`;
   const friendArt=`<span class="plduo">${avatarSVG(avNorm({hair:'poni',hc:'h2',shirt:'shirtCrewNeck',cc:'c5',bg:'b4'}))}</span>`;
   const otherArt=avatarSVG(avNorm({hair:'hijab',skin:'s3',cc:'c2',bg:'b3'}));
   const lbl={sendiri:'MAIN SENDIRI',teman:'TANTANG TEMAN',lain:'LAWAN PEMAIN LAIN'}[PLSEL]+'  +10 XP';
   const ic=(d,t)=>`<span class="plst"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>${t}</span>`;
-  return `<div class="pltop"><h1>Bermain</h1><div class="plstats">${ic('<path d="M3 12h4l3-8 4 16 3-8h4"/>',`${s.matches||0}x main`)}${ic('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',`${s.wins||0}x menang`)}</div></div>
+  return `<div class="plstick"><div class="pltop"><h1>Bermain</h1><div class="plstats">${ic('<path d="M3 12h4l3-8 4 16 3-8h4"/>',`${s.matches||0}x main`)}${ic('<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',`${s.wins||0}x menang`)}</div></div>
    <div class="plcards">${card('sendiri','Sendiri','<div class="mascot" data-mascot data-mood="happy"></div>')}${card('teman','Teman',friendArt)}${card('lain','Pemain Lain',otherArt)}</div>
    <button class="primary press plgo" id="plGo" data-lbl="${lbl}">${lbl}</button>
-   <div class="plmore"><button class="linkbtn" data-ph="offline">Main di satu HP (offline)</button><span>·</span><button class="linkbtn" data-ph="onN">Ruang sampai 8 pemain</button></div>
+   <div class="plmore"><button class="plchip" data-ph="offline">Satu HP (offline)</button><button class="plchip" data-ph="onN">Ruang 8 pemain</button></div></div>
    <h3 class="sect">Riwayat pertandingan</h3>
    ${hist.length?`<div class="plhist">${hist.slice(0,15).map((h,i)=>`<div class="plrow">${avSpan({name:h.name,avatar:h.av})}<span class="grow"><b>${esc(h.name)}</b><small class="r-${h.res}">${h.res==='menang'?'✓ Menang':h.res==='kalah'?'✕ Kalah':'= Seri'} · ${h.my}–${h.their} · ${plAgo(h.at)}</small></span>${on&&h.uid?`<button class="linkbtn pltan" data-pt="${i}">TANTANG</button>`:''}</div>`).join('')}</div>`:`<p class="note plempty">Belum ada pertandingan. Tantang teman atau pemain lain untuk mulai!</p>`}`}
 function plBind(hub){hub.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{PLSEL=b.dataset.pl;playHub()});
