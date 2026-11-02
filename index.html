@@ -8736,12 +8736,21 @@ async function fbRoute(u){if(u){FBX.routedUid=u.uid;FBX.routedAt=Date.now()}fbSt
   const me=snap&&snap.exists?snap.data():null;FBX.me=me;
   if(FBX.admin&&(!SESSION||SESSION.role!=='teacher')){busy(false);setSession({role:'admin',uid:u.uid});openAdmin();return}
   if(!me){busy(false);
-    if((u.email||'').endsWith('@'+MAIL_DOM)){try{await u.delete()}catch(e){await FB.auth.signOut()}toast('lock','Pendaftaran belum selesai. Silakan daftar lagi.');return}
+    if((u.email||'').endsWith('@'+MAIL_DOM)){const fixed=await fbRepairStudent(u);if(fixed)return fbEnterStudent(u,fixed);try{await FB.auth.signOut()}catch(e){}toast('lock','Data akun belum lengkap dan belum bisa dipulihkan. Coba lagi nanti atau hubungi guru.');return}
     if(hasGoogle(u)){fbGoogleRole(u);return}
     fbTeacherForm(u);return}
   if(me.role==='teacher')return fbEnterTeacher(u,me);
   return fbEnterStudent(u,me)}
 
+/* Akun murid yang data profilnya tidak ada (pendaftaran terputus): pulihkan, JANGAN dihapus. */
+async function fbRepairStudent(u){try{const user=String(u.email||'').split('@')[0].toLowerCase();if(!user)return null;
+  let h=null;try{const hs=await FB.db.doc('handles/'+user).get();if(hs.exists)h=hs.data()}catch(e){}
+  if(h&&h.uid&&h.uid!==u.uid)return null;
+  const name=(h&&h.name)||user,cls=(h&&h.cls)||'sd2';const pf=newProfile({name,cls,goal:20});pf.user=user;pf.pass=FBX.lastPin||null;
+  const me={role:'student',username:user,name,cls,pin:FBX.lastPin||null,google:false,classId:null,teacherUid:null,joinCode:null,clsName:null,xp:0,lastDay:null,p:JSON.stringify(pf),plan:'free',proUntil:0,created:Date.now(),upd:Date.now()};
+  await FB.db.doc('users/'+u.uid).set(me);
+  if(!h)await FB.db.doc('handles/'+user).set({uid:u.uid,name,av:null,cls,kw:searchKw(name,user),upd:Date.now()}).catch(()=>{});
+  FBX.me=me;setTimeout(()=>toast('check','Data akunmu dipulihkan. Silakan lanjut belajar.'),800);return me}catch(e){console.warn('pulihkan akun',e);return null}}
 function fbHideAuth(){$('#auth').hidden=true;$('#onb').hidden=true;$('#adminPanel').hidden=true;closeModal()}
 async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}catch(e){}
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
@@ -8949,7 +8958,7 @@ showLogin=function(pf){_showLogin(pf);const tc=document.querySelector('#auth .tc
 doLogin=function(user,pw,fail){const raw=String(user||'').trim();pw=String(pw||'');if(!raw){fail('Isi nama pengguna atau email dulu.');return}
   let email,pass;
   if(raw.includes('@')){email=raw;pass=pw;if(pass.length<6){fail('Sandi guru minimal 6 karakter.');return}}
-  else{if(raw.toLowerCase()==='admin'){fail('Admin masuk dengan email, bukan dengan nama pengguna "admin".');return}if(!/^\d{4}$/.test(pw)){fail('Sandi murid berupa 4 angka.');return}email=uMail(raw);pass=uPass(pw)}
+  else{if(raw.toLowerCase()==='admin'){fail('Admin masuk dengan email, bukan dengan nama pengguna "admin".');return}if(!/^\d{4}$/.test(pw)){fail('Sandi murid berupa 4 angka.');return}email=uMail(raw);pass=uPass(pw);FBX.lastPin=pw}
   const b=$('#lgGo');if(b){b.disabled=true;b.textContent='Memeriksa…'}
   setSession(null);
   FB.auth.signInWithEmailAndPassword(email,pass).catch(e=>{if(b){b.disabled=false;b.textContent='MASUK'}fail(fbErr(e))})};
