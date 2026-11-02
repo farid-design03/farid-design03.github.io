@@ -7373,21 +7373,31 @@ function spMountSprite(box,id){const m=SP_SPR[id],rows=Math.ceil(m.n/m.cols),fl=
   box.innerHTML=`<div class="spspr" style="${id==='sq'?'transform:scaleX(-1);':''}background-image:url(sport/${id}.webp);background-size:${m.cols*100}% ${rows*100}%"></div><div class="spfloor" style="top:${fl}%"></div>`;
   const el=box.firstChild,t0=performance.now();let last=-1;
   const frame=now=>{if(!box.isConnected)return;const k=Math.floor((now-t0)/1000*m.fps)%m.n;if(k!==last){last=k;const c=k%m.cols,r=Math.floor(k/m.cols);el.style.backgroundPosition=`${m.cols>1?c/(m.cols-1)*100:0}% ${rows>1?r/(rows-1)*100:0}%`}requestAnimationFrame(frame)};requestAnimationFrame(frame)}
-function spMount(box){if(box.dataset.bad!=='1'&&!box.dataset.fix){const sid=spAnimKey(box.dataset.ex,box.dataset.v);if(SP_SPR[sid]){spMountSprite(box,sid);return}}
+/* figur olahraga 2D mengikuti avatar & jenis kelamin murid */
+function spColors(){const a=(typeof avNorm==='function'&&P)?avNorm(P.avatar):{};const pick=(k,v)=>{try{const it=(AV_PARTS[k]||{}).items||[];const f=it.find(x=>x[0]===v);return f&&f[3]}catch(e){return null}};
+  const shade=(h,m)=>{const n=parseInt(String(h).slice(1),16);if(isNaN(n))return h;const r=Math.round(((n>>16)&255)*m),g=Math.round(((n>>8)&255)*m),b=Math.round((n&255)*m);return '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1)};
+  const g=P&&P.gender,skin=pick('skin',a.skin)||'#F6C9A0',hair=pick('hc',a.hc)||'#2B1D14';let shirt=pick('cc',a.cc)||(g==='P'?'#FF5C9E':'#1CB0F6');if(/^#f{6}$/i.test(shirt))shirt='#E8ECF2';
+  const hijab=/hijab|jilbab|kerudung/i.test(String(a.hair||''))?(g==='P'?'#9B6BFF':shade(shirt,.75)):null;
+  const tail=!hijab&&g==='P'&&!/none|peci|sides/.test(String(a.hair||''));
+  return {skin,shirt,shirt2:shade(shirt,.82),pants:g==='P'?'#5B4B8A':'#3C4A6B',pants2:g==='P'?'#47396F':'#2B3550',shoe:'#FF9600',hair,hijab,tail,arm:hijab?shirt:skin,arm2:hijab?shade(shirt,.82):shade(skin,.9)}}
+function spMount(box){const SPC=spColors();
 const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[id],bad=box.dataset.bad==='1',form=SP_FORM[id]||{};const def=bad&&form.badKeys?Object.assign({},base,{keys:form.badKeys}):base;const NS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('class','spsvg');
   const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
   if(bad)mk('rect',{x:0,y:0,width:100,height:100,fill:'#FFF3F3'});mk('rect',{x:0,y:91,width:100,height:9,fill:bad?'#FBE0E0':'#E9F7DF'});mk('line',{x1:0,y1:91.5,x2:100,y2:91.5,stroke:'#C8E6B0','stroke-width':1.5});
   if(def.floor)mk('rect',{x:8,y:89.5,width:84,height:2.5,rx:1.2,fill:'#9B6BFF',opacity:.55});
   if(def.wall){mk('rect',{x:12,y:4,width:8,height:87,fill:'#E5D3B3'});mk('line',{x1:20,y1:4,x2:20,y2:91,stroke:'#C9B48F','stroke-width':1})}
-  const L=(c,w)=>mk('line',{stroke:c,'stroke-width':w,'stroke-linecap':'round'});
-  const far={th:L(SPC.pants2,8.5),sh:L(SPC.pants2,7),ft:L('#D27800',4.5),ua:L(SPC.shirt2,6.5),fa:L('#E0AE85',5.5)};
+  const L=(c,w)=>{const a=mk('line',{stroke:'#1C1E3D','stroke-width':w+2.6,'stroke-linecap':'round'}),b=mk('line',{stroke:c,'stroke-width':w,'stroke-linecap':'round'});
+    return {_o:a,_c:b,setAttribute(k,v){if(k!=='stroke')a.setAttribute(k,v);b.setAttribute(k,v)},style:{set display(v){a.style.display=v;b.style.display=v}},get parentNode(){return b.parentNode}}};
+  const far={th:L(SPC.pants2,8.5),sh:L(SPC.pants2,7),ft:L('#D27800',4.5),ua:L(SPC.shirt2,6.5),fa:L(SPC.arm2,5.5)};
   const FR=def.face==='front';const torso=L(SPC.shirt,13),neck=L(SPC.skin,5);const tpoly=mk('path',{fill:SPC.shirt,stroke:SPC.shirt,'stroke-width':2,'stroke-linejoin':'round'}),shorts=mk('path',{fill:SPC.pants,stroke:SPC.pants,'stroke-width':2,'stroke-linejoin':'round'});if(!FR){tpoly.style.display='none';shorts.style.display='none'}else torso.style.display='none';
-  if(FR){[far.th,far.sh].forEach(l=>l.setAttribute('stroke',SPC.pants));far.ft.setAttribute('stroke',SPC.shoe);far.ua.setAttribute('stroke',SPC.shirt);far.fa.setAttribute('stroke',SPC.skin)}
-  const near={th:L(SPC.pants,8.5),sh:L(SPC.pants,7),ft:L(SPC.shoe,4.5),ua:L(SPC.shirt,6.5),fa:L(SPC.skin,5.5)};
-  const hand1=mk('circle',{r:3,fill:SPC.skin}),hand2=mk('circle',{r:3,fill:'#E0AE85'});
-  const hair=mk('circle',{r:7.6,fill:SPC.hair});const head=mk('circle',{r:7,fill:SPC.skin});const eye=mk('circle',{r:1.15,fill:'#1E1E24'}),eye2=mk('circle',{r:1.15,fill:'#1E1E24'}),mouth=mk('path',{fill:'none',stroke:'#B0563C','stroke-width':.9,'stroke-linecap':'round'});
-  hand2.parentNode.insertBefore(hand2,torso);
+  if(FR){[far.th,far.sh].forEach(l=>l.setAttribute('stroke',SPC.pants));far.ft.setAttribute('stroke',SPC.shoe);far.ua.setAttribute('stroke',SPC.shirt);far.fa.setAttribute('stroke',SPC.arm)}
+  const near={th:L(SPC.pants,8.5),sh:L(SPC.pants,7),ft:L(SPC.shoe,4.5),ua:L(SPC.shirt,6.5),fa:L(SPC.arm,5.5)};
+  [far,near].forEach(g=>{const first=g.th._c;Object.values(g).forEach(x=>svg.insertBefore(x._o,first))});
+  const hand1=mk('circle',{r:3,fill:SPC.arm,stroke:'#1B1E3D','stroke-width':1.2}),hand2=mk('circle',{r:3,fill:SPC.arm2,stroke:'#1B1E3D','stroke-width':1.2});
+  const tail=SPC.tail?mk('circle',{r:4.2,fill:SPC.hair,stroke:'#1B1E3D','stroke-width':1.2}):null;
+  const hair=mk('circle',{r:SPC.hijab?9.4:7.8,fill:SPC.hijab||SPC.hair,stroke:'#1B1E3D','stroke-width':1.3});const head=mk('circle',{r:SPC.hijab?6.3:7,fill:SPC.skin,stroke:SPC.hijab?'none':'#1B1E3D','stroke-width':1.2});const eye=mk('circle',{r:1.15,fill:'#1E1E24'}),eye2=mk('circle',{r:1.15,fill:'#1E1E24'}),mouth=mk('path',{fill:'none',stroke:'#B0563C','stroke-width':.9,'stroke-linecap':'round'});
+  svg.insertBefore(hand2,far.th._o);
   const gl=[0,1].map(()=>mk('line',{stroke:bad?'#FF4B4B':'#58CC02','stroke-width':1.6,'stroke-dasharray':'3 2.5','stroke-linecap':'round',opacity:0}));
   box.innerHTML='';box.appendChild(svg);
   const keys=def.keys,tot=keys.reduce((s,k)=>s+k[1],0);const t0=performance.now();
@@ -7404,8 +7414,10 @@ const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[id],bad=box.dataset.ba
    head.setAttribute('cx',p.H[0]);head.setAttribute('cy',p.H[1]);
    {const gs=form.guide?spGuides(form.guide,p):[];gl.forEach((g,k)=>{const L2=gs[k];if(!L2){g.setAttribute('opacity',0);return}g.setAttribute('opacity',.95);g.setAttribute('x1',L2[0]);g.setAttribute('y1',L2[1]);g.setAttribute('x2',L2[2]);g.setAttribute('y2',L2[3])});svg.appendChild(gl[0]);svg.appendChild(gl[1])}
    const ang=Math.atan2(p.H[1]-p.N[1],p.H[0]-p.N[0]),up=[Math.cos(ang),Math.sin(ang)];
-   if(def.face==='front'){hair.setAttribute('cx',p.H[0]);hair.setAttribute('cy',p.H[1]-2);eye.setAttribute('cx',p.H[0]-2.6);eye.setAttribute('cy',p.H[1]);eye2.setAttribute('cx',p.H[0]+2.6);eye2.setAttribute('cy',p.H[1]);eye2.style.display='';mouth.setAttribute('d',`M${p.H[0]-2} ${p.H[1]+3} Q${p.H[0]} ${p.H[1]+4.6} ${p.H[0]+2} ${p.H[1]+3}`)}
-   else{const f=def.face,fl=Math.hypot(f[0],f[1]),fx=f[0]/fl,fy=f[1]/fl;hair.setAttribute('cx',p.H[0]+up[0]*1.4-fx*1.8);hair.setAttribute('cy',p.H[1]+up[1]*1.4-fy*1.8);
+   if(tail){const f=def.face==='front'?[0,1]:def.face,fl=Math.hypot(f[0],f[1])||1;tail.setAttribute('cx',p.H[0]-f[0]/fl*7.5+up[0]*2);tail.setAttribute('cy',p.H[1]-f[1]/fl*7.5+up[1]*2)}
+   if(SPC.hijab){hair.setAttribute('cx',p.H[0]-up[0]*.6);hair.setAttribute('cy',p.H[1]-up[1]*.6)}
+   if(def.face==='front'){if(!SPC.hijab){hair.setAttribute('cx',p.H[0]);hair.setAttribute('cy',p.H[1]-2)}eye.setAttribute('cx',p.H[0]-2.6);eye.setAttribute('cy',p.H[1]);eye2.setAttribute('cx',p.H[0]+2.6);eye2.setAttribute('cy',p.H[1]);eye2.style.display='';mouth.setAttribute('d',`M${p.H[0]-2} ${p.H[1]+3} Q${p.H[0]} ${p.H[1]+4.6} ${p.H[0]+2} ${p.H[1]+3}`)}
+   else{const f=def.face,fl=Math.hypot(f[0],f[1]),fx=f[0]/fl,fy=f[1]/fl;if(!SPC.hijab){hair.setAttribute('cx',p.H[0]+up[0]*1.4-fx*1.8);hair.setAttribute('cy',p.H[1]+up[1]*1.4-fy*1.8)}
     eye.setAttribute('cx',p.H[0]+fx*3.6+up[0]*.8);eye.setAttribute('cy',p.H[1]+fy*3.6+up[1]*.8);eye2.style.display='none';
     const mx=p.H[0]+fx*4.2-up[0]*2.6,my=p.H[1]+fy*4.2-up[1]*2.6;mouth.setAttribute('d',`M${mx-fx*1.4} ${my-fy*1.4} L${mx} ${my}`)}
    if(fix!=null&&fix!=='')return;requestAnimationFrame(frame)};
