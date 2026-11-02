@@ -157,7 +157,7 @@ service cloud.firestore {
         && id.matches('^' + request.resource.data.week + '_.*');
       allow update: if signedIn() && request.auth.uid in resource.data.members
         && request.resource.data.members == resource.data.members
-        && changedKeys().hasOnly(['n_' + request.auth.uid, 'nudge_' + request.auth.uid, 'gift_' + request.auth.uid, 'giftGot_' + request.auth.uid, 'claim_' + request.auth.uid]);
+        && changedKeys().hasOnly(['n_' + request.auth.uid, 'nudge_' + request.auth.uid, 'nudgeS_' + request.auth.uid, 'gift_' + request.auth.uid, 'giftGot_' + request.auth.uid, 'claim_' + request.auth.uid]);
       allow delete: if false;
     }
 
