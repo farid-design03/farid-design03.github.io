@@ -2901,7 +2901,7 @@ html body:not(.teacher) .uhead .guide{border:2px solid rgba(255,255,255,.55)!imp
 html body:not(.teacher) .main .card,html body:not(.teacher) .item.box,html body:not(.teacher) .phopt,html body:not(.teacher) .roomcard,html body:not(.teacher) .friendcard,html body:not(.teacher) .duocard,html body:not(.teacher) .fqcard,html body:not(.teacher) .mqcard{border:2px solid var(--line)!important;border-bottom-width:4px!important;box-shadow:none!important;border-radius:16px!important}
 html body:not(.teacher) .main .card.league,html body:not(.teacher) #leagueCard{border:0!important}
 /* tombol 3D kapital */
-html body:not(.teacher) .primary{text-transform:uppercase!important;letter-spacing:.06em!important;border:0!important;box-shadow:0 4px 0 color-mix(in srgb,var(--green) 70%,#000)!important;border-radius:14px!important}
+html body:not(.teacher) .primary{text-transform:uppercase!important;letter-spacing:.06em!important;border:0!important;box-shadow:0 4px 0 var(--lip,color-mix(in srgb,var(--green) 70%,#000))!important;border-radius:14px!important}
 html body:not(.teacher) .ghost,html body:not(.teacher) .smallbtn{text-transform:uppercase!important;letter-spacing:.06em!important;border:2px solid var(--line)!important;box-shadow:0 4px 0 var(--line)!important;border-radius:14px!important}
 html body:not(.teacher) .primary:active,html body:not(.teacher) .ghost:active{box-shadow:none!important}
 /* label bagian abu kapital */
@@ -2914,7 +2914,7 @@ html body:not(.teacher) .qsec h3,html body:not(.teacher) .sect,html body:not(.te
  html body:not(.teacher) .side .nav[aria-current="page"]{background:#DDF4FF!important;border:2px solid #84D8FF!important;border-radius:12px!important}
  html[data-theme=malam] body:not(.teacher) .side .nav[aria-current="page"]{background:rgba(28,176,246,.15)!important;border-color:rgba(132,216,255,.5)!important}
 }
-html[data-theme=malam] body:not(.teacher) .primary{box-shadow:0 4px 0 #1e40af!important}
+html[data-theme=malam] body:not(.teacher) .primary{box-shadow:0 4px 0 var(--lip,#1e40af)!important}
 html[data-theme=malam] body:not(.teacher) .npop .primary{background:#fff!important;color:var(--uc)!important;box-shadow:0 4px 0 rgba(0,0,0,.25)!important}
 @media (max-width:999px){html[data-theme=malam] body:not(.teacher) .side .nav:not([aria-current="page"]){background:transparent!important;border-color:transparent!important;box-shadow:none!important}}
 /* ---- interaksi ala Duolingo ---- */
@@ -10595,6 +10595,18 @@ $('#checkBtn').onclick=()=>{if(game&&game.sel!=null&&!game.locked)answer(game.se
 $('#skipBtn2').onclick=()=>{if(game&&!game.locked)answer(-1)};
 {const cb=document.getElementById('checkBar');if(cb)document.body.appendChild(cb)}
 try{document.addEventListener('touchstart',()=>{},{passive:true})}catch(e){}
+
+/* bayangan tombol = versi gelap warna tombol itu sendiri */
+(()=>{const done=new WeakMap();
+ const lip=b=>{const bg=getComputedStyle(b).backgroundColor;if(done.get(b)===bg)return;done.set(b,bg);const m=bg.match(/[\d.]+/g);if(!m)return;const [r,g,bl,a=1]=m.map(Number);
+  if(a<.5){b.style.removeProperty('--lip');return}
+  const lum=(.299*r+.587*g+.114*bl)/255;
+  b.style.setProperty('--lip',lum>.9?'#E5E5E5':`rgb(${Math.round(r*.78)},${Math.round(g*.78)},${Math.round(bl*.78)})`)};
+ let q=0;const run=()=>{q=0;document.querySelectorAll('.primary').forEach(b=>{if(b.offsetParent)lip(b)})};
+ const sched=()=>{if(!q)q=requestAnimationFrame(run)};
+ try{new MutationObserver(sched).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','hidden','disabled']})}catch(e){}
+ addEventListener('load',sched);sched();
+ try{new MutationObserver(()=>{document.querySelectorAll('.primary').forEach(b=>done.delete(b));sched()}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']})}catch(e){}})();
 document.body.insertAdjacentHTML('beforeend','<button class="practicefab" id="practiceFab" hidden><i data-icon="practice"></i>Latihan</button>');
 $('#practiceFab').onclick=()=>startPractice();
 setInterval(()=>{if(P){tickHearts();if($('#statsBar').offsetParent)renderTop()}},30000);
