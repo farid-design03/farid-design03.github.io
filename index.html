@@ -9718,7 +9718,7 @@ async function roomCreate(s0,ui0,n,bg){const gen=roomGen(n);
   for(let k=0;k<5&&!code;k++){const c=genCode();try{await FB.db.doc('rooms/'+c).set(Object.assign({host:uid,hostName:P.name},gen,{status:'lobby',round:1,max:AJAK.max||8,players:{[uid]:roomMe()},created:Date.now()}));code=c}catch(e){last=e}}
   if(!code)throw last;roomOpen(code,bg)}
 /* Pemain Lain: langsung mencari lawan setara (kelas yang sama, semua pengguna JELAS); pertandingan mulai otomatis */
-const MM={on:false,hb:null,t0:0,tick:null,my:null};
+const MM={on:false,hb:null,t0:0,tick:null,my:null};window.MM=MM;
 function mmWaitOpen(){let el=$('#mmWait');if(!el){document.body.insertAdjacentHTML('beforeend','<div id="mmWait" class="mmwait" role="dialog" aria-modal="true" aria-label="Mencari lawan" hidden></div>');el=$('#mmWait')}
   el.innerHTML=`<div class="mmin"><div class="mmrings"><i></i><i></i><i></i><span class="mmav">${avSpan(P)}</span></div><h2>Mencari lawan…</h2><p class="note">${esc(CLS().full)} · semua pengguna JELAS yang setara</p><b class="mmtime" id="mmTime">0:00</b><p class="note mmtip" id="mmTip"></p><button class="ghost" id="mmCancel">Batal</button></div>`;
   el.hidden=false;document.body.classList.add('mm-on');MM.t0=Date.now();clearInterval(MM.tick);
@@ -9731,19 +9731,24 @@ async function mmCancel(){MM.on=false;clearInterval(MM.hb);mmWaitClose();const m
     try{const d=ROOM.doc;if(ROOM.code===my&&(!d||(d.status==='lobby'&&Object.keys(d.players||{}).length<2)))await FB.db.doc('rooms/'+my).delete()}catch(e){}}
   if(ROOM.code&&(!ROOM.doc||ROOM.doc.status==='lobby'))roomClose(true)}
 async function mmJoinable(code){try{const s=await FB.db.doc('rooms/'+code).get();if(!s.exists)return false;const d=s.data();return d.status==='lobby'&&Object.keys(d.players||{}).length<(d.max||2)&&Date.now()-(d.created||0)<6e5}catch(e){return false}}
-window.mmRandom=async function(){if(!FBX.user||!P)return;if(MM.on){mmWaitOpen();return}const me=FBX.user.uid,ref=FB.db.doc('mm/'+P.cls);
-  MM.on=true;MM.my=null;ROOM.mm=true;mmWaitOpen();
-  const valid=d=>d&&d.code&&d.host!==me&&Date.now()-(d.at||0)<25000;
+window.mmRandom=async function(){if(!FBX.user||!P)return;if(MM.on){mmWaitOpen();return}MM.on=true;MM.my=null;MM.bad=MM.bad||new Set();ROOM.mm=true;mmWaitOpen();mmSearch()};
+/* jam HP bisa berbeda: penanda waktu hanya dipakai longgar (±2 menit); keaktifan dicek dari ruangnya sendiri */
+async function mmSearch(){if(!MM.on)return;const me=FBX.user.uid,ref=FB.db.doc('mm/'+P.cls);
+  const valid=d=>d&&d.code&&d.host!==me&&Math.abs(Date.now()-(d.at||0))<120000&&!MM.bad.has(d.code);
   const claim=()=>FB.db.runTransaction(async tr=>{const s=await tr.get(ref);const d=s.exists?s.data():null;if(valid(d)){tr.delete(ref);return d.code}return null});
   try{ajakInit();Object.assign(AJAK,{cls:P.cls,sid:'acak',ui:'acak',mode:'kuis',max:2});
-    for(let k=0;k<3&&MM.on;k++){const c=await claim();if(!c)break;if(await mmJoinable(c)){await roomJoin(c);return}}
+    for(let k=0;k<3&&MM.on;k++){const c=await claim();if(!c)break;if(await mmJoinable(c)){await mmGuest(c);return}MM.bad.add(c)}
     if(!MM.on)return;
-    await roomCreate(null,0,5,true);const my=ROOM.code;MM.my=my;ROOM.mm=true;if(!MM.on){mmCancel();return}
+    let my=MM.my;if(!my||ROOM.code!==my){await roomCreate(null,0,5,true);my=ROOM.code;MM.my=my}ROOM.mm=true;if(!MM.on){mmCancel();return}
     const other=await FB.db.runTransaction(async tr=>{const s=await tr.get(ref);const d=s.exists?s.data():null;if(valid(d)){tr.delete(ref);return d.code}tr.set(ref,{code:my,host:me,at:Date.now()});return null});
-    if(other&&await mmJoinable(other)){try{await FB.db.doc('rooms/'+my).delete()}catch(e){}MM.my=null;ROOM.mm=true;await roomJoin(other);return}
+    if(other&&await mmJoinable(other)){try{await FB.db.doc('rooms/'+my).delete()}catch(e){}MM.my=null;await mmGuest(other);return}
     clearInterval(MM.hb);MM.hb=setInterval(async()=>{const d=ROOM.doc;if(!MM.on||ROOM.code!==my||!d||d.status!=='lobby'||Object.keys(d.players||{}).length>=2){clearInterval(MM.hb);return}
-      try{const s=await ref.get();const x=s.exists?s.data():null;if(x&&x.code===my)await ref.update({at:Date.now()});else if(!valid(x))await ref.set({code:my,host:me,at:Date.now()})}catch(e){}},8000)}
-  catch(e){MM.on=false;ROOM.mm=false;mmWaitClose();toast('lock',fbErr(e))}};
+      try{const s=await ref.get();const x=s.exists?s.data():null;if(x&&x.code===my)await ref.update({at:Date.now()});else if(x&&valid(x)){clearInterval(MM.hb);const c=await claim();if(c&&await mmJoinable(c)){try{await FB.db.doc('rooms/'+my).delete()}catch(e){}MM.my=null;await mmGuest(c)}else{mmSearch()}}else await ref.set({code:my,host:me,at:Date.now()})}catch(e){}},5000)}
+  catch(e){MM.on=false;ROOM.mm=false;mmWaitClose();toast('lock',fbErr(e))}}
+/* masuk ruang orang lain; kalau pembuatnya ternyata sudah pergi (tidak mulai dalam 8 detik), keluar dan cari lagi */
+async function mmGuest(code){ROOM.mm=true;await roomJoin(code);setTimeout(async()=>{if(!MM.on||ROOM.code!==code)return;const d=ROOM.doc;if(d&&d.status!=='lobby')return;
+  MM.bad.add(code);try{await FB.db.doc('rooms/'+code).update({['players.'+FBX.user.uid]:FV().delete()})}catch(e){}roomClose(true);ROOM.mm=true;mmSearch()},8000)}
+addEventListener('pagehide',()=>{if(MM.on)try{mmCancel()}catch(e){}});
 window.duelFriend=function(f){if(!FBX.user||!P)return;ajakInit();AJAK.max=2;AJAK.sent=AJAK.sent||{};ajakInvite(f,null)};
 /* main lagi dengan pemain yang sama, tanpa mengundang ulang */
 async function roomRematch(btn){const d=ROOM.doc;if(!d||d.host!==FBX.user.uid)return;if(btn){btn.disabled=true;btn.textContent='Menyiapkan soal baru…'}
