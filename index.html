@@ -2846,6 +2846,9 @@ p.vpara{margin:0;font-size:16.5px;line-height:1.55;font-weight:600}
 .xcube{display:flex;flex-direction:column-reverse;gap:3px;perspective:400px}.xlay{display:grid;grid-template-columns:repeat(var(--s),26px);gap:2px;transform:rotateX(55deg) rotateZ(-30deg);opacity:0;transition:all .4s;margin-top:-30px}.xlay.on{opacity:1}.xlay span{width:26px;height:26px;background:#FFC800;border:2px solid #E5A100;border-radius:4px}
 @media (min-width:900px){.xscene{max-width:1100px;width:calc(100% - 40px);margin:0 auto}.xch{width:120px}.xch-bimo{width:112px}.xask{left:18%;right:18%}}
 html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam] .xbub{background:#fff}
+/* gulir di panel/jendela tidak ikut menggulir halaman di belakangnya */
+body *{overscroll-behavior:contain}
+html.scrlock,html.scrlock body{overflow:hidden!important}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -7441,6 +7444,13 @@ async function vxGo(i){VX.tok++;const t=VX.tok;VX.i=i;try{speechSynthesis.cancel
 function vxToggle(){VX.paused=!VX.paused;$('#vxPlay').innerHTML=VX.paused?VP_IC.play:VP_IC.pause;$('#vxBig').hidden=!VX.paused;if(VX.paused){try{speechSynthesis.cancel()}catch(e){}}else if(VX.gate){const g=VX.gate;VX.gate=null;g()}}
 const _closeVideo1=closeVideo;closeVideo=function(){VX.open=false;VX.tok++;if(VX.gate){VX.gate();VX.gate=null}if(VX.wake){VX.wake(-1);VX.wake=null}const el=$('#vx');if(el){el.hidden=true;el.innerHTML=''}_closeVideo1()};
 
+
+/* kunci gulir halaman saat jendela/lapisan penuh sedang terbuka */
+(function(){const ids=['modal','ajak','room','vx','vp','invWait','loading'];let raf=0;
+ const chk=()=>{raf=0;const open=ids.some(id=>{const e=document.getElementById(id);return e&&!e.hidden&&e.offsetParent!==null||(e&&!e.hidden&&getComputedStyle(e).position==='fixed')});document.documentElement.classList.toggle('scrlock',!!open)};
+ const mo=new MutationObserver(()=>{if(!raf)raf=requestAnimationFrame(chk)});
+ const start=()=>{mo.observe(document.body,{attributes:true,attributeFilter:['hidden'],subtree:true,childList:true});chk()};
+ if(document.body)start();else document.addEventListener('DOMContentLoaded',start)})();
 /* ---------- starting a level ---------- */
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
   if(idx>pr.done)return;
