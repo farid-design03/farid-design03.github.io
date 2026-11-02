@@ -1,7 +1,8 @@
 // Selalu ambil versi terbaru dari internet; pakai salinan tersimpan hanya saat offline.
-const CACHE = 'jelajah-kelas-v120';
+const CACHE = 'jelajah-kelas-v121';
 self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+// Hapus salinan versi lama supaya penyimpanan di HP tidak menumpuk setiap kali aplikasi diperbarui.
+self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
@@ -14,11 +15,12 @@ self.addEventListener('fetch', e => {
     return;
   }
   if (url.origin !== location.origin) return;
+  // Halaman utama disimpan satu kali saja (tanpa ?parameter), berkas lain hanya jika berhasil diunduh.
+  const key = req.mode === 'navigate' ? './' : url.origin + url.pathname;
   e.respondWith(fetch(req).then(res => {
-    const copy = res.clone();
-    caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+    if (res.ok && res.type === 'basic') { const copy = res.clone(); caches.open(CACHE).then(c => c.put(key, copy)).catch(() => {}); }
     return res;
-  }).catch(() => caches.match(req).then(r => r || caches.match('./'))));
+  }).catch(() => caches.match(key).then(r => r || caches.match('./'))));
 });
 
 // Pemberitahuan tantangan: tombol Terima / Tolak, atau ketuk untuk membuka aplikasi.
