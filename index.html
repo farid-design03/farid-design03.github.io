@@ -2939,6 +2939,9 @@ body:not(.teacher) #vPlay.enter,body:not(.teacher) #vDuel.enter{animation:slideI
 body:not(.teacher) .view.enter:not(#vPlay):not(#vDuel){animation:fadeUp .22s ease-out}
 @keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){body:not(.teacher) .node.cur::after,body:not(.teacher) #nodeGo::after,body:not(.teacher) .nrow::before{animation:none!important;display:none}}
+/* ---- semua tombol tenggelam saat dipencet ---- */
+:where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row){transition:translate .06s ease,box-shadow .06s ease,filter .06s}
+:where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row):not(:disabled):not(.node):active{translate:0 4px!important;box-shadow:none!important;filter:brightness(.97)}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -10512,6 +10515,7 @@ $('#modal').onclick=e=>{if(e.target.id==='modal'&&!$('#mbox').querySelector('#ch
 $('#checkBtn').onclick=()=>{if(game&&game.sel!=null&&!game.locked)answer(game.sel)};
 $('#skipBtn2').onclick=()=>{if(game&&!game.locked)answer(-1)};
 {const cb=document.getElementById('checkBar');if(cb)document.body.appendChild(cb)}
+try{document.addEventListener('touchstart',()=>{},{passive:true})}catch(e){}
 document.body.insertAdjacentHTML('beforeend','<button class="practicefab" id="practiceFab" hidden><i data-icon="practice"></i>Latihan</button>');
 $('#practiceFab').onclick=()=>startPractice();
 setInterval(()=>{if(P){tickHearts();if($('#statsBar').offsetParent)renderTop()}},30000);
