@@ -2858,15 +2858,23 @@ html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam]
 @media (max-width:999px){#leagueCard{width:100vw;max-width:100vw;margin-left:calc(50% - 50vw)!important;margin-right:0!important;margin-top:-14px!important}
  #leagueCard .lgx-head{top:var(--stickTop,0)}}
 html[data-theme=malam] #leagueCard .lgx-head{background:#0a0f1e!important;border-color:#1f2a44!important}
-/* ===== gaya datar Duolingo: gambar tanpa garis hitam, halaman murid tanpa kotak ===== */
-svg [stroke="#1B1E3D"]{stroke:transparent}
-svg [stroke="#1B1E3D"] [fill="none"],svg [stroke="#1B1E3D"][fill="none"],svg [stroke="#1B1E3D"] path[d][stroke-linecap="round"]:not([fill]),svg [stroke="#1B1E3D"] line{stroke:#1B1E3D}
-.mascot svg .mbody{stroke:transparent}
+/* ===== gaya Duolingo: gambar tanpa garis hitam tebal, kotak abu tipis tanpa bayangan ===== */
+svg [stroke="#1B1E3D"]{stroke:rgba(27,30,61,.14)}
+svg [stroke="#1B1E3D"] [fill="none"],svg [stroke="#1B1E3D"][fill="none"],svg [stroke="#1B1E3D"] line{stroke:#1B1E3D}
+.mascot svg .mbody{stroke:rgba(27,30,61,.14)}
 .mascot svg .mbody [fill="none"]{stroke:#1B1E3D}
-/* halaman murid: isi penuh tanpa kotak, dipisah garis tipis */
-body:not(.teacher) :is(#vQuest,#vShop,#vProfile,#vTeam) .card:not(.fqcard):not(.mqcard){background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding-left:0!important;padding-right:0!important;border-bottom:2px solid var(--line)!important;padding-bottom:16px!important}
-body:not(.teacher) :is(#vQuest,#vShop,#vProfile,#vTeam) .item{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding-left:0!important;padding-right:0!important}
-body:not(.teacher) :is(#vQuest,#vShop,#vProfile,#vTeam) .pagehead{border-radius:0!important;border-left:0!important;border-right:0!important;border-top:0!important;box-shadow:none!important}
+html[data-theme=malam] svg [stroke="#1B1E3D"]{stroke:rgba(0,0,0,.25)}html[data-theme=malam] .mascot svg .mbody{stroke:rgba(0,0,0,.25)}
+/* kartu murid: garis abu tipis, tanpa bayangan */
+body:not(.teacher) .main .card,body:not(.teacher) .ps,body:not(.teacher) .item.box{border:2px solid var(--line)!important;box-shadow:none!important;border-radius:16px!important}
+/* judul halaman: bilah polos dengan garis bawah */
+body:not(.teacher) .view>.pagehead{background:var(--bg,#fff)!important;border:0!important;border-bottom:2px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+/* Toko: tanpa kotak, baris dipisah garis */
+body:not(.teacher) #vShop .shopsec{border:0!important;border-bottom:2px solid var(--line)!important;border-radius:0!important;padding-left:2px!important;padding-right:2px!important;background:transparent!important}
+body:not(.teacher) #vShop .item{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding-left:0!important;padding-right:0!important}
+/* Profil: spanduk avatar penuh, isi langsung di halaman */
+body:not(.teacher) #vProfile .ptop{border:0!important;background:transparent!important;border-radius:0!important;overflow:visible!important}
+@media (max-width:999px){body:not(.teacher) #vProfile .ptop .pban{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0}
+ body:not(.teacher) #vQuest .mqhead{margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;border-radius:0!important}}
 body:not(.teacher) #fbTasks .fbtask,body:not(.teacher) .notifbar2{box-shadow:none!important}
 </style>
 <style>html,body{margin:0}</style>
