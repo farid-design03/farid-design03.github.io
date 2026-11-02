@@ -1,0 +1,19 @@
+# Sekali pakai: pulihkan akun login murid farid. Dihapus setelah selesai.
+name: Pulihkan akun
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/pulihkan-akun.yml','.github/scripts/pulihkan-akun.mjs']
+jobs:
+  pulihkan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 20}
+      - run: npm install --no-save google-auth-library@9
+      - run: node .github/scripts/pulihkan-akun.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          UID_LAMA: HpY9uyPGOuZW275xOMD3RojdH6I3
+          USERNAME_LAMA: farid
