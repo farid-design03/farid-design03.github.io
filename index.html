@@ -2847,8 +2847,7 @@ p.vpara{margin:0;font-size:16.5px;line-height:1.55;font-weight:600}
 @media (min-width:900px){.xscene{max-width:1100px;width:calc(100% - 40px);margin:0 auto}.xch{width:120px}.xch-bimo{width:112px}.xask{left:18%;right:18%}}
 html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam] .xbub{background:#fff}
 /* gulir di panel/jendela tidak ikut menggulir halaman di belakangnya */
-body *{overscroll-behavior:contain}
-html.scrlock,html.scrlock body{overflow:hidden!important}
+.mbox,.gb,.tbpop,.tbpb,.tsres,.tdpmenu,.ajlist,.onb,.onbin,.sheet,.petgrid,.lgx-list,.xstage,.vbody,.vcap,.xbub,#pop{overscroll-behavior-y:contain}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -7446,8 +7445,10 @@ const _closeVideo1=closeVideo;closeVideo=function(){VX.open=false;VX.tok++;if(VX
 
 
 /* kunci gulir halaman saat jendela/lapisan penuh sedang terbuka */
-(function(){const ids=['modal','ajak','room','vx','vp','invWait','loading'];let raf=0;
- const chk=()=>{raf=0;const open=ids.some(id=>{const e=document.getElementById(id);return e&&!e.hidden&&e.offsetParent!==null||(e&&!e.hidden&&getComputedStyle(e).position==='fixed')});document.documentElement.classList.toggle('scrlock',!!open)};
+/* posisi halaman dibekukan (bukan dikunci) selama jendela terbuka, supaya isi jendela tetap bisa digulir */
+(function(){const ids=['modal','ajak','room','vx','vp','invWait','loading'];let raf=0,on=false,y=0;
+ const chk=()=>{raf=0;const open=ids.some(id=>{const e=document.getElementById(id);return e&&!e.hidden});if(open&&!on){on=true;y=scrollY}else if(!open&&on){on=false;if(Math.abs(scrollY-y)>2)scrollTo(0,y)}};
+ addEventListener('scroll',()=>{if(on&&Math.abs(scrollY-y)>2)scrollTo(0,y)},{passive:true});
  const mo=new MutationObserver(()=>{if(!raf)raf=requestAnimationFrame(chk)});
  const start=()=>{mo.observe(document.body,{attributes:true,attributeFilter:['hidden'],subtree:true,childList:true});chk()};
  if(document.body)start();else document.addEventListener('DOMContentLoaded',start)})();
