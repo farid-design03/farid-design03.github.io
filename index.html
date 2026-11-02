@@ -2917,6 +2917,28 @@ html body:not(.teacher) .qsec h3,html body:not(.teacher) .sect,html body:not(.te
 html[data-theme=malam] body:not(.teacher) .primary{box-shadow:0 4px 0 #1e40af!important}
 html[data-theme=malam] body:not(.teacher) .npop .primary{background:#fff!important;color:var(--uc)!important;box-shadow:0 4px 0 rgba(0,0,0,.25)!important}
 @media (max-width:999px){html[data-theme=malam] body:not(.teacher) .side .nav:not([aria-current="page"]){background:transparent!important;border-color:transparent!important;box-shadow:none!important}}
+/* ---- interaksi ala Duolingo ---- */
+/* cincin level aktif berdenyut */
+body:not(.teacher) .nrow:has(>.node.cur:not(.k-chest))::before{content:"";position:absolute;left:50%;top:50%;width:104px;height:98px;margin:-49px 0 0 -52px;border-radius:50%;border:5px solid color-mix(in srgb,var(--uc) 45%,#fff);pointer-events:none;z-index:-1;animation:curRing 1.6s ease-in-out infinite}
+@keyframes curRing{0%,100%{transform:scale(.94);opacity:.95}50%{transform:scale(1.06);opacity:.55}}
+html body:not(.teacher) .node.cur:not(.k-chest){box-shadow:0 7px 0 rgba(0,0,0,.2)!important;overflow:hidden;animation:curBob 1.6s ease-in-out infinite}
+@keyframes curBob{0%,100%{translate:0 0}50%{translate:0 -2px}}
+/* kilau berkilat melintas di level aktif & tombol mulai */
+body:not(.teacher) .node.cur:not(.k-chest)::after,body:not(.teacher) #nodeGo::after{content:""!important;position:absolute!important;inset:-20% auto -20% -60%!important;width:45%!important;height:auto!important;background:linear-gradient(100deg,transparent 0,rgba(255,255,255,.75) 45%,rgba(190,240,255,.9) 50%,rgba(255,255,255,.75) 55%,transparent 100%)!important;border:0!important;border-radius:0!important;transform:skewX(-20deg)!important;animation:shine 2.8s ease-in-out infinite;pointer-events:none}
+body:not(.teacher) #nodeGo{position:relative;overflow:hidden}
+body:not(.teacher) #nodeGo::after{animation-delay:.6s}
+@keyframes shine{0%,55%{left:-60%}85%,100%{left:130%}}
+/* tekan level: turun seperti tombol 3D */
+html body:not(.teacher) .node:active{transform:translateY(5px)!important;box-shadow:0 2px 0 rgba(0,0,0,.2)!important}
+/* popup muncul memantul dari level */
+body:not(.teacher) .npop{transform-origin:50% 0;animation:npopDuo .28s cubic-bezier(.3,1.5,.5,1)!important}
+@keyframes npopDuo{0%{scale:.3;opacity:0}100%{scale:1;opacity:1}}
+/* masuk pelajaran: layar baru meluncur dari kanan */
+body:not(.teacher) #vPlay.enter,body:not(.teacher) #vDuel.enter{animation:slideInR .38s cubic-bezier(.2,.8,.2,1)!important}
+@keyframes slideInR{0%{transform:translateX(100%)}100%{transform:none}}
+body:not(.teacher) .view.enter:not(#vPlay):not(#vDuel){animation:fadeUp .22s ease-out}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){body:not(.teacher) .node.cur::after,body:not(.teacher) #nodeGo::after,body:not(.teacher) .nrow::before{animation:none!important;display:none}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
