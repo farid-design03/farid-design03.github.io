@@ -79,7 +79,7 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--yellow);outline
 /* ---------- shared pieces ---------- */
 .card{background:var(--surface);border:2px solid var(--line);border-radius:24px;box-shadow:0 4px 0 var(--line2)}
 .press{transition:transform .12s ease,box-shadow .12s ease}
-.press:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 2px 0 var(--line2)!important}
+.press:active:not(:disabled){box-shadow:none!important}
 
 /* ---------- top bar ---------- */
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -273,7 +273,7 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--yellow);outline
 #fbText .fbread{margin-top:8px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:800;font-size:14px;color:var(--ink);box-shadow:0 2px 0 var(--line2);cursor:pointer}
 .primary{border:2px solid var(--line);background:var(--green);color:#fff;border-radius:16px;padding:10px 22px;font-family:var(--title);font-size:20px;box-shadow:0 4px 0 var(--line2);text-shadow:0 2px 0 rgba(27,30,61,.4);transition:transform .12s}
 .primary:hover{transform:translateY(-2px)}
-.primary:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line2)}
+.primary:active{box-shadow:none}
 .ghost{border:2px solid var(--line);background:var(--card);border-radius:16px;padding:10px 18px;font-family:var(--display);font-weight:800;box-shadow:0 4px 0 var(--line2);transition:transform .12s}
 .ghost:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line2)}
 .speak{border:2px solid var(--line);background:var(--blue);color:#fff;border-radius:999px;padding:3px 12px;font-size:14px;font-weight:700;box-shadow:0 3px 0 var(--line2)}
@@ -1445,7 +1445,7 @@ input:focus,select:focus,textarea:focus{border-color:#84D8FF!important;outline:n
 *{-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
 .primary,.ghost,.smallbtn,.opt,.popover .row,.aved-it,.petit,.item .buy,.ajinv,.ajg,.ajopt,.stile,.back,.iconbtn,.pban-set,.pban-edit,.keypad button,.seg button,.lrow.tap,.pick,.tcard button{transition:transform .07s ease,box-shadow .07s ease,background-color .15s,filter .15s,border-color .15s}
-.primary:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 0 0 #58A700!important}
+.primary:active:not(:disabled){box-shadow:none!important}
 .ghost:active:not(:disabled),.smallbtn:active:not(:disabled),.aved-it:active,.petit:active,.ajopt:active,.stile:active,.back:active,.iconbtn:active,.pban-set:active,.pban-edit:active,.keypad button:active,.item .buy:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 0 0 transparent!important}
 .opt:active:not(:disabled){transform:translateY(4px)!important;box-shadow:0 0 0 transparent!important}
 .popover .row{box-shadow:0 3px 0 var(--line)}.popover .row:active{transform:translateY(3px);box-shadow:none}
@@ -2344,7 +2344,7 @@ html[data-theme=malam] .modal,html[data-theme=malam] .sheet,html[data-theme=mala
 html[data-theme=malam] .toast{background:#17213a!important;color:var(--ink)!important;border:1px solid #2c3a5c!important;border-left:4px solid #3b82f6!important;border-radius:10px!important;box-shadow:0 16px 40px rgba(1,4,14,.55)!important}
 /* tombol */
 html[data-theme=malam] .primary,html[data-theme=malam] .sfprobtn{background:linear-gradient(135deg,#3b82f6,#2563eb)!important;color:#fff!important;border:0!important;border-radius:10px!important;box-shadow:0 6px 16px rgba(37,99,235,.28)!important;text-shadow:none!important;font-family:var(--title)!important;font-weight:600!important;letter-spacing:.02em!important}
-html[data-theme=malam] .primary:active{transform:translateY(1px)}
+
 html[data-theme=malam] .primary:disabled{background:#1f2b47!important;color:var(--muted)!important;box-shadow:none!important;opacity:1}
 html[data-theme=malam] .ghost,html[data-theme=malam] .smallbtn,html[data-theme=malam] .tdnav,html[data-theme=malam] .dalt,html[data-theme=malam] .buy,html[data-theme=malam] .claim,html[data-theme=malam] .ajinv,html[data-theme=malam] .tbicon{background:#17213a!important;color:var(--ink)!important;border:1px solid #2c3a5c!important;border-radius:10px!important;box-shadow:none!important;font-family:var(--title)!important;font-weight:600!important}
 html[data-theme=malam] .ghost:hover,html[data-theme=malam] .smallbtn:hover{border-color:#3b82f6!important}
@@ -2903,7 +2903,7 @@ html body:not(.teacher) .main .card.league,html body:not(.teacher) #leagueCard{b
 /* tombol 3D kapital */
 html body:not(.teacher) .primary{text-transform:uppercase!important;letter-spacing:.06em!important;border:0!important;box-shadow:0 4px 0 color-mix(in srgb,var(--green) 70%,#000)!important;border-radius:14px!important}
 html body:not(.teacher) .ghost,html body:not(.teacher) .smallbtn{text-transform:uppercase!important;letter-spacing:.06em!important;border:2px solid var(--line)!important;box-shadow:0 4px 0 var(--line)!important;border-radius:14px!important}
-html body:not(.teacher) .primary:active,html body:not(.teacher) .ghost:active{transform:translateY(3px)!important;box-shadow:none!important}
+html body:not(.teacher) .primary:active,html body:not(.teacher) .ghost:active{box-shadow:none!important}
 /* label bagian abu kapital */
 html body:not(.teacher) .qsec h3,html body:not(.teacher) .sect,html body:not(.teacher) .eyebrow{text-transform:uppercase!important;letter-spacing:.08em!important;color:var(--muted2,#AFAFAF)!important;font-size:14px!important;font-weight:800!important}
 /* nav bawah: ikon saja, aktif kotak biru muda */
@@ -2919,12 +2919,13 @@ html[data-theme=malam] body:not(.teacher) .npop .primary{background:#fff!importa
 @media (max-width:999px){html[data-theme=malam] body:not(.teacher) .side .nav:not([aria-current="page"]){background:transparent!important;border-color:transparent!important;box-shadow:none!important}}
 /* ---- interaksi ala Duolingo ---- */
 /* cincin level aktif berdenyut */
-body:not(.teacher) .nrow:has(>.node.cur:not(.k-chest))::before{content:"";position:absolute;left:50%;top:50%;width:104px;height:98px;margin:-49px 0 0 -52px;border-radius:50%;border:5px solid color-mix(in srgb,var(--uc) 45%,#fff);pointer-events:none;z-index:-1;animation:curRing 1.6s ease-in-out infinite}
-@keyframes curRing{0%,100%{transform:scale(.94);opacity:.95}50%{transform:scale(1.06);opacity:.55}}
-html body:not(.teacher) .node.cur:not(.k-chest){box-shadow:0 7px 0 rgba(0,0,0,.2)!important;overflow:hidden;animation:curBob 1.6s ease-in-out infinite}
+body:not(.teacher) .nrow:has(>.node.cur:not(.k-chest))::before{content:"";position:absolute;top:-14px;bottom:-21px;left:-14px;right:-14px;border-radius:50%;border:5px solid color-mix(in srgb,var(--uc) 40%,#fff);pointer-events:none;z-index:-1;animation:curRing 1.6s ease-in-out infinite}
+@keyframes curRing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.6}}
+html body:not(.teacher) .node.cur:not(.k-chest){box-shadow:0 7px 0 rgba(0,0,0,.2)!important;background-image:linear-gradient(100deg,transparent 42%,rgba(255,255,255,.5) 48%,rgba(200,240,255,.75) 50%,rgba(255,255,255,.5) 52%,transparent 58%)!important;background-size:300% 100%!important;background-repeat:no-repeat!important;animation:shineBg 2.8s ease-in-out infinite}
+@keyframes shineBg{0%,55%{background-position:100% 0}85%,100%{background-position:0% 0}}
 @keyframes curBob{0%,100%{translate:0 0}50%{translate:0 -2px}}
 /* kilau berkilat melintas di level aktif & tombol mulai */
-body:not(.teacher) .node.cur:not(.k-chest)::after,body:not(.teacher) #nodeGo::after{content:""!important;position:absolute!important;inset:-20% auto -20% -60%!important;width:45%!important;height:auto!important;background:linear-gradient(100deg,transparent 0,rgba(255,255,255,.75) 45%,rgba(190,240,255,.9) 50%,rgba(255,255,255,.75) 55%,transparent 100%)!important;border:0!important;border-radius:0!important;transform:skewX(-20deg)!important;animation:shine 2.8s ease-in-out infinite;pointer-events:none}
+body:not(.teacher) #nodeGo::after{content:""!important;position:absolute!important;inset:-20% auto -20% -60%!important;width:45%!important;height:auto!important;background:linear-gradient(100deg,transparent 0,rgba(255,255,255,.75) 45%,rgba(190,240,255,.9) 50%,rgba(255,255,255,.75) 55%,transparent 100%)!important;border:0!important;border-radius:0!important;transform:skewX(-20deg)!important;animation:shine 2.8s ease-in-out infinite;pointer-events:none}
 body:not(.teacher) #nodeGo{position:relative;overflow:hidden}
 body:not(.teacher) #nodeGo::after{animation-delay:.6s}
 @keyframes shine{0%,55%{left:-60%}85%,100%{left:130%}}
@@ -2940,8 +2941,13 @@ body:not(.teacher) .view.enter:not(#vPlay):not(#vDuel){animation:fadeUp .22s eas
 @keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){body:not(.teacher) .node.cur::after,body:not(.teacher) #nodeGo::after,body:not(.teacher) .nrow::before{animation:none!important;display:none}}
 /* ---- semua tombol tenggelam saat dipencet ---- */
-:where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row){transition:translate .06s ease,box-shadow .06s ease,filter .06s}
-:where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row):not(:disabled):not(.node):active{translate:0 4px!important;box-shadow:none!important;filter:brightness(.97)}
+:where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row){transition:transform .05s ease,box-shadow .05s ease,filter .05s}
+html body:not(#_x) :is(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row):not(:disabled):not(.node):active{transform:translateY(4px)!important;translate:none!important;box-shadow:none!important;filter:brightness(.97)}
+/* kartu bertepi bawah tebal: turun 2px, tepi bawah menipis, alas tetap */
+html body:not(#_x) :is(.phopt,.item.box,.roomcard,.friendcard,.duocard):not(:disabled):active{transform:translateY(2px)!important;border-bottom-width:2px!important;box-shadow:none!important}
+/* level: tombol turun setinggi bayangannya, bayangan tetap di tempat */
+html body:not(#_x) .node:not(.k-chest):active{transform:translateY(7px)!important;translate:none!important;box-shadow:none!important;animation:none!important;transition:transform .05s!important}
+html body:not(#_x) .node:not(.k-chest):active::after{display:none!important}
 /* ---- pelajaran ala Duolingo ---- */
 body:not(.teacher) .lbar{position:relative;overflow:visible!important;height:18px!important;border:0!important;background:var(--track,#E5E5E5)!important;border-radius:999px!important}
 body:not(.teacher) .lbar i{border-radius:999px;position:relative;background:var(--green)!important;background-image:none!important;transition:width .55s cubic-bezier(.3,1.5,.5,1),background-color .3s!important;min-width:0}
