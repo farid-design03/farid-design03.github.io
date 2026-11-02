@@ -2714,6 +2714,75 @@ html[data-theme=malam] .rrp.me{background:rgba(251,191,36,.12)!important}
 body.exam #quitBtn,body.exam #pauseBtn{visibility:hidden;pointer-events:none}
 body.exam,body.exam *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body.exam #vPlay::before{content:"MODE UJIAN";position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;font:800 11px var(--title);letter-spacing:.12em;color:#fff;background:#E5383B;padding:4px 10px;border-radius:999px;opacity:.9}
+/* ===== video belajar ===== */
+.vp{position:fixed;inset:0;z-index:350;display:flex;flex-direction:column;background:#0b1020;color:#fff;font-family:var(--body)}
+.vp[hidden]{display:none}
+body.vp-on{overflow:hidden}
+.vtop{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px}
+.vtt{flex:1;min-width:0;display:flex;flex-direction:column}.vtt small{opacity:.7;font-size:12px}.vtt b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--title)}
+.vbtn{min-width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:700 15px var(--title);cursor:pointer;display:grid;place-items:center;padding:0 10px}
+.vbtn[aria-pressed=false]{opacity:.5}.vbtn.vplay{width:52px;height:52px;border-radius:50%;font-size:20px;background:#fff;color:#0b1020}
+.vstage{position:relative;flex:1;min-height:0;margin:0 10px;border-radius:22px;overflow:hidden;background:linear-gradient(160deg,color-mix(in srgb,var(--vc) 85%,#fff 0%),color-mix(in srgb,var(--vc) 55%,#1b1e3d));cursor:pointer}
+.vbg i{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);animation:vFloat 9s ease-in-out infinite}
+.vbg i:nth-child(1){width:220px;height:220px;left:-60px;top:-50px}.vbg i:nth-child(2){width:140px;height:140px;right:-30px;top:30%;animation-delay:-3s}
+.vbg i:nth-child(3){width:90px;height:90px;left:30%;bottom:-30px;animation-delay:-5s}.vbg i:nth-child(4){width:50px;height:50px;right:22%;top:10%;animation-delay:-7s;background:rgba(255,255,255,.2)}
+@keyframes vFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,-18px)}}
+.vemo{position:absolute;right:14px;top:12px;display:flex;gap:6px;z-index:2}
+.vemo span{font-size:38px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25));animation:vEmo .6s cubic-bezier(.3,1.6,.5,1) both,vBob 3s ease-in-out infinite;animation-delay:calc(var(--k)*.15s),calc(var(--k)*.4s + .6s)}
+@keyframes vEmo{from{transform:scale(0) rotate(-30deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes vBob{0%,100%{translate:0 0}50%{translate:0 -6px}}
+.vcard{position:absolute;left:14px;right:14px;top:58px;bottom:118px;z-index:1;background:rgba(255,255,255,.95);color:#1b1e3d;border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.vcard.vin{animation:vCard .45s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes vCard{from{transform:translateY(24px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.vcard.k-title,.vcard.k-end{justify-content:center;text-align:center;background:transparent;color:#fff;box-shadow:none;bottom:150px}
+.vh{margin:0;font-family:var(--title);font-size:22px;line-height:1.2;color:inherit}
+.k-title .vh,.k-end .vh{font-size:clamp(26px,7vw,40px);text-shadow:0 3px 0 rgba(0,0,0,.18)}
+.k-title .vh .vw{opacity:0;display:inline-block;animation:vEmo .5s cubic-bezier(.3,1.6,.5,1) forwards}
+.k-title .vh .vw:nth-child(2){animation-delay:.12s}.k-title .vh .vw:nth-child(3){animation-delay:.24s}.k-title .vh .vw:nth-child(4){animation-delay:.36s}.k-title .vh .vw:nth-child(n+5){animation-delay:.48s}
+.vbody{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.vit{animation:vIn .45s ease-out both}
+@keyframes vIn{from{transform:translateX(-14px);opacity:0}to{transform:none;opacity:1}}
+.vsub{margin:0;font-weight:800;opacity:.85;letter-spacing:.04em}.vlead{margin:0;font-size:17px;line-height:1.5;font-weight:600}
+p.vpara{margin:0;font-size:16.5px;line-height:1.55;font-weight:600}
+.vw{transition:color .15s,background .15s;border-radius:4px}.vw.on{color:color-mix(in srgb,var(--vc) 75%,#000)}
+.k-title .vw.on,.k-end .vw.on{color:#fff}
+.vli{display:flex;gap:10px;align-items:flex-start;font-size:16px;line-height:1.45;font-weight:600}
+.vnum{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--vc);color:#fff;font:800 13px var(--title)}
+.vck .vnum{background:#22c55e}
+.vex{border:2px solid color-mix(in srgb,var(--vc) 35%,#fff);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:color-mix(in srgb,var(--vc) 7%,#fff)}
+.vtag{display:inline-block;font:800 11px var(--title);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--vc);padding:2px 8px;border-radius:999px;align-self:flex-start}.vtag.ok{background:#22c55e}
+.vq{font-weight:700;font-size:16px;line-height:1.45}.va{font-weight:700;color:#15803d}.va.vpop{animation:vEmo .5s cubic-bezier(.3,1.6,.5,1)}
+.vopts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vo{border:2px solid #e2e6f0;border-radius:12px;padding:8px 10px;font-weight:700;font-size:14.5px;background:#fff;transition:all .3s}.vo b{color:var(--vc);margin-right:4px}
+.vo.right{border-color:#22c55e;background:#dcfce7;transform:scale(1.04)}.vo.dim{opacity:.4}
+.vnote{background:#FFF7E0;border-radius:12px;padding:8px 12px;font-weight:600;font-size:15px;line-height:1.45}
+.vtb{overflow:auto}.vtb table{border-collapse:collapse;width:100%;font-size:14.5px}.vtb th{background:var(--vc);color:#fff;padding:6px 8px;text-align:left}.vtb td{border-bottom:1px solid #e5e7ef;padding:6px 8px;font-weight:600}
+.vrowin{animation:vIn .4s ease-out both}
+.vend{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}.vend button{min-height:46px}
+.vmas{position:absolute;left:10px;bottom:44px;width:96px;z-index:3;transition:all .4s cubic-bezier(.2,.9,.3,1.2);transform-origin:50% 100%}
+.vmas.big{left:50%;width:130px;margin-left:-65px;bottom:30px}
+.vmas .mascot{width:100%}
+.vmas.talk{animation:vTalk .32s ease-in-out infinite alternate}
+@keyframes vTalk{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(1.04,.96) rotate(2deg)}}
+.vcap{position:absolute;left:112px;right:10px;bottom:10px;z-index:3;background:rgba(10,14,30,.78);color:#fff;border-radius:14px;padding:8px 12px;font-size:14px;line-height:1.4;font-weight:600;max-height:84px;overflow:auto}
+.vcap:empty{display:none}
+.vbig{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:34px;display:grid;place-items:center;z-index:4;pointer-events:none}
+.vctl{padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px}
+.vbar{display:flex;gap:4px}.vseg{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.2);border:0;padding:0;cursor:pointer;overflow:hidden}.vseg i{display:block;height:100%;width:0;background:#fff;border-radius:3px;transition:width .15s linear}
+.vrow{display:flex;align-items:center;gap:8px;justify-content:center}.vtime{font:700 13px var(--title);opacity:.75;min-width:52px;text-align:center}
+.vconf{position:absolute;top:-10px;width:9px;height:14px;border-radius:2px;z-index:5;animation:vConf 1.5s ease-in forwards}
+@keyframes vConf{to{transform:translate(var(--dx),110vh) rotate(540deg)}}
+@media (min-width:900px){.vstage{max-width:1100px;width:calc(100% - 40px);margin:0 auto}.vcard{left:12%;right:12%;bottom:120px}.vmas{width:120px}.vcap{left:150px}.vctl{max-width:1100px;width:100%;margin:0 auto;box-sizing:border-box}}
+@media (prefers-reduced-motion:reduce){.vp *{animation:none!important}}
+.vcard{bottom:auto!important;max-height:calc(100% - 200px)}
+.vcard.k-title,.vcard.k-end{top:46px}
+.vill{position:absolute;right:16px;bottom:110px;z-index:2;display:flex;gap:6px;align-items:flex-end;pointer-events:none}
+.vill span{font-size:56px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25));animation:vEmo .6s cubic-bezier(.3,1.6,.5,1) both,vBob 3s ease-in-out infinite;animation-delay:calc(var(--k,0)*.15s),calc(var(--k,0)*.4s + .6s)}
+.vill .vglyph{display:grid;place-items:center;min-width:96px;height:96px;padding:0 14px;border-radius:28px;background:rgba(255,255,255,.95);color:var(--vc);font:800 34px var(--title);box-shadow:0 10px 0 rgba(0,0,0,.15)}
+.vill .vglyph.sm{min-width:64px;height:64px;font-size:22px;border-radius:20px;opacity:.9}
+.vill.k-title{right:auto;left:50%;transform:translateX(-50%);bottom:auto;top:52%}
+.vill.k-title .vglyph{min-width:120px;height:120px;font-size:42px}
+.vill.k-end{display:none}
+.vbtn svg{display:block}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -6985,7 +7054,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
 
 function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
   s.units.forEach((u,ui)=>{const base=ui*NODES.length,locked=done<base,sign=ui%2?-1:1;
-    h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}" aria-label="Panduan">${ico('book')}<span class="gl">Panduan</span></button></div><div class="nodes">`;
+    h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}" aria-label="Video belajar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.2v5.6l5-2.8z" fill="currentColor"/></svg><span class="gl">Video</span></button></div><div class="nodes">`;
     const spP=spPending(ui),spD=spDone(ui);
     NODES.forEach((nd,ni)=>{const idx=base+ni;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spP)st='lock';
       h+=`<div class="nrow" style="--x:${OFFS[ni]*sign}px" data-u="${ui}" data-n="${ni}">${st==='cur'?`<span class="starttip">${done===0?'MULAI':nd.k==='chest'?'BUKA':'LANJUT'}</span>`:''}<button class="node ${st} k-${nd.k}" aria-label="${esc(nodeTitle(s,ui,ni))}">${ico(nd.k==='chest'&&st==='done'?'chestOpen':NODE_ICON[nd.k])}</button></div>`;
@@ -7020,11 +7089,97 @@ function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?
     (x.ex?x.ex.map(e=>`<div class="ex"><div class="qq">${e[0]}</div><div class="aa">${e[1]}</div></div>`).join(''):'')+
     (x.note?`<div class="gnote">${x.note}</div>`:'')+`</section>`;
   return `<p class="gintro">${m.intro}</p>`+m.s.map(sec).join('')+(m.sum&&m.sum.length?`<section class="gsum"><h4>Yang perlu diingat</h4><ul>${m.sum.map(t=>`<li>${t}</li>`).join('')}</ul></section>`:'')}
-function openGuide(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=u._k||`${c.id}/${s.id}/${ui}`;
+function openGuide(ui){openVideo(ui)}
+function openGuideText(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=u._k||`${c.id}/${s.id}/${ui}`;
   $('#modal').classList.add('gsheet');
   openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
    ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal;
   loadMateri().then(M=>{const el=$('#gMat');if(!el)return;const m=M[key];el.innerHTML=m?guideBody(m):''}).catch(()=>{const el=$('#gMat');if(el)el.innerHTML='<div class="gload">Materi lengkap belum bisa dimuat. Periksa internet, lalu buka lagi.</div>'})}
+
+/* ---------- VIDEO BELAJAR: panduan unit sebagai video animasi dengan narasi, karakter, dan gambar ---------- */
+const VP_IC={prev:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 5h2.5v14H6zM20 5v14L9.5 12z"/></svg>',next:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 5H18v14h-2.5zM4 5l10.5 7L4 19z"/></svg>',play:'<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M7 4.5v15L20 12z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M6 4.5h4.5v15H6zM13.5 4.5H18v15h-4.5z"/></svg>'};
+const VP={on:false,sc:[],i:0,j:0,play:false,tok:0,cc:true,rate:1,timer:null,wtimer:null,ui:0};
+const vpStrip=h=>{const d=document.createElement('div');d.innerHTML=String(h||'');return (d.textContent||'').replace(/\s+/g,' ').trim()};
+const VP_EMO=/\p{Extended_Pictographic}(️|‍\p{Extended_Pictographic})*/gu;
+function vpSay(t){t=vpStrip(t).replace(VP_EMO,'').replace(/…/g,', titik-titik,').replace(/(\d)\s*×\s*(\d)/g,'$1 kali $2').replace(/×/g,' kali ').replace(/÷/g,' dibagi ')
+  .replace(/(\d)\s*[−-]\s*(\d)/g,'$1 kurang $2').replace(/(\d)\s*\+\s*(\d)/g,'$1 tambah $2').replace(/\s=\s/g,' sama dengan ').replace(/(\d)\s*:\s*(\d)/g,'$1 dibagi $2')
+  .replace(/(\d)%/g,'$1 persen').replace(/²/g,' kuadrat').replace(/³/g,' pangkat tiga').replace(/½/g,'setengah').replace(/¼/g,'seperempat').replace(/¾/g,'tiga perempat')
+  .replace(/→/g,', menjadi ').replace(/[•·]/g,', ').replace(/\s+/g,' ').trim();return t}
+const vpEst=t=>Math.max(1600,vpSay(t).length*72/VP.rate+500);
+function vpVoice(){try{const v=speechSynthesis.getVoices();return v.find(x=>/^id/i.test(x.lang)&&/google/i.test(x.name))||v.find(x=>/^id/i.test(x.lang))||null}catch(e){return null}}
+/* narasi kalimat demi kalimat (Chrome memotong ucapan yang terlalu panjang) */
+function vpSpeak(text,onDone,onProg){const tok=VP.tok,raw=vpSay(text);const est=vpEst(text);let done=false;const fin=()=>{if(done||tok!==VP.tok)return;done=true;clearInterval(VP.wtimer);onProg&&onProg(1);onDone()};
+  const t0=Date.now();clearInterval(VP.wtimer);if(onProg)VP.wtimer=setInterval(()=>{if(tok!==VP.tok){clearInterval(VP.wtimer);return}onProg(Math.min(.98,(Date.now()-t0)/est))},120);
+  const canTTS=soundOn&&'speechSynthesis' in window&&raw;if(!canTTS){VP.timer=setTimeout(fin,est);return}
+  try{speechSynthesis.cancel()}catch(e){}const parts=raw.match(/[^.!?]+[.!?]*/g)||[raw];let k=0;const v=vpVoice();
+  const next=()=>{if(tok!==VP.tok)return;if(k>=parts.length){fin();return}const u=new SpeechSynthesisUtterance(parts[k++].trim());u.lang='id-ID';if(v)u.voice=v;u.rate=.95*VP.rate;u.pitch=1.08;u.onend=next;u.onerror=()=>{VP.timer=setTimeout(next,300)};speechSynthesis.speak(u)};
+  next();VP.timer=setTimeout(fin,est*2.2+4000)}
+function vpWords(el){const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w))f.appendChild(document.createTextNode(w));else{const s=document.createElement('span');s.className='vw';s.textContent=w;f.appendChild(s)}});c.replaceWith(f)}else if(c.nodeType===1)walk(c)})};walk(el);return [...el.querySelectorAll('.vw')]}
+function vpEmo(txt){return [...new Set((String(txt).match(VP_EMO)||[]))].slice(0,4)}
+/* menyusun adegan dari materi unit */
+function vpScenes(u,s,m,ui,ex){const sc=[],nm=(P&&P.name||'').split(' ')[0];
+  const mk=(kind,head,steps,emo)=>sc.push({kind,head,steps,emo:emo||[]});
+  mk('title',`${esc(u.t)}`,[{h:`<p class="vsub">${esc(s.name)} · Unit ${ui+1}</p>`,say:`Halo${nm?' '+nm:''}! Aku Uli. Hari ini kita belajar ${u.t}.`},{h:`<p class="vlead">${m?m.intro:esc(u.d)}</p>`,say:m?m.intro:u.d,w:1}],vpEmo(m?m.intro:''));
+  if(m)m.s.forEach((x,k)=>{const st=[],all=[x.h,x.p,(x.li||[]).join(' '),(x.ex||[]).flat().join(' ')].join(' ');
+    if(x.p)st.push({h:`<p class="vpara">${x.p}</p>`,say:x.p,w:1});
+    (x.li||[]).forEach((t,i)=>st.push({h:`<div class="vli"><span class="vnum">${i+1}</span><span>${t}</span></div>`,say:t,w:1}));
+    if(x.tb){st.push({h:`<div class="vtb"><table><thead><tr>${x.tb[0].map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody></tbody></table></div>`,say:'Perhatikan tabel ini.'});
+      x.tb.slice(1).forEach(r=>st.push({row:`<tr>${r.map(t=>`<td>${t}</td>`).join('')}</tr>`,say:r.map(vpStrip).join(', ')}))}
+    (x.ex||[]).forEach(e=>{st.push({h:`<div class="vex"><span class="vtag">Contoh</span><div class="vq">${e[0]}</div><div class="va" hidden></div></div>`,say:'Contoh. '+e[0]});st.push({ans:e[1],say:e[1],cheer:1})});
+    if(x.note)st.push({h:`<div class="vnote">💡 ${x.note}</div>`,say:x.note,w:1});
+    if(!st.length)st.push({h:'',say:x.h});
+    mk('sec',x.h,st,vpEmo(all))});
+  mk('tip','Tips dari Uli',[{h:`<p class="vpara">${esc(u.tip||u.d)}</p>`,say:u.tip||u.d,w:1}],['💡']);
+  (ex||[]).slice(0,2).forEach((q,k)=>mk('quiz',`Ayo coba! (${k+1})`,[{h:`<div class="vex"><div class="vq">${q.q}</div><div class="vopts">${q.opts.map((o,i)=>`<span class="vo" data-i="${i}"><b>${'ABCD'[i]}</b> ${o}</span>`).join('')}</div></div>`,say:vpStrip(q.q)+'. Coba tebak jawabannya!',wait:2200},{reveal:q.opts.indexOf(q.ans),ans:q.exp||'',say:'Jawabannya, '+q.ans+'. '+(q.exp?vpStrip(q.exp):''),cheer:1}],['🤔']));
+  if(m&&m.sum&&m.sum.length)mk('sum','Yang perlu diingat',m.sum.map(t=>({h:`<div class="vli vck"><span class="vnum">✓</span><span>${t}</span></div>`,say:t,w:1})),['⭐']);
+  mk('end','Hebat, kamu sudah selesai!',[{h:`<p class="vlead">Sekarang ayo berlatih supaya makin paham.</p>`,say:'Hebat! Kamu sudah selesai menonton. Sekarang ayo berlatih supaya makin paham!',cheer:1}],['🎉','🏆']);
+  return sc}
+function openVideo(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const key=u._k||`${c.id}/${s.id}/${ui}`;const ex=unitQs(u,2);
+  let el=$('#vp');if(!el){document.body.insertAdjacentHTML('beforeend','<div id="vp" class="vp" role="dialog" aria-modal="true" aria-label="Video belajar" hidden></div>');el=$('#vp')}
+  el.style.setProperty('--vc',s.color||u.color||'#3D8BFF');el.hidden=false;document.body.classList.add('vp-on');VP.on=true;VP.ui=ui;
+  el.innerHTML=`<div class="vtop"><button class="vbtn" id="vpX" aria-label="Tutup video">✕</button><div class="vtt"><small>Video belajar · Unit ${ui+1}</small><b>${esc(u.t)}</b></div><button class="vbtn vtxt" id="vpTxt" title="Baca versi teks">Teks</button></div>
+   <div class="vstage" id="vpStage"><div class="vbg"><i></i><i></i><i></i><i></i></div><div class="vemo" id="vpEmo"></div><div class="vcard" id="vpCard"><div class="gload" style="color:#fff">Menyiapkan video…</div></div>
+    <div class="vmas" id="vpMas"><div class="mascot" data-mascot data-mood="happy"></div></div><div class="vcap" id="vpCap"></div><div class="vill" id="vpIll"></div><div class="vbig" id="vpBig" hidden>${VP_IC.play}</div></div>
+   <div class="vctl"><div class="vbar" id="vpBar"></div><div class="vrow"><button class="vbtn" id="vpPrev" aria-label="Adegan sebelumnya">${VP_IC.prev}</button><button class="vbtn vplay" id="vpPlay" aria-label="Jeda">${VP_IC.pause}</button><button class="vbtn" id="vpNext" aria-label="Adegan berikutnya">${VP_IC.next}</button><span class="vtime" id="vpTime"></span><button class="vbtn" id="vpCC" aria-pressed="true" title="Teks narasi">CC</button><button class="vbtn" id="vpRate" title="Kecepatan">1×</button></div></div>`;
+  hydrate(el);
+  $('#vpX').onclick=closeVideo;$('#vpTxt').onclick=()=>{closeVideo();openGuideText(ui)};$('#vpPlay').onclick=()=>vpToggle();$('#vpStage').onclick=e=>{if(e.target.closest('button'))return;vpToggle()};
+  $('#vpPrev').onclick=()=>vpGo(Math.max(0,VP.i-(VP.j>1?0:1)));$('#vpNext').onclick=()=>vpGo(Math.min(VP.sc.length-1,VP.i+1));
+  $('#vpCC').onclick=()=>{VP.cc=!VP.cc;$('#vpCC').setAttribute('aria-pressed',VP.cc);$('#vpCap').hidden=!VP.cc};
+  $('#vpRate').onclick=()=>{VP.rate=VP.rate>=1.5?.75:VP.rate+.25;$('#vpRate').textContent=VP.rate+'×';vpGo(VP.i)};
+  try{speechSynthesis.getVoices()}catch(e){}
+  loadMateri().catch(()=>({})).then(M=>{if(!VP.on)return;VP.sc=vpScenes(u,s,(M||{})[key],ui,ex);
+    $('#vpBar').innerHTML=VP.sc.map((x,k)=>`<button class="vseg" data-k="${k}" aria-label="Adegan ${k+1}"><i></i></button>`).join('');
+    $('#vpBar').querySelectorAll('.vseg').forEach(b=>b.onclick=()=>vpGo(+b.dataset.k));VP.play=true;vpGo(0)})}
+function vpGo(i){VP.tok++;clearTimeout(VP.timer);clearInterval(VP.wtimer);try{speechSynthesis.cancel()}catch(e){}VP.i=i;VP.j=0;const x=VP.sc[i];if(!x)return;
+  const card=$('#vpCard');card.className='vcard k-'+x.kind;card.innerHTML=`<h2 class="vh">${x.head}</h2><div class="vbody"></div>`;card.classList.remove('vin');void card.offsetWidth;card.classList.add('vin');
+  $('#vpEmo').innerHTML='';const sj=SUBJ()||{};const ill=x.kind==='title'?`<span class="vglyph">${esc(sj.glyph||'★')}</span>`:x.emo.length?x.emo.map((e,k)=>`<span style="--k:${k}">${e}</span>`).join(''):`<span class="vglyph sm">${esc(sj.glyph||'★')}</span>`;$('#vpIll').innerHTML=ill;$('#vpIll').className='vill k-'+x.kind;
+  $('#vpMas').classList.toggle('big',x.kind==='title'||x.kind==='end');
+  $('#vpBar').querySelectorAll('.vseg').forEach((b,k)=>{b.classList.toggle('done',k<i);b.classList.toggle('cur',k===i);b.querySelector('i').style.width=k<i?'100%':'0'});
+  $('#vpTime').textContent=`${i+1} / ${VP.sc.length}`;
+  if(x.kind==='title')vpWords(card.querySelector('.vh'));
+  vpStep()}
+function vpStep(){const x=VP.sc[VP.i];if(!x)return;if(VP.j>=x.steps.length){vpSegFill(1);if(VP.i<VP.sc.length-1){VP.timer=setTimeout(()=>{if(VP.play)vpGo(VP.i+1)},700)}else vpEndBtns();return}
+  const st=x.steps[VP.j],body=$('#vpCard .vbody');let words=[];
+  if(st.h!=null&&st.h!==''){const w=document.createElement('div');w.className='vit';w.innerHTML=st.h;body.appendChild(w);if(st.w)words=vpWords(w);w.scrollIntoView&&body.scrollHeight>body.clientHeight&&(body.scrollTop=body.scrollHeight)}
+  if(st.row){const tb=body.querySelector('.vtb tbody');if(tb){tb.insertAdjacentHTML('beforeend',st.row);tb.lastElementChild.classList.add('vrowin')}}
+  if(st.ans!=null&&st.reveal==null){const a=[...body.querySelectorAll('.va')].pop();if(a){a.innerHTML=`<span class="vtag ok">Jawaban</span> ${st.ans}`;a.hidden=false;a.classList.add('vpop')}}
+  if(st.reveal!=null){body.querySelectorAll('.vo').forEach((o,k)=>{o.classList.add(k===st.reveal?'right':'dim')});if(st.ans){const d=document.createElement('div');d.className='vit vnote';d.innerHTML=st.ans;body.appendChild(d)}}
+  if(st.cheer){vpCheer()}
+  const cap=$('#vpCap');cap.textContent=vpStrip(st.say);cap.hidden=!VP.cc;
+  if(!VP.play){$('#vpMas').classList.remove('talk');return}
+  $('#vpMas').classList.add('talk');const seg=x.steps.length;
+  vpSpeak(st.say,()=>{$('#vpMas').classList.remove('talk');VP.j++;const go=()=>{if(VP.play)vpStep()};VP.timer=setTimeout(go,st.wait||450)},
+    f=>{if(words.length){const n=Math.round(f*words.length);words.forEach((w,k)=>w.classList.toggle('on',k<n))}vpSegFill((VP.j+f)/seg)})}
+function vpSegFill(f){const b=$('#vpBar')&&$('#vpBar').querySelectorAll('.vseg')[VP.i];if(b)b.querySelector('i').style.width=Math.round(Math.min(1,f)*100)+'%'}
+function vpToggle(){VP.play=!VP.play;$('#vpPlay').innerHTML=VP.play?VP_IC.pause:VP_IC.play;$('#vpPlay').setAttribute('aria-label',VP.play?'Jeda':'Putar');$('#vpBig').hidden=VP.play;
+  if(!VP.play){VP.tok++;clearTimeout(VP.timer);clearInterval(VP.wtimer);try{speechSynthesis.cancel()}catch(e){}$('#vpMas').classList.remove('talk')}
+  else{const x=VP.sc[VP.i];if(x&&VP.j>=x.steps.length&&VP.i>=VP.sc.length-1)vpGo(0);else vpStep()}}
+function vpCheer(){try{tone&&tone([660,880,1100],.06)}catch(e){}const st=$('#vpStage');if(!st)return;for(let k=0;k<14;k++){const c=document.createElement('i');c.className='vconf';c.style.cssText=`left:${10+Math.random()*80}%;background:hsl(${Math.random()*360},90%,60%);animation-delay:${Math.random()*.3}s;--dx:${(Math.random()-.5)*120}px`;st.appendChild(c);setTimeout(()=>c.remove(),1600)}}
+function vpEndBtns(){const body=$('#vpCard .vbody');if(!body||body.querySelector('.vend'))return;body.insertAdjacentHTML('beforeend',`<div class="vend"><button class="ghost" id="vpAgain">Tonton lagi</button><button class="primary" id="vpGoPlay">Mulai berlatih</button></div>`);
+  $('#vpAgain').onclick=()=>{VP.play=true;$('#vpPlay').innerHTML=VP_IC.pause;vpGo(0)};$('#vpGoPlay').onclick=()=>{const ui=VP.ui;closeVideo();try{const pr=progOf(),idx=Math.min(pr.done,ui*NODES.length+NODES.length-1),u0=Math.floor(idx/NODES.length);if(u0===ui)startNode(ui,idx%NODES.length);else startNode(ui,0)}catch(e){}}}
+function closeVideo(){VP.on=false;VP.tok++;clearTimeout(VP.timer);clearInterval(VP.wtimer);try{speechSynthesis.cancel()}catch(e){}const el=$('#vp');if(el){el.hidden=true;el.innerHTML=''}document.body.classList.remove('vp-on')}
+document.addEventListener('keydown',e=>{if(!VP.on)return;if(e.key===' '){e.preventDefault();vpToggle()}else if(e.key==='Escape')closeVideo();else if(e.key==='ArrowRight')vpGo(Math.min(VP.sc.length-1,VP.i+1));else if(e.key==='ArrowLeft')vpGo(Math.max(0,VP.i-1))});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&VP.on&&VP.play)vpToggle()});
 
 /* ---------- starting a level ---------- */
 function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES.length+ni,pr=progOf();const replay=idx<pr.done;
@@ -9499,6 +9654,7 @@ function backArm(){if(BACK.armed)return;try{history.pushState({jk:1},'');BACK.ar
 function exitAsk(){openModal(`<div id="exitAsk" style="text-align:center"><div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3>Mau keluar dari JELAS?</h3><p>Progresmu sudah tersimpan. Tekan tombol kembali sekali lagi untuk keluar.</p></div><div class="acts"><button class="primary" id="mNo">Tetap di sini</button><button class="ghost" id="mYes" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
   $('#mNo').onclick=()=>{closeModal();backArm()};$('#mYes').onclick=()=>{history.back();setTimeout(()=>toast('lock','Tekan tombol kembali di HP sekali lagi untuk keluar.'),400)}}
 function handleBack(){
+  if(typeof VP!=='undefined'&&VP.on){closeVideo();return true}
   if(!$('#modal').hidden){closeModal();return true}
   if(!$('#pop').hidden){closePop();return true}
   {const ae=document.getElementById('avEd');if(ae&&!ae.hidden){ae.hidden=true;return true}}
