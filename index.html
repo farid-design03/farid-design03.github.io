@@ -3018,7 +3018,6 @@ html body:not(#_x):not(.teacher) .feedback.bad #fbText{color:#EA2B2B}
 html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.ok{background:#202F36!important}html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad{background:#202F36!important}
 html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.ok b,html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.ok #fbText{color:#79B933!important}
 html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad b,html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad #fbText{color:#EE5555!important}
-.spanim{background:#F3F4F6!important}.spitem .spanim{background:#F3F4F6!important}
 .sphint{margin:0 0 6px;font-size:13px;font-weight:700;color:var(--mut,#777)}.spitem[role=button]{cursor:pointer}
 .splink{background:none;border:0;color:#1CB0F6;font-weight:800;font-size:14px;padding:2px 6px;margin:-4px auto 4px;display:block;box-shadow:none!important}
 .spdet{position:fixed;inset:0;z-index:2600;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}.spdet[hidden]{display:none}
@@ -3026,7 +3025,7 @@ html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad b,html[data-the
 @keyframes spUp{from{transform:translateY(40px);opacity:0}}
 .sptabs{display:flex;gap:6px;padding:12px 14px 8px;justify-content:center}.sptabs button{flex:1;max-width:130px;border:2px solid var(--line,#E5E5E5);background:transparent;border-radius:12px;padding:7px 4px;font-weight:800;color:var(--mut,#777);box-shadow:none}
 .sptabs button.on{background:#1C6CF6;border-color:#1C6CF6;color:#fff}
-.sptop{flex:none;background:#F3F4F6;margin:0 14px;border-radius:18px;overflow:hidden;height:min(240px,32vh);display:flex;align-items:center;justify-content:center}.sptop .spanim{width:min(240px,32vh);flex:none}.sptop .spmap{height:min(200px,26vh);width:auto}
+.sptop{flex:none;background:#F4FAFF;margin:0 14px;border-radius:18px;overflow:hidden;height:min(240px,32vh);display:flex;align-items:center;justify-content:center}.sptop .spanim{width:min(240px,32vh);flex:none}.sptop .spmap{height:min(200px,26vh);width:auto}
 .spdbody{overflow:auto;padding:12px 18px 6px;text-align:left}.spdbody h2{margin:2px 0 8px;font-size:22px}.spdbody h3{margin:14px 0 4px;font-size:16px}.spdbody p{margin:0 0 6px;line-height:1.5}
 .spben{color:var(--mut,#666);font-size:14px}
 .spdur{display:flex;align-items:center;justify-content:space-between;border:2px solid var(--line,#E5E5E5);border-radius:14px;padding:8px 10px}.spdur>span{font-weight:800}
@@ -3038,7 +3037,7 @@ html[data-theme=malam] body:not(#_x):not(.teacher) .feedback.bad b,html[data-the
 .spdfoot{display:flex;align-items:center;gap:10px;padding:10px 14px calc(12px + env(safe-area-inset-bottom));border-top:2px solid var(--line,#E5E5E5)}
 .spdfoot>span{font-weight:800;min-width:36px;text-align:center}.spnav{width:40px;height:40px;border-radius:12px;border:2px solid var(--line,#E5E5E5);background:transparent;font-size:22px;font-weight:900;box-shadow:none}.spnav:disabled{opacity:.35}
 .spdfoot .primary{flex:1;margin:0;background:#1C6CF6}
-html[data-theme=malam] .sptop,html[data-theme=malam] .spanim{background:#E9EBEF!important}
+html[data-theme=malam] .sptop{background:#E9EBEF!important}
 html[data-theme=malam] .spdur,html[data-theme=malam] .spnav,html[data-theme=malam] .sptabs button:not(.on){color:#eee}html[data-theme=malam] .spstep button{background:#24324a;color:#8DB8FF}html[data-theme=malam] .spchips span:not(.pri){background:#24324a;color:#8DB8FF}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
@@ -7402,7 +7401,7 @@ function spColors(){const a=(typeof avNorm==='function'&&P)?avNorm(P.avatar):{};
   const hijab=/hijab|jilbab|kerudung/i.test(String(a.hair||''))?(g==='P'?'#9B6BFF':shade(shirt,.75)):null;
   const tail=!hijab&&g==='P'&&!/none|peci|sides/.test(String(a.hair||''));
   const pants=g==='P'?'#3F3F55':'#2B2B33';return {skin,skin2:shade(skin,.88),shirt,shirt2:shade(shirt,.82),pants,pants2:shade(pants,.8),legs:hijab?pants:skin,shoe:'#5A5A64',hair,hijab,tail,uarm:hijab?shirt:skin,arm:hijab?shirt:skin,arm2:hijab?shade(shirt,.82):shade(skin,.88)}}
-function spMount(box){const SPC=spColors();
+function spMount(box){if(box.dataset.bad!=='1'&&!box.dataset.fix){const sid=spAnimKey(box.dataset.ex,box.dataset.v);if(SP_SPR[sid]){spMountSprite(box,sid);return}}const SPC=spColors();
 const id=spAnimKey(box.dataset.ex,box.dataset.v),base=SPK[id],bad=box.dataset.bad==='1',form=SP_FORM[id]||{};const def=bad&&form.badKeys?Object.assign({},base,{keys:form.badKeys}):base;const NS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('class','spsvg');
   const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e);return e};
