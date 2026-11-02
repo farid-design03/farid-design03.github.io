@@ -2859,11 +2859,9 @@ html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam]
  #leagueCard .lgx-head{top:var(--stickTop,0)}}
 html[data-theme=malam] #leagueCard .lgx-head{background:#0a0f1e!important;border-color:#1f2a44!important}
 /* ===== gaya Duolingo: gambar tanpa garis hitam tebal, kotak abu tipis tanpa bayangan ===== */
-svg [stroke="#1B1E3D"]{stroke:rgba(27,30,61,.14)}
-svg [stroke="#1B1E3D"] [fill="none"],svg [stroke="#1B1E3D"][fill="none"],svg [stroke="#1B1E3D"] line{stroke:#1B1E3D}
-.mascot svg .mbody{stroke:rgba(27,30,61,.14)}
-.mascot svg .mbody [fill="none"]{stroke:#1B1E3D}
-html[data-theme=malam] svg [stroke="#1B1E3D"]{stroke:rgba(0,0,0,.25)}html[data-theme=malam] .mascot svg .mbody{stroke:rgba(0,0,0,.25)}
+/* garis tepi gambar: hitam tipis (lebih tipis dari aslinya) */
+svg [stroke="#1B1E3D"]{stroke:#1B1E3D;stroke-width:2.1px}
+.mascot svg .mbody{stroke:#1B1E3D;stroke-width:2.1px}
 /* kartu murid: garis abu tipis, tanpa bayangan */
 body:not(.teacher) .main .card,body:not(.teacher) .ps,body:not(.teacher) .item.box{border:2px solid var(--line)!important;box-shadow:none!important;border-radius:16px!important}
 /* judul halaman: bilah polos dengan garis bawah */
