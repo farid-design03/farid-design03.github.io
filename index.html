@@ -2942,6 +2942,35 @@ body:not(.teacher) .view.enter:not(#vPlay):not(#vDuel){animation:fadeUp .22s eas
 /* ---- semua tombol tenggelam saat dipencet ---- */
 :where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row){transition:translate .06s ease,box-shadow .06s ease,filter .06s}
 :where(button,[role=button],.opt,.phopt,.item.box,.lrow.tap,.stile,.aved-it,.petit,.ajopt,.ajg,.ajinv,.pick,.popover .row):not(:disabled):not(.node):active{translate:0 4px!important;box-shadow:none!important;filter:brightness(.97)}
+/* ---- pelajaran ala Duolingo ---- */
+body:not(.teacher) .lbar{position:relative;overflow:visible!important;height:18px!important;border:0!important;background:var(--track,#E5E5E5)!important;border-radius:999px!important}
+body:not(.teacher) .lbar i{border-radius:999px;position:relative;background:var(--green)!important;background-image:none!important;transition:width .55s cubic-bezier(.3,1.5,.5,1),background-color .3s!important;min-width:0}
+body:not(.teacher) .lbar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:5px;border-radius:999px;background:rgba(255,255,255,.4)}
+body:not(.teacher) .lbar.hot i{background:#FF9600!important}
+body:not(.teacher) .lcombo{position:absolute;left:4px;top:-17px;font-style:normal;font:900 11px var(--title);letter-spacing:.06em;color:#FF9600;white-space:nowrap;pointer-events:none}
+body:not(.teacher) .lcombo.pop{animation:lcPop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes lcPop{0%{transform:scale(.4) translateY(6px);opacity:0}100%{transform:none;opacity:1}}
+body.lessonmode:not(.teacher) #combo{display:none}
+/* lembar umpan balik naik dari bawah, dengan ikon */
+body:not(.teacher) #feedback:not([hidden]){animation:fbUp .26s cubic-bezier(.2,.9,.3,1)!important}
+@keyframes fbUp{0%{transform:translateY(100%)}100%{transform:none}}
+body:not(.teacher) #fbTitle{display:inline-flex;align-items:center;gap:10px;font-size:22px!important;font-weight:900!important}
+body:not(.teacher) #fbTitle::before{content:"✓";display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:#fff;color:#58A700;font-size:20px;font-weight:900;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+body:not(.teacher) .feedback.bad #fbTitle::before{content:"✕";color:#EA2B2B}
+html body:not(.teacher) .feedback.bad #nextBtn{background:#FF4B4B!important;box-shadow:0 4px 0 #EA2B2B!important;color:#fff!important}
+html body:not(.teacher) .feedback.ok #nextBtn{background:var(--green)!important;box-shadow:0 4px 0 #58A700!important}
+/* layar selesai: kartu muncul satu per satu, angka berhitung */
+body:not(.teacher) #vDone .done h2.gold{font-size:28px!important}
+body:not(.teacher) #vDone .tiles .tile{animation:tileIn .45s cubic-bezier(.3,1.5,.5,1) both}
+body:not(.teacher) #vDone .tiles .tile:nth-child(1){animation-delay:.25s}body:not(.teacher) #vDone .tiles .tile:nth-child(2){animation-delay:.43s}body:not(.teacher) #vDone .tiles .tile:nth-child(3){animation-delay:.61s}
+@keyframes tileIn{0%{transform:translateY(24px) scale(.8);opacity:0}100%{transform:none;opacity:1}}
+body:not(.teacher) #vDone .cpop{display:inline-block;animation:lcPop .35s cubic-bezier(.3,1.6,.5,1)}
+body:not(.teacher) #vDone .done>.mascot{animation:doneHop .7s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes doneHop{0%{transform:translateY(30px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+body:not(.teacher) #vDone .acts .primary{animation:tileIn .4s .8s both}
+body:not(.teacher) .bigflame{animation:popIn .5s,flick 1.2s .5s ease-in-out infinite!important;transform-origin:50% 100%}
+@keyframes flick{0%,100%{transform:scale(1,1) rotate(0)}30%{transform:scale(1.04,.97) rotate(-2deg)}60%{transform:scale(.97,1.04) rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){body:not(.teacher) #vDone *,body:not(.teacher) #feedback,body:not(.teacher) .bigflame{animation:none!important}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -5173,7 +5202,8 @@ function launch(){
 }
 function renderHUD(){
   if(CUR)return duelHUD(CUR);
-  if(game.lesson&&game.mode==='kuis'){$('#dots').innerHTML=`<span class="lbar"><i style="width:${Math.min(100,game.correct/game.lesson.target*100)}%"></i></span>`;$('#hearts').hidden=false;$('#hearts').innerHTML=lessonHearts();$('#scoreChip').hidden=true;$('#teamBar').hidden=true;$('#combo').textContent=game.streak>=3?`${game.streak} beruntun!`:'';return}
+  if(game.lesson&&game.mode==='kuis'){{const d=$('#dots'),w=Math.min(100,game.correct/game.lesson.target*100);let lb=d.querySelector('.lbar');if(!lb){d.innerHTML='<span class="lbar"><i style="width:0%"></i><em class="lcombo"></em></span>';lb=d.querySelector('.lbar');void lb.offsetWidth}
+   lb.querySelector('i').style.width=w+'%';const hot=game.streak>=3;lb.classList.toggle('hot',hot);const lc=lb.querySelector('.lcombo');const t=hot?`${game.streak} BERTURUT-TURUT!`:'';if(lc.textContent!==t){lc.textContent=t;lc.classList.remove('pop');void lc.offsetWidth;if(t)lc.classList.add('pop')}}$('#hearts').hidden=false;$('#hearts').innerHTML=lessonHearts();$('#scoreChip').hidden=true;$('#teamBar').hidden=true;$('#combo').textContent=game.streak>=3?`${game.streak} beruntun!`:'';return}
   const grp=game.group;
   $('#dots').innerHTML=game.qs.map((_,k)=>{const r=game.results[k];const tc=grp&&grp.format==='giliran'&&r===undefined&&k!==game.i?`style="background:${grp.teams[k%grp.teams.length].color};opacity:.25"`:'';return `<span class="dot ${r===true?'ok':r===false?'bad':k===game.i?'cur':''}" ${tc}></span>`}).join('');
   $('#hearts').hidden=!!grp;$('#scoreChip').hidden=!!grp;$('#teamBar').hidden=!grp;
@@ -7613,8 +7643,12 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   if(!goalBefore&&P.today.xp>=P.goal)screens.push(`<div class="done"><div class="ring" style="--p:100;width:150px;height:150px"><span style="width:110px;height:110px;font-size:26px">${P.today.xp}<br>XP</span></div><h2>Target harian tercapai!</h2><p class="sub">Kamu sudah mengumpulkan ${P.goal} XP hari ini.</p><div class="acts"><button class="primary" data-next>Lanjut</button></div></div>`);
   BADGES.forEach((b,i)=>{const l=blevel(b);if(l>badgeBefore[i])screens.push(`<div class="done"><span style="width:140px">${badgeSVG(b,l)}</span><h2>Pencapaian baru!</h2><p class="sub"><b>${b.name}</b> level ${l}: ${b.d(b.lv[l-1])}.</p><div class="acts"><button class="primary" data-next>Lanjut</button></div></div>`)});
   sfx.win();setTimeout(burstConfetti,150);showDone(screens)}
+function doneCount(view){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const run=(el,from,to,delay,fmt)=>{const t0=performance.now()+delay,dur=700;el.textContent=fmt(from);const f=now=>{const k=Math.min(1,Math.max(0,(now-t0)/dur)),e=1-Math.pow(1-k,3);el.textContent=fmt(Math.round(from+(to-from)*e));if(k<1)requestAnimationFrame(f);else{el.classList.add('cpop')}};requestAnimationFrame(f)};
+  view.querySelectorAll('.tile .tv').forEach((tv,i)=>{const tn=[...tv.childNodes].find(n=>n.nodeType===3&&/\d/.test(n.textContent));if(!tn||/:/.test(tn.textContent))return;const m=tn.textContent.match(/^(\d+)(.*)$/);if(!m)return;const sp=document.createElement('span');tn.replaceWith(sp);run(sp,0,+m[1],350+i*180,v=>v+m[2])});
+  const bn=view.querySelector('.bignum');if(bn){const to=+bn.textContent;if(to>0)run(bn,Math.max(0,to-1),to,500,v=>String(v))}}
 function showDone(screens){let i=0;const view=$('#vDone');
-  const step=()=>{if(i>=screens.length){game=null;go('learn');return}view.innerHTML=screens[i++];hydrate(view);show('vDone');const b=view.querySelector('[data-next]');if(b){b.onclick=step;setTimeout(()=>b.focus({preventScroll:true}),50)}};step()}
+  const step=()=>{if(i>=screens.length){game=null;go('learn');return}view.innerHTML=screens[i++];hydrate(view);show('vDone');doneCount(view);const b=view.querySelector('[data-next]');if(b){b.onclick=step;setTimeout(()=>b.focus({preventScroll:true}),50)}};step()}
 function showFail(o,noHearts,correct,need){const view=$('#vDone');
   view.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="sad"></div><h2>${noHearts?'Nyawamu habis':'Belum berhasil'}</h2><p class="sub">${noHearts?'Isi ulang nyawa atau berlatih dulu, lalu coba lagi.':`Kamu menjawab benar ${correct} soal. Butuh ${need} untuk lulus.`}</p>${noHearts?`<div class="card" style="padding:14px;width:100%;max-width:420px;text-align:left">${heartsPanel()}</div>`:''}<div class="acts">${noHearts?'':`<button class="primary" id="failRetry">Coba lagi</button>`}<button class="ghost" id="failBack">Kembali ke jalur</button></div></div>`;
   hydrate(view);show('vDone');bindHeartActs(view);const r=$('#failRetry');if(r)r.onclick=()=>o.kind==='practice'?startPractice():startNode(o.ui,o.ni);$('#failBack').onclick=()=>{game=null;go('learn')}}
