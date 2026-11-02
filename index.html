@@ -3055,6 +3055,7 @@ html[data-theme=malam] .spdur,html[data-theme=malam] .spnav,html[data-theme=mala
 .fqno{background:none;border:0;color:#1CB0F6;font-weight:900;letter-spacing:.05em;font-size:15px;padding:8px;box-shadow:none!important}
 .fqbal{align-self:flex-end;display:flex;align-items:center;gap:6px;color:#1CB0F6;font-size:18px}.fqbal .fqgem{width:24px}
 html[data-theme=malam] .fqst button.on{background:#1b3a52;border-color:#3d8cc4;box-shadow:0 3px 0 #3d8cc4}
+html body:not(#_x) .quest .qt{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -7171,17 +7172,42 @@ function applyTheme(cls,subj){const W=COURSE.some(c=>c.id===cls)?cls:'k4';const 
 
 /* ---------- quests & badges ---------- */
 const QUEST_T=[
- {id:'xp',key:'xp',icon:'bolt',gems:15,goal:p=>p.goal,t:g=>`Kumpulkan ${g} XP`},
- {id:'lessons',key:'lessons',icon:'star',gems:10,goal:()=>2,t:g=>`Selesaikan ${g} level`},
- {id:'perfect',key:'perfect',icon:'target',gems:15,goal:()=>1,t:()=>'Selesaikan 1 level tanpa salah'},
- {id:'correct',key:'correct',icon:'check',gems:10,goal:()=>15,t:g=>`Jawab benar ${g} soal`},
- {id:'games',key:'games',icon:'league',gems:10,goal:()=>1,t:()=>'Mainkan 1 level game'},
- {id:'best',key:'best',icon:'flame',gems:10,goal:()=>5,t:g=>`Jawab benar ${g} kali berturut-turut`}];
-function ensureQuests(){const t=dayKey();if(P.quests&&P.quests.day===t)return;const seed=dayNum(t);const others=QUEST_T.slice(1);const a=others[seed%others.length],b=others[(seed+2)%others.length];
-  P.quests={day:t,list:[QUEST_T[0],a,b].map(q=>({id:q.id,goal:q.goal(P),claimed:false}))}}
-const qdef=id=>QUEST_T.find(q=>q.id===id);
+ /* mudah */
+ {id:'xp',key:'xp',tier:0,icon:'bolt',goal:p=>p.goal,t:g=>`Kumpulkan ${g} XP`},
+ {id:'lessons',key:'lessons',tier:0,icon:'star',goal:r=>r(1,2),t:g=>`Selesaikan ${g} level`},
+ {id:'correct',key:'correct',tier:0,icon:'check',goal:r=>r(2,3)*5,t:g=>`Jawab benar ${g} soal`},
+ {id:'games',key:'games',tier:0,icon:'game',goal:()=>1,t:()=>'Mainkan 1 level game'},
+ {id:'practice',key:'practice',tier:0,icon:'heart',goal:()=>1,t:()=>'Selesaikan 1 latihan ulang'},
+ {id:'sport',key:'sport',tier:0,icon:'dumbbell',goal:()=>1,ok:p=>p.fit&&p.fit.n>0,t:()=>'Olahraga 1 kali'},
+ {id:'early',key:'early',tier:0,icon:'clock',goal:()=>1,t:()=>'Selesaikan 1 level sebelum jam 12'},
+ /* sedang */
+ {id:'xp2',key:'xp',tier:1,icon:'bolt',goal:r=>r(4,6)*5,t:g=>`Raih ${g} XP hari ini`},
+ {id:'lessons3',key:'lessons',tier:1,icon:'star',goal:r=>r(3,4),t:g=>`Selesaikan ${g} level`},
+ {id:'perfect',key:'perfect',tier:1,icon:'target',goal:()=>1,t:()=>'Selesaikan 1 level tanpa salah'},
+ {id:'best',key:'best',tier:1,icon:'flame',goal:r=>r(5,8),t:g=>`Benar ${g}× berturut-turut`},
+ {id:'good',key:'good',tier:1,icon:'check',goal:()=>2,t:g=>`Nilai 90+ di ${g} level`},
+ {id:'fast',key:'fast',tier:1,icon:'clock',goal:()=>1,t:()=>'Selesaikan pelajaran dalam 1 menit'},
+ {id:'subj',key:'subj',tier:1,icon:'book',goal:()=>2,t:g=>`Belajar ${g} pelajaran berbeda`},
+ {id:'games2',key:'games',tier:1,icon:'game',goal:()=>2,t:g=>`Mainkan ${g} level game`},
+ /* sulit */
+ {id:'xp3',key:'xp',tier:2,icon:'bolt',goal:r=>r(6,8)*10,t:g=>`Kumpulkan ${g} XP`},
+ {id:'lessons5',key:'lessons',tier:2,icon:'star',goal:r=>r(5,6),t:g=>`Selesaikan ${g} level`},
+ {id:'perfect2',key:'perfect',tier:2,icon:'target',goal:r=>r(2,3),t:g=>`Selesaikan ${g} level tanpa salah`},
+ {id:'best10',key:'best',tier:2,icon:'flame',goal:r=>r(10,12),t:g=>`Benar ${g}× berturut-turut`},
+ {id:'correct40',key:'correct',tier:2,icon:'check',goal:r=>r(7,9)*5,t:g=>`Jawab benar ${g} soal`},
+ {id:'good3',key:'good',tier:2,icon:'trophy',goal:()=>3,t:g=>`Nilai 90+ di ${g} level`},
+ {id:'subj3',key:'subj',tier:2,icon:'book',goal:()=>3,t:g=>`Belajar ${g} pelajaran berbeda`}];
+const Q_GEMS=[10,15,20];QUEST_T.forEach(q=>q.gems=Q_GEMS[q.tier]);
+function ensureQuests(){const t=dayKey();if(P.quests&&P.quests.day===t&&(P.quests.v===2||P.quests.list.some(q=>q.claimed)))return;
+  let h=dayNum(t)*2654435761>>>0;String((typeof FBX!=='undefined'&&FBX.user&&FBX.user.uid)||P.name||'').split('').forEach(c=>{h=Math.imul(h^c.charCodeAt(0),16777619)>>>0});
+  const rnd=()=>{h=(Math.imul(h^(h>>>15),2246822507)+0x6D2B79F5)>>>0;return h/4294967296},r=(a,b)=>a+Math.floor(rnd()*(b-a+1));
+  const prev=(P.quests&&P.quests.list||[]).map(q=>q.id),used=new Set();const list=[];
+  for(const tier of [0,1,2]){let pool=QUEST_T.filter(q=>q.tier===tier&&(!q.ok||q.ok(P))&&!used.has(q.key));const fresh=pool.filter(q=>!prev.includes(q.id));if(fresh.length)pool=fresh;
+    const q=pool[Math.floor(rnd()*pool.length)];used.add(q.key);list.push({id:q.id,goal:q.id==='xp'?q.goal(P):q.goal(r),claimed:false})}
+  P.quests={day:t,v:2,list}}
+const qdef=id=>QUEST_T.find(q=>q.id===id)||QUEST_T[0];
 const qprog=q=>Math.min(q.goal,P.today[qdef(q.id).key]||0);
-function bump(key,n){const before=P.quests.list.map(q=>qprog(q)>=q.goal);if(key==='best')P.today.best=Math.max(P.today.best||0,n);else P.today[key]=(P.today[key]||0)+n;
+function bump(key,n){const before=P.quests.list.map(q=>qprog(q)>=q.goal);if(key==='best')P.today.best=Math.max(P.today.best||0,n);else if(key==='subj'){P.today.subjL=P.today.subjL||[];if(n&&!P.today.subjL.includes(n))P.today.subjL.push(n);P.today.subj=P.today.subjL.length}else P.today[key]=(P.today[key]||0)+n;
   P.quests.list.forEach((q,i)=>{if(!before[i]&&qprog(q)>=q.goal){monthTick();setTimeout(()=>toast('quest',`Misi selesai: ${qdef(q.id).t(q.goal)}`),300)}})}
 const BADGES=[
  {id:'api',ic:'flame',name:'Api Menyala',color:'#FF8A00',val:p=>p.bestStreak||0,lv:[3,7,30],d:n=>`Belajar ${n} hari berturut-turut`},
@@ -7548,7 +7574,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
   const next=()=>{st.k++;if(st.k>=st.plan.length){st.phase='feel';render();return}stop();st.phase='rest';st.left=10;render();SPT.timer=setInterval(()=>{st.left--;const t=el.querySelector('.sptime');if(t)t.textContent=Math.max(0,st.left);if(st.left<=0){stop();st.phase=st.plan[st.k].t==='time'?'ready':'ex';render();sayEx()}},1000)};
   const feel=fx=>{const main=st.plan.slice(1,3).map(x=>x.id);const warm=st.plan[0].id;
    main.concat(warm).forEach(id=>{const cur=f.lv[id]||0;let d=fx==='easy'?2:fx==='ok'?1:-1;if(st.mini&&d>0)d=0;f.lv[id]=Math.max(0,cur+d)});
-   f.n=(f.n||0)+1;f.last=Date.now();f.days[dayKey()]=spToday()+1;P.sportDone=P.sportDone||{};P.sportDone[spKey(st.ui)]=1;
+   f.n=(f.n||0)+1;f.last=Date.now();try{ensureQuests();bump('sport',1)}catch(e){}f.days[dayKey()]=spToday()+1;P.sportDone=P.sportDone||{};P.sportDone[spKey(st.ui)]=1;
    addXp(10);P.gems=(P.gems||0)+5;save();try{sfx.win()}catch(e){}st.phase='end';render();setTimeout(()=>{try{burstConfetti()}catch(e){}},200)};
   st.phase='intro';render();el.hidden=false;el.scrollTop=0;document.body.classList.add('sporting')}
 
@@ -8000,7 +8026,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   const badgeBefore=BADGES.map(b=>blevel(b));const goalBefore=P.today.xp>=P.goal;
   P.stats.lessons++;if(perfect)P.stats.perfect++;if(o.kind==='test')P.stats.tests++;if(o.kind==='game'&&!P.stats.games.includes(g.mode))P.stats.games.push(g.mode);P.stats.correct+=g.correct;
   const streakUp=addXp(xp);P.gems+=gems;
-  bump('xp',0);bump('lessons',1);fqTick();if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
+  bump('xp',0);bump('lessons',1);fqTick();if(acc>=90)bump('good',1);if(o.kind==='lesson'&&secs<=60)bump('fast',1);if(o.kind==='practice')bump('practice',1);if(new Date().getHours()<12)bump('early',1);try{bump('subj',SUBJ().id)}catch(e){}if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
   save();renderTop();
   const screens=[];try{window.fsTick&&fsTick(screens)}catch(e){}
   const title=o.kind==='test'?'Ujian lulus!':o.kind==='game'?'Level game selesai!':o.kind==='practice'?'Latihan selesai!':perfect?'Pelajaran sempurna!':'Pelajaran selesai!';
