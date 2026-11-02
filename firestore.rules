@@ -113,6 +113,15 @@ service cloud.firestore {
     }
 
     // Main bareng online: ruang tantangan. Pemain hanya boleh mengubah datanya sendiri.
+    // antrean "Pemain Lain": satu ruang menunggu per tingkat kelas
+    match /mm/{cls} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create, update: if signedIn() && request.resource.data.host == request.auth.uid
+        && request.resource.data.code is string && request.resource.data.code.size() == 6;
+      allow delete: if signedIn();
+    }
+
     match /rooms/{code} {
       allow get: if signedIn();
       allow list: if false;
@@ -153,6 +162,22 @@ service cloud.firestore {
     }
 
     // Teman: A mengikuti B. Hanya A yang boleh membuat; A atau B boleh menghapus.
+    // Runtunan Teman: dokumen bersama dua murid, id = uidKecil_uidBesar.
+    match /fs/{id} {
+      allow read: if signedIn() && request.auth.uid in resource.data.m;
+      allow create: if signedIn() && request.resource.data.m is list && request.resource.data.m.size() == 2
+        && request.auth.uid in request.resource.data.m
+        && request.resource.data.m[0] < request.resource.data.m[1]
+        && id == request.resource.data.m[0] + '_' + request.resource.data.m[1]
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.status == 'pending';
+      allow update: if signedIn() && request.auth.uid in resource.data.m
+        && request.resource.data.m == resource.data.m
+        && request.resource.data.from == resource.data.from
+        && (resource.data.status == 'on' || request.auth.uid != resource.data.from || request.resource.data.status == 'pending');
+      allow delete: if signedIn() && request.auth.uid in resource.data.m;
+    }
+
     match /fol/{id} {
       allow read: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
       allow create, update: if signedIn() && request.resource.data.from == request.auth.uid
