@@ -2920,7 +2920,7 @@ html[data-theme=malam] body:not(.teacher) .npop .primary{background:#fff!importa
 /* ---- interaksi ala Duolingo ---- */
 /* cincin level aktif berdenyut */
 body:not(.teacher) .nrow:has(>.node.cur:not(.k-chest))::before{content:"";position:absolute;top:-14px;bottom:-21px;left:-14px;right:-14px;border-radius:50%;border:5px solid color-mix(in srgb,var(--uc) 40%,#fff);pointer-events:none;z-index:-1;animation:curRing 1.6s ease-in-out infinite}
-@keyframes curRing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.6}}
+@keyframes curRing{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 html body:not(.teacher) .node.cur:not(.k-chest){box-shadow:0 7px 0 rgba(0,0,0,.2)!important;background-image:linear-gradient(100deg,transparent 42%,rgba(255,255,255,.5) 48%,rgba(200,240,255,.75) 50%,rgba(255,255,255,.5) 52%,transparent 58%)!important;background-size:300% 100%!important;background-repeat:no-repeat!important;animation:shineBg 2.8s ease-in-out infinite}
 @keyframes shineBg{0%,55%{background-position:100% 0}85%,100%{background-position:0% 0}}
 @keyframes curBob{0%,100%{translate:0 0}50%{translate:0 -2px}}
@@ -2989,7 +2989,8 @@ html body:not(#_x) .nrow.sprow{--uc:#FF9600}
 html body:not(#_x) .node.k-sport.done{background:#FF9600!important}
 html body:not(#_x) .nodes{gap:42px!important}
 /* cincin: diam, mengelilingi tombol dan alasnya */
-html body:not(#_x) .nrow:has(>.node.cur:not(.k-chest))::before{top:-15px!important;bottom:-23px!important;left:-15px!important;right:-15px!important;border-width:7px!important;border-color:color-mix(in srgb,var(--uc) 30%,#fff)!important;animation:none!important}
+html body:not(#_x) .nrow:has(>.node.cur:not(.k-chest))::before{top:-15px!important;bottom:-23px!important;left:-15px!important;right:-15px!important;border-width:7px!important;border-color:color-mix(in srgb,var(--uc) 30%,#fff)!important;animation:curRing 1.4s ease-in-out infinite!important}
+html body:not(#_x) .nrow.popopen:has(>.node.cur:not(.k-chest))::before,html body:not(#_x) .nrow:has(>.node.cur:not(.k-chest):active)::before{animation:none!important;transform:none!important;opacity:1!important}
 html[data-theme=malam] body:not(#_x) .nrow:has(>.node.cur:not(.k-chest))::before{border-color:color-mix(in srgb,var(--uc) 35%,#131f24)!important}
 html body:not(#_x) .nrow{margin-bottom:6px}
 /* label MULAI: kotak putih bergaris abu, teks warna unit, memantul */
