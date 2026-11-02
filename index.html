@@ -6470,7 +6470,7 @@ const ico=n=>`<i data-icon="${n}"></i>`;
 const CAPS=[['ink','Topi Hitam','#1B1E3D',0],['red','Topi Merah','#F2394B',40],['blue','Topi Biru','#3D8BFF',40],['gold','Topi Emas','#FFC23D',60],['pink','Topi Merah Muda','#FF5C9E',40]];
 const BODIES=[['purple','Bulu Ungu','#9468F7',0],['orange','Bulu Jingga','#FF9A3D',60],['blue','Bulu Biru','#4F8CFF',60],['pink','Bulu Merah Muda','#FF7EB6',60],['teal','Bulu Toska','#22C5B5',80]];
 function shade(hex,f){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;r=Math.round(r*(1+f));g=Math.round(g*(1+f));b=Math.round(b*(1+f));return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('')}
-function mascotSVG(force){const o=(typeof P!=='undefined'&&P&&P.outfit)||{cap:'ink',body:'purple'};const cap=(CAPS.find(c=>c[0]===o.cap)||CAPS[0])[2],body=(BODIES.find(c=>c[0]===o.body)||BODIES[0])[2];
+function mascotSVG(force){let o=(typeof P!=='undefined'&&P&&P.outfit);if(!o){try{o=JSON.parse(localStorage.getItem('jk_out')||'null')}catch(e){}}o=o||{cap:'ink',body:'purple'};const cap=(CAPS.find(c=>c[0]===o.cap)||CAPS[0])[2],body=(BODIES.find(c=>c[0]===o.body)||BODIES[0])[2];
   const pet=force||curPet();if(pet!=='uli'){const sv=petSVG(pet,cap);if(sv)return sv}
   return MASCOT_SVG.split('#9468F7').join(body).split('#7B4FE0').join(shade(body,-.18)).replace(`<path d="M28 26 L60 12 L92 26 L60 40Z" fill="${INK}"/>`,`<path d="M28 26 L60 12 L92 26 L60 40Z" fill="${cap}"/>`)}
 /* =========================================================
@@ -6488,8 +6488,13 @@ const cheap=p=>p?Math.max(5,Math.round(p*.4/5)*5):0;
 const PRICE={heart:20,freeze:30,boost:15};
 CAPS.forEach(x=>x[3]=cheap(x[3]));BODIES.forEach(x=>x[3]=cheap(x[3]));PETS.forEach(x=>x[3]=cheap(x[3]));
 const petOf=id=>PETS.find(x=>x[0]===id)||PETS[0];
-function curPet(){return (typeof P!=='undefined'&&P&&P.pet)||'uli'}
-function petName(){return petOf(curPet())[1].split(' ')[0]}
+/* nama panggilan setiap teman belajar */
+const PET_NAMES={uli:'Uli',komodo:'Kodo',orangutan:'Utan',gajah:'Gembul',jalak:'Jali',harimau:'Rimba',badak:'Bado',anoa:'Noa',tarsius:'Tasi',babirusa:'Biru',bekantan:'Bekan',kukang:'Kuku',kakatua:'Kaka',maleo:'Leo',beruang:'Madu',kuskus:'Kusi',owa:'Owi',macan:'Tutul',banteng:'Bento',pesut:'Pesu',elang:'Garu',rangkong:'Rangga',kasuari:'Suri',merak:'Mera',cenderawasih:'Cendra'};
+const petSpecies=id=>id==='uli'?'Burung Hantu':petOf(id)[1];
+const petNick=id=>PET_NAMES[id]||petOf(id)[1].split(' ')[0];
+const petFull=id=>`${petNick(id)} si ${petSpecies(id)}`;
+function curPet(){if(typeof P!=='undefined'&&P&&P.pet)return P.pet;try{return localStorage.getItem('jk_pet')||'uli'}catch(e){return 'uli'}}
+function petName(){return petNick(curPet())}
 /* mata: biasa (eo), senang (eh), sedih (es) */
 function pEyes(x1,y1,x2,y2,r,o){o=o||{};const pr=o.pr||Math.max(3,r*.48),dx=o.dx==null?1.5:o.dx,iris=o.iris,wc=o.light?' stroke="#fff"':'';
   const one=(x,y)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff"/>`+(iris?`<circle cx="${x+dx}" cy="${y+1}" r="${pr+2.4}" fill="${iris}" stroke="none"/>`:'');
@@ -6720,15 +6725,31 @@ function petSVG(id,cap){const f=PET_ART[id];if(!f)return null;
 function openPets(){if(!P)return;P.pets=P.pets||['uli'];const gem=`<span style="width:16px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
   const cap=(CAPS.find(c=>c[0]===(P.outfit||{}).cap)||CAPS[0])[2];
   const render=()=>{openModal(`<h3>Pilih teman belajar</h3><p class="note" style="margin:0 0 10px">Kamu punya ${gem} ${P.gems} permata.</p><div class="petgrid">${PETS.map(([id,name,reg,price])=>{const own=price===0||P.pets.includes(id),on=curPet()===id;
-      return `<button class="petit ${on?'on':''}" data-id="${id}" ${!own&&P.gems<price?'data-poor="1"':''}><span class="petpic mascot">${id==='uli'?mascotSVG('uli'):petSVG(id,cap)}</span><b>${esc(name)}</b><small>${esc(reg)}</small><em>${on?'Dipakai':own?(price?'Dimiliki':'Gratis'):`${gem} ${price}`}</em></button>`}).join('')}</div><button class="ghost" id="mClose" style="margin-top:12px">Tutup</button>`);
+      return `<button class="petit ${on?'on':''}" data-id="${id}" ${!own&&P.gems<price?'data-poor="1"':''}><span class="petpic mascot">${id==='uli'?mascotSVG('uli'):petSVG(id,cap)}</span><b>${esc(petNick(id))}</b><small>${esc(petSpecies(id))} · ${esc(reg)}</small><em>${on?'Dipakai':own?(price?'Dimiliki':'Gratis'):`${gem} ${price}`}</em></button>`}).join('')}</div><button class="ghost" id="mClose" style="margin-top:12px">Tutup</button>`);
     $('#mClose').onclick=closeModal;
     $('#mbox').querySelectorAll('.petit').forEach(b=>b.onclick=()=>{const id=b.dataset.id,pr=petOf(id)[3],own=pr===0||P.pets.includes(id);
       const use=()=>{P.pet=id;save();rerenderMascots();renderTop();if(curTab==='shop')renderShop();if(curTab==='profile')renderProfile();render()};
-      if(!own){if(P.gems<pr){toast('gem',`Permatamu kurang ${pr-P.gems}.`);return}buyAsk(petOf(id)[1],pr,()=>{if(P.gems<pr)return;P.gems-=pr;P.pets.push(id);tone([660,880,1100],.08);toast('gem',`${petOf(id)[1]} jadi teman belajarmu! −${pr} permata`);use()},`<span class="mascot" style="display:block;width:90px;margin:auto">${petSVG(id,cap)||''}</span>`);return}
+      if(!own){if(P.gems<pr){toast('gem',`Permatamu kurang ${pr-P.gems}.`);return}buyAsk(petFull(id),pr,()=>{if(P.gems<pr)return;P.gems-=pr;P.pets.push(id);tone([660,880,1100],.08);toast('gem',`${petFull(id)} jadi teman belajarmu! −${pr} permata`);use()},`<span class="mascot" style="display:block;width:90px;margin:auto">${petSVG(id,cap)||''}</span>`);return}
       use()})};
   render()}
 
-function rerenderMascots(){document.querySelectorAll('[data-mascot]').forEach(el=>{const mood=el.dataset.mood;el.innerHTML=mascotSVG();if(mood)el.dataset.mood=mood})}
+
+/* simpan teman belajar terakhir supaya layar memuat & ikon memakai hewan yang sama sebelum data dimuat */
+function petCache(){try{if(typeof P!=='undefined'&&P){localStorage.setItem('jk_pet',P.pet||'uli');if(P.outfit)localStorage.setItem('jk_out',JSON.stringify(P.outfit))}}catch(e){}petIcon()}
+let PETICON_K='';
+function petIcon(){const id=curPet();let o='';try{o=localStorage.getItem('jk_out')||''}catch(e){}const k=id+o;if(k===PETICON_K)return;PETICON_K=k;
+  try{const svg=mascotSVG().replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="150" height="155" ');const img=new Image();
+    img.onload=()=>{const draw=S=>{const c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,S);g.addColorStop(0,'#5CC8FF');g.addColorStop(1,'#3D8BFF');
+        x.fillStyle=g;const r=S*.22;x.beginPath();x.moveTo(r,0);x.arcTo(S,0,S,S,r);x.arcTo(S,S,0,S,r);x.arcTo(0,S,0,0,r);x.arcTo(0,0,S,0,r);x.fill();const w=S*.8;x.drawImage(img,(S-w)/2,S*.12,w,w*124/120);return c.toDataURL('image/png')};
+      const u=draw(192);['icon','apple-touch-icon'].forEach(rel=>{let l=document.querySelector(`link[rel="${rel}"]`);if(!l){l=document.createElement('link');l.rel=rel;document.head.appendChild(l)}l.href=u});
+      document.querySelectorAll('img.instico,img[data-peticon]').forEach(im=>im.src=u);window.PET_ICON=u};
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}catch(e){}}
+setTimeout(petIcon,400);
+/* pintasan dari ikon aplikasi (tekan lama ikon JELAS) */
+try{const g=new URLSearchParams(location.search).get('buka');if(g){sessionStorage.setItem('jk_buka',g);const q=new URLSearchParams(location.search);q.delete('buka');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''))}}catch(e){}
+function bukaShortcut(){let g='';try{g=sessionStorage.getItem('jk_buka')||'';sessionStorage.removeItem('jk_buka')}catch(e){}if(!g||!P)return;const map={belajar:'learn',main:'team',misi:'quest',liga:'league'};if(map[g])setTimeout(()=>{try{go(map[g])}catch(e){}},1200)}
+
+function rerenderMascots(){petCache();document.querySelectorAll('[data-mascot]').forEach(el=>{const mood=el.dataset.mood;el.innerHTML=mascotSVG();if(mood)el.dataset.mood=mood})}
 
 /* ---------- dates ---------- */
 const pad2=n=>String(n).padStart(2,'0');
@@ -7155,7 +7176,7 @@ function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?
 function openGuide(ui){openGuideText(ui)}
 function openGuideText(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=u._k||`${c.id}/${s.id}/${ui}`;
   $('#modal').classList.add('gsheet');
-  openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
+  openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari ${esc(petName())}</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
    ex.map(q=>`<div class="ex"><div class="qq">${q.q}</div><div class="aa">Jawaban: ${q.ans}</div>${q.exp?`<div class="ee">${q.exp}</div>`:''}</div>`).join('')+`</div><button class="primary" id="mClose">Mengerti!</button>`);$('#mClose').onclick=closeModal;
   loadMateri().then(M=>{const el=$('#gMat');if(!el)return;const m=M[key];el.innerHTML=m?guideBody(m):''}).catch(()=>{const el=$('#gMat');if(el)el.innerHTML='<div class="gload">Materi lengkap belum bisa dimuat. Periksa internet, lalu buka lagi.</div>'})}
 
@@ -7486,7 +7507,7 @@ function showFail(o,noHearts,correct,need){const view=$('#vDone');
 function openChest(idx){const pr=progOf();if(idx!==pr.done)return;const n=R(15,30);
   openModal(`<div style="display:grid;place-items:center"><span class="chestbig shakeit" id="chestImg">${ICONS.chest}</span></div><h3 style="text-align:center" id="chestT">Membuka peti…</h3><p style="text-align:center" id="chestP">&nbsp;</p><button class="primary" id="mClose" disabled>Ambil hadiah</button>`);
   tone([300,400,500],.12);
-  setTimeout(()=>{$('#chestImg').classList.remove('shakeit');$('#chestImg').innerHTML=ICONS.chestOpen;$('#chestT').textContent=`+${n} permata!`;$('#chestP').textContent='Tukarkan permata di Toko dengan nyawa, pelindung api, atau gaya baru untuk Uli.';$('#mClose').disabled=false;sfx.win();popFx($('#chestImg'),`+${n}`);
+  setTimeout(()=>{$('#chestImg').classList.remove('shakeit');$('#chestImg').innerHTML=ICONS.chestOpen;$('#chestT').textContent=`+${n} permata!`;$('#chestP').textContent='Tukarkan permata di Toko dengan nyawa, pelindung api, atau gaya baru untuk '+petName()+'.';$('#mClose').disabled=false;sfx.win();popFx($('#chestImg'),`+${n}`);
     P.gems+=n;P.stats.chests++;pr.done++;save();renderTop()},1100);
   $('#mClose').onclick=()=>{closeModal();renderPath();setTimeout(scrollToCurrent,60)}}
 
@@ -7600,7 +7621,7 @@ function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[
 
 /* ---------- onboarding (guided first steps) ---------- */
 /* ---------- boot ---------- */
-function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900)}
+function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');bukaShortcut();setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900)}
 function askGender(){if(!P||P.gender||document.body.classList.contains('teacher'))return;const o={gender:null};
   openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px"></p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`);
   $('#mbox').querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{P.gender=b.dataset.gd;const a=avNorm(P.avatar);const bad=Object.keys(AV_G).some(c=>!avFor(c,a[c],P.gender));if(bad){const d=avDefaultFor(P.gender);['hair','hc','brow','eyes','acc','adat','dunia'].forEach(c=>{if(!avFor(c,a[c],P.gender)||c==='hair'||c==='hc')a[c]=d[c]});P.avatar=a;P.color=avBgColor(a)}save();closeModal();renderTop();if(curTab==='profile')renderProfile();toast('check','Tersimpan. Terima kasih!')})}
