@@ -2705,6 +2705,15 @@ html[data-theme=malam] .rrp.me{background:rgba(251,191,36,.12)!important}
 .rmicons{display:flex;gap:10px;justify-content:center}
 .rmicons .icb{width:52px;height:48px;min-height:0!important;padding:0!important;display:grid!important;place-items:center;border-radius:14px!important;text-decoration:none}
 .rmicons .icwa{color:#25A244!important}html[data-theme=malam] .rmicons .icwa{color:#4ade80!important}
+/* tugas guru: menempel saat digulir */
+#fbTasks.on{position:sticky;top:calc(var(--stickTop) - 2px);z-index:7;margin-bottom:2px}
+#fbTasks.on .fbtask{box-shadow:0 6px 18px rgba(0,0,0,.12)!important;padding:10px 14px;gap:6px}
+#fbTasks.on .fbtask-h{font-size:16px}#fbTasks.on .fbtask-r{padding-top:6px}
+#fbTasks.on~#path .uhead,#fbTasks.on~* .uhead{top:calc(var(--stickTop) + var(--taskH,0px))}
+.exrules{margin:0 0 6px;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.45;text-align:left}
+body.exam #quitBtn,body.exam #pauseBtn{visibility:hidden;pointer-events:none}
+body.exam,body.exam *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.exam #vPlay::before{content:"MODE UJIAN";position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;font:800 11px var(--title);letter-spacing:.12em;color:#fff;background:#E5383B;padding:4px 10px;border-radius:999px;opacity:.9}
 </style>
 <style>html,body{margin:0}</style>
 </head>
@@ -5128,7 +5137,7 @@ function arcSize(){
 /* ---------- JEDA: tombol jeda dan berhenti otomatis saat aplikasi ditinggal ---------- */
 const PAUSE={on:false,at:0};window.PAUSE=PAUSE;
 function pauseCan(){const b=document.body;if(!b.classList.contains('playing'))return false;const v=document.querySelector('section.view:not([hidden])');return !!v&&((v.id==='vPlay'&&!!game)||(v.id==='vDuel'&&!!DUEL))}
-function pauseGame(auto){if(PAUSE.on||!pauseCan())return;PAUSE.on=true;PAUSE.at=Date.now();
+function pauseGame(auto){if(window.examActive&&window.examActive())return;if(PAUSE.on||!pauseCan())return;PAUSE.on=true;PAUSE.at=Date.now();
   try{speechSynthesis.cancel()}catch(e){}try{musicStop()}catch(e){}
   let el=$('#pauseOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="pauseov" id="pauseOv" role="dialog" aria-modal="true" aria-labelledby="pauseT" hidden></div>');el=$('#pauseOv')}
   el.innerHTML=`<div class="pausebox"><div class="mascot" data-mascot data-mood="happy" style="width:96px;margin:0 auto"></div><h3 id="pauseT">${auto?'Permainan dijeda':'Istirahat sebentar'}</h3><p>${auto?'Kamu meninggalkan aplikasi, jadi permainan berhenti dulu. Waktu dan nyawamu aman.':'Waktu berhenti. Lanjutkan kapan saja kamu siap.'}</p><button class="primary" id="pauseGo">LANJUTKAN</button><button class="ghost" id="pauseQuit">Keluar dari permainan</button></div>`;
@@ -7042,7 +7051,7 @@ function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');i
 function selectOpt(k){if(!game||game.locked||!game.lesson)return;const q=game.qs[game.i];if(k<0||k>=q.opts.length)return;game.sel=k;
   $('#opts').querySelectorAll('.opt').forEach((b,i)=>b.classList.toggle('sel',i===k));$('#checkBtn').disabled=false;tone([520],.04)}
 function lessonHearts(){return `<span class="lhearts">${ICONS.heart.replace('fill="currentColor"','fill="#FF5A5F"')}<b>${!game.lesson.usesHearts||!P||P.unlimited?'∞':Math.max(0,P.hearts)}</b></span>`}
-function quitAsk(){if(game&&game.lesson&&game.lesson.room&&window.roomQuit){openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Keluar dari tantangan?</h3><p style="text-align:center">Nilaimu dihitung sampai soal ini, lalu kamu keluar dari ruang tanding. Teman lain tetap bisa melanjutkan.</p><div class="acts"><button class="primary" id="mStay">Lanjut main</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
+function quitAsk(){if(window.examActive&&window.examActive()){toast('lock','Selesaikan tugas dulu. Kamu tidak bisa keluar saat mode ujian.');return}if(game&&game.lesson&&game.lesson.room&&window.roomQuit){openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Keluar dari tantangan?</h3><p style="text-align:center">Nilaimu dihitung sampai soal ini, lalu kamu keluar dari ruang tanding. Teman lain tetap bisa melanjutkan.</p><div class="acts"><button class="primary" id="mStay">Lanjut main</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
     $('#mStay').onclick=closeModal;$('#mLeave').onclick=()=>{closeModal();clearInterval(timerId);arcStop();roomQuit()};return}
   openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Tunggu, jangan berhenti dulu!</h3><p style="text-align:center">Kalau keluar sekarang, kemajuan di level ini akan hilang.</p><div class="acts"><button class="primary" id="mStay">Lanjut belajar</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);
   $('#mStay').onclick=closeModal;$('#mLeave').onclick=()=>{closeModal();clearInterval(timerId);arcStop();const ev=game&&game.lesson&&game.lesson.kind==='eval';game=null;go(ev?'trun':'learn')}}
@@ -8814,8 +8823,10 @@ async function renderTTask(){const v=$('#vTTask'),c=tCls(),cid=tcid();
     $('#tkList').innerHTML=tasks.length?tasks.map(x=>{const avg=av(x.done.map(d=>d.score));
       return `<div class="tcard"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:200px"><h3>${esc(x.title)}</h3><p class="sub" style="margin:0">${esc(x.subjName)} · ${x.n} soal · batas ${fmtDs(x.due)}${x.hours&&x.hours.length?` · 🔔 ${x.hours.map(h=>String(h).padStart(2,'0')+'.00').join(', ')}`:''} ${x.due<today?'<span class="pill mute">Lewat batas</span>':'<span class="pill ok">Aktif</span>'}</p></div>
         <span class="pill mid">${x.done.length} dari ${online.length} murid${avg!=null?' · rata-rata '+avg:''}</span><button class="smallbtn" data-tkd="${x.id}">Rincian</button><button class="smallbtn" data-tkx="${x.id}" style="color:var(--bad)">Hapus</button></div>
-        <div id="tkd_${x.id}" hidden>${online.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>Nama</th><th class="num">Nilai</th><th>Dikerjakan</th></tr></thead><tbody>${online.map(p=>{const d=x.done.find(y=>y.uid===p._uid);
-          return `<tr><td class="nm">${esc(p.name)}</td><td class="num">${d?d.score:'—'}</td><td>${d?fmtDs(dayKey(new Date(d.at)))+(d.tries>1?` · ${d.tries} kali`:''):'<span class="pill bad">Belum</span>'}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid online di kelas ini. Bagikan kode kelas supaya murid bisa mengerjakan tugas dari rumah.</p>'}</div></div>`}).join(''):'<div class="tcard"><p class="note" style="margin:0">Belum ada tugas. Buat tugas pertama di atas.</p></div>';
+        <div id="tkd_${x.id}" hidden>${online.length?`<div class="tablewrap"><table class="ttable"><thead><tr><th>Nama</th><th class="num">Nilai</th><th>Dikerjakan</th><th>Keluar aplikasi</th><th></th></tr></thead><tbody>${online.map(p=>{const d=x.done.find(y=>y.uid===p._uid);
+          return `<tr><td class="nm">${esc(p.name)}</td><td class="num">${d?d.score:'—'}</td><td>${d?fmtDs(dayKey(new Date(d.at)))+(d.tries>1?` · ${d.tries} kali`:''):'<span class="pill bad">Belum</span>'}</td><td>${d?(d.viol?`<span class="pill bad">${d.viol}×${d.forced?' · dikumpulkan otomatis':''}</span>`:'<span class="pill ok">Tidak</span>'):''}</td><td>${d?`<button class="smallbtn" data-tkr="${x.id}|${p._uid}" title="Hapus nilai agar murid bisa mengerjakan ulang">Izinkan ulang</button>`:''}</td></tr>`}).join('')}</tbody></table></div>`:'<p class="note">Belum ada murid online di kelas ini. Bagikan kode kelas supaya murid bisa mengerjakan tugas dari rumah.</p>'}</div></div>`}).join(''):'<div class="tcard"><p class="note" style="margin:0">Belum ada tugas. Buat tugas pertama di atas.</p></div>';
+    $('#tkList').querySelectorAll('[data-tkr]').forEach(b=>b.onclick=()=>{const [tid,uid]=b.dataset.tkr.split('|');openModal(`<h3>Izinkan mengerjakan ulang?</h3><p>Nilai murid ini untuk tugas tersebut dihapus, lalu tugas muncul lagi di HP-nya.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes">Izinkan</button></div>`);
+      $('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{try{await FB.db.doc('classes/'+cid+'/tasks/'+tid+'/done/'+uid).delete();closeModal();toast('check','Murid bisa mengerjakan ulang.');renderTTask()}catch(e){toast('lock',fbErr(e))}}});
     $('#tkList').querySelectorAll('[data-tkd]').forEach(b=>b.onclick=()=>{const d=$('#tkd_'+b.dataset.tkd);d.hidden=!d.hidden;b.textContent=d.hidden?'Rincian':'Tutup'});
     $('#tkList').querySelectorAll('[data-tkx]').forEach(b=>b.onclick=()=>{const x=tasks.find(t=>t.id===b.dataset.tkx);openModal(`<h3>Hapus tugas "${esc(x.title)}"?</h3><p>Nilai murid untuk tugas ini juga terhapus.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Hapus</button></div>`);
       $('#mNo').onclick=closeModal;$('#mYes').onclick=async()=>{$('#mYes').disabled=true;try{for(const d of x.done)await FB.db.doc('classes/'+cid+'/tasks/'+x.id+'/done/'+d.uid).delete();await FB.db.doc('classes/'+cid+'/tasks/'+x.id).delete();FB.db.doc('reminders/'+x.id).delete().catch(()=>{});closeModal();renderTTask()}catch(e){closeModal();toast('lock',fbErr(e))}}})}
@@ -8835,20 +8846,47 @@ function taskNag(){const ts=(FBX.tasks||[]).filter(x=>!x.mine&&x.due>=dayKey());
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&FBX.user&&!isT()){FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();FBX.nagAt=0;taskNag()})}});
 window.fbOpenTask=function(tid){const go2=()=>{const x=(FBX.tasks||[]).find(t=>t.id===tid);if(x)fbStartTask(x);else toast('target','Tugas ini sudah tidak ada.')};if((FBX.tasks||[]).length)go2();else fbLoadTasks().then(go2)};
 function fbTaskBanner(){let el=$('#fbTasks');if(!el){$('#path').insertAdjacentHTML('beforebegin','<div id="fbTasks"></div>');el=$('#fbTasks')}
-  const ts=FBX.tasks||[];if(isT()||!P||!ts.length){el.innerHTML='';return}const today=dayKey();
-  el.innerHTML=`<div class="card fbtask"><div class="fbtask-h"><span style="width:30px;flex:none">${ICONS.target}</span><b>Tugas dari guru</b><span class="pill ${ts.some(x=>!x.mine)?'bad':'ok'}">${ts.filter(x=>!x.mine).length?ts.filter(x=>!x.mine).length+' belum':'Semua selesai'}</span></div>
-    ${ts.map(x=>{const d=x.mine,late=x.due<today;return `<div class="fbtask-r"><span class="grow"><b>${esc(x.title)}</b><small>${esc(x.subjName)} · ${x.n} soal · ${d?`Nilaimu <b>${d.score}</b>`:late?'Lewat batas waktu':'Batas '+fmtDs(x.due)}</small></span><button class="${d?'ghost':'primary'} fbtask-b" data-task="${x.id}">${d?'Ulangi':'Kerjakan'}</button></div>`}).join('')}</div>`;
+  const ts=(FBX.tasks||[]).filter(x=>!x.mine);if(isT()||!P||!ts.length){el.innerHTML='';el.classList.remove('on');document.documentElement.style.setProperty('--taskH','0px');return}el.classList.add('on');const today=dayKey();requestAnimationFrame(()=>{try{document.documentElement.style.setProperty('--taskH',(el.offsetHeight+8)+'px')}catch(e){}});
+  el.innerHTML=`<div class="card fbtask"><div class="fbtask-h"><span style="width:30px;flex:none">${ICONS.target}</span><b>Tugas dari guru</b><span class="pill bad">${ts.length} belum</span></div>
+    ${ts.map(x=>{const d=x.mine,late=x.due<today;return `<div class="fbtask-r"><span class="grow"><b>${esc(x.title)}</b><small>${esc(x.subjName)} · ${x.n} soal · ${d?`Nilaimu <b>${d.score}</b>`:late?'Lewat batas waktu':'Batas '+fmtDs(x.due)}</small></span><button class="primary fbtask-b" data-task="${x.id}">Kerjakan</button></div>`}).join('')}</div>`;
   el.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>fbStartTask(ts.find(x=>x.id===b.dataset.task)));try{ncBadge()}catch(e){}}
-function fbStartTask(x){const c=COURSE.find(k=>k.id===x.cls),s=c&&c.subjects.find(k=>k.id===x.subj),u=s&&s.units[x.unit];if(!u){toast('lock','Materi tugas ini tidak ditemukan.');return}
-  beginRun({kind:'practice',qs:unitQs(u,x.n),mode:'kuis',title:`Tugas · ${u.t}`,subj:s,cls:x.cls,task:x.id})}
-function fbSubmitTask(tid,score,correct,total){const m=FBX.me||{};if(!m.classId)return;const x=(FBX.tasks||[]).find(t=>t.id===tid),prev=x&&x.mine;
-  const best=prev&&prev.score>score?prev:{score,correct,total};
-  const doc={name:P.name,score:best.score,correct:best.correct,total:best.total,last:score,at:Date.now(),tries:((prev&&prev.tries)||0)+1};if(x)x.mine=doc;
+function fbStartTask(x){if(!x)return;if(x.mine){toast('lock','Tugas ini sudah kamu kerjakan dan tidak bisa diulang.');return}
+  const c=COURSE.find(k=>k.id===x.cls),s=c&&c.subjects.find(k=>k.id===x.subj),u=s&&s.units[x.unit];if(!u){toast('lock','Materi tugas ini tidak ditemukan.');return}
+  openModal(`<div style="text-align:center"><span style="display:inline-block;width:64px">${ICONS.target}</span><h3>Mode ujian</h3><p style="margin:0 0 6px"><b>${esc(x.title)}</b> · ${x.n} soal</p></div>
+   <ul class="exrules"><li>Tugas hanya bisa dikerjakan <b>satu kali</b>.</li><li>Selama mengerjakan, kamu <b>tidak bisa keluar</b> atau kembali ke menu.</li><li>Jika kamu membuka aplikasi lain atau layar utama, itu dicatat sebagai pelanggaran dan dilaporkan ke guru.</li><li>Setelah <b>${EX_MAX} kali</b> keluar, tugas <b>dikumpulkan otomatis</b> dengan jawaban yang sudah ada.</li></ul>
+   <div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Mulai mengerjakan</button></div>`);
+  $('#mNo').onclick=closeModal;$('#mYes').onclick=()=>{closeModal();examStart(x,s,u)}}
+const EX_MAX=3;let EXAM=null;window.examActive=()=>!!EXAM;
+function examSave(){if(!EXAM)return;const o=game&&game.lesson;try{localStorage.setItem('jk_exam',JSON.stringify({tid:EXAM.tid,cid:EXAM.cid,viol:EXAM.viol,ans:o?o.answers:0,wrong:o?o.wrong:0,target:o?o.target:EXAM.n,at:Date.now()}))}catch(e){}}
+function examStart(x,s,u){EXAM={tid:x.id,cid:(FBX.me||{}).classId,n:x.n,viol:0,away:false,title:x.title};document.body.classList.add('exam');
+  try{const d=document.documentElement;(d.requestFullscreen||d.webkitRequestFullscreen||(()=>{})).call(d,{navigationUI:'hide'})}catch(e){}
+  beginRun({kind:'practice',qs:unitQs(u,x.n),mode:'kuis',title:`Tugas · ${u.t}`,subj:s,cls:x.cls,task:x.id,noReask:true});examSave()}
+function examEnd(){EXAM=null;document.body.classList.remove('exam');try{localStorage.removeItem('jk_exam')}catch(e){}try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}}
+function examForce(){if(!EXAM||!game||!game.lesson)return;const o=game.lesson,ok=Math.max(0,o.answers-o.wrong),score=Math.round(ok/o.target*100),v=EXAM.viol,t=EXAM.tid;
+  fbSubmitTask(t,score,ok,o.target,{viol:v,forced:true});clearInterval(timerId);try{arcStop()}catch(e){}game=null;examEnd();go('learn');
+  openModal(`<div style="text-align:center"><span style="font-size:52px">⛔</span><h3>Tugas dikumpulkan otomatis</h3><p>Kamu keluar dari aplikasi ${v} kali saat mengerjakan tugas. Jawaban yang sudah ada dikirim ke guru.</p><p><b>Nilai: ${score}</b> (${ok} dari ${o.target} benar)</p></div><div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal}
+function examAway(){if(!EXAM||EXAM.away)return;EXAM.away=true;EXAM.viol++;examSave()}
+function examBack(){if(!EXAM||!EXAM.away)return;EXAM.away=false;if(EXAM.viol>=EX_MAX){examForce();return}
+  try{haptic&&haptic([200,100,200])}catch(e){}
+  openModal(`<div style="text-align:center" id="exWarn"><span style="font-size:52px">⚠️</span><h3>Peringatan ${EXAM.viol} dari ${EX_MAX}</h3><p>Kamu keluar dari aplikasi saat mengerjakan tugas. Ini dicatat dan dilaporkan ke guru.</p><p>${EX_MAX-EXAM.viol===1?'<b>Sekali lagi keluar, tugas dikumpulkan otomatis.</b>':`Jika keluar ${EX_MAX-EXAM.viol} kali lagi, tugas dikumpulkan otomatis.`}</p></div><div class="acts"><button class="primary" id="mNo">Lanjut mengerjakan</button></div>`);
+  $('#mNo').onclick=()=>{closeModal();try{const d=document.documentElement;if(!document.fullscreenElement)(d.requestFullscreen||(()=>{})).call(d)}catch(e){}}}
+document.addEventListener('visibilitychange',()=>{if(!EXAM)return;if(document.hidden)examAway();else examBack()});
+addEventListener('blur',()=>{if(!EXAM)return;setTimeout(()=>{if(EXAM&&!document.hasFocus())examAway()},800)});
+addEventListener('focus',()=>{if(EXAM)examBack()});
+addEventListener('beforeunload',e=>{if(EXAM){examSave();e.preventDefault();e.returnValue=''}});
+['copy','cut','contextmenu','selectstart'].forEach(ev=>document.addEventListener(ev,e=>{if(EXAM&&!(e.target.closest&&e.target.closest('input,textarea')))e.preventDefault()},true));
+/* tugas yang terputus (aplikasi ditutup paksa): kirim nilai yang sudah ada saat aplikasi dibuka lagi */
+function examRecover(){let r=null;try{r=JSON.parse(localStorage.getItem('jk_exam')||'null')}catch(e){}if(!r||EXAM||!FBX.user)return;const m=FBX.me||{};if(!m.classId||m.classId!==r.cid)return;
+  try{localStorage.removeItem('jk_exam')}catch(e){}const ok=Math.max(0,(r.ans||0)-(r.wrong||0)),score=Math.round(ok/(r.target||1)*100);
+  fbSubmitTask(r.tid,score,ok,r.target,{viol:(r.viol||0)+1,forced:true});
+  openModal(`<div style="text-align:center"><span style="font-size:52px">⛔</span><h3>Tugas terakhir sudah dikumpulkan</h3><p>Aplikasi ditutup saat kamu mengerjakan tugas, jadi jawaban yang sudah ada dikirim ke guru.</p><p><b>Nilai: ${score}</b></p></div><div class="acts"><button class="primary" id="mNo">Mengerti</button></div>`);$('#mNo').onclick=closeModal}
+function fbSubmitTask(tid,score,correct,total,ex){const m=FBX.me||{};if(!m.classId)return;const x=(FBX.tasks||[]).find(t=>t.id===tid),prev=x&&x.mine;if(prev){examEnd();return}
+  const doc={name:P.name,score,correct,total,last:score,at:Date.now(),tries:1,viol:(ex&&ex.viol)!=null?ex.viol:(EXAM?EXAM.viol:0),forced:!!(ex&&ex.forced)};if(x)x.mine=doc;
   FB.db.doc('classes/'+m.classId+'/tasks/'+tid+'/done/'+FBX.user.uid).set(doc).then(()=>toast('target',`Tugas terkirim ke guru. Nilai: ${score}`)).catch(e=>toast('lock','Tugas belum terkirim: '+fbErr(e)))}
 const _finishRun=finishRun;
-finishRun=function(){const o=game&&game.lesson;if(o&&o.task&&FBX.user&&!isT()){const ok=Math.max(0,o.target-Math.min(o.target,o.wrong));fbSubmitTask(o.task,Math.round(ok/o.target*100),ok,o.target)}_finishRun()};
+finishRun=function(){const o=game&&game.lesson;if(o&&o.task&&FBX.user&&!isT()){const ok=Math.max(0,o.target-Math.min(o.target,o.wrong));fbSubmitTask(o.task,Math.round(ok/o.target*100),ok,o.target,{viol:EXAM?EXAM.viol:0});examEnd();setTimeout(()=>{if(curTab==='learn')fbTaskBanner()},300)}_finishRun()};
 const _renderPath=renderPath;
-renderPath=function(){_renderPath();if(!FBX.user||isT())return;fbTaskBanner();notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+renderPath=function(){_renderPath();if(!FBX.user||isT())return;examRecover();fbTaskBanner();notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 /* ---------- peringkat kelas online ---------- */
 const _rL=renderLeague;
