@@ -22,6 +22,7 @@
 <style>
 @font-face{font-family:"Inter";src:url(fonts/inter.woff) format("woff");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Nunito";src:url(fonts/nunito.woff) format("woff");font-weight:200 1000;font-display:swap}
+@font-face{font-family:"Kalam";src:url(fonts/kalam.woff) format("woff");font-weight:700;font-display:swap}
 @font-face{font-family:"Fredoka";src:url(fonts/fredoka.woff) format("woff");font-weight:300 700;font-display:swap}
 /* Layout: a bright cartoon schoolyard world (sky, sun, drifting clouds, hills) behind chunky sticker-style cards with ink outlines and solid drop shadows; one committed bright look for classroom TVs */
 :root{
@@ -2859,11 +2860,6 @@ html[data-theme=malam] .xbig,html[data-theme=malam] .xask,html[data-theme=malam]
  #leagueCard .lgx-head{top:var(--stickTop,0)}}
 html[data-theme=malam] #leagueCard .lgx-head{background:#0a0f1e!important;border-color:#1f2a44!important}
 /* ===== gaya Duolingo: gambar tanpa garis hitam tebal, kotak abu tipis tanpa bayangan ===== */
-svg [stroke="#1B1E3D"]{stroke:rgba(27,30,61,.14)}
-svg [stroke="#1B1E3D"] [fill="none"],svg [stroke="#1B1E3D"][fill="none"],svg [stroke="#1B1E3D"] line{stroke:#1B1E3D}
-.mascot svg .mbody{stroke:rgba(27,30,61,.14)}
-.mascot svg .mbody [fill="none"]{stroke:#1B1E3D}
-html[data-theme=malam] svg [stroke="#1B1E3D"]{stroke:rgba(0,0,0,.25)}html[data-theme=malam] .mascot svg .mbody{stroke:rgba(0,0,0,.25)}
 /* kartu murid: garis abu tipis, tanpa bayangan */
 body:not(.teacher) .main .card,body:not(.teacher) .ps,body:not(.teacher) .item.box{border:2px solid var(--line)!important;box-shadow:none!important;border-radius:16px!important}
 /* judul halaman: bilah polos dengan garis bawah */
@@ -2876,26 +2872,170 @@ body:not(.teacher) #vProfile .ptop{border:0!important;background:transparent!imp
 @media (max-width:999px){body:not(.teacher) #vProfile .ptop .pban{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0}
  body:not(.teacher) #vQuest .mqhead{margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;border-radius:0!important}}
 body:not(.teacher) #fbTasks .fbtask,body:not(.teacher) .notifbar2{box-shadow:none!important}
-/* ===== desain Canva: jalur level tersambung garis, nav bawah berlabel ===== */
-.nodes{isolation:isolate}
+/* garis penghubung level */
 .nlinks{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
 .nlinks path{fill:none;stroke:#E5E5E5;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
 .nlinks path.d{stroke:var(--uc);opacity:.45}
-html[data-theme=malam] .nlinks path{stroke:#1f2b47}html[data-theme=malam] .nlinks path.d{stroke:var(--uc);opacity:.5}
-.unit.locked .nlinks{opacity:.6}
-.node.k-chest,.node.k-chest.lock,html[data-theme=malam] .node.k-chest.lock{background:transparent!important;box-shadow:none!important;border:0!important}
-.uhead{border:0!important;box-shadow:0 5px 0 rgba(0,0,0,.14)!important;background-image:none!important}
-.uhead h2{text-shadow:none!important}
-.uhead .guide{border:2px solid rgba(255,255,255,.8)!important;box-shadow:none!important;background:rgba(255,255,255,.12)!important}
-.node.k-chest.lock i{filter:grayscale(1) brightness(1.18)!important}
-@media (max-width:999px){
- body:not(.teacher) .side .nav span{display:block!important;font-size:10.5px;font-weight:700;margin-top:1px;letter-spacing:0}
- body:not(.teacher) .side .nav{padding:6px 0 3px!important;border-color:transparent!important;background:transparent!important}
- body:not(.teacher) .side .nav i{width:30px!important;height:30px!important}
- body:not(.teacher) .side .nav[aria-current="page"]{color:var(--red,#FF4B4B)!important}
- body:not(.teacher) .side .nav[aria-current="page"] i{transform:scale(1.08)}
- html[data-theme=malam] body:not(.teacher) .side .nav[aria-current="page"]{color:#ff6b6b!important}
+@media (max-width:999px){body:not(.teacher) .side .nav span{display:block!important;margin-top:1px}body:not(.teacher) .side .nav{padding:6px 0 3px!important}body:not(.teacher) .side .nav i{width:30px!important;height:30px!important}}
+/* ===================================================================
+   GAYA JELAS: "BUKU TULIS"
+   kertas bergaris, spidol, stiker, selotip washi, stabilo, krayon
+   hanya untuk tampilan murid (dasbor guru tetap gaya MORUBA)
+   =================================================================== */
+:root{
+  --paper:#FFFCF2; --paper2:#FFF7E4; --rule:#DDE7F6; --rule2:#C9D7EE; --margin:#F4B5B5;
+  --pen:#2B3354; --pen2:rgba(43,51,84,.55); --pen3:rgba(43,51,84,.16);
+  --marker:#FFE45C; --marker2:#B8F0C8; --marker3:#FFC9DD;
+  --tape:rgba(255,214,102,.72); --tape2:rgba(132,206,255,.7);
+  --hand:"Kalam","Comic Sans MS","Nunito",cursive;
+  --hr:255px 14px 225px 14px/14px 225px 14px 255px;
+  --hr2:20px 8px 18px 10px/10px 18px 8px 20px;
+  --stk:3px 4px 0 var(--pen3);
 }
+html[data-theme=malam]{
+  --paper:#0d1426; --paper2:#111a2e; --rule:rgba(148,170,214,.07); --rule2:rgba(148,170,214,.13); --margin:rgba(248,113,113,.22);
+  --pen:#c9d4ea; --pen2:rgba(201,212,234,.5); --pen3:rgba(0,0,0,.35);
+  --marker:rgba(241,199,91,.42); --marker2:rgba(74,222,128,.25); --marker3:rgba(244,114,182,.25);
+  --tape:rgba(241,199,91,.4); --tape2:rgba(110,168,255,.4);
+}
+
+/* ---------- kertas ---------- */
+html body:not(.teacher){
+  background-color:var(--paper)!important;
+  background-image:repeating-linear-gradient(180deg,transparent 0 33px,var(--rule) 33px 35px)!important;
+  background-attachment:scroll!important;
+}
+@media (min-width:640px){
+ html body:not(.teacher) .main{background-image:linear-gradient(90deg,transparent 0 calc(50% - 352px),var(--margin) calc(50% - 352px) calc(50% - 350px),transparent calc(50% - 350px))}
+}
+body:not(.teacher) h1,body:not(.teacher) h2,body:not(.teacher) h3{font-family:var(--hand)!important;font-weight:700!important;letter-spacing:0!important;text-transform:none!important}
+
+/* ---------- header (atas) ---------- */
+html body:not(.teacher) .stats{background:var(--paper)!important;border:0!important;border-bottom:2px dashed var(--rule2)!important;box-shadow:none!important;backdrop-filter:none!important}
+body:not(.teacher) .stats .stat{font-family:var(--hand)!important;font-weight:700!important;font-size:19px!important}
+body:not(.teacher) .stats .clspick{font-family:var(--hand)!important;font-weight:700!important;font-size:15px!important;background:var(--paper2)!important;border:2px solid var(--pen2)!important;border-radius:var(--hr)!important;box-shadow:none!important}
+body:not(.teacher) .stats .subjpick .sg{border:2px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:2px 3px 0 var(--pen3)!important;transform:rotate(-3deg)}
+
+/* ---------- tombol: stiker potongan kertas ---------- */
+html body:not(.teacher) .primary{background:var(--green);color:#fff;border:2.5px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:3px 4px 0 var(--pen)!important;font-family:var(--hand)!important;font-weight:700!important;font-size:20px!important;text-transform:none!important;letter-spacing:.01em!important;text-shadow:none!important;padding-top:7px;padding-bottom:7px}
+html body:not(.teacher) .primary:active{transform:translate(2px,3px)!important;box-shadow:1px 1px 0 var(--pen)!important}
+html body:not(.teacher) .primary:disabled{background:var(--track)!important;color:var(--muted2)!important;border-color:var(--pen2)!important;box-shadow:2px 3px 0 var(--pen3)!important}
+html body:not(.teacher) .ghost{background:var(--card)!important;color:var(--pen)!important;border:2.5px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:3px 4px 0 var(--pen3)!important;font-family:var(--hand)!important;font-weight:700!important;font-size:18px!important;text-transform:none!important;letter-spacing:.01em!important}
+html body:not(.teacher) .ghost:active{transform:translate(2px,3px)!important;box-shadow:none!important}
+html body:not(.teacher) .smallbtn{border:2px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:2px 3px 0 var(--pen3)!important;color:var(--pen)!important;font-family:var(--hand)!important;font-weight:700!important;font-size:15px!important;background:var(--card)!important}
+
+/* ---------- kartu: kertas tempel bergaris spidol ---------- */
+html body:not(.teacher) .main .card,html body:not(.teacher) .ps,html body:not(.teacher) .item.box,html body:not(.teacher) .roomcard,html body:not(.teacher) .friendcard,html body:not(.teacher) .duocard,html body:not(.teacher) .fqcard,html body:not(.teacher) .mqcard,html body:not(.teacher) .notifbar2,html body:not(.teacher) #fbTasks .fbtask{
+  background:var(--card)!important;border:2px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:var(--stk)!important}
+html body:not(.teacher) .main .card.league,html body:not(.teacher) #leagueCard{border:0!important;box-shadow:none!important;background:transparent!important}
+html body:not(.teacher) .phopt{background:var(--card)!important;border:2px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:var(--stk)!important}
+html body:not(.teacher) .phopt:nth-child(2n){transform:rotate(.6deg)}html body:not(.teacher) .phopt:nth-child(2n+1){transform:rotate(-.5deg)}
+body:not(.teacher) .phopt b,body:not(.teacher) .phopt strong,body:not(.teacher) .roomcard-h,body:not(.teacher) .duohead{font-family:var(--hand)!important;font-size:20px}
+
+/* ---------- judul halaman: tulisan tangan + stabilo ---------- */
+html body:not(.teacher) .view>.pagehead{background:transparent!important;border:0!important;border-bottom:2px dashed var(--rule2)!important;box-shadow:none!important;border-radius:0!important}
+body:not(.teacher) .view>.pagehead h1,body:not(.teacher) .view>.pagehead h2,body:not(.teacher) .view>.pagehead b{font-family:var(--hand)!important;font-size:27px!important;background:linear-gradient(transparent 58%,var(--marker) 58% 92%,transparent 92%);padding:0 4px}
+body:not(.teacher) .qsec h3,body:not(.teacher) .sect,body:not(.teacher) .eyebrow,body:not(.teacher) .lbl{font-family:var(--hand)!important;font-weight:700!important;text-transform:none!important;letter-spacing:.01em!important;font-size:19px!important;color:var(--pen)!important}
+body:not(.teacher) .qsec h3,body:not(.teacher) .sect{width:fit-content;background:linear-gradient(transparent 60%,var(--marker2) 60% 92%,transparent 92%);display:inline;padding:0 3px}
+
+/* ---------- jalur belajar ---------- */
+html body:not(.teacher) .uhead{border:2.5px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:3px 5px 0 var(--pen3)!important;background-image:repeating-linear-gradient(180deg,transparent 0 26px,rgba(255,255,255,.13) 26px 28px)!important;overflow:visible}
+html body:not(.teacher) .unit:nth-child(odd) .uhead{transform:rotate(-.6deg)}html body:not(.teacher) .unit:nth-child(even) .uhead{transform:rotate(.5deg)}
+html body:not(.teacher) .uhead::before,html body:not(.teacher) .uhead::after{content:"";position:absolute;top:-11px;width:62px;height:22px;background:repeating-linear-gradient(45deg,var(--tape) 0 6px,rgba(255,255,255,.35) 6px 12px);border-left:2px dotted rgba(0,0,0,.08);border-right:2px dotted rgba(0,0,0,.08);pointer-events:none}
+html body:not(.teacher) .uhead::before{left:16px;transform:rotate(-6deg)}
+html body:not(.teacher) .uhead::after{right:22px;transform:rotate(5deg);background:repeating-linear-gradient(45deg,var(--tape2) 0 6px,rgba(255,255,255,.35) 6px 12px)}
+body:not(.teacher) .uhead h2{font-family:var(--hand)!important;font-size:25px!important;line-height:1.1!important}
+body:not(.teacher) .uhead .ue{font-family:var(--hand)!important;text-transform:none!important;letter-spacing:.02em!important;font-size:15px!important}
+html body:not(.teacher) .uhead .guide{border:2px dashed rgba(255,255,255,.9)!important;border-radius:var(--hr)!important;background:rgba(255,255,255,.14)!important;box-shadow:none!important;font-family:var(--hand)!important}
+/* level: stiker bulat */
+html body:not(.teacher) .node{border:3px solid var(--pen)!important;box-shadow:inset 0 -6px 0 rgba(0,0,0,.14),3px 5px 0 var(--pen3)!important;border-radius:50% 46% 52% 47%/47% 52% 46% 50%!important}
+html body:not(.teacher) .node.k-test{border-radius:30px 18px 28px 20px/20px 28px 18px 30px!important}
+html body:not(.teacher) .node.lock{background:var(--paper2)!important;color:var(--pen2)!important;border:3px dashed var(--pen2)!important;box-shadow:none!important}
+html body:not(.teacher) .node.lock i{filter:none!important;opacity:.75}
+html body:not(.teacher) .node.cur{box-shadow:inset 0 -6px 0 rgba(0,0,0,.14),3px 5px 0 var(--pen3),0 0 0 8px var(--paper),0 0 0 11px var(--uc)!important}
+html body:not(.teacher) .node.done::after{content:"✓"!important;background:var(--marker)!important;color:var(--pen)!important;border:2px solid var(--pen)!important;font-family:var(--hand);transform:rotate(-10deg)}
+html body:not(.teacher) .node.k-chest,html body:not(.teacher) .node.k-chest.lock{border:0!important;box-shadow:none!important;background:transparent!important}
+html body:not(.teacher) .node.k-chest i{filter:drop-shadow(3px 4px 0 var(--pen3))!important}
+html body:not(.teacher) .node.k-chest.lock i{filter:grayscale(1) brightness(1.15) drop-shadow(3px 4px 0 var(--pen3))!important;opacity:1}
+body:not(.teacher) .starttip{font-family:var(--hand)!important;font-size:21px!important;border:2.5px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:3px 4px 0 var(--pen3)!important;background:var(--card)!important;padding:1px 14px 2px!important}
+body:not(.teacher) .starttip::after{border-right:2.5px solid var(--pen)!important;border-bottom:2.5px solid var(--pen)!important;background:var(--card)!important}
+/* garis krayon putus-putus antar level */
+body:not(.teacher) .nlinks path{stroke:var(--pen2)!important;stroke-width:3.5!important;stroke-dasharray:3 11;opacity:1!important}
+body:not(.teacher) .nlinks path.d{stroke:var(--uc)!important;stroke-width:6!important;stroke-dasharray:9 9;opacity:.85!important}
+/* maskot hiasan: stiker dengan tepi putih */
+body:not(.teacher) .deco .mascot{filter:drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(3px 4px 0 rgba(43,51,84,.18))}
+html[data-theme=malam] body:not(.teacher) .deco .mascot{filter:drop-shadow(3px 4px 0 rgba(0,0,0,.35))}
+body:not(.teacher) .unit:nth-child(odd) .deco{transform:rotate(-6deg)}body:not(.teacher) .unit:nth-child(even) .deco{transform:rotate(6deg)}
+/* popup level */
+html body:not(.teacher) .npop{border:2.5px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:4px 5px 0 var(--pen3)!important}
+html body:not(.teacher) .npop::before{border-left:2.5px solid var(--pen)!important;border-top:2.5px solid var(--pen)!important}
+body:not(.teacher) .npop b{font-family:var(--hand)!important;font-size:23px!important}
+html body:not(.teacher) .npop .primary{background:var(--card)!important;color:var(--pen)!important}
+/* tombol Latihan melayang */
+html body:not(.teacher) #practiceFab,html body:not(.teacher) .fab{border:2.5px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:3px 4px 0 var(--pen)!important;font-family:var(--hand)!important;font-weight:700!important;transform:rotate(-2deg)}
+
+/* ---------- nav bawah (HP) & samping (laptop) ---------- */
+html body:not(.teacher) .side{background:var(--paper)!important;border-top:2px dashed var(--rule2)!important;box-shadow:none!important}
+@media (min-width:1000px){html body:not(.teacher) .side{border-top:0!important;border-right:2px dashed var(--rule2)!important}}
+body:not(.teacher) .side .nav span{font-family:var(--hand)!important;font-weight:700!important;color:var(--pen2)}
+@media (max-width:999px){body:not(.teacher) .side .nav span{font-size:13px!important;line-height:1.1;padding:0 3px}}
+html body:not(.teacher) .side .nav{background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+html body:not(.teacher) .side .nav[aria-current="page"]{color:var(--pen)!important;background:transparent!important}
+html body:not(.teacher) .side .nav[aria-current="page"] span{color:var(--pen)!important;background:linear-gradient(transparent 45%,var(--marker) 45% 95%,transparent 95%)}
+html body:not(.teacher) .side .nav[aria-current="page"] i{transform:rotate(-8deg) scale(1.1)}
+@media (min-width:1000px){html body:not(.teacher) .side .nav[aria-current="page"]{background:var(--paper2)!important;border:2px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:var(--stk)!important}
+ html body:not(.teacher) .side .nav[aria-current="page"] span{background:none}}
+body:not(.teacher) .sbname{font-family:var(--hand)!important}
+
+/* ---------- bilah progres: arsiran krayon ---------- */
+html body:not(.teacher) .qbar,html body:not(.teacher) .mqbar{border:2px solid var(--pen)!important;border-radius:var(--hr)!important;background:var(--paper2)!important}
+html body:not(.teacher) .qbar>i,html body:not(.teacher) .qbar>span:not(.qt):first-child,html body:not(.teacher) .qbar .fill{background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.28) 0 5px,transparent 5px 10px)!important}
+
+/* ---------- Misi ---------- */
+html body:not(.teacher) #vQuest .mqhead{border-bottom:2.5px solid var(--pen)!important;background-image:repeating-linear-gradient(180deg,transparent 0 30px,rgba(255,255,255,.14) 30px 32px)!important}
+body:not(.teacher) #vQuest .mqhead h2,body:not(.teacher) #vQuest .mqhead b{font-family:var(--hand)!important}
+html body:not(.teacher) #vQuest .quest{border-bottom:2px dashed var(--rule2)!important}
+body:not(.teacher) .quest .qt,body:not(.teacher) .quest b{font-family:var(--hand);font-size:18px}
+
+/* ---------- Toko ---------- */
+html body:not(.teacher) #vShop .shopsec{border:0!important;border-bottom:2px dashed var(--rule2)!important;box-shadow:none!important;background:transparent!important;border-radius:0!important}
+html body:not(.teacher) #vShop .shopsec h3{width:fit-content;background:linear-gradient(transparent 60%,var(--marker3) 60% 92%,transparent 92%);display:inline;padding:0 3px}
+html body:not(.teacher) #vShop .item{border-bottom:2px dashed var(--rule)!important}
+html body:not(.teacher) #vShop .item .buy,html body:not(.teacher) .buy{border:2px solid var(--pen)!important;border-radius:var(--hr)!important;box-shadow:2px 3px 0 var(--pen3)!important;font-family:var(--hand)!important;font-weight:700!important;background:var(--card)!important}
+body:not(.teacher) #vShop .item b,body:not(.teacher) #vShop .it b{font-family:var(--hand);font-size:18px}
+
+/* ---------- Profil ---------- */
+html body:not(.teacher) #vProfile .pban{border-bottom:2.5px solid var(--pen)!important}
+body:not(.teacher) #vProfile .pinfo h2,body:not(.teacher) #vProfile .pinfo input,body:not(.teacher) #vProfile .pinfo .pname{font-family:var(--hand)!important}
+html body:not(.teacher) #vProfile .ps:nth-child(odd){transform:rotate(-.8deg)}html body:not(.teacher) #vProfile .ps:nth-child(even){transform:rotate(.7deg)}
+body:not(.teacher) #vProfile .ps b,body:not(.teacher) #vProfile .ps .num{font-family:var(--hand)!important;font-size:24px!important}
+html body:not(.teacher) .pban-edit,html body:not(.teacher) .pban-set{border:2px solid var(--pen)!important;box-shadow:2px 3px 0 var(--pen3)!important}
+
+/* ---------- Peringkat ---------- */
+body:not(.teacher) .lgx-head h2,body:not(.teacher) .lgx-head b{font-family:var(--hand)!important;font-size:24px!important}
+html body:not(.teacher) .lgx-list>*{border-bottom:2px dashed var(--rule)!important}
+html body:not(.teacher) .lgx-list .me,html body:not(.teacher) .lgx-list .cur{background:linear-gradient(transparent 12%,var(--marker) 12% 88%,transparent 88%)!important;border-radius:6px!important}
+body:not(.teacher) .lgx-empty b,body:not(.teacher) .lgx-empty p{font-family:var(--hand);font-size:19px}
+
+/* ---------- jendela (modal) & toast ---------- */
+html body:not(.teacher) .mbox{background:var(--card)!important;border:2.5px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:5px 7px 0 var(--pen3)!important;overflow:auto}
+html body:not(.teacher) .mbox h3{font-size:24px!important}
+html body:not(.teacher) .toast{border:2px solid var(--pen)!important;border-radius:var(--hr)!important;font-family:var(--hand)!important;font-weight:700!important}
+html body:not(.teacher) .popover{border:2.5px solid var(--pen)!important;border-radius:var(--hr2)!important;box-shadow:4px 5px 0 var(--pen3)!important;background:var(--card)!important}
+
+/* ---------- pelajaran (soal) ---------- */
+html body:not(.teacher) .opt{border:2.5px solid var(--pen2)!important;border-radius:var(--hr2)!important;box-shadow:2px 3px 0 var(--pen3)!important;background:var(--card)!important}
+html body:not(.teacher) .opt.sel,html body:not(.teacher) .opt[aria-pressed=true]{border-color:var(--blue)!important;background:var(--tb)!important}
+body:not(.teacher) .qq,body:not(.teacher) .qtitle,body:not(.teacher) .lesson h2{font-family:var(--hand)!important}
+
+/* ---------- mode malam: buku malam ---------- */
+html[data-theme=malam] body:not(.teacher) .primary{color:#0a0f1e!important}
+html[data-theme=malam] body:not(.teacher) .npop .primary{background:#fff!important;color:#0a0f1e!important}
+html[data-theme=malam] body:not(.teacher) .uhead{background:color-mix(in srgb,var(--uc) 55%,#111a2e)!important;background-image:repeating-linear-gradient(180deg,transparent 0 26px,rgba(255,255,255,.06) 26px 28px)!important}
+html[data-theme=malam] body:not(.teacher) .uhead{border-color:rgba(255,255,255,.35)!important}
+html[data-theme=malam] body:not(.teacher) .node{border-color:rgba(255,255,255,.55)!important}
+html[data-theme=malam] body:not(.teacher) .node.lock{background:#141e36!important;border-color:rgba(201,212,234,.3)!important;color:#6b7894!important}
+@media (prefers-reduced-motion:reduce){html body:not(.teacher) .uhead,html body:not(.teacher) .ps,html body:not(.teacher) .phopt{transform:none!important}}
 </style>
 <style>html,body{margin:0}</style>
 </head>
