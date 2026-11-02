@@ -7117,7 +7117,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
 
 function renderPath(){const s=SUBJ(),pr=progOf(),done=pr.done;let h='';
   s.units.forEach((u,ui)=>{const base=ui*NODES.length,locked=done<base,sign=ui%2?-1:1;
-    h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}" aria-label="Video belajar"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.2v5.6l5-2.8z" fill="currentColor"/></svg><span class="gl">Video</span></button></div><div class="nodes">`;
+    h+=`<div class="unit ${locked?'locked':''}" style="--uc:${unitColor(ui)}" id="unit${ui}"><div class="uhead"><div><div class="ue">Unit ${ui+1} · ${esc(s.name)}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div><button class="guide" data-guide="${ui}" aria-label="Panduan">${ico('book')}<span class="gl">Panduan</span></button></div><div class="nodes">`;
     const spP=spPending(ui),spD=spDone(ui);
     NODES.forEach((nd,ni)=>{const idx=base+ni;let st=idx<done?'done':idx===done?'cur':'lock';if(ni===2&&spP)st='lock';
       h+=`<div class="nrow" style="--x:${OFFS[ni]*sign}px" data-u="${ui}" data-n="${ni}">${st==='cur'?`<span class="starttip">${done===0?'MULAI':nd.k==='chest'?'BUKA':'LANJUT'}</span>`:''}<button class="node ${st} k-${nd.k}" aria-label="${esc(nodeTitle(s,ui,ni))}">${ico(nd.k==='chest'&&st==='done'?'chestOpen':NODE_ICON[nd.k])}</button></div>`;
@@ -7152,7 +7152,7 @@ function guideBody(m){const sec=x=>`<section class="gsec"><h4>${x.h}</h4>`+(x.p?
     (x.ex?x.ex.map(e=>`<div class="ex"><div class="qq">${e[0]}</div><div class="aa">${e[1]}</div></div>`).join(''):'')+
     (x.note?`<div class="gnote">${x.note}</div>`:'')+`</section>`;
   return `<p class="gintro">${m.intro}</p>`+m.s.map(sec).join('')+(m.sum&&m.sum.length?`<section class="gsum"><h4>Yang perlu diingat</h4><ul>${m.sum.map(t=>`<li>${t}</li>`).join('')}</ul></section>`:'')}
-function openGuide(ui){openVideo(ui)}
+function openGuide(ui){openGuideText(ui)}
 function openGuideText(ui){const c=CLS(),s=SUBJ(),u=s.units[ui];const ex=unitQs(u,3);const key=u._k||`${c.id}/${s.id}/${ui}`;
   $('#modal').classList.add('gsheet');
   openModal(`<div class="ghead"><span class="eyebrow">Unit ${ui+1} · ${esc(s.name||s.t||'')}</span><h3>${esc(u.t)}</h3></div><div class="gb"><div class="tipbox"><div class="mascot" data-mascot data-mood="happy"></div><div><b>Tips dari Uli</b><br>${esc(u.tip||u.d)}</div></div><div id="gMat"><div class="gload">Memuat materi…</div></div><h4 class="gexh">Contoh soal</h4>`+
