@@ -3281,6 +3281,8 @@ html[data-theme=malam] .bddate{background:#3a2c0a}
 /* layar penuh di atas aplikasi: kunci gulir latar, hanya satu bilah gulir */
 .bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask{overscroll-behavior:contain}
 html:has(:is(.bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask):not([hidden])),html:has(:is(.bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask):not([hidden])) body{overflow:hidden!important}
+/* nyawa dimatikan sementara */
+html.noheart #heartBtn,html.noheart .lhearts,html.noheart .nyawa-sec,html.noheart #sUnl,html.noheart .set:has(#sUnl),html.noheart .set:has(#stUnl),html.noheart #rail .rcard:has([data-act=refill]){display:none!important}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3662,7 +3664,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=188"></script>
+<script src="av.js?v=189"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7043,6 +7045,8 @@ function finish(){
    quests, shop, league, profile, onboarding
    ========================================================= */
 const K='#1B1E3D';
+/* Nyawa dimatikan sementara; ubah ke false untuk menyalakan lagi. */
+const HEARTS_OFF=true;window.HEARTS_OFF=HEARTS_OFF;if(HEARTS_OFF)document.documentElement.classList.add('noheart');
 const ICONS={
  home:`<svg viewBox="0 0 48 48"><path d="M8 22 L24 9 L40 22 V41 H8Z" fill="#FFB65C" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M4 23 L24 6 L44 23" fill="none" stroke="#F2394B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><rect x="18" y="27" width="12" height="14" rx="3" fill="#3D8BFF" stroke="${K}" stroke-width="3"/></svg>`,
  team:`<svg viewBox="0 0 48 48"><g stroke="${K}" stroke-width="3" stroke-linejoin="round"><circle cx="16" cy="15" r="7" fill="#FFC23D"/><path d="M3 40 c0-10 6-15 13-15 s13 5 13 15z" fill="#3D8BFF"/><circle cx="33" cy="17" r="6" fill="#FFC23D"/><path d="M22 40 c0-9 5-13 11-13 s11 4 11 13z" fill="#26BF66"/></g></svg>`,
@@ -8350,7 +8354,7 @@ function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES
 function startPractice(){const s=SUBJ(),doneUnits=Math.max(1,Math.floor(progOf().done/NODES.length));const pool=s.units.slice(0,Math.min(s.units.length,doneUnits));
   beginRun({kind:'practice',qs:Array.from({length:6},()=>unitQs(pick(pool),1)[0]),mode:'kuis',title:`Latihan · ${s.name}`})}
 function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');if(rr&&!o.room)rr.hidden=true}L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.id===o.cls).lv):lvOf();const s=o.subj||SUBJ();S={id:s.id,name:o.title||s.name,make:()=>o.qs};MODE=o.mode;setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
-  const usesHearts=o.kind==='lesson'||o.kind==='test';
+  const usesHearts=!HEARTS_OFF&&(o.kind==='lesson'||o.kind==='test');
   game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?3:(usesHearts&&!P.unlimited?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
     lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
   show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');try{loadMateri().catch(()=>{})}catch(e){}
@@ -8457,7 +8461,7 @@ function renderQuests(){ensureQuests();ensureMonth();const now=new Date(),k=P.mo
 function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICONS.gem}</span>${n}`;
   const outfit=(list,kind)=>list.map(([id,name,col,price])=>{const own=P.owned[kind].includes(id),on=P.outfit[kind]===id;return `<div class="item"><span class="ii"><span class="swatchdot" style="background:${col}"></span></span><span class="it"><b>${name}</b><small>${on?'Sedang dipakai':own?'Sudah dimiliki':'Gaya baru untuk '+petName()}</small></span><button class="buy ${own?'owned':''}" data-kind="${kind}" data-id="${id}" data-price="${price}" ${on||(!own&&P.gems<price)?'disabled':''}>${on?'Dipakai':own?'Pakai':gem(price)}</button></div>`}).join('');
   $('#shopList').innerHTML=`<div class="card shopsec shopav"><div class="shopav-av" style="--av:${avBgColor(P.avatar)}">${avatarSVG(P.avatar||null)}</div><div style="flex:1;min-width:160px"><h3>Kostum avatar</h3><p class="note" style="margin:0"></p></div><button class="primary" id="shopAv">Ubah avatar</button></div><div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3></div>
-   <div class="card shopsec"><h3>Nyawa</h3>
+   <div class="card shopsec nyawa-sec"><h3>Nyawa</h3>
     <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${P.unlimited?'Mode kelas aktif: nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${P.unlimited||P.hearts>=5||P.gems<PRICE.heart?'disabled':''}>${gem(PRICE.heart)}</button></div>
     <div class="item"><span class="ii">${ico('target')}</span><span class="it"><b>Latihan</b><small>Ulangi materi yang sudah dipelajari, dapat +1 nyawa</small></span><button class="buy" id="buyPractice" style="color:var(--ok)">Gratis</button></div></div>
    <div class="card shopsec"><h3>Pengganda XP</h3><div class="item"><span class="ii">${ico('bolt')}</span><span class="it"><b>XP 2× selama 15 menit</b><small>${boostLeft()?`Aktif, sisa ${boostLeft()} menit`:'Semua XP yang kamu dapat jadi dua kali lipat'}</small></span><button class="buy" id="buyBoost" ${P.gems<PRICE.boost?'disabled':''}>${gem(PRICE.boost)}</button></div></div>
@@ -8481,7 +8485,7 @@ function notifIsOn(){try{return !notifOff()&&'Notification' in window&&Notificat
 function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class="sethead"><h3 style="margin:0;flex:1">Pengaturan</h3><button class="back" id="setX" aria-label="Tutup">✕</button></div><div class="card settings" id="setBody"></div></div>`);
   $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   const rs=()=>{
-  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+(window.fbNotifSet?`<div class="set"><span><b>Notifikasi</b><small>Tugas dari guru dan tantangan teman</small></span><button class="tgl" id="sNotif" aria-pressed="${notifIsOn()}" aria-label="Notifikasi"></button></div>`:'')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
+  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+(window.fbNotifSet?`<div class="set"><span><b>Notifikasi</b><small>Tugas dari guru dan tantangan teman</small></span><button class="tgl" id="sNotif" aria-pressed="${notifIsOn()}" aria-label="Notifikasi"></button></div>`:'')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+(HEARTS_OFF?'':tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas'))+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
    `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
     ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
   $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();(rs(),renderProfile())};
@@ -8490,7 +8494,7 @@ function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class
   {const nb=$('#sNotif');if(nb)nb.onclick=async()=>{const on=nb.getAttribute('aria-pressed')!=='true';nb.disabled=true;const r=await window.fbNotifSet(on);nb.disabled=false;
     if(r==='on')toast('check','Notifikasi menyala.');else if(r==='off')toast('check','Notifikasi dimatikan.');else if(r==='unsupported')toast('lock','Browser ini belum mendukung notifikasi.');else if(r==='default')toast('lock','Izin notifikasi belum diberikan.');rs()}}
   $('#sHap').onclick=()=>{hapOn=!hapOn;store.set('haptic',hapOn);if(hapOn)haptic([15,40,15]);(rs(),renderProfile())};
-  $('#sUnl').onclick=()=>{P.unlimited=!P.unlimited;save();renderTop();(rs(),renderProfile())};
+  if($('#sUnl'))$('#sUnl').onclick=()=>{P.unlimited=!P.unlimited;save();renderTop();(rs(),renderProfile())};
   $('#sTV').onclick=()=>{TV=!TV;store.set('tv',TV);applyTV();(rs(),renderProfile())};
   $('#sGoal').querySelectorAll('button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;if(P.quests)P.quests.list.forEach(q=>{if(q.id==='xp')q.goal=P.goal});save();(rs(),renderProfile());renderTop()});
   $('#sFull').onclick=()=>{try{if(!document.fullscreenElement){const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{$('#sFull').textContent='Tidak tersedia'})}else document.exitFullscreen()}catch(e){}};
@@ -9043,7 +9047,7 @@ function renderTSet(){const t=T();
      <div class="tfield"><label for="stLabel">Nama kelas</label><input id="stLabel" maxlength="30" placeholder="Contoh: 5A" value="${esc(t.label||'')}"></div><div class="tfield"><label for="stCls">Jenjang</label><select id="stCls">${COURSE.filter(c=>!c.hidden||c.id===t.cls).map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
    addStudentBlock()+
-   `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
+   `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${(HEARTS_OFF?'':'')+tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
      ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser di TV</small></span><button class="smallbtn" id="stFull">Aktifkan</button></div></div>
    ${licCard()}
    <div class="tcard"><h3>Keamanan</h3><div class="tform"><div class="tfield"><label for="stPin">Sandi guru baru</label><input id="stPin" type="password" autocomplete="new-password"></div><div class="tfield"><label for="stPin2">Ulangi sandi baru</label><input id="stPin2" type="password" autocomplete="new-password"></div></div><p class="sub" style="margin:0">Nama pengguna guru: <b>${esc(t.user||'guru')}</b></p><button class="ghost" id="stPinSave" style="align-self:flex-start">Ganti sandi guru</button></div>
@@ -10640,7 +10644,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=188';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=189';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
