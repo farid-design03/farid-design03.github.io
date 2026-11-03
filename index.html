@@ -3269,6 +3269,15 @@ html[data-theme=malam] .bddate{background:#3a2c0a}
 .rcbig{width:min(56vw,240px)}.rcbig .rcbox{width:100%}.rcbig .bdnum{font-size:clamp(34px,10vw,48px)!important;-webkit-text-stroke-width:8px}
 .rcbig.none .rcart{opacity:.35}
 .rct{margin:-6px 0 0;font-size:26px}
+.scov{position:fixed;inset:0;z-index:2700;background:rgba(0,0,0,.62);display:flex;flex-direction:column}.scov[hidden]{display:none}
+.scwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 28px;min-height:0}
+.scimg{width:min(400px,82vw);max-height:100%;object-fit:contain;border-radius:22px;box-shadow:0 12px 40px rgba(0,0,0,.35);animation:popIn .3s ease}
+.scprev{color:#fff}
+.scsheet{background:var(--card,#fff);border-radius:22px 22px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom));animation:spUp .25s ease-out}
+.schd{display:grid;grid-template-columns:44px 1fr 44px;align-items:center}.schd b{text-align:center;font:900 16px var(--display,sans-serif);color:var(--muted);letter-spacing:.06em}
+.scx{background:none;border:0;box-shadow:none!important;font-size:24px;color:var(--muted);width:44px;height:44px;padding:0}
+.scsheet .pcacts{margin-top:14px}
+.bdtop .back svg{width:26px;height:26px}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3650,7 +3659,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=184"></script>
+<script src="av.js?v=185"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7526,20 +7535,57 @@ function bdPage(){recNote();save();const R=P.rec||{},recs=[
   {const rw=el.querySelector('.rcrow');let dn=false,sx=0,sl=0,mv=0;rw.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dn=true;mv=0;sx=e.clientX;sl=rw.scrollLeft;rw.classList.add('drag')});window.addEventListener('pointermove',e=>{if(!dn)return;mv=Math.abs(e.clientX-sx);rw.scrollLeft=sl-(e.clientX-sx)});window.addEventListener('pointerup',()=>{if(!dn)return;dn=false;rw.classList.remove('drag')});rw.addEventListener('click',e=>{if(mv>6){e.stopPropagation();e.preventDefault();mv=0}},true)}el.querySelectorAll('[data-bd]').forEach(x=>x.onclick=()=>bdDetail(BADGES.find(b=>b.id===x.dataset.bd),true))}
 function bdDetail(b,fromPage){recNote();save();const l=blevel(b),nx=b.lv[Math.min(l,b.lv.length-1)],v=b.val(P),at=l?((P.bAt||{})[b.id]||{})[l]:0;
   const txt=l?`Kamu meraih pencapaian <b>${esc(b.name)}</b> karena ${BD_WHY[b.id]?BD_WHY[b.id](b.lv[l-1]):b.d(b.lv[l-1])}!`:`Raih pencapaian <b>${esc(b.name)}</b>: ${esc(b.d(b.lv[0]))}.`;
-  const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${typeof shareIcon!=='undefined'?shareIcon:'⇪'}</button></div>
+  const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${SHARE_SVG}</button></div>
    <div class="bddet"><div class="bdbig">${bdArt(b,l)}</div>${l?`<span class="bddate">${bdFmt(at).toUpperCase()}</span>`:'<span class="bddate lk">BELUM DIRAIH</span>'}<p class="bdtxt">${txt}</p>
    ${l<b.lv.length?`<div class="bdnext"><small>Level berikutnya: ${esc(b.d(nx))}</small><div class="qbar"><i style="width:${Math.min(100,v/nx*100)}%"></i><span>${Math.min(v,nx)} / ${nx}</span></div></div>`:'<p class="bdmax">Level tertinggi tercapai!</p>'}</div>`,'det');
   $('#bdX').onclick=()=>{if(fromPage)bdPage();else el.hidden=true};
-  $('#bdShare').onclick=async()=>{const t=`Aku meraih pencapaian "${b.name}" level ${l} di JELAS! 🏅 ${location.origin}${location.pathname}`;try{if(navigator.share){await navigator.share({text:t});return}}catch(e){return}copyText(t)}}
+  $('#bdShare').onclick=()=>{if(!l){toast('lock','Raih pencapaian ini dulu untuk membagikannya.');return}shareCard({img:`capai/${b.id}${l}.webp?v=1`,num:b.lv[l-1],theme:['bronze','bronze','silver','legend'][l],line:`Aku meraih pencapaian ${l===b.lv.length?'tertinggi ':''}${b.name}!`,head:'BAGIKAN PENCAPAIAN',file:`jelas-${b.id}-${l}`})}}
+const SHARE_SVG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3.5"/><path d="M7.5 8L12 3.5 16.5 8"/><path d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v7A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 17.5 11H16"/></svg>';
+window.SHARE_SVG=SHARE_SVG;
+const SC_TH={bronze:['#FFF4E3','#FFFFFF','#2B2B2B'],silver:['#E3EEFF','#B9F1FF','#0E2A5C'],legend:['#3B1466','#C98A00','#FFF6D8'],gold:['#FFF1CC','#FFFFFF','#3C2A00']};
+async function shareCardBlob(o){const S=1080,cv=document.createElement('canvas');cv.width=cv.height=S;const g=cv.getContext('2d');const th=SC_TH[o.theme]||SC_TH.bronze;
+  try{await document.fonts.load('900 60px Fredoka');await document.fonts.load('800 60px Nunito')}catch(e){}
+  const gr=g.createLinearGradient(0,0,S*.4,S);gr.addColorStop(0,th[0]);gr.addColorStop(1,th[1]);g.fillStyle=gr;g.beginPath();g.roundRect?g.roundRect(0,0,S,S,70):g.rect(0,0,S,S);g.fill();
+  g.save();g.globalAlpha=.18;g.fillStyle='#fff';g.beginPath();g.moveTo(S*.55,0);g.lineTo(S,0);g.lineTo(S,S*.45);g.closePath();g.fill();g.beginPath();g.moveTo(0,S*.62);g.lineTo(S*.35,S);g.lineTo(0,S);g.closePath();g.fill();g.restore();
+  const star=(x,y,r,c)=>{g.fillStyle=c;g.beginPath();g.moveTo(x,y-r);g.quadraticCurveTo(x,y,x+r,y);g.quadraticCurveTo(x,y,x,y+r);g.quadraticCurveTo(x,y,x-r,y);g.quadraticCurveTo(x,y,x,y-r);g.fill()};
+  const sc=o.theme==='legend'?'#FFE27A':'#FFFFFF';star(820,230,34,sc);star(230,560,24,sc);star(880,650,18,sc);star(170,190,14,sc);
+  const load=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src});
+  const im=await load(o.img==='svg:flame'?'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(ICONS.flame.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" ').replace(/currentColor/g,'#FF9600')):o.img);
+  if(im){const box=520,r=Math.min(box/im.width,box/im.height),w=im.width*r,h=im.height*r;g.drawImage(im,(S-w)/2,90+(box-h),w,h)}
+  if(o.num!=null&&o.num!==''){const t=String(o.num);g.font='900 110px Fredoka, Nunito, sans-serif';g.textAlign='center';g.lineJoin='round';
+    const stc=o.theme==='legend'?'#8A5A00':o.theme==='silver'?'#1C6CF6':o.theme==='gold'?'#C26A00':'#9A5A18';g.lineWidth=26;g.strokeStyle=stc;g.strokeText(t,S/2,690);g.fillStyle=o.theme==='legend'||o.theme==='gold'?'#FFF2A8':'#FFFFFF';g.fillText(t,S/2,690)}
+  g.fillStyle=th[2];g.font='800 54px Fredoka, Nunito, sans-serif';g.textAlign='center';
+  const words=o.line.split(' '),lines=[];let cur='';words.forEach(w=>{const tt=cur?cur+' '+w:w;if(g.measureText(tt).width>880&&cur){lines.push(cur);cur=w}else cur=tt});lines.push(cur);
+  lines.slice(0,3).forEach((ln,i)=>g.fillText(ln,S/2,800+i*70));
+  const uli=await load('pets/uli.webp?v=1');g.font='900 66px Fredoka, Nunito, sans-serif';const wl=g.measureText('jelas').width;const bx=S/2-(wl+80)/2;if(uli)g.drawImage(uli,bx,S-140,70,70);g.fillStyle=o.theme==='legend'?'#9BE15D':'#58CC02';g.textAlign='left';g.fillText('jelas',bx+82,S-82);
+  return await new Promise(r=>cv.toBlob(r,'image/png'))}
+async function shareCard(o){let el=$('#scOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="scov" id="scOv" hidden></div>');el=$('#scOv')}
+  el.innerHTML='<div class="scwrap"><div class="scprev"><p class="note">Membuat gambar…</p></div></div>';el.hidden=false;
+  const bl=await shareCardBlob(o);if(!bl){el.hidden=true;toast('lock','Gagal membuat gambar.');return}const url=URL.createObjectURL(bl),file=new File([bl],o.file+'.png',{type:'image/png'}),text=o.line+' Ayo belajar bareng di JELAS: '+location.origin+location.pathname;
+  el.innerHTML=`<div class="scwrap"><img class="scimg" src="${url}" alt="Kartu untuk dibagikan"></div><div class="scsheet"><div class="schd"><button class="scx" id="scX" aria-label="Tutup">✕</button><b>${esc(o.head||'BAGIKAN')}</b><span></span></div><div class="pcacts">
+    <button data-sc="wa"><span class="pci" style="background:#25D366;color:#fff"><svg viewBox="0 0 32 32" width="34" height="34"><path d="M16 4.5A11.5 11.5 0 0 0 6.1 21.8L4.5 27.5l5.9-1.5A11.5 11.5 0 1 0 16 4.5z" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"/><path d="M12.2 10.6c.3-.6.7-.6 1-.6h.8c.3 0 .6.1.8.6l1 2.4c.1.3 0 .6-.1.8l-.7.9c-.2.2-.2.5 0 .8.5.9 1.2 1.7 2 2.3.7.6 1.4 1 2.1 1.3.3.1.6 0 .8-.2l.9-1c.2-.3.6-.3.9-.2l2.3 1.1c.3.2.5.4.5.7 0 .7-.3 1.7-1.1 2.2-.8.5-1.9.8-3.6.2-1.7-.6-3.4-1.7-4.8-3.1-1.4-1.4-2.5-3.1-3-4.6-.4-1.5-.1-2.6.3-3.2z" fill="currentColor"/></svg></span>WhatsApp</button>
+    <button data-sc="save"><span class="pci"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>Simpan</button>
+    <button data-sc="copy"><span class="pci"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>Salin teks</button>
+    <button data-sc="more"><span class="pci"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg></span>Lainnya</button></div></div>`;
+  const close=()=>{el.hidden=true;el.innerHTML='';setTimeout(()=>URL.revokeObjectURL(url),3000)};$('#scX').onclick=close;el.onclick=e=>{if(e.target===el||e.target.classList.contains('scwrap'))close()};
+  const shareFile=async()=>{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text});return true}return false};
+  const save=()=>{const a=document.createElement('a');a.href=url;a.download=file.name;document.body.appendChild(a);a.click();a.remove();toast('check','Gambar disimpan.')};
+  el.querySelectorAll('[data-sc]').forEach(x=>x.onclick=async()=>{const k=x.dataset.sc;try{
+    if(k==='save'){save();return}if(k==='copy'){copyText(text);return}
+    if(await shareFile())return;
+    if(k==='wa'){save();setTimeout(()=>window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank'),400);toast('check','Gambar disimpan. Lampirkan di WhatsApp, ya.');return}
+    if(navigator.share){await navigator.share({text});return}save()}catch(e){if(e&&e.name==='AbortError')return;save()}})}
+window.shareCard=shareCard;
 const RC_WHY={league:r=>`Liga tertinggi yang pernah kamu capai adalah <b>Liga ${TIERS[Math.max(0,Math.min(9,r.v-1))][0]}</b>. Terus kumpulkan XP untuk naik ke liga berikutnya!`,
  perfect:r=>`Kamu sudah menyelesaikan <b>${r.v} level tanpa satu pun jawaban salah</b>. Teliti sekali!`,
  xpday:r=>`Rekor XP terbanyakmu dalam sehari adalah <b>${r.v} XP</b>. Bisakah kamu memecahkannya?`,
  streak:r=>`Rekor runtunan terpanjangmu adalah <b>${r.v} hari</b> belajar berturut-turut tanpa putus!`};
 const RC_NONE={league:'Kumpulkan XP minggu ini untuk masuk liga dan mencatat rekor pertamamu.',perfect:'Selesaikan satu level tanpa salah untuk mencatat rekor pertamamu.',xpday:'Kumpulkan XP hari ini untuk mencatat rekor pertamamu.',streak:'Belajar hari ini untuk memulai runtunan.'};
-function rcDetail(k,title,art,r){const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${typeof shareIcon!=='undefined'?shareIcon:'⇪'}</button></div>
+function rcDetail(k,title,art,r){const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${SHARE_SVG}</button></div>
   <div class="bddet"><div class="bdbig rcbig ${r?'':'none'}"><div class="rcbox">${art}</div></div><h2 class="rct">${esc(title)}</h2>${r?`<span class="bddate">${bdFmt(r.at).toUpperCase()}</span>`:'<span class="bddate lk">BELUM ADA</span>'}<p class="bdtxt">${r?RC_WHY[k](r):RC_NONE[k]}</p></div>`,'det');
   $('#bdX').onclick=()=>bdPage();
-  $('#bdShare').onclick=async()=>{const t=`Rekor ${title} aku di JELAS: ${r?r.v:0}! 🏆 ${location.origin}${location.pathname}`;try{if(navigator.share){await navigator.share({text:t});return}}catch(e){return}copyText(t)}}
+  $('#bdShare').onclick=()=>{if(!r){toast('lock','Catat rekornya dulu untuk membagikannya.');return}const img={league:`liga/tier${Math.max(0,Math.min(9,r.v-1))}.webp?v=1`,perfect:'liga/medal1.webp?v=1',xpday:'props/petir.webp?v=1',streak:'svg:flame'}[k];
+    shareCard({img,num:k==='league'?TIERS[Math.max(0,Math.min(9,r.v-1))][0]:r.v,theme:'gold',line:{league:`Rekor liga tertinggiku: Liga ${TIERS[Math.max(0,Math.min(9,r.v-1))][0]}!`,perfect:`Aku sudah ${r.v} kali menyelesaikan level tanpa salah!`,xpday:`Rekorku: ${r.v} XP dalam sehari!`,streak:`Rekor runtunanku: ${r.v} hari berturut-turut!`}[k],head:'BAGIKAN REKOR',file:`jelas-rekor-${k}`})}}
 window.bdPage=bdPage;
 function gemPop(){openPop($('#gemBtn'),`<h4>${P.gems} permata</h4><p style="margin:0 0 10px;font-size:14px">Dapatkan permata dari peti, level sempurna, ujian, dan misi harian.</p><button class="primary" style="width:100%" id="popShop">Buka Toko</button>`);$('#popShop').onclick=()=>{closePop();go('shop')}}
 function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(Date.now()-P.heartsAt);const m=Math.max(0,Math.ceil(ms/60000));return `Nyawa berikutnya dalam ${m} menit.`}
@@ -10591,7 +10637,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=184';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=185';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
