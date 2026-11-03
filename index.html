@@ -3259,6 +3259,16 @@ html body .tbpb .dnrow b,html body .tbpb .ntx b{display:block!important;margin-b
 .bdnext{width:100%;max-width:380px;display:flex;flex-direction:column;gap:8px}.bdnext small{color:var(--muted);font-weight:800}
 .bdmax{color:#C77D00;font-weight:900;margin:0}
 html[data-theme=malam] .bddate{background:#3a2c0a}
+.rccard{background:var(--card,#fff);cursor:pointer;font:inherit;color:inherit;box-shadow:0 4px 0 var(--line,#E5E5E5)!important;min-width:0}
+.rccard{padding:14px 6px!important;flex-basis:44%!important}.rccard b{font-size:clamp(12px,3.3vw,15px)!important;line-height:1.2;white-space:nowrap;letter-spacing:-.2px;max-width:100%}
+.rccard small{font-size:12px}
+.rccard .bdnum{font-size:clamp(17px,5vw,22px)!important}
+.rcrow{scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-snap-type:x proximity!important;scroll-padding-left:18px;cursor:grab;user-select:none}
+.rcrow.drag{scroll-behavior:auto;scroll-snap-type:none!important;cursor:grabbing}
+.rcrow img{-webkit-user-drag:none;pointer-events:none}
+.rcbig{width:min(56vw,240px)}.rcbig .rcbox{width:100%}.rcbig .bdnum{font-size:clamp(34px,10vw,48px)!important;-webkit-text-stroke-width:8px}
+.rcbig.none .rcart{opacity:.35}
+.rct{margin:-6px 0 0;font-size:26px}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3640,7 +3650,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=183"></script>
+<script src="av.js?v=184"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7510,9 +7520,10 @@ function bdPage(){recNote();save();const R=P.rec||{},recs=[
   ['xpday','XP Terbanyak',v=>`<span class="rcart"><img src="props/petir.webp?v=1" alt=""></span>${bdNum(v)}`],
   ['streak','Rekor Runtunan',v=>`<span class="rcart rcfl">${ICONS.flame}</span>${bdNum(v)}`]];
   const el=bdOv(`<div class="bdtop"><button class="back" id="bdBack" aria-label="Kembali">←</button><b>Pencapaian</b><span></span></div>
-   <h2 class="bdh">Rekor Personal</h2><div class="rcrow">${recs.map(([k,t,f])=>{const r=R[k];return `<div class="rccard ${r?'':'none'}"><div class="rcbox">${r?f(r.v):`<span class="rcart">${ICONS.lock}</span>`}</div><b>${t}</b><small>${r?bdFmt(r.at):'Belum ada'}</small></div>`}).join('')}</div>
+   <h2 class="bdh">Rekor Personal</h2><div class="rcrow">${recs.map(([k,t,f])=>{const r=R[k];return `<button class="rccard ${r?'':'none'}" data-rc="${k}"><div class="rcbox">${r?f(r.v):`<span class="rcart">${ICONS.lock}</span>`}</div><b>${t}</b><small>${r?bdFmt(r.at):'Belum ada'}</small></button>`}).join('')}</div>
    <h2 class="bdh">Penghargaan</h2><div class="bdgrid">${BADGES.map(b=>{const l=blevel(b);return `<button class="bdcell ${l?'':'none'}" data-bd="${b.id}">${bdArt(b,l)}<b>${esc(b.name)}</b><small>${l} dari ${b.lv.length}</small></button>`}).join('')}</div>`,'page');
-  $('#bdBack').onclick=()=>{el.hidden=true};el.querySelectorAll('[data-bd]').forEach(x=>x.onclick=()=>bdDetail(BADGES.find(b=>b.id===x.dataset.bd),true))}
+  $('#bdBack').onclick=()=>{el.hidden=true};el.querySelectorAll('[data-rc]').forEach(x=>x.onclick=()=>{const k=x.dataset.rc,rc=recs.find(q=>q[0]===k),r=R[k];rcDetail(k,rc[1],r?rc[2](r.v):`<span class="rcart">${ICONS.lock}</span>`,r)});
+  {const rw=el.querySelector('.rcrow');let dn=false,sx=0,sl=0,mv=0;rw.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dn=true;mv=0;sx=e.clientX;sl=rw.scrollLeft;rw.classList.add('drag')});window.addEventListener('pointermove',e=>{if(!dn)return;mv=Math.abs(e.clientX-sx);rw.scrollLeft=sl-(e.clientX-sx)});window.addEventListener('pointerup',()=>{if(!dn)return;dn=false;rw.classList.remove('drag')});rw.addEventListener('click',e=>{if(mv>6){e.stopPropagation();e.preventDefault();mv=0}},true)}el.querySelectorAll('[data-bd]').forEach(x=>x.onclick=()=>bdDetail(BADGES.find(b=>b.id===x.dataset.bd),true))}
 function bdDetail(b,fromPage){recNote();save();const l=blevel(b),nx=b.lv[Math.min(l,b.lv.length-1)],v=b.val(P),at=l?((P.bAt||{})[b.id]||{})[l]:0;
   const txt=l?`Kamu meraih pencapaian <b>${esc(b.name)}</b> karena ${BD_WHY[b.id]?BD_WHY[b.id](b.lv[l-1]):b.d(b.lv[l-1])}!`:`Raih pencapaian <b>${esc(b.name)}</b>: ${esc(b.d(b.lv[0]))}.`;
   const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${typeof shareIcon!=='undefined'?shareIcon:'⇪'}</button></div>
@@ -7520,6 +7531,15 @@ function bdDetail(b,fromPage){recNote();save();const l=blevel(b),nx=b.lv[Math.mi
    ${l<b.lv.length?`<div class="bdnext"><small>Level berikutnya: ${esc(b.d(nx))}</small><div class="qbar"><i style="width:${Math.min(100,v/nx*100)}%"></i><span>${Math.min(v,nx)} / ${nx}</span></div></div>`:'<p class="bdmax">Level tertinggi tercapai!</p>'}</div>`,'det');
   $('#bdX').onclick=()=>{if(fromPage)bdPage();else el.hidden=true};
   $('#bdShare').onclick=async()=>{const t=`Aku meraih pencapaian "${b.name}" level ${l} di JELAS! 🏅 ${location.origin}${location.pathname}`;try{if(navigator.share){await navigator.share({text:t});return}}catch(e){return}copyText(t)}}
+const RC_WHY={league:r=>`Liga tertinggi yang pernah kamu capai adalah <b>Liga ${TIERS[Math.max(0,Math.min(9,r.v-1))][0]}</b>. Terus kumpulkan XP untuk naik ke liga berikutnya!`,
+ perfect:r=>`Kamu sudah menyelesaikan <b>${r.v} level tanpa satu pun jawaban salah</b>. Teliti sekali!`,
+ xpday:r=>`Rekor XP terbanyakmu dalam sehari adalah <b>${r.v} XP</b>. Bisakah kamu memecahkannya?`,
+ streak:r=>`Rekor runtunan terpanjangmu adalah <b>${r.v} hari</b> belajar berturut-turut tanpa putus!`};
+const RC_NONE={league:'Kumpulkan XP minggu ini untuk masuk liga dan mencatat rekor pertamamu.',perfect:'Selesaikan satu level tanpa salah untuk mencatat rekor pertamamu.',xpday:'Kumpulkan XP hari ini untuk mencatat rekor pertamamu.',streak:'Belajar hari ini untuk memulai runtunan.'};
+function rcDetail(k,title,art,r){const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${typeof shareIcon!=='undefined'?shareIcon:'⇪'}</button></div>
+  <div class="bddet"><div class="bdbig rcbig ${r?'':'none'}"><div class="rcbox">${art}</div></div><h2 class="rct">${esc(title)}</h2>${r?`<span class="bddate">${bdFmt(r.at).toUpperCase()}</span>`:'<span class="bddate lk">BELUM ADA</span>'}<p class="bdtxt">${r?RC_WHY[k](r):RC_NONE[k]}</p></div>`,'det');
+  $('#bdX').onclick=()=>bdPage();
+  $('#bdShare').onclick=async()=>{const t=`Rekor ${title} aku di JELAS: ${r?r.v:0}! 🏆 ${location.origin}${location.pathname}`;try{if(navigator.share){await navigator.share({text:t});return}}catch(e){return}copyText(t)}}
 window.bdPage=bdPage;
 function gemPop(){openPop($('#gemBtn'),`<h4>${P.gems} permata</h4><p style="margin:0 0 10px;font-size:14px">Dapatkan permata dari peti, level sempurna, ujian, dan misi harian.</p><button class="primary" style="width:100%" id="popShop">Buka Toko</button>`);$('#popShop').onclick=()=>{closePop();go('shop')}}
 function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(Date.now()-P.heartsAt);const m=Math.max(0,Math.ceil(ms/60000));return `Nyawa berikutnya dalam ${m} menit.`}
@@ -10571,7 +10591,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=183';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=184';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
