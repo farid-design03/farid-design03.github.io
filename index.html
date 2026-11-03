@@ -3057,6 +3057,13 @@ html[data-theme=malam] .spdur,html[data-theme=malam] .spnav,html[data-theme=mala
 html[data-theme=malam] .fqst button.on{background:#1b3a52;border-color:#3d8cc4;box-shadow:0 3px 0 #3d8cc4}
 html body:not(#_x) .quest .qt{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25}
 #loading h2{font-variant-numeric:tabular-nums}.ldbar{width:min(260px,70vw);height:16px;border-radius:99px;background:var(--line,#E5E5E5);overflow:hidden;margin:4px auto 2px}.ldbar i{display:block;height:100%;width:0;border-radius:99px;background:#58CC02;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12),inset 0 3px 0 rgba(255,255,255,.35);transition:width .12s linear}
+.sktabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--line,#E5E5E5);margin:-4px -4px 10px}.sktabs button{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:8px 4px;font-weight:900;letter-spacing:.06em;color:var(--muted);box-shadow:none!important;font-size:14px}.sktabs button.on{color:#1CB0F6;border-bottom-color:#1CB0F6}
+#pop:has(.sktabs){width:min(360px,calc(100vw - 24px))!important;max-height:70vh;overflow:auto}
+.fsprow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:2px solid var(--line,#E5E5E5);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left;cursor:pointer;box-shadow:none!important}.fsprow:last-child{border-bottom:0}
+.fsprow .fsav{width:42px;height:42px;flex:none}.fsprow .grow{flex:1;min-width:0;display:flex;flex-direction:column}.fsprow b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fsprow small{font-size:12px;font-weight:700;color:var(--muted)}
+.fsprow.lit small{color:#FF9600}.fspn{display:flex;align-items:center;gap:2px;font-weight:900;color:#FF9600;font-size:16px}.fspn i{width:18px;display:inline-block}.fsprow:not(.lit) .fspn{filter:grayscale(1);opacity:.6}
+.fspoke{border:2px solid var(--line,#E5E5E5);background:transparent;border-radius:12px;padding:6px 8px;font-weight:900;font-size:12px;color:#1CB0F6;letter-spacing:.04em;box-shadow:0 2px 0 var(--line,#E5E5E5)}.fspoke:disabled{color:var(--muted);opacity:.7}
+.fsplusav{display:grid!important;place-items:center;border:2px dashed var(--line,#CFCFCF);border-radius:50%;font-size:22px;font-weight:900;color:var(--muted)}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -7248,7 +7255,8 @@ function gradeMigrate(){if(!P||document.body.classList.contains('teacher'))retur
 const LEVEL_COL={tk:'#FF8A3D',sd:'#F2394B',smp:'#2F5BEA',sma:'#6676B8'};
 function weekStrip(){const t=dayNum(dayKey());const names=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];const d=new Date();const dow=(d.getDay()+6)%7;
   return `<div class="week">`+names.map((n,i)=>{const k=t-dow+i;const on=P.days.some(x=>dayNum(x)===k);return `<div class="${on?'on':''} ${i===dow?'today':''}"><span>${on?'✓':''}</span>${n}</div>`}).join('')+`</div>`}
-function streakPop(){const st=shownStreak();openPop($('#streakBtn'),`<h4>${st} hari beruntun</h4><p style="margin:0 0 10px;font-size:14px">${P.lastDay===dayKey()?'Kamu sudah belajar hari ini. Mantap!':'Selesaikan satu level hari ini supaya apimu tetap menyala.'}</p>${weekStrip()}<p style="margin:10px 0 0;font-size:14px;color:var(--muted)">${ico('ice')} Pelindung api: ${P.freeze} (melindungi beruntun jika lupa belajar sehari)</p>`)}
+function streakPop(tab){const st=shownStreak();const tabs=`<div class="sktabs"><button data-sk="me" class="${tab==='fr'?'':'on'}">PRIBADI</button><button data-sk="fr" class="${tab==='fr'?'on':''}">TEMAN</button></div>`;if(tab==='fr'){openPop($('#streakBtn'),tabs+'<div id="fsPanel"></div>');$('#pop').dataset.k='f';skBind();window.fsPanel&&fsPanel($('#fsPanel'));return}openPop($('#streakBtn'),`${tabs}<h4>${st} hari beruntun</h4><p style="margin:0 0 10px;font-size:14px">${P.lastDay===dayKey()?'Kamu sudah belajar hari ini. Mantap!':'Selesaikan satu level hari ini supaya apimu tetap menyala.'}</p>${weekStrip()}<p style="margin:10px 0 0;font-size:14px;color:var(--muted)">${ico('ice')} Pelindung api: ${P.freeze} (melindungi beruntun jika lupa belajar sehari)</p>`);$('#pop').dataset.k='f';skBind()}
+function skBind(){$('#pop').querySelectorAll('[data-sk]').forEach(b=>b.onclick=e=>{e.stopPropagation();streakPop(b.dataset.sk)})}
 function gemPop(){openPop($('#gemBtn'),`<h4>${P.gems} permata</h4><p style="margin:0 0 10px;font-size:14px">Dapatkan permata dari peti, level sempurna, ujian, dan misi harian.</p><button class="primary" style="width:100%" id="popShop">Buka Toko</button>`);$('#popShop').onclick=()=>{closePop();go('shop')}}
 function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(Date.now()-P.heartsAt);const m=Math.max(0,Math.ceil(ms/60000));return `Nyawa berikutnya dalam ${m} menit.`}
 function heartsPanel(){return P.unlimited?`<p style="margin:0">Mode kelas aktif: nyawa tidak terbatas. Matikan di Profil → Pengaturan.</p>`:
@@ -10224,6 +10232,7 @@ function fqSheet(html,bind){let el=$('#fqSheet');if(!el){document.body.insertAdj
   el.innerHTML=`<div class="fqsin" role="dialog" aria-modal="true"><i class="fqgrab"></i>${html}<button class="fqno" id="fqNo">BELUM DULU DEH</button></div>`;el.hidden=false;hydrate(el);try{haptic(15)}catch(e){}
   const close=()=>{el.hidden=true;el.innerHTML=''};$('#fqNo').onclick=close;el.onclick=e=>{if(e.target===el)close()};bind(el,close)}
 const fqPotion=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="13" cy="14" r="5" fill="#B9A6E8" stroke="#1C1E3D" stroke-width="2"/><circle cx="20" cy="24" r="3" fill="#D8CCF5" stroke="#1C1E3D" stroke-width="2"/><rect x="27" y="6" width="12" height="7" rx="2" fill="#C98A4B" stroke="#1C1E3D" stroke-width="2"/><path d="M29 13v12L15 50a6 6 0 0 0 5 9h26a6 6 0 0 0 5-9L37 25V13z" fill="#F4EEFF" stroke="#1C1E3D" stroke-width="2.4" stroke-linejoin="round"/><path d="M19 42h28l4 8a4 4 0 0 1-3.5 6h-29a4 4 0 0 1-3.5-6z" fill="#A970F0"/><circle cx="28" cy="49" r="2.4" fill="#D9BFFF"/><circle cx="37" cy="46" r="1.6" fill="#D9BFFF"/></svg>`;
+window.FQ_ST=FQ_ST;window.fqStk=fqStk;window.fqSheet=(...a)=>fqSheet(...a);
 const fqWeekLeft=()=>{const d=(new Date().getDay()+6)%7;return 7-d};
 const fqMine=()=>(P.fqw&&P.fqw.wk===weekKey())?P.fqw.n:0;
 async function fqLoad(){const me=FBX.user.uid;const q=await FB.db.collection('fq').where('members','array-contains',me).where('week','==',weekKey()).get();FQ.list=q.docs.map(d=>Object.assign({id:d.id},d.data()));return FQ.list}
@@ -10268,7 +10277,7 @@ async function fqNotice(){try{if(!FBX.user||isT()||!P)return;await fqLoad();awai
 /* ---------- teman: ikuti pemain JELAS mana pun ---------- */
 const FOL={following:null,followers:null};window.FOL=FOL;
 const IKUTI_KEY=(()=>{try{const q=new URLSearchParams(location.search),v=q.get('ikuti');if(v){sessionStorage.setItem('jk_ikuti',v.toLowerCase());q.delete('ikuti');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash)}}catch(e){}return 1})();
-async function folLoad(){const me=FBX.user.uid;const [a,b]=await Promise.all([FB.db.collection('fol').where('from','==',me).get(),FB.db.collection('fol').where('to','==',me).get()]);
+window.folLoad=()=>folLoad();async function folLoad(){const me=FBX.user.uid;const [a,b]=await Promise.all([FB.db.collection('fol').where('from','==',me).get(),FB.db.collection('fol').where('to','==',me).get()]);
   FOL.following=a.docs.map(d=>{const x=d.data();return {uid:x.to,name:x.toName,av:x.toAv||null,user:x.toUser||'',at:x.at}});
   FOL.followers=b.docs.map(d=>{const x=d.data();return {uid:x.from,name:x.fromName,av:x.fromAv||null,user:x.fromUser||'',at:x.at}});return FOL}
 const isFollowing=uid=>!!(FOL.following||[]).some(x=>x.uid===uid);
@@ -10578,11 +10587,11 @@ function fsRender(){const el=$('#fsRow'),h=$('#fsH');if(!el)return;const on=rtOn
   el.querySelectorAll('[data-fsy]').forEach(b=>b.onclick=()=>fsAccept(b.dataset.fsy,b));
   el.querySelectorAll('[data-fsn]').forEach(b=>b.onclick=()=>fsEnd(b.dataset.fsn,true))}
 async function fsInvitePick(){if(!rtOn())return;openModal('<h3>Ajak teman</h3><p class="note">Memuat teman…</p>');
-  try{if(!window.FOL||!FOL.following)await folLoad()}catch(e){}if(!FS.list)await fsLoad();
-  const used=new Set(FS.list.map(fsOther)),map=new Map();[...(FOL.following||[]),...(FOL.followers||[])].forEach(f=>{if(!used.has(f.uid)&&!map.has(f.uid))map.set(f.uid,f)});const fr=[...map.values()];
+  try{if(!window.FOL||!FOL.following)await window.folLoad()}catch(e){}if(!FS.list)await fsLoad();
+  const used=new Set(FS.list.map(fsOther)),back=new Set((FOL.followers||[]).map(f=>f.uid)),map=new Map();(FOL.following||[]).forEach(f=>{if(back.has(f.uid)&&!used.has(f.uid)&&!map.has(f.uid))map.set(f.uid,f)});const fr=[...map.values()];
   const full=FS.list.filter(x=>x.from===FBX.user.uid).length>=FS.max;
   openModal(`<h3 style="margin:0">Pilih teman runtunan</h3><p class="note" style="margin:0">Runtunan langsung dimulai begitu kamu memilih. Kalian berdua belajar setiap hari untuk menjaga api bersama. Kamu bisa memilih ${FS.max} teman.</p>
-   ${full?'<p class="note">Runtunan temanmu sudah penuh.</p>':fr.length?`<div class="fslist">${fr.map(f=>`<div class="ajrow">${fsAv(f)}<span class="grow"><b>${esc(f.name||'Teman')}</b><small>${f.user?'@'+esc(f.user):''}</small></span><button class="ajinv" data-fsi="${esc(f.uid)}">PILIH</button></div>`).join('')}</div>`:'<p class="note">Belum ada teman. Ikuti temanmu dulu lewat <b>Tambahkan teman</b> di profil.</p>'}
+   ${full?'<p class="note">Runtunan temanmu sudah penuh.</p>':fr.length?`<div class="fslist">${fr.map(f=>`<div class="ajrow">${fsAv(f)}<span class="grow"><b>${esc(f.name||'Teman')}</b><small>${f.user?'@'+esc(f.user):''}</small></span><button class="ajinv" data-fsi="${esc(f.uid)}">PILIH</button></div>`).join('')}</div>`:'<p class="note">Runtunan Teman hanya bisa dengan teman yang <b>saling mengikuti</b>. Ikuti temanmu lewat <b>Tambahkan teman</b> di profil, lalu minta dia mengikutimu juga.</p>'}
    <div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal;
   document.querySelectorAll('[data-fsi]').forEach(b=>b.onclick=()=>fsInvite(fr.find(f=>f.uid===b.dataset.fsi),b))}
 async function fsInvite(f,b){const me=FBX.user.uid,m=[me,f.uid].sort(),id=m.join('_');b.disabled=true;b.textContent='…';
@@ -10603,8 +10612,23 @@ function fsOpen(x){if(!x)return;const me=FBX.user.uid,ou=fsOther(x),o=fsInfo(x,o
   const chk=(u,inf)=>`<div class="fsday ${d[u]===t?'ok':''}">${fsAv(inf)}<span><b>${u===me?'Kamu':esc(String(inf.name).split(' ')[0])}</b><small>${d[u]===t?'Sudah belajar hari ini':'Belum belajar hari ini'}</small></span><i>${d[u]===t?'✓':'…'}</i></div>`;
   openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(mi)}${fsAv(o)}</div></div><div class="fsbig">${n}</div><h3 style="text-align:center;margin:0">hari Runtunan Teman</h3><p class="note" style="text-align:center;margin:0">Kamu dan ${esc(o.name)}${x.best?` · terbaik ${x.best} hari`:''}</p>
    ${chk(me,mi)}${chk(ou,o)}<p class="note" style="margin:0">Api bertambah setiap hari kalian berdua menyelesaikan minimal satu pelajaran.</p>
-   <div class="acts"><button class="ghost" id="mEnd" style="color:var(--bad)">Akhiri</button><button class="primary" id="mNo">${d[me]===t?'Tutup':'Belajar sekarang'}</button></div>`);
-  $('#mNo').onclick=()=>{closeModal();if(d[me]!==t)go('learn')};$('#mEnd').onclick=()=>fsEnd(x.id,false)}
+   ${n?'<p class="note" style="margin:0;font-size:13px">Runtunan hanya bisa diakhiri setelah apinya padam.</p>':''}<div class="acts">${n?(d[ou]!==t&&!fsNudged(x)?'<button class="ghost" id="mPoke">👋 Colek</button>':''):'<button class="ghost" id="mEnd" style="color:var(--bad)">Akhiri</button>'}<button class="primary" id="mNo">${d[me]===t?'Tutup':'Belajar sekarang'}</button></div>`);
+  $('#mNo').onclick=()=>{closeModal();if(d[me]!==t)go('learn')};const me_=$('#mEnd');if(me_)me_.onclick=()=>fsEnd(x.id,false);const pk=$('#mPoke');if(pk)pk.onclick=()=>{closeModal();fsPoke(x)}}
+const fsNudged=x=>{const v=+(x['nudge_'+FBX.user.uid]||0);return !!v&&dayKey(new Date(v))===dayKey()};
+function fsPoke(x,after){const me=FBX.user.uid,ou=fsOther(x),o=fsInfo(x,ou),oav=`<span class="fqbav">${avSpan({name:o.name,avatar:o.av||null})}</span>`;
+  window.fqSheet(`<h3>Colek ${esc(o.name)}</h3><div class="fqbub"><div class="fqbtx" id="fqBub"></div>${oav}</div><div class="fqst">${window.FQ_ST.map((q,i)=>`<button data-st="${i}" class="${i?'':'on'}">${window.fqStk(i)}</button>`).join('')}</div><button class="primary press fqgo" id="fqGo">COLEK ${esc(String(o.name).toUpperCase())}!</button>`,(el,close)=>{let cur=0;const show=()=>{$('#fqBub').innerHTML=`${window.fqStk(cur)}<b>${esc(window.FQ_ST[cur].t)}</b>`;hydrate($('#fqBub'))};show();
+   el.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{cur=+b.dataset.st;el.querySelectorAll('[data-st]').forEach(y=>y.classList.toggle('on',y===b));show();try{tone([620],.03)}catch(_){}});
+   $('#fqGo').onclick=async()=>{close();const tt=Date.now();try{await FB.db.doc('fs/'+x.id).update({['nudge_'+me]:tt,['nudgeS_'+me]:cur});x['nudge_'+me]=tt;x['nudgeS_'+me]=cur;try{notifyServer('nudge',x.id)}catch(_){}try{sfx.win()}catch(_){}toast('check',`Kamu mencolek ${o.name}.`);after&&after()}catch(e){toast('lock','Gagal mencolek. Coba lagi.')}}})}
+window.fsPanel=async function(box){if(!box)return;if(!rtOn()){box.innerHTML='<p class="note" style="margin:0">Masuk dengan akun murid untuk memulai Runtunan Teman.</p>';return}
+  if(!FS.list){box.innerHTML='<p class="note" style="margin:0">Memuat…</p>';await fsLoad()}const me=FBX.user.uid,t=dayKey();
+  const rows=FS.list.map(x=>{const ou=fsOther(x),o=fsInfo(x,ou),d=x.d||{},n=fsNum(x),a=d[me]===t,b=d[ou]===t,first=esc(String(o.name).split(' ')[0]);
+    const st=a&&b?'Api menyala hari ini ✓':a?`Menunggu ${first} belajar`:b?`${first} sudah belajar. Giliranmu!`:'Belum ada yang belajar hari ini';
+    return `<div class="fsprow ${a&&b?'lit':''}" data-fsp="${x.id}">${fsAv(o)}<span class="grow"><b>${esc(o.name)}</b><small>${st}</small></span><span class="fspn"><i>${ICONS.flame}</i>${n}</span>${!b?`<button class="fspoke" data-poke="${x.id}" ${fsNudged(x)?'disabled':''}>${fsNudged(x)?'DICOLEK':'COLEK'}</button>`:''}</div>`});
+  const own=FS.list.filter(x=>x.from===me).length;for(let i=own;i<FS.max;i++)rows.push(`<button class="fsprow add" data-fsadd><span class="fsav fsplusav">+</span><span class="grow"><b>Ajak teman</b><small>Teman yang saling mengikuti</small></span></button>`);
+  box.innerHTML=`<p class="note" style="margin:0 0 6px;font-size:13px">Api bertambah setiap hari kalian berdua belajar. Maksimal ${FS.max} teman.</p>${rows.join('')}`;hydrate(box);
+  box.querySelectorAll('[data-fsadd]').forEach(b=>b.onclick=()=>{closePop();fsInvitePick()});
+  box.querySelectorAll('[data-poke]').forEach(b=>b.onclick=e=>{e.stopPropagation();const x=FS.list.find(y=>y.id===b.dataset.poke);closePop();fsPoke(x)});
+  box.querySelectorAll('[data-fsp]').forEach(r=>r.onclick=()=>{closePop();fsOpen(FS.list.find(y=>y.id===r.dataset.fsp))})};
 /* dipanggil saat pelajaran selesai: catat hari ini, tambah api kalau teman juga sudah */
 async function fsTick(screens){if(!rtOn())return;const me=FBX.user.uid,t=dayKey(),y=fsYest();let list;try{list=await fsLoad()}catch(e){return}
   for(const x of list){const ref=FB.db.doc('fs/'+x.id);
@@ -10618,6 +10642,7 @@ async function fsTick(screens){if(!rtOn())return;const me=FBX.user.uid,t=dayKey(
 window.fsTick=fsTick;
 /* ajakan masuk: tampilkan sekali per sesi */
 async function fsNotice(){if(!rtOn())return;try{await fsLoad()}catch(e){return}const me=FBX.user.uid;let seen={};try{seen=JSON.parse(localStorage.getItem('jk_fsseen')||'{}')}catch(e){}
+  (FS.list||[]).forEach(x=>{const ou=fsOther(x),v=+(x['nudge_'+ou]||0),k='n'+x.id;if(v&&v>(seen[k]||0)&&dayKey(new Date(v))===dayKey()){seen[k]=v;const st=(window.FQ_ST||[{t:'Ayo belajar!'}])[+x['nudgeS_'+ou]||0]||{t:'Ayo belajar!'};setTimeout(()=>toast('flame',`${fsInfo(x,ou).name} mencolekmu: “${st.t}”`),1500)}});try{localStorage.setItem('jk_fsseen',JSON.stringify(seen))}catch(e){}
   const inc=(FS.list||[]).filter(x=>x.from!==me&&!seen[x.id]&&(x.news||(!x.acc&&Date.now()-(x.created||0)<7*864e5)));if(!inc.length||!$('#modal').hidden||document.body.classList.contains('playing'))return;
   inc.forEach(x=>seen[x.id]=1);try{localStorage.setItem('jk_fsseen',JSON.stringify(seen))}catch(e){}
   const x=inc[0],o=fsInfo(x,x.from),more=inc.length-1;openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(o)}${fsAv(fsMe())}</div></div><h3 style="text-align:center">${esc(o.name)} memilihmu sebagai teman runtunan!${more?` (+${more} lainnya)`:''}</h3><p style="text-align:center">Runtunan Teman kalian sudah dimulai. Belajar setiap hari bersama untuk menjaga api tetap menyala.</p><div class="acts"><button class="primary" id="mYes">Ayo belajar</button></div>`);
