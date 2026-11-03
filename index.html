@@ -3138,6 +3138,19 @@ html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l
 @keyframes mDroop{0%{transform:translateY(0) scale(1,1)}40%{transform:translateY(6px) scale(1.06,.92)}100%{transform:translateY(5px) scale(1.02,.96) rotate(-5deg)}}
 @keyframes mSway{0%,100%{transform:translateY(5px) scale(1.02,.96) rotate(-5deg)}50%{transform:translateY(5px) scale(1.02,.96) rotate(-2deg)}}
 @media (prefers-reduced-motion:reduce){.mascot *{animation:none!important}}
+/* avatar hidup: bernapas, berkedip, alis terangkat, rambut ikut memantul */
+:is(.pban-av,.pcav,.skava,.aved-prev,.upav,.fqav,.fqbav,.plduo,.ajme,.shopav-av,.plcard,.pltop,.fsduo,.skfr .fsav) svg .avb{transform-box:view-box;transform-origin:132px 280px;animation:avBr 6.4s cubic-bezier(.45,0,.55,1) infinite}
+:is(.pban-av,.pcav,.skava,.aved-prev,.upav,.fqav,.fqbav,.plduo,.ajme,.shopav-av,.plcard,.pltop,.fsduo,.skfr .fsav) svg .ave{transform-box:fill-box;transform-origin:50% 50%;animation:avBl 5.6s infinite}
+:is(.pban-av,.pcav,.skava,.aved-prev,.upav,.fqav,.fqbav,.plduo,.ajme,.shopav-av,.plcard,.pltop,.fsduo,.skfr .fsav) svg .avbr{animation:avBrow 7.4s cubic-bezier(.3,1.4,.5,1) infinite}
+:is(.pban-av,.pcav,.skava,.aved-prev,.upav,.fqav,.fqbav,.plduo,.ajme,.shopav-av,.plcard,.pltop,.fsduo,.skfr .fsav) svg .avtop{animation:avHair 3.2s cubic-bezier(.45,0,.55,1) .18s infinite}
+.skava.b svg .avb,.fqav+.fqav svg .avb{animation-delay:-1.6s}.skava.b svg .ave,.fqav+.fqav svg .ave{animation-delay:-2.4s}
+@keyframes avBr{0%,100%{transform:scale(1,1) rotate(0)}25%{transform:scale(1.014,1.026) rotate(-1.2deg)}50%{transform:scale(1,1) rotate(0)}75%{transform:scale(1.014,1.026) rotate(1.2deg)}}
+@keyframes avHair{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+@keyframes avBl{0%,90%,100%{transform:scaleY(1)}92%{transform:scaleY(.08)}94%{transform:scaleY(1)}}
+@keyframes avBrow{0%,70%,84%,100%{transform:translateY(0)}74%,80%{transform:translateY(-5px)}}
+.aved-prev.cheer svg .avb{animation:avPop .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes avPop{0%{transform:scale(1,1)}30%{transform:scale(1.05,.94)}60%{transform:scale(.97,1.05)}100%{transform:scale(1,1)}}
+@media (prefers-reduced-motion:reduce){svg .avb,svg .avh,svg .ave{animation:none!important}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -11021,7 +11034,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
    else s+=`<rect width="120" height="120" fill="${avItem('bg',a.bg)[3]}"/>`}
   /* jubah kostum super di belakang */
   if(a.shirt==='super'&&!AD)s+=`<path d="M20 120 L34 86 L86 86 L100 120Z" fill="#F2394B" ${sw}/>`;
-  /* rambut belakang */
+  s+='<g class="avh">';/* rambut belakang */
   if(a.hair==='panjang')s+=HW(`<path d="M30 54 C28 24 46 18 60 18 C76 18 92 24 90 54 L93 96 C80 100 40 100 27 96Z" fill="${hc}" ${sw}/>`);
   if(a.hair==='kuncir')s+=HW(`<circle cx="60" cy="19" r="10" fill="${hc}" ${sw}/>`);
   const hS=shade(hc,-.32),hL=(()=>{const n=parseInt(hc.slice(1),16);return '#'+[n>>16,n>>8&255,n&255].map(v=>Math.round(v+(255-v)*.38).toString(16).padStart(2,'0')).join('')})();
@@ -11035,7 +11048,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
   if(BACK[a.hair])s+=HW(BACK[a.hair]);
   if(a.hair==='hijab'){s+=`<path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="${hc}" ${sw}/>`;
     if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}h"><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z"/></clipPath><g clip-path="url(#${uid}h)">${AD.hoodPat}</g><path d="M22 68 C20 30 40 15 60 15 C80 15 100 30 98 68 C98 96 84 110 60 112 C36 110 22 96 22 68Z" fill="none" ${sw}/>`}
-  /* baju adat */
+  s+='</g><g class="avb">';/* baju adat */
   if(AD&&AD.back)s+=AD.back(sw);
   if(AD){s+=`<path d="${BP}" fill="${AD.c}" ${sw}/>`;if(AD.clip)s+=`<clipPath id="${uid}d"><path d="${BP}"/></clipPath><g clip-path="url(#${uid}d)">${AD.clip}</g><path d="${BP}" fill="none" ${sw}/>`;if(AD.on)s+=AD.on(sw)}else{
   /* baju */
@@ -11046,7 +11059,7 @@ function avatarSVG(a,opt){a=avNorm(a);opt=opt||{};const AD=a.adat!=='none'?ADAT[
   if(a.shirt==='jaket')s+=`<path d="M60 88 L60 121" ${sw}/><path d="M40 90 C46 98 52 100 60 100 C68 100 74 98 80 90" fill="none" stroke="#5A6A92" stroke-width="4"/><circle cx="60" cy="104" r="2" fill="#FFC23D"/>`;
   if(a.shirt==='batik'){s+=`<clipPath id="${uid}c"><path d="${BP}"/></clipPath><g clip-path="url(#${uid}c)">`;for(let y=92;y<122;y+=10)for(let x=18+(y%20?5:0);x<106;x+=12)s+=`<path d="M${x} ${y-3} L${x+3} ${y} L${x} ${y+3} L${x-3} ${y}Z" fill="#F5C26B"/><circle cx="${x+6}" cy="${y+5}" r="1.4" fill="#F5C26B"/>`;s+=`</g><path d="${BP}" fill="none" ${sw}/>`}
   if(a.shirt==='super')s+=`<path d="M60 96 L63 103 L71 103 L65 108 L67 116 L60 111 L53 116 L55 108 L49 103 L57 103Z" fill="#FFC23D" ${sw}/>`;}
-  /* leher, telinga, kepala */
+  s+='</g><g class="avh">';/* leher, telinga, kepala */
   if(a.hair==='hijab'){const DR='M22 64 C20 30 40 14 60 14 C80 14 100 30 98 64 C98 80 102 92 110 102 C98 114 80 118 60 118 C40 118 22 114 10 102 C18 92 22 80 22 64Z';
     s+=`<path d="${DR}" fill="${hc}" ${sw}/>`;
     if(AD&&AD.hoodPat)s+=`<clipPath id="${uid}r"><path d="${DR}"/></clipPath><g clip-path="url(#${uid}r)">${AD.hoodPat}</g><path d="${DR}" fill="none" ${sw}/>`;
@@ -11081,7 +11094,7 @@ poni:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L
   /* pipi */
   const ey=a.hair==='hijab'?58:55;
   s+=`<circle cx="44" cy="${ey+9}" r="4.5" fill="#FF8FA3" opacity=".55"/><circle cx="76" cy="${ey+9}" r="4.5" fill="#FF8FA3" opacity=".55"/>`;
-  /* mata */
+  s+='<g class="ave">';/* mata */
   const eye=(x,kind)=>kind==='senyum'?`<path d="M${x-5} ${ey+1} Q${x} ${ey-5} ${x+5} ${ey+1}" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/>`
     :kind==='besar'?`<circle cx="${x}" cy="${ey}" r="6.5" fill="#fff" ${sw}/><circle cx="${x}" cy="${ey+1}" r="3.8" fill="${K}"/><circle cx="${x+1.6}" cy="${ey-1}" r="1.5" fill="#fff"/>`
     :kind==='bintang'?`<path d="M${x} ${ey-7} L${x+2.2} ${ey-2.2} L${x+7} ${ey-1.5} L${x+3.3} ${ey+2} L${x+4.4} ${ey+7} L${x} ${ey+4.4} L${x-4.4} ${ey+7} L${x-3.3} ${ey+2} L${x-7} ${ey-1.5} L${x-2.2} ${ey-2.2}Z" fill="#FFC23D" stroke="${K}" stroke-width="1.8" stroke-linejoin="round"/>`
@@ -11094,7 +11107,7 @@ poni:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L
     :eye(x,k);
   const ekind=(x,k)=>['sipit','almond','lentik','ngantuk','tajam'].includes(k)?eyeX(x,k):eye(x,k);
   s+=a.eyes==='kedip'?eye(49,'bulat')+eye(71,'senyum'):ekind(49,a.eyes)+ekind(71,a.eyes);
-  /* alis */
+  s+='</g>';/* alis */
   {const bc=(a.hair==='hijab'||a.hair==='none'||a.hc==='h9')?'#3B2A20':shade(hc,-.1),by=ey-12;
    const B={tipis:x=>`<path d="M${x-6} ${by+1} Q${x} ${by-2} ${x+6} ${by+1}" fill="none" stroke="${bc}" stroke-width="2.2" stroke-linecap="round"/>`,
     tebal:x=>`<path d="M${x-7} ${by+2} Q${x} ${by-3} ${x+7} ${by+1}" fill="none" stroke="${bc}" stroke-width="4.2" stroke-linecap="round"/>`,
@@ -11120,7 +11133,7 @@ poni:`<path d="M32 54 C30 27 46 20 60 20 C76 20 90 27 88 54 C86 47 84 44 80 44 L
     headphone:`<path d="M30 54 C28 18 92 18 90 54" fill="none" stroke="${K}" stroke-width="6" stroke-linecap="round"/><rect x="22" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/><rect x="86" y="46" width="12" height="20" rx="5" fill="#F2394B" ${sw}/>`,
     mahkota:`<path d="M39 32 L42 12 L51 23 L60 8 L69 23 L78 12 L81 32Z" fill="#FFC23D" ${sw}/><circle cx="60" cy="25" r="3" fill="#F2394B"/><circle cx="47" cy="27" r="2" fill="#3D8BFF"/><circle cx="73" cy="27" r="2" fill="#3D8BFF"/>`}[a.acc]||'');
   if(AD&&AD.head&&!(AD.hairOnly&&a.hair==='hijab'))s+=a.hair==='hijab'?AD.head(sw):HW(AD.head(sw));
-  return s+'</svg>'}
+  return s+'</g></svg>'}
 function avSpan(p){if(p&&p.avatar)return `<span class="avatar avimg" style="--av:${avBgColor(p.avatar)}">${avatarSVG(p.avatar)}</span>`;return `<span class="avatar" style="--av:${(p&&p.color)||'#9B6BFF'}">${esc(String((p&&p.name)||'?')[0].toUpperCase())}</span>`}
 
 /* ====== avatar kartun baru (Avataaars oleh Pablo Stanley, bebas dipakai, https://avataaars.com/) ======
@@ -11190,7 +11203,7 @@ function openAvatarEditor(){if(!P)return;P.avatar=avNorm(P.avatar);P.avOwned=P.a
   const render=()=>{const tb0=el.querySelector('.aved-tabs'),tabX=tb0?tb0.scrollLeft:0,elY=el.scrollTop,first=!tb0;const c=cost(),can=c<=P.gems,cat=AV_PARTS[tab];
     el.innerHTML=`<div class="onbin" style="max-width:720px;gap:12px">
       <div class="aved-top"><button class="back" id="avX" aria-label="Tutup">✕</button><h2 style="flex:1">Ubah avatar</h2><span class="aved-gems">${gem} ${P.gems}</span></div>
-      <div class="aved-prev" style="--av:${avBgColor(draft)}">${avatarSVG(draft)}</div>
+      <div class="aved-prev ${first?'':'cheer'}" style="--av:${avBgColor(draft)}">${avatarSVG(draft)}</div>
       <div class="aved-tabs" role="tablist">${AV_TABS.map(k=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${AV_PARTS[k].label}</button>`).join('')}</div>
       ${tab==='hair'&&draft.hair!=='hijab'&&draft.hair!=='none'||tab==='hair'?`<div class="aved-colors"><b>Warna ${draft.hair==='hijab'?'hijab':'rambut'}</b><div>${AV_PARTS.hc.items.map(it=>{const own=owned('hc',it[0]),on=draft.hc===it[0];return `<button class="aved-col ${on?'on':''}" data-hc="${it[0]}" style="--c:${it[3]}" aria-pressed="${on}" title="${esc(it[1])}${own?'':' · '+it[2]+' permata'}">${own?'':`<small>${it[2]}</small>`}</button>`}).join('')}</div></div>`:''}
       <div class="aved-grid">${cat.items.filter(it=>avFor(tab,it[0],P.gender)||draft[tab]===it[0]).map(it=>{const id=it[0],own=owned(tab,id),on=draft[tab]===id,prev=Object.assign({},draft,{[tab]:id},tab==='gfx'?{shirt:'graphicShirt'}:{});
