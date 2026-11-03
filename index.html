@@ -3111,6 +3111,33 @@ html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l
 .pcx{background:none;border:0;box-shadow:none!important;font-size:24px;color:var(--muted);width:40px;height:40px;padding:0}
 .pcacts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.pcacts button{background:none;border:0;box-shadow:none!important;display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--ink);padding:0}
 .pci{width:60px;height:60px;border-radius:50%;background:var(--line,#ECECEC);display:grid;place-items:center;color:var(--ink)}
+/* maskot hidup: napas, lirik, kibas, rumbai berayun, lompat pegas */
+.mascot .mbody{transform-box:view-box;transform-origin:60px 112px;animation:mBreath 3.2s cubic-bezier(.45,0,.55,1) infinite}
+.mascot .msh{transform-box:view-box;transform-origin:60px 118px;animation:mShB 3.2s cubic-bezier(.45,0,.55,1) infinite}
+.mascot .look{animation:mLook 7s ease-in-out infinite}
+.mascot .tas{transform-box:view-box;transform-origin:60px 26px;animation:mTas 3.2s ease-in-out infinite}
+.mascot .wl{transform-box:view-box;transform-origin:28px 64px;animation:mWl 3.2s ease-in-out infinite}.mascot .wr{transform-box:view-box;transform-origin:92px 64px;animation:mWr 3.2s ease-in-out infinite}
+.mascot .eo{transform-box:view-box;transform-origin:60px 56px;animation:mBlink 5.2s infinite}
+.mascot[data-mood="happy"] .mbody{animation:mJump .9s cubic-bezier(.3,0,.3,1) 2,mBreath 3.2s 1.8s cubic-bezier(.45,0,.55,1) infinite}
+.mascot[data-mood="happy"] .msh{animation:mShJ .9s cubic-bezier(.3,0,.3,1) 2}
+.mascot[data-mood="happy"] .wl{animation:mFlapL .16s ease-in-out 10,mWl 3.2s 1.6s ease-in-out infinite}.mascot[data-mood="happy"] .wr{animation:mFlapR .16s ease-in-out 10,mWr 3.2s 1.6s ease-in-out infinite}
+.mascot[data-mood="happy"] .tas{animation:mTasJ .9s ease-in-out 2,mTas 3.2s 1.8s ease-in-out infinite}
+.mascot[data-mood="sad"] .mbody{animation:mDroop .8s cubic-bezier(.3,1.4,.5,1) forwards,mSway 3.4s .8s ease-in-out infinite}
+.mascot[data-mood="sad"] .wl{animation:none;transform:rotate(-14deg)}.mascot[data-mood="sad"] .wr{animation:none;transform:rotate(14deg)}
+.mascot[data-mood="sad"] .tas{animation:none;transform:rotate(10deg)}.mascot[data-mood="sad"] .look{animation:none}
+@keyframes mBreath{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-3px) scale(.985,1.03)}}
+@keyframes mShB{0%,100%{transform:scaleX(1);opacity:1}50%{transform:scaleX(.93);opacity:.8}}
+@keyframes mLook{0%,18%,100%{transform:translate(0,0)}22%,40%{transform:translate(-3px,0)}46%,62%{transform:translate(3px,1px)}68%,80%{transform:translate(0,-2px)}}
+@keyframes mTas{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+@keyframes mWl{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}@keyframes mWr{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
+@keyframes mBlink{0%,92%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}96%{transform:scaleY(1)}97.5%{transform:scaleY(.08)}99%{transform:scaleY(1)}}
+@keyframes mJump{0%{transform:translateY(0) scale(1,1)}16%{transform:translateY(0) scale(1.12,.84)}38%{transform:translateY(-26px) scale(.9,1.12)}55%{transform:translateY(-30px) scale(1,1)}76%{transform:translateY(0) scale(1.1,.88)}88%{transform:translateY(-3px) scale(.97,1.04)}100%{transform:translateY(0) scale(1,1)}}
+@keyframes mShJ{0%,100%{transform:scaleX(1);opacity:1}16%{transform:scaleX(1.12)}50%{transform:scaleX(.6);opacity:.45}76%{transform:scaleX(1.1);opacity:1}}
+@keyframes mFlapL{50%{transform:rotate(32deg)}}@keyframes mFlapR{50%{transform:rotate(-32deg)}}
+@keyframes mTasJ{0%,100%{transform:rotate(0)}30%{transform:rotate(14deg)}55%{transform:rotate(-16deg)}80%{transform:rotate(8deg)}}
+@keyframes mDroop{0%{transform:translateY(0) scale(1,1)}40%{transform:translateY(6px) scale(1.06,.92)}100%{transform:translateY(5px) scale(1.02,.96) rotate(-5deg)}}
+@keyframes mSway{0%,100%{transform:translateY(5px) scale(1.02,.96) rotate(-5deg)}50%{transform:translateY(5px) scale(1.02,.96) rotate(-2deg)}}
+@media (prefers-reduced-motion:reduce){.mascot *{animation:none!important}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3490,18 +3517,18 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
-const MASCOT_SVG=`<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse cx="60" cy="118" rx="30" ry="5" fill="rgba(27,30,61,.18)"/><g class="mbody" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+const MASCOT_SVG=`<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse class="msh" cx="60" cy="118" rx="30" ry="5" fill="rgba(27,30,61,.18)"/><g class="mbody" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
 <path d="M30 40 L32 16 L50 32Z" fill="#7B4FE0"/><path d="M90 40 L88 16 L70 32Z" fill="#7B4FE0"/>
 <path class="wl" d="M26 62 C10 72 12 92 30 98" fill="#7B4FE0"/><path class="wr" d="M94 62 C110 72 108 92 90 98" fill="#7B4FE0"/>
 <ellipse cx="60" cy="68" rx="38" ry="42" fill="#9468F7"/><ellipse cx="60" cy="86" rx="23" ry="21" fill="#F4E9FF" stroke-width="3"/>
 <path d="M50 82 q5 5 10 0 q5 5 10 0 M47 92 q6 5 13 0 q6 5 13 0" fill="none" stroke="#C9B3F5" stroke-width="3"/>
 <path d="M46 110 v6 M52 110 v6 M68 110 v6 M74 110 v6" stroke="#FF9F1C" stroke-width="5"/>
-<g class="eo"><circle cx="45" cy="56" r="13" fill="#fff"/><circle cx="75" cy="56" r="13" fill="#fff"/><g class="pupil" stroke="none" fill="${INK}"><circle cx="47" cy="57" r="6"/><circle cx="77" cy="57" r="6"/><circle cx="49" cy="54" r="2" fill="#fff"/><circle cx="79" cy="54" r="2" fill="#fff"/></g></g>
+<g class="eo"><circle cx="45" cy="56" r="13" fill="#fff"/><circle cx="75" cy="56" r="13" fill="#fff"/><g class="pupil" stroke="none" fill="${INK}"><g class="look"><circle cx="47" cy="57" r="6"/><circle cx="77" cy="57" r="6"/><circle cx="49" cy="54" r="2" fill="#fff"/><circle cx="79" cy="54" r="2" fill="#fff"/></g></g></g>
 <g class="eh" fill="none"><path d="M34 60 q11 -14 22 0"/><path d="M64 60 q11 -14 22 0"/></g>
 <g class="es" fill="none"><path d="M33 42 l20 6"/><path d="M87 42 l-20 6"/></g>
 <path d="M53 66 h14 l-7 10z" fill="#FFB020" stroke-width="3"/>
 <circle cx="33" cy="74" r="5" fill="#FF8FB8" stroke="none"/><circle cx="87" cy="74" r="5" fill="#FF8FB8" stroke="none"/>
-<path d="M28 26 L60 12 L92 26 L60 40Z" fill="${INK}"/><path d="M60 26 L88 30 V44" fill="none" stroke="#FFC23D" stroke-width="3"/><circle cx="88" cy="47" r="4" fill="#FFC23D" stroke-width="2"/>
+<path d="M28 26 L60 12 L92 26 L60 40Z" fill="${INK}"/><g class="tas"><path d="M60 26 L88 30 V44" fill="none" stroke="#FFC23D" stroke-width="3"/><circle cx="88" cy="47" r="4" fill="#FFC23D" stroke-width="2"/></g>
 </g></svg>`;
 const S3=`stroke="${INK}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"`;
 const LEVEL_ART={
@@ -7152,7 +7179,7 @@ const PET_ART={
   <path d="M55 48 L60 58 L65 48Z" fill="#B9C4D6" stroke-width="2.5"/>
   ${pEyes(50,42,70,42,6.5,{iris:'#FFC23D'})}${pCap(60,28,.55,c)}`};
 function petSVG(id,cap){const f=PET_ART[id];if(!f)return null;
-  return `<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse cx="60" cy="118" rx="34" ry="5" fill="rgba(27,30,61,.15)"/><g class="mbody" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">${f(cap)}</g></svg>`}
+  return `<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse class="msh" cx="60" cy="118" rx="34" ry="5" fill="rgba(27,30,61,.15)"/><g class="mbody" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">${f(cap)}</g></svg>`}
 function openPets(){if(!P)return;P.pets=P.pets||['uli'];const gem=`<span style="width:16px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
   const cap=(CAPS.find(c=>c[0]===(P.outfit||{}).cap)||CAPS[0])[2];
   const render=()=>{openModal(`<h3>Pilih teman belajar</h3><p class="note" style="margin:0 0 10px">Kamu punya ${gem} ${P.gems} permata.</p><div class="petgrid">${PETS.map(([id,name,reg,price])=>{const own=price===0||P.pets.includes(id),on=curPet()===id;
