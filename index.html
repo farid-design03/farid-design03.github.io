@@ -3173,6 +3173,13 @@ html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l
 .pzx-sorak{animation:pzPop 2.6s ease-in-out infinite}
 @keyframes pziGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(255,200,0,0));translate:0 0}50%{filter:drop-shadow(0 0 7px rgba(255,200,0,.9));translate:0 -3px}}
 @media (prefers-reduced-motion:reduce){.pzi,.pzi img{animation:none!important}}
+/* peti Canva */
+.node.k-chest i svg{width:100%;height:100%}
+.node.k-chest.cur i{animation:chGlow 1.6s ease-in-out infinite}
+@keyframes chGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(255,200,0,0))}50%{filter:drop-shadow(0 0 10px rgba(255,200,0,.95))}}
+.chestbig{margin-bottom:14px!important}.chestbig.chglow{animation:chGlow .5s ease-in-out infinite}
+.chestbig.chpop{animation:chPop .6s cubic-bezier(.3,1.6,.5,1),chGlow 1.8s .6s ease-in-out infinite}
+@keyframes chPop{0%{transform:scale(.7) translateY(10px)}60%{transform:scale(1.12) translateY(-6px)}100%{transform:scale(1) translateY(0)}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3548,7 +3555,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=171"></script>
+<script src="av.js?v=172"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7390,7 +7397,7 @@ function openStreak(tab){let el=$('#skOv');if(!el){document.body.insertAdjacentH
        <div class="skcard skmile"><span class="skflag"><svg viewBox="0 0 40 40"><rect x="7" y="4" width="3.4" height="32" rx="1.7" fill="#C2410C"/><circle cx="8.7" cy="5" r="2.6" fill="#FF9600"/><path d="M10 7h20l-5 7 5 7H10z" fill="#FFC23D"/><path d="M10 7h9v14h-9z" fill="#FF9600"/></svg></span><p>Kamu akan sampai di titik pencapaian runtunan berikutnya (<b>${nx} hari</b>) pada <b>${rd}</b>!</p></div>
        <h3 class="skh">Kalender Runtunan</h3><div class="skcard" id="skCal">${skCal(cy,cm)}</div>
        <h3 class="skh">Target Runtunan</h3><div class="skcard"><div class="sktgt"><span class="skcalic">${ICONS.flame}</span><div class="sktbar"><i style="width:${Math.max(4,(st-prev)/(nx-prev)*100)}%"></i></div><span class="skcalic n">${nx}</span></div><div class="sktnum">${st} / ${nx} HARI</div></div>
-       <h3 class="skh">Sultan Runtunan</h3>${SK_REW.map(r=>{const got=best>=r.d,cd=cl[r.d];return `<div class="skcard skrew ${got?'got':''}"><span class="sklock">${got?ICONS.chestOpen||ICONS.chest:ICONS.lock}</span><div><b>${r.d} hari</b><p>${got?r.t:`Capai ${r.d} hari beruntun untuk membuka hadiah ini.`}</p>${got?(cd?'<small class="skok">SUDAH DIAMBIL</small>':`<button class="primary press skclaim" data-cl="${r.d}">AMBIL HADIAH</button>`):'<small>TERKUNCI</small>'}</div></div>`}).join('')}
+       <h3 class="skh">Sultan Runtunan</h3>${SK_REW.map(r=>{const got=best>=r.d,cd=cl[r.d];return `<div class="skcard skrew ${got?'got':''}"><span class="sklock">${got?(cd?ICONS.chestOpen:ICONS.chestFull):ICONS.lock}</span><div><b>${r.d} hari</b><p>${got?r.t:`Capai ${r.d} hari beruntun untuk membuka hadiah ini.`}</p>${got?(cd?'<small class="skok">SUDAH DIAMBIL</small>':`<button class="primary press skclaim" data-cl="${r.d}">AMBIL HADIAH</button>`):'<small>TERKUNCI</small>'}</div></div>`}).join('')}
        <p class="note" style="text-align:center;margin:14px 0 0">Runtunan terbaikmu: ${best} hari · Pelindung api: ${P.freeze}</p>`}
     else body=`<div class="skfrart" id="skArt"></div><div class="skfrh"><h3 class="skh" style="margin:0">Runtunan Teman</h3><button class="skedit" id="skEdit">${edit?'SELESAI':'EDIT'}</button></div><div class="skcard skfrlist" id="skFr"><p class="note">Memuat…</p></div><p class="note" style="margin:10px 4px 0;font-size:13px">Api bertambah setiap hari kalian berdua belajar. Kamu bisa memilih sampai 5 teman yang saling mengikuti.</p>`;
     el.innerHTML=`<div class="skin ${tab==='fr'?'fr':''}">${head}<div class="skbody">${body}</div></div>`;el.hidden=false;document.body.classList.add('skopen');hydrate(el);
@@ -8213,10 +8220,13 @@ function showDone(screens){let i=0;const view=$('#vDone');
 function showFail(o,noHearts,correct,need){const view=$('#vDone');
   view.innerHTML=`<div class="done"><div class="mascot" data-mascot data-mood="sad"></div><h2>${noHearts?'Nyawamu habis':'Belum berhasil'}</h2><p class="sub">${noHearts?'Isi ulang nyawa atau berlatih dulu, lalu coba lagi.':`Kamu menjawab benar ${correct} soal. Butuh ${need} untuk lulus.`}</p>${noHearts?`<div class="card" style="padding:14px;width:100%;max-width:420px;text-align:left">${heartsPanel()}</div>`:''}<div class="acts">${noHearts?'':`<button class="primary" id="failRetry">Coba lagi</button>`}<button class="ghost" id="failBack">Kembali ke jalur</button></div></div>`;
   hydrate(view);show('vDone');bindHeartActs(view);const r=$('#failRetry');if(r)r.onclick=()=>o.kind==='practice'?startPractice():startNode(o.ui,o.ni);$('#failBack').onclick=()=>{game=null;go('learn')}}
+/* peti Canva */
+{const ci=n=>`<svg viewBox="0 0 100 100" aria-hidden="true"><image href="props/chest-${n}.webp?v=1" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMax meet"/></svg>`;ICONS.chest=ci('closed');ICONS.chestOpen=ci('empty');ICONS.chestGlow=ci('glow');ICONS.chestFull=ci('full')}
 function openChest(idx){const pr=progOf();if(idx!==pr.done)return;const n=R(15,30);
   openModal(`<div style="display:grid;place-items:center"><span class="chestbig shakeit" id="chestImg">${ICONS.chest}</span></div><h3 style="text-align:center" id="chestT">Membuka peti…</h3><p style="text-align:center" id="chestP">&nbsp;</p><button class="primary" id="mClose" disabled>Ambil hadiah</button>`);
   tone([300,400,500],.12);
-  setTimeout(()=>{$('#chestImg').classList.remove('shakeit');$('#chestImg').innerHTML=ICONS.chestOpen;$('#chestT').textContent=`+${n} permata!`;$('#chestP').textContent='Tukarkan permata di Toko dengan nyawa, pelindung api, atau gaya baru untuk '+petName()+'.';$('#mClose').disabled=false;sfx.win();popFx($('#chestImg'),`+${n}`);
+  setTimeout(()=>{const ci=$('#chestImg');if(ci){ci.classList.remove('shakeit');ci.innerHTML=ICONS.chestGlow;ci.classList.add('chglow')}},650);
+  setTimeout(()=>{$('#chestImg').classList.remove('shakeit','chglow');$('#chestImg').innerHTML=ICONS.chestFull;$('#chestImg').classList.add('chpop');$('#chestT').textContent=`+${n} permata!`;$('#chestP').textContent='Tukarkan permata di Toko dengan nyawa, pelindung api, atau gaya baru untuk '+petName()+'.';$('#mClose').disabled=false;sfx.win();popFx($('#chestImg'),`+${n}`);
     P.gems+=n;P.stats.chests++;pr.done++;save();renderTop()},1100);
   $('#mClose').onclick=()=>{closeModal();renderPath();setTimeout(scrollToCurrent,60)}}
 
@@ -10448,7 +10458,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=171';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=172';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
