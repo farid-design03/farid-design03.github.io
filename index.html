@@ -3156,6 +3156,23 @@ html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l
 @keyframes mPet{0%,100%{transform:translateY(0) scale(1,1) rotate(0)}22%{transform:translateY(-2px) scale(.985,1.035) rotate(-2.5deg)}50%{transform:translateY(0) scale(1.015,.985) rotate(0)}72%{transform:translateY(-2px) scale(.985,1.035) rotate(2.5deg)}}
 .mascot[data-mood=sad] .mbody.pimg{filter:saturate(.75) brightness(.97)}
 .mascot[data-mascot]{cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* pose & properti Canva di jalur */
+.pzu .pzbody,.pzc .pzbody{animation:none!important;transform:none!important}
+.pzu .mascot{width:118%;margin-left:-9%}
+.pzi{position:absolute;z-index:2;pointer-events:none;display:block}.pzi img{width:100%;height:auto;display:block}
+.pzi-front{left:20%;width:60%;bottom:-8%}
+.pzi-top{left:22%;width:56%;bottom:90%}
+.pzi-side{left:auto;right:-36%;width:50%;bottom:-2%}
+.pzi b{position:absolute;left:0;right:0;top:18%;text-align:center;font:900 15px/1 var(--display,sans-serif);color:#1C1E3D}
+.pzx-hello b,.pzx-halo b{top:28%}.pzx-lambai b{top:16%;font-size:14px;color:#5A3A12}
+.pzx-bola{animation:pzBounce .9s cubic-bezier(.3,0,.7,1) infinite alternate}
+.pzx-balon,.pzx-musik,.pzx-awan,.pzx-koin,.pzx-ops,.pzx-bulan,.pzx-planet,.pzx-halo,.pzx-hello,.pzx-tidur,.pzx-petir{animation:pzFloat 2.6s ease-in-out infinite}
+.pzx-lampu,.pzx-mahkota,.pzx-medali,.pzx-trofi,.pzx-lentera{animation:pziGlow 2.2s ease-in-out infinite}
+.pzx-atom img,.pzx-planet img{animation:pzSpin 9s linear infinite}
+.pzx-bendera,.pzx-lambai{animation:pzSway 2.4s ease-in-out infinite;transform-origin:20% 100%}
+.pzx-sorak{animation:pzPop 2.6s ease-in-out infinite}
+@keyframes pziGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(255,200,0,0));translate:0 0}50%{filter:drop-shadow(0 0 7px rgba(255,200,0,.9));translate:0 -3px}}
+@media (prefers-reduced-motion:reduce){.pzi,.pzi img{animation:none!important}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3531,7 +3548,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=170"></script>
+<script src="av.js?v=171"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7226,7 +7243,7 @@ setTimeout(petIcon,400);
 try{const g=new URLSearchParams(location.search).get('buka');if(g){sessionStorage.setItem('jk_buka',g);const q=new URLSearchParams(location.search);q.delete('buka');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''))}}catch(e){}
 function bukaShortcut(){let g='';try{g=sessionStorage.getItem('jk_buka')||'';sessionStorage.removeItem('jk_buka')}catch(e){}if(!g||!P)return;const map={belajar:'learn',main:'team',misi:'quest',liga:'league'};if(map[g])setTimeout(()=>{try{go(map[g])}catch(e){}},1200)}
 
-function rerenderMascots(){petCache();document.querySelectorAll('[data-mascot]').forEach(el=>{const mood=el.dataset.mood;el.innerHTML=mascotSVG();if(mood)el.dataset.mood=mood})}
+function rerenderMascots(){petCache();if(document.querySelector('[data-mascot][data-pose],.pz .pzi')){try{renderPath()}catch(e){}}document.querySelectorAll('[data-mascot]:not([data-pose])').forEach(el=>{const mood=el.dataset.mood;el.innerHTML=mascotSVG();if(mood)el.dataset.mood=mood})}
 
 /* ---------- dates ---------- */
 const pad2=n=>String(n).padStart(2,'0');
@@ -7798,7 +7815,20 @@ const SUBJ_POSE={hitung:['angka','ops','trofi'],mtk:['penggaris','kalkulator','o
  ips:['globe','peta','koin'],geografi:['globe','peta','teropong'],ekonomi:['koin','kalkulator','menulis'],sosiologi:['teman','halo','baca'],
  sejarah:['gulungan','bendera','baca'],pancasila:['bendera','teman','baca'],pai:['rehal','lentera','baca'],pjok:['bola','stopwatch','trofi'],
  seni:['palet','musik','bentuk'],warna:['palet','bentuk','balon'],informatika:['laptop','lampu','menulis'],tkj:['laptop','robot','lampu'],kka:['laptop','robot','lampu'],umum:['lampu','globe','teropong']};
+/* pose Canva: Uli punya gambar pose sendiri, hewan lain memakai properti bergambar */
+const ULI_POSE={angka:'hitung',ops:'hitung',kalkulator:'hitung',persen:'hitung',grafik:'hitung',koin:'hitung',timbangan:'hitung',dadu:'hitung',segitiga:'hitung',kubus:'hitung',penggaris:'hitung',pizza:'hitung',jam:'hitung',bentuk:'lukis',keranjang:'hitung',
+ abc:'baca',gulungan:'baca',apel:'baca',halo:'lambai',hello:'lambai',teman:'lambai',
+ tabung:'eksperimen',mikroskop:'eksperimen',dna:'eksperimen',atom:'eksperimen',magnet:'eksperimen',petir:'ide',tanaman:'eksperimen',awan:'teropong',hewan:'teropong',
+ globe:'globe',peta:'globe',planet:'teropong',bulan:'teropong',laptop:'laptop',robot:'laptop',wifi:'laptop',biner:'laptop',lampu:'ide',
+ bendera:'bendera',perisai:'bendera',topeng:'lukis',rehal:'rehal',lentera:'rehal',stopwatch:'olahraga',palet:'lukis',mahkota:'piala',medali:'piala',
+ baca:'baca',lambai:'lambai',sorak:'sorak',tidur:'tidur',teropong:'teropong',bola:'bola',menulis:'tulis',trofi:'piala',musik:'nyanyi',balon:'sorak'};
+const POSE_CLS={baca:'front',lambai:'top',sorak:'side',tidur:'side',teropong:'side',bola:'side',menulis:'front',trofi:'side',musik:'top',balon:'side'};
+const POSE_TXT={halo:'Halo!',hello:'Hello!',lambai:'Hai!'};
+function uliPoseSVG(p){return `<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse class="msh" cx="60" cy="118" rx="34" ry="5" fill="rgba(27,30,61,.15)"/><g class="mbody pimg"><image href="pets/uli-${p}.webp?v=1" x="0" y="0" width="120" height="120" preserveAspectRatio="xMidYMax meet"/></g></svg>`}
 function decoPose(ui){let key='',u=null;try{const sb=SUBJ();key=String(sb.id).replace(/[0-9_].*$/,'');u=sb.units[ui]}catch(e){}const list=SUBJ_POSE[key]||['baca','menulis','trofi'];const t1=u?String(u.t).toLowerCase():'',t2=u?String(u.d||'').toLowerCase():'';const hit=(t1&&UNIT_POSE.find(([re])=>re.test(t1)))||(t2&&UNIT_POSE.find(([re])=>re.test(t2)));const id=hit?hit[1]:list[ui%list.length];
+  if(curPet()==='uli'){const ps=ULI_POSE[id]||'baca';return `<div class="pz pzu pose-${id}"><div class="pzbody"><div class="mascot" data-mascot data-pose="${ps}">${uliPoseSVG(ps)}</div></div></div>`}
+  {const x=PZX[id],cls=x?x.cls:(POSE_CLS[id]||'front'),mood=x?x.mood:((POSES.find(q=>q.id===id)||{}).mood||'idle'),tx=POSE_TXT[id];const im=`<span class="pzi pzi-${cls} pzx-${id}"><img src="props/${id}.webp?v=1" alt="" loading="lazy" decoding="async">${tx?`<b>${tx}</b>`:''}</span>`;
+   return `<div class="pz pzc pose-${id}">${cls==='top'?im:''}<div class="pzbody"><div class="mascot" data-mascot data-mood="${mood}"></div></div>${cls!=='top'?im:''}</div>`}
   const x=PZX[id];if(x)return `<div class="pz pose-${id} pzk-${x.cls}">${x.cls==='top'?x.svg:''}<div class="pzbody"><div class="mascot" data-mascot data-mood="${x.mood}"></div></div>${x.cls!=='top'?x.svg:''}</div>`;
   const p=POSES.find(q=>q.id===id)||POSES[0];
   return `<div class="pz pose-${p.id}">${p.top||''}<div class="pzbody"><div class="mascot" data-mascot data-mood="${p.mood}"></div></div>${p.side||''}${p.front||''}</div>`}
@@ -10418,7 +10448,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=170';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=171';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
