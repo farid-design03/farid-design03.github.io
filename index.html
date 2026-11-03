@@ -3227,6 +3227,38 @@ html body .tbpb .dnrow b,html body .tbpb .ntx b{display:block!important;margin-b
 .bdg .lv.lv3{background:linear-gradient(90deg,#FFD54A,#FFF3B0,#FFD54A)!important;color:#6B3A00!important;border-color:#C98A00!important;background-size:200% 100%!important;animation:lvShine 2s linear infinite}
 @keyframes lvShine{to{background-position:-200% 0}}
 .done span svg.bimg{width:100%;height:auto}
+/* pencapaian gaya Duolingo */
+.chev{font-size:34px!important;line-height:1;color:var(--muted)!important;font-weight:400}
+.bdrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.bdit{background:none;border:0;padding:0;box-shadow:none!important;cursor:pointer}
+.bdart{position:relative;display:block;width:100%;aspect-ratio:1}.bdart>svg{width:100%;height:100%}
+.bdart.bl0 svg{filter:grayscale(1);opacity:.45}
+.bdart.bl1>svg,.bdart.bl2>svg{animation:bgBreath 3.4s ease-in-out infinite}.bdart.bl3>svg{animation:bgLegend 2.6s ease-in-out infinite;overflow:visible}
+.bdnum{position:absolute;left:50%;bottom:-2%;transform:translateX(-50%);font:900 clamp(17px,5.4vw,26px)/1 var(--display,sans-serif);color:#fff;white-space:nowrap;-webkit-text-stroke:5px #1C6CF6;paint-order:stroke fill;text-shadow:0 3px 0 #0E4FC2;letter-spacing:.5px}
+.bdart.bl1 .bdnum{-webkit-text-stroke-color:#A0611E;text-shadow:0 3px 0 #6E3E0C}
+.bdart.bl3 .bdnum{-webkit-text-stroke-color:#B07A00;text-shadow:0 3px 0 #7A4F00;color:#FFF6C8}
+.bdov{position:fixed;inset:0;z-index:2500;background:var(--card,#fff);overflow:auto;padding:0 0 40px}.bdov[hidden]{display:none}
+.bdtop{position:sticky;top:0;z-index:2;background:var(--card,#fff);display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:10px 12px;border-bottom:2px solid var(--line,#E5E5E5)}
+.bdtop b{text-align:center;font:800 20px var(--display,sans-serif);color:var(--muted)}.bdtop .back{width:44px;height:44px;font-size:24px;display:grid;place-items:center;background:none;border:0;box-shadow:none!important;color:var(--muted)}
+.bdov.det .bdtop{border-bottom:0}
+.bdov>*:not(.bdtop){max-width:640px;margin-left:auto;margin-right:auto}
+.bdh{font-size:28px;margin:24px 18px 14px}
+.rcrow{display:flex;gap:14px;overflow-x:auto;padding:0 18px 6px;scroll-snap-type:x mandatory;scrollbar-width:none}.rcrow::-webkit-scrollbar{display:none}
+.rccard{flex:0 0 42%;max-width:220px;scroll-snap-align:start;border:2px solid var(--line,#E5E5E5);border-radius:22px;padding:16px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.rcbox{position:relative;width:100%;aspect-ratio:1;display:grid;place-items:center}
+.rcart{width:78%;height:78%;display:grid;place-items:center}.rcart svg,.rcart img{width:100%;height:100%;object-fit:contain}.rcfl{color:#FF9600}
+.rccard .bdnum{bottom:0;font-size:24px;-webkit-text-stroke-color:#C26A00;text-shadow:0 3px 0 #8A4A00;color:#FFE27A}
+.rccard b{font-size:17px}.rccard small{color:var(--muted);font-weight:800}.rccard.none .rcart{opacity:.35}
+.bdgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 10px;padding:0 14px}
+.bdcell{background:none;border:0;box-shadow:none!important;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;cursor:pointer}
+.bdcell b{font:800 16px/1.2 var(--display,sans-serif);color:var(--ink)}.bdcell small{color:var(--muted);font-weight:800}
+.bddet{display:flex;flex-direction:column;align-items:center;gap:18px;padding:20px 26px;text-align:center}
+.bdbig{width:min(62vw,280px)}.bdbig .bdnum{font-size:clamp(34px,11vw,52px);-webkit-text-stroke-width:8px}
+.bddate{background:#FFF1C9;color:#C77D00;font:900 15px var(--display,sans-serif);padding:8px 14px;border-radius:10px;letter-spacing:.04em}.bddate.lk{background:var(--line,#eee);color:var(--muted)}
+.bdtxt{font:800 22px/1.45 var(--display,sans-serif);color:var(--ink);margin:0}.bdtxt b{font-weight:900}
+.bdnext{width:100%;max-width:380px;display:flex;flex-direction:column;gap:8px}.bdnext small{color:var(--muted);font-weight:800}
+.bdmax{color:#C77D00;font-weight:900;margin:0}
+html[data-theme=malam] .bddate{background:#3a2c0a}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3502,14 +3534,14 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
     <section id="vProfile" class="view" hidden style="flex-direction:column;gap:18px">
       <div class="pagehead"><i data-icon="user"></i><div><h2>Profil</h2></div></div>
       <div id="profileTop" class="card ptop"></div>
-      <h3 class="sect">Statistik</h3>
+      <h3 class="sect">Ringkasan</h3>
       <div class="pstats" id="pStats"></div>
       <h3 class="sect" id="fsH" hidden>Runtunan teman</h3>
       <div class="card fsrow" id="fsRow" hidden></div>
-      <h3 class="sect mbh" id="mbHead">Lencana bulanan<span>LIHAT SEMUA</span></h3>
+      <h3 class="sect mbh" id="mbHead">Lencana bulanan<span class="chev" aria-label="Lihat semua">›</span></h3>
       <div class="card mbprof" id="mbRow"></div>
-      <h3 class="sect">Pencapaian</h3>
-      <div class="card badges" id="badgeList"></div>
+      <h3 class="sect mbh" id="bdHead">Pencapaian<span class="chev" aria-label="Lihat semua">›</span></h3>
+      <div class="bdrow" id="badgeList"></div>
       <h3 class="sect" id="myEvalH" hidden>Nilai dari guru</h3>
       <div class="card badges" id="myEval" hidden></div>
       <h3 class="sect">Akun</h3>
@@ -3608,7 +3640,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=182"></script>
+<script src="av.js?v=183"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7463,6 +7495,32 @@ function openStreak(tab){let el=$('#skOv');if(!el){document.body.insertAdjacentH
     if(tab==='fr'){const eb=$('#skEdit');eb.onclick=()=>{edit=!edit;render()};if(window.skFriends)skFriends($('#skFr'),$('#skArt'),edit,close,render);else $('#skFr').innerHTML='<p class="note">Masuk dengan akun murid untuk memulai Runtunan Teman.</p>'}};
   render()}
 window.openStreak=openStreak;
+/* ===== Pencapaian gaya Duolingo: Rekor Personal + Penghargaan ===== */
+function recNote(){if(!P)return;P.rec=P.rec||{};P.bAt=P.bAt||{};const R=P.rec,now=Date.now(),up=(k,v)=>{v=+v||0;if(v>0&&(!R[k]||v>R[k].v))R[k]={v,at:now}};
+  try{up('streak',Math.max(P.bestStreak||0,shownStreak()));up('perfect',(P.stats||{}).perfect||0);up('xpday',Math.max(0,...Object.values(P.xpd||{})));const s=typeof lgState==='function'?lgState():null;if(s)up('league',(s.t||0)+1)}catch(e){}
+  BADGES.forEach(b=>{const l=blevel(b);const a=P.bAt[b.id]=P.bAt[b.id]||{};for(let i=1;i<=l;i++)if(!a[i])a[i]=now})}
+function bdNum(n){return `<span class="bdnum">${n}</span>`}
+function bdArt(b,l){return `<span class="bdart bl${l}">${badgeSVG(b,l)}${l?bdNum(b.lv[l-1]):''}</span>`}
+const BD_WHY={api:n=>`berhasil belajar ${n} hari berturut-turut tanpa putus`,xp:n=>`berhasil mengumpulkan ${n} XP`,perfect:n=>`menyelesaikan ${n} level tanpa satu pun jawaban salah`,game:n=>`sudah mencoba ${n} jenis game berbeda`,test:n=>`lulus ${n} ujian unit`,team:n=>`ikut ${n} pertandingan bersama teman`,chest:n=>`membuka ${n} peti harta`};
+const bdFmt=t=>t?new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'';
+function bdOv(html,cls){let el=$('#bdOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="bdov" id="bdOv" hidden></div>');el=$('#bdOv')}el.className='bdov '+(cls||'');el.innerHTML=html;el.hidden=false;el.scrollTop=0;hydrate(el);return el}
+function bdPage(){recNote();save();const R=P.rec||{},recs=[
+  ['league','Liga Tertinggi',v=>`<span class="rcart">${lgBadge(Math.max(0,Math.min(9,v-1)))}</span>${bdNum(TIERS[Math.max(0,Math.min(9,v-1))][0])}`],
+  ['perfect','Pelajaran Sempurna',v=>`<span class="rcart"><img src="liga/medal1.webp?v=1" alt=""></span>${bdNum(v)}`],
+  ['xpday','XP Terbanyak',v=>`<span class="rcart"><img src="props/petir.webp?v=1" alt=""></span>${bdNum(v)}`],
+  ['streak','Rekor Runtunan',v=>`<span class="rcart rcfl">${ICONS.flame}</span>${bdNum(v)}`]];
+  const el=bdOv(`<div class="bdtop"><button class="back" id="bdBack" aria-label="Kembali">←</button><b>Pencapaian</b><span></span></div>
+   <h2 class="bdh">Rekor Personal</h2><div class="rcrow">${recs.map(([k,t,f])=>{const r=R[k];return `<div class="rccard ${r?'':'none'}"><div class="rcbox">${r?f(r.v):`<span class="rcart">${ICONS.lock}</span>`}</div><b>${t}</b><small>${r?bdFmt(r.at):'Belum ada'}</small></div>`}).join('')}</div>
+   <h2 class="bdh">Penghargaan</h2><div class="bdgrid">${BADGES.map(b=>{const l=blevel(b);return `<button class="bdcell ${l?'':'none'}" data-bd="${b.id}">${bdArt(b,l)}<b>${esc(b.name)}</b><small>${l} dari ${b.lv.length}</small></button>`}).join('')}</div>`,'page');
+  $('#bdBack').onclick=()=>{el.hidden=true};el.querySelectorAll('[data-bd]').forEach(x=>x.onclick=()=>bdDetail(BADGES.find(b=>b.id===x.dataset.bd),true))}
+function bdDetail(b,fromPage){recNote();save();const l=blevel(b),nx=b.lv[Math.min(l,b.lv.length-1)],v=b.val(P),at=l?((P.bAt||{})[b.id]||{})[l]:0;
+  const txt=l?`Kamu meraih pencapaian <b>${esc(b.name)}</b> karena ${BD_WHY[b.id]?BD_WHY[b.id](b.lv[l-1]):b.d(b.lv[l-1])}!`:`Raih pencapaian <b>${esc(b.name)}</b>: ${esc(b.d(b.lv[0]))}.`;
+  const el=bdOv(`<div class="bdtop"><button class="back" id="bdX" aria-label="Tutup">✕</button><span></span><button class="back" id="bdShare" aria-label="Bagikan">${typeof shareIcon!=='undefined'?shareIcon:'⇪'}</button></div>
+   <div class="bddet"><div class="bdbig">${bdArt(b,l)}</div>${l?`<span class="bddate">${bdFmt(at).toUpperCase()}</span>`:'<span class="bddate lk">BELUM DIRAIH</span>'}<p class="bdtxt">${txt}</p>
+   ${l<b.lv.length?`<div class="bdnext"><small>Level berikutnya: ${esc(b.d(nx))}</small><div class="qbar"><i style="width:${Math.min(100,v/nx*100)}%"></i><span>${Math.min(v,nx)} / ${nx}</span></div></div>`:'<p class="bdmax">Level tertinggi tercapai!</p>'}</div>`,'det');
+  $('#bdX').onclick=()=>{if(fromPage)bdPage();else el.hidden=true};
+  $('#bdShare').onclick=async()=>{const t=`Aku meraih pencapaian "${b.name}" level ${l} di JELAS! 🏅 ${location.origin}${location.pathname}`;try{if(navigator.share){await navigator.share({text:t});return}}catch(e){return}copyText(t)}}
+window.bdPage=bdPage;
 function gemPop(){openPop($('#gemBtn'),`<h4>${P.gems} permata</h4><p style="margin:0 0 10px;font-size:14px">Dapatkan permata dari peti, level sempurna, ujian, dan misi harian.</p><button class="primary" style="width:100%" id="popShop">Buka Toko</button>`);$('#popShop').onclick=()=>{closePop();go('shop')}}
 function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(Date.now()-P.heartsAt);const m=Math.max(0,Math.ceil(ms/60000));return `Nyawa berikutnya dalam ${m} menit.`}
 function heartsPanel(){return P.unlimited?`<p style="margin:0">Mode kelas aktif: nyawa tidak terbatas. Matikan di Profil → Pengaturan.</p>`:
@@ -8254,7 +8312,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   const badgeBefore=BADGES.map(b=>blevel(b));const goalBefore=P.today.xp>=P.goal;
   P.stats.lessons++;if(perfect)P.stats.perfect++;if(o.kind==='test')P.stats.tests++;if(o.kind==='game'&&!P.stats.games.includes(g.mode))P.stats.games.push(g.mode);P.stats.correct+=g.correct;
   const streakUp=addXp(xp);P.gems+=gems;
-  bump('xp',0);bump('lessons',1);fqTick();if(acc>=90)bump('good',1);if(o.kind==='lesson'&&secs<=60)bump('fast',1);if(o.kind==='practice')bump('practice',1);if(new Date().getHours()<12)bump('early',1);try{bump('subj',SUBJ().id)}catch(e){}if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
+  try{recNote()}catch(e){}bump('xp',0);bump('lessons',1);fqTick();if(acc>=90)bump('good',1);if(o.kind==='lesson'&&secs<=60)bump('fast',1);if(o.kind==='practice')bump('practice',1);if(new Date().getHours()<12)bump('early',1);try{bump('subj',SUBJ().id)}catch(e){}if(perfect)bump('perfect',1);bump('correct',g.correct);if(o.kind==='game')bump('games',1);bump('best',g.best);
   save();renderTop();
   const screens=[];try{window.fsTick&&fsTick(screens)}catch(e){}
   const title=o.kind==='test'?'Ujian lulus!':o.kind==='game'?'Level game selesai!':o.kind==='practice'?'Latihan selesai!':perfect?'Pelajaran sempurna!':'Pelajaran selesai!';
@@ -8376,7 +8434,9 @@ function renderProfile(){const t=tierOf(P);
   $('#pName').onchange=e=>{const v=e.target.value.trim();if(v){P.name=v;save();renderProfile()}};
   $('#profileTop').querySelectorAll('.avcolors button').forEach(b=>b.onclick=()=>{P.color=b.dataset.c;save();renderProfile()});
   $('#pStats').innerHTML=[[`<span style="color:#FF8A00;width:34px">${ICONS.flame}</span>`,Math.max(P.bestStreak||0,shownStreak()),'Rekor runtunan'],[ico('bolt'),P.xp,'Total XP'],[`<i>${shield(t[2])}</i>`,t[0],'Liga sekarang'],[ico('check'),unitsDone(P),'Unit selesai']].map(x=>`<div class="ps">${x[0]}<span><b>${x[1]}</b><small>${x[2]}</small></span></div>`).join('');
-  $('#badgeList').innerHTML=BADGES.map(b=>{const l=blevel(b),nx=b.lv[Math.min(l,b.lv.length-1)],v=b.val(P);return `<div class="badge ${l?'':'none'}"><span class="bdg">${badgeSVG(b,l)}<span class="lv lv${l}">${l?['','Perunggu','Perak','Legenda'][l]:'Belum'}</span></span><span class="bt"><b>${b.name}</b><small>${l>=b.lv.length?'Level tertinggi tercapai!':b.d(nx)}</small><div class="qbar"><i style="width:${Math.min(100,v/nx*100)}%"></i><span>${Math.min(v,nx)} / ${nx}</span></div></span></div>`}).join('');
+  {const got=BADGES.map(b=>({b,l:blevel(b)})).sort((x,y)=>y.l-x.l||BADGES.indexOf(x.b)-BADGES.indexOf(y.b)).slice(0,4);
+   $('#badgeList').innerHTML=got.map(({b,l})=>`<button class="bdit ${l?'':'none'}" data-bd="${b.id}">${bdArt(b,l)}</button>`).join('');
+   $('#badgeList').querySelectorAll('[data-bd]').forEach(x=>x.onclick=()=>bdDetail(BADGES.find(b=>b.id===x.dataset.bd)));const bh=$('#bdHead');if(bh)bh.onclick=bdPage}
   const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   $('#profileList').innerHTML=APP.profiles.map(p=>`<div class="prow">${avSpan(p)}<span class="grow"><b>${esc(p.name)}</b><small>${(COURSE.find(c=>c.id===p.cls)||{}).full||''} · ${p.xp} XP</small></span>${p.id===P.id?'<small><b>Sedang dipakai</b></small>':`${T()?'':`<button class="smallbtn" data-use="${p.id}">Pakai</button><button class="smallbtn danger" data-del="${p.id}">Hapus</button>`}`}</div>`).join('')+`${T()?'<div class="prow"><button class="primary" id="toPicker" style="width:100%">Ganti murid</button></div>':'<div class="prow"><button class="primary" id="addProfile" style="width:100%">+ Tambah profil teman</button></div>'}`;
   $('#profileList').querySelectorAll('[data-use]').forEach(b=>b.onclick=()=>{P=APP.profiles.find(p=>p.id===b.dataset.use);afterLogin();toast('user',`Halo, ${P.name}!`)});
@@ -10511,7 +10571,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=182';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=183';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
