@@ -3144,7 +3144,7 @@ html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l
 :is(.pban-av,.pcav,.skava,.aved-prev,.upav,.fqav,.fqbav,.plduo,.ajme,.shopav-av,.plcard,.pltop,.fsduo,.skfr .fsav) svg .avbr{animation:avBrow 7.4s cubic-bezier(.3,1.4,.5,1) infinite}
 :is(.pban-av,.pcav,.skava,.aved-prev,.upav,.fqav,.fqbav,.plduo,.ajme,.shopav-av,.plcard,.pltop,.fsduo,.skfr .fsav) svg .avtop{animation:avHair 3.2s cubic-bezier(.45,0,.55,1) .18s infinite}
 .skava.b svg .avb,.fqav+.fqav svg .avb{animation-delay:-1.6s}.skava.b svg .ave,.fqav+.fqav svg .ave{animation-delay:-2.4s}
-@keyframes avBr{0%,100%{transform:scale(1,1) rotate(0)}25%{transform:scale(1.014,1.026) rotate(-1.2deg)}50%{transform:scale(1,1) rotate(0)}75%{transform:scale(1.014,1.026) rotate(1.2deg)}}
+@keyframes avBr{0%,100%{transform:scale(1,1) rotate(0)}25%{transform:scale(1.02,1.035) rotate(-2deg)}50%{transform:scale(1,1) rotate(0)}75%{transform:scale(1.02,1.035) rotate(2deg)}}
 @keyframes avHair{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
 @keyframes avBl{0%,90%,100%{transform:scaleY(1)}92%{transform:scaleY(.08)}94%{transform:scaleY(1)}}
 @keyframes avBrow{0%,70%,84%,100%{transform:translateY(0)}74%,80%{transform:translateY(-5px)}}
@@ -3526,7 +3526,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js"></script>
+<script src="av.js?v=165"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10412,7 +10412,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=165';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
