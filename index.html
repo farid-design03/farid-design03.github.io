@@ -10562,16 +10562,16 @@ const fsOther=x=>x.m.find(u=>u!==FBX.user.uid);
 const fsNum=x=>(x.last===dayKey()||x.last===fsYest())?(x.n||0):0;
 const fsInfo=(x,uid)=>((x.info||{})[uid])||{name:'Teman'};
 const fsMe=()=>({name:P.name,av:P.avatar||null,user:(FBX.me||{}).username||''});
-async function fsLoad(){if(!rtOn())return [];try{const q=await FB.db.collection('fs').where('m','array-contains',FBX.user.uid).get();FS.list=q.docs.map(d=>Object.assign({id:d.id},d.data()))}catch(e){FS.list=FS.list||[]}return FS.list}
+async function fsLoad(){if(!rtOn())return [];try{const q=await FB.db.collection('fs').where('m','array-contains',FBX.user.uid).get();FS.list=q.docs.map(d=>Object.assign({id:d.id},d.data()));const me=FBX.user.uid;for(const x of FS.list){if(x.status==='pending'&&x.from!==me){try{await FB.db.doc('fs/'+x.id).update({status:'on',['info.'+me]:fsMe(),acc:Date.now()});x.status='on';x.news=1}catch(e){}}}}catch(e){FS.list=FS.list||[]}return FS.list}
 window.fsLoad=fsLoad;
 function fsAv(inf,cls){return `<span class="fsav ${cls||''}">${avSpan({name:inf.name,avatar:inf.av||null})}</span>`}
 function fsRender(){const el=$('#fsRow'),h=$('#fsH');if(!el)return;const on=rtOn();el.hidden=h.hidden=!on;if(!on)return;
   if(!FS.list){el.innerHTML='<p class="note" style="margin:0">Memuat…</p>';fsLoad().then(fsRender);return}
-  const me=FBX.user.uid,inc=FS.list.filter(x=>x.status==='pending'&&x.from!==me),act=FS.list.filter(x=>x.status==='on'||x.from===me);
+  const me=FBX.user.uid,inc=[],act=FS.list;
   let html=inc.map(x=>{const o=fsInfo(x,x.from);return `<div class="fsinc">${fsAv(o)}<span class="grow"><b>${esc(o.name)}</b><small>mengajakmu memulai Runtunan Teman</small></span><button class="primary fsyes" data-fsy="${x.id}">Terima</button><button class="ghost fsno" data-fsn="${x.id}" aria-label="Tolak">✕</button></div>`}).join('');
-  const slots=act.slice(0,FS.max).map(x=>{const o=fsInfo(x,fsOther(x)),n=fsNum(x),pend=x.status!=='on',today=(x.d||{})[me]===dayKey()&&(x.d||{})[fsOther(x)]===dayKey();
+  const slots=act.map(x=>{const o=fsInfo(x,fsOther(x)),n=fsNum(x),pend=false,today=(x.d||{})[me]===dayKey()&&(x.d||{})[fsOther(x)]===dayKey();
     return `<button class="fsslot ${pend?'pend':''} ${today?'lit':''}" data-fs="${x.id}">${fsAv(o)}${pend?'<em class="fswait">Menunggu</em>':`<em class="fsn"><i>${ICONS.flame}</i>${n}</em>`}<small>${esc(String(o.name).split(' ')[0])}</small></button>`});
-  for(let i=slots.length;i<FS.max;i++)slots.push(`<button class="fsslot add" data-fsadd aria-label="Ajak teman"><span class="fsplus">+</span><small>&nbsp;</small></button>`);
+  for(let i=act.filter(x=>x.from===me).length;i<FS.max;i++)slots.push(`<button class="fsslot add" data-fsadd aria-label="Ajak teman"><span class="fsplus">+</span><small>&nbsp;</small></button>`);
   html+=`<div class="fsslots">${slots.join('')}</div>`;el.innerHTML=html;hydrate(el);
   el.querySelectorAll('[data-fsadd]').forEach(b=>b.onclick=fsInvitePick);
   el.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>fsOpen(FS.list.find(x=>x.id===b.dataset.fs)));
@@ -10580,15 +10580,15 @@ function fsRender(){const el=$('#fsRow'),h=$('#fsH');if(!el)return;const on=rtOn
 async function fsInvitePick(){if(!rtOn())return;openModal('<h3>Ajak teman</h3><p class="note">Memuat teman…</p>');
   try{if(!window.FOL||!FOL.following)await folLoad()}catch(e){}if(!FS.list)await fsLoad();
   const used=new Set(FS.list.map(fsOther)),map=new Map();[...(FOL.following||[]),...(FOL.followers||[])].forEach(f=>{if(!used.has(f.uid)&&!map.has(f.uid))map.set(f.uid,f)});const fr=[...map.values()];
-  const full=FS.list.filter(x=>x.status==='on'||x.from===FBX.user.uid).length>=FS.max;
-  openModal(`<h3 style="margin:0">Mulai Runtunan Teman</h3><p class="note" style="margin:0">Kalian berdua belajar setiap hari untuk menjaga api bersama. Maksimal ${FS.max} teman.</p>
-   ${full?'<p class="note">Runtunan temanmu sudah penuh.</p>':fr.length?`<div class="fslist">${fr.map(f=>`<div class="ajrow">${fsAv(f)}<span class="grow"><b>${esc(f.name||'Teman')}</b><small>${f.user?'@'+esc(f.user):''}</small></span><button class="ajinv" data-fsi="${esc(f.uid)}">AJAK</button></div>`).join('')}</div>`:'<p class="note">Belum ada teman. Ikuti temanmu dulu lewat <b>Tambahkan teman</b> di profil.</p>'}
+  const full=FS.list.filter(x=>x.from===FBX.user.uid).length>=FS.max;
+  openModal(`<h3 style="margin:0">Pilih teman runtunan</h3><p class="note" style="margin:0">Runtunan langsung dimulai begitu kamu memilih. Kalian berdua belajar setiap hari untuk menjaga api bersama. Kamu bisa memilih ${FS.max} teman.</p>
+   ${full?'<p class="note">Runtunan temanmu sudah penuh.</p>':fr.length?`<div class="fslist">${fr.map(f=>`<div class="ajrow">${fsAv(f)}<span class="grow"><b>${esc(f.name||'Teman')}</b><small>${f.user?'@'+esc(f.user):''}</small></span><button class="ajinv" data-fsi="${esc(f.uid)}">PILIH</button></div>`).join('')}</div>`:'<p class="note">Belum ada teman. Ikuti temanmu dulu lewat <b>Tambahkan teman</b> di profil.</p>'}
    <div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal;
   document.querySelectorAll('[data-fsi]').forEach(b=>b.onclick=()=>fsInvite(fr.find(f=>f.uid===b.dataset.fsi),b))}
 async function fsInvite(f,b){const me=FBX.user.uid,m=[me,f.uid].sort(),id=m.join('_');b.disabled=true;b.textContent='…';
-  try{await FB.db.doc('fs/'+id).set({m,from:me,status:'pending',info:{[me]:fsMe(),[f.uid]:{name:f.name||'Teman',av:f.av||null,user:f.user||''}},d:{},n:0,last:null,best:0,created:Date.now()});
-    b.textContent='TERKIRIM';FS.list=null;try{notifyServer('fsinv',id)}catch(e){}toast('check',`Ajakan terkirim ke ${f.name||'temanmu'}.`);renderProfile()}
-  catch(e){console.warn('fsInvite',e);b.disabled=false;b.textContent='AJAK';toast('lock','Gagal mengirim ajakan. Coba lagi.')}}
+  try{await FB.db.doc('fs/'+id).set({m,from:me,status:'on',info:{[me]:fsMe(),[f.uid]:{name:f.name||'Teman',av:f.av||null,user:f.user||''}},d:{},n:0,last:null,best:0,created:Date.now()});
+    b.textContent='DIMULAI';FS.list=null;try{notifyServer('fsinv',id)}catch(e){}try{sfx.win()}catch(e){}closeModal();toast('flame',`Runtunan Teman dengan ${f.name||'temanmu'} dimulai! Belajar hari ini, ya.`);renderProfile()}
+  catch(e){console.warn('fsInvite',e);b.disabled=false;b.textContent='PILIH';toast('lock','Gagal memulai runtunan. Coba lagi.')}}
 async function fsAccept(id,b){if(b){b.disabled=true}const me=FBX.user.uid;
   try{await FB.db.doc('fs/'+id).update({status:'on',['info.'+me]:fsMe(),acc:Date.now()});FS.list=null;await fsLoad();const x=FS.list.find(y=>y.id===id);closeModal();
     toast('check',`Runtunan Teman dengan ${x?esc(fsInfo(x,x.from).name):'temanmu'} dimulai! Belajar hari ini, ya.`);renderProfile()}
@@ -10599,7 +10599,7 @@ function fsEnd(id,reject){const x=(FS.list||[]).find(y=>y.id===id);const nm=x?fs
   openModal(`<h3>Akhiri runtunan?</h3><p>Runtunan Teman dengan <b>${esc(nm)}</b> akan hilang dan tidak bisa dikembalikan.</p><div class="acts"><button class="ghost" id="mNo">Batal</button><button class="primary" id="mYes" style="background:var(--bad)">Akhiri</button></div>`);
   $('#mNo').onclick=closeModal;$('#mYes').onclick=go_}
 function fsOpen(x){if(!x)return;const me=FBX.user.uid,ou=fsOther(x),o=fsInfo(x,ou),mi=fsInfo(x,me),n=fsNum(x),d=x.d||{},t=dayKey();
-  if(x.status!=='on'){openModal(`<div class="fsduo">${fsAv(mi)}${fsAv(o)}</div><h3 style="text-align:center">Menunggu ${esc(o.name)}</h3><p style="text-align:center">Ajakan Runtunan Teman sudah terkirim. Runtunan dimulai setelah ${esc(o.name)} menerima.</p><div class="acts"><button class="ghost" id="mYes">Batalkan ajakan</button><button class="primary" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=()=>fsEnd(x.id,true);return}
+  if(false){openModal(`<div class="fsduo">${fsAv(mi)}${fsAv(o)}</div><h3 style="text-align:center">Menunggu ${esc(o.name)}</h3><p style="text-align:center">Ajakan Runtunan Teman sudah terkirim. Runtunan dimulai setelah ${esc(o.name)} menerima.</p><div class="acts"><button class="ghost" id="mYes">Batalkan ajakan</button><button class="primary" id="mNo">Tutup</button></div>`);$('#mNo').onclick=closeModal;$('#mYes').onclick=()=>fsEnd(x.id,true);return}
   const chk=(u,inf)=>`<div class="fsday ${d[u]===t?'ok':''}">${fsAv(inf)}<span><b>${u===me?'Kamu':esc(String(inf.name).split(' ')[0])}</b><small>${d[u]===t?'Sudah belajar hari ini':'Belum belajar hari ini'}</small></span><i>${d[u]===t?'✓':'…'}</i></div>`;
   openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(mi)}${fsAv(o)}</div></div><div class="fsbig">${n}</div><h3 style="text-align:center;margin:0">hari Runtunan Teman</h3><p class="note" style="text-align:center;margin:0">Kamu dan ${esc(o.name)}${x.best?` · terbaik ${x.best} hari`:''}</p>
    ${chk(me,mi)}${chk(ou,o)}<p class="note" style="margin:0">Api bertambah setiap hari kalian berdua menyelesaikan minimal satu pelajaran.</p>
@@ -10607,7 +10607,7 @@ function fsOpen(x){if(!x)return;const me=FBX.user.uid,ou=fsOther(x),o=fsInfo(x,o
   $('#mNo').onclick=()=>{closeModal();if(d[me]!==t)go('learn')};$('#mEnd').onclick=()=>fsEnd(x.id,false)}
 /* dipanggil saat pelajaran selesai: catat hari ini, tambah api kalau teman juga sudah */
 async function fsTick(screens){if(!rtOn())return;const me=FBX.user.uid,t=dayKey(),y=fsYest();let list;try{list=await fsLoad()}catch(e){return}
-  for(const x of list.filter(z=>z.status==='on')){const ref=FB.db.doc('fs/'+x.id);
+  for(const x of list){const ref=FB.db.doc('fs/'+x.id);
     try{const res=await FB.db.runTransaction(async tr=>{const s=await tr.get(ref);if(!s.exists)return null;const v=s.data(),d=v.d||{},ou=v.m.find(u=>u!==me);
       if(d[me]===t)return null;const upd={['d.'+me]:t};let ext=null;
       if(d[ou]===t&&v.last!==t){const n=v.last===y?(v.n||0)+1:1;upd.n=n;upd.last=t;upd.best=Math.max(v.best||0,n);ext={n,o:(v.info||{})[ou]||{name:'Teman'}}}
@@ -10617,10 +10617,11 @@ async function fsTick(screens){if(!rtOn())return;const me=FBX.user.uid,t=dayKey(
   FS.list=null}
 window.fsTick=fsTick;
 /* ajakan masuk: tampilkan sekali per sesi */
-async function fsNotice(){if(!rtOn())return;try{await fsLoad()}catch(e){return}const me=FBX.user.uid;const inc=(FS.list||[]).filter(x=>x.status==='pending'&&x.from!==me);
-  if(!inc.length||!$('#modal').hidden||document.body.classList.contains('playing'))return;const k='jk_fsn_'+inc.map(x=>x.id).join(',');try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}
-  const x=inc[0],o=fsInfo(x,x.from);openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(o)}${fsAv(fsMe())}</div></div><h3 style="text-align:center">${esc(o.name)} mengajakmu memulai Runtunan Teman!</h3><p style="text-align:center">Kalian berdua belajar setiap hari untuk menjaga api bersama.</p><div class="acts"><button class="ghost" id="mNo">Nanti</button><button class="primary" id="mYes">Terima</button></div>`);
-  $('#mNo').onclick=closeModal;$('#mYes').onclick=e=>fsAccept(x.id,e.currentTarget)}
+async function fsNotice(){if(!rtOn())return;try{await fsLoad()}catch(e){return}const me=FBX.user.uid;let seen={};try{seen=JSON.parse(localStorage.getItem('jk_fsseen')||'{}')}catch(e){}
+  const inc=(FS.list||[]).filter(x=>x.from!==me&&!seen[x.id]&&(x.news||(!x.acc&&Date.now()-(x.created||0)<7*864e5)));if(!inc.length||!$('#modal').hidden||document.body.classList.contains('playing'))return;
+  inc.forEach(x=>seen[x.id]=1);try{localStorage.setItem('jk_fsseen',JSON.stringify(seen))}catch(e){}
+  const x=inc[0],o=fsInfo(x,x.from),more=inc.length-1;openModal(`<div class="fsflame">${ICONS.flame}<div class="fsduo">${fsAv(o)}${fsAv(fsMe())}</div></div><h3 style="text-align:center">${esc(o.name)} memilihmu sebagai teman runtunan!${more?` (+${more} lainnya)`:''}</h3><p style="text-align:center">Runtunan Teman kalian sudah dimulai. Belajar setiap hari bersama untuk menjaga api tetap menyala.</p><div class="acts"><button class="primary" id="mYes">Ayo belajar</button></div>`);
+  $('#mYes').onclick=()=>{closeModal();go('learn')}}
 window.fsNotice=fsNotice;
 {const _rP3=renderProfile;renderProfile=function(){_rP3();try{mbRender()}catch(e){console.warn(e)}try{fsRender()}catch(e){console.warn(e)}}}
 

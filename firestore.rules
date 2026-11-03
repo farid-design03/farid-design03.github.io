@@ -170,7 +170,7 @@ service cloud.firestore {
         && request.resource.data.m[0] < request.resource.data.m[1]
         && id == request.resource.data.m[0] + '_' + request.resource.data.m[1]
         && request.resource.data.from == request.auth.uid
-        && request.resource.data.status == 'pending';
+        && request.resource.data.status in ['pending', 'on'];
       allow update: if signedIn() && request.auth.uid in resource.data.m
         && request.resource.data.m == resource.data.m
         && request.resource.data.from == resource.data.from
