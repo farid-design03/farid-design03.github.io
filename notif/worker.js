@@ -4,7 +4,7 @@
 //   Midtrans: MIDTRANS_SERVER_KEY = Server Key, MIDTRANS_PRODUCTION = 1 (hanya saat sudah mode asli/Production).
 //   Xendit:   XENDIT_SECRET_KEY = Secret API key, XENDIT_CALLBACK_TOKEN = Webhook verification token.
 
-const ALLOWED_ORIGINS = ['https://farid-design03.github.io'];
+const ALLOWED_ORIGINS = ['https://jelajahkelas.github.io', 'https://farid-design03.github.io'];
 let SA = null, ACCESS = { token: null, exp: 0 }, JWKS = { keys: null, exp: 0 };
 
 const enc = new TextEncoder();
