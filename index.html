@@ -3056,6 +3056,7 @@ html[data-theme=malam] .spdur,html[data-theme=malam] .spnav,html[data-theme=mala
 .fqbal{align-self:flex-end;display:flex;align-items:center;gap:6px;color:#1CB0F6;font-size:18px}.fqbal .fqgem{width:24px}
 html[data-theme=malam] .fqst button.on{background:#1b3a52;border-color:#3d8cc4;box-shadow:0 3px 0 #3d8cc4}
 html body:not(#_x) .quest .qt{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25}
+#loading h2{font-variant-numeric:tabular-nums}.ldbar{width:min(260px,70vw);height:16px;border-radius:99px;background:var(--line,#E5E5E5);overflow:hidden;margin:4px auto 2px}.ldbar i{display:block;height:100%;width:0;border-radius:99px;background:#58CC02;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12),inset 0 3px 0 rgba(255,255,255,.35);transition:width .12s linear}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -9050,7 +9051,14 @@ window.fbPlanLabel=()=>isPaid()?'Pro':inTrial()?`Coba Pro ${trialLeft()} hari`:'
 const isT=()=>!!(SESSION&&SESSION.role==='teacher');window.isT=isT;window.FBX=FBX;
 const fbErr=e=>{const c=String((e&&e.code)||'');return /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(c)?'Nama pengguna atau sandi salah.':/too-many/.test(c)?'Terlalu banyak percobaan. Tunggu beberapa menit, lalu coba lagi.':/network|unavailable/.test(c)?'Tidak tersambung ke internet. Periksa koneksi, lalu coba lagi.':/email-already/.test(c)?'Email ini sudah terdaftar. Silakan masuk.':/weak-password/.test(c)?'Sandi minimal 6 karakter.':/requires-recent-login/.test(c)?'Demi keamanan, keluar lalu masuk lagi sebelum mengganti sandi.':/permission/.test(c)?'Akses ditolak.':(e&&e.message)||String(e)};
 window.fbErr=fbErr;
-const busy=(on,msg)=>{const l=$('#loading');if(!l)return;l.hidden=!on;if(on){const h=l.querySelector('h2'),p=l.querySelector('p');if(h)h.textContent=msg||'Memuat…';if(p)p.textContent='Menyambungkan akunmu'}};
+const BUSY={p:0,t:null,h:null};
+const busy=(on,msg)=>{const l=$('#loading');if(!l)return;const h=l.querySelector('h2'),p=l.querySelector('p');
+  if(!l.querySelector('.ldbar')){h.insertAdjacentHTML('afterend','<div class="ldbar"><i></i></div>')}
+  const bar=l.querySelector('.ldbar i'),stage=v=>v<30?'Menyambungkan akunmu':v<60?'Mengambil data belajarmu':v<88?'Menyiapkan pelajaranmu':'Hampir selesai';
+  const draw=()=>{const v=Math.floor(BUSY.p);h.textContent='Memuat… '+v+'%';bar.style.width=v+'%';p.textContent=stage(v)};
+  clearTimeout(BUSY.h);
+  if(on){if(l.hidden){BUSY.p=0}l.hidden=false;draw();clearInterval(BUSY.t);BUSY.t=setInterval(()=>{if(l.hidden){clearInterval(BUSY.t);return}BUSY.p+=Math.max(.15,(96-BUSY.p)*.05);if(BUSY.p>96)BUSY.p=96;draw()},80);return}
+  clearInterval(BUSY.t);BUSY.t=null;if(l.hidden)return;BUSY.p=100;draw();BUSY.h=setTimeout(()=>{l.hidden=true;BUSY.p=0},260)};window.busy=busy;
 const timeout=(pr,ms)=>Promise.race([pr,new Promise(r=>setTimeout(r,ms))]);
 
 /* lisensi lama tidak dipakai di versi online */
