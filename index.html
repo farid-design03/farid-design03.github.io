@@ -3697,7 +3697,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=201"></script>
+<script src="av.js?v=202"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7731,9 +7731,8 @@ function spAmount(id,mini){const e=SP_EX[id],lv=spFit().lv[id]||0;let name=e.n,a
   if(id==='pu'){const g=P&&P.gender,w=g==='P'?8:g==='L'?4:6,k=g==='P'?16:g==='L'?9:12;if(lv<w){name='Push-up dinding';amt=4+lv*2}else if(lv<k){name='Push-up lutut';amt=3+(lv-w)}else{amt=Math.min(e.m,2+(lv-k))}}
   else amt=Math.min(e.m,e.b+e.s*lv);
   if(mini)amt=Math.max(e.t==='time'?5:1,Math.round(amt/2));amt=spAdjAmt(id,amt);return {id,name,amt,t:e.t,per:e.per||'',tip:e.tip}}
-function spPlan(mini){const f=spFit(),n=f.n||0,g=P&&P.gender;const warm=g==='P'?(n%2?'skip':'jj'):(n%2?'hk':'jj');const groups=g==='P'?[['sq','br','lg'],['pl','pu','br'],['cr','pl']]:g==='L'?[['sq','lg'],['pu','pl'],['cr','mc']]:[['sq','lg','br'],['pu','pl'],['cr','mc','pl']];
-  const a=groups[n%3],b=groups[(n+1)%3];const x=a[Math.floor(n/3)%a.length],y=b.filter(k=>k!==x)[Math.floor(n/2)%b.filter(k=>k!==x).length];
-  return [warm,x,y,'st'].map(id=>spAmount(id,mini))}
+/* Gerakan dasar saja: push-up dan sit-up (berganti urutan tiap sesi) */
+function spPlan(mini){const n=spFit().n||0;return (n%2?['cr','pu']:['pu','cr']).map(id=>spAmount(id,mini))}
 function spKey(ui){return `${P.cls}/${SUBJ().id}/${ui}`}
 function spDone(ui){const pr=progOf(),base=ui*NODES.length;return !!((P.sportDone||{})[spKey(ui)])||pr.done>base+2}
 function spPending(ui){const pr=progOf(),base=ui*NODES.length;return pr.done===base+2&&!spDone(ui)}
@@ -7938,7 +7937,7 @@ function spFigureOld(id){const ps=SP_POSE[id]||SP_POSE.jj;const L=(p,a,b)=>`<lin
   return `<svg viewBox="0 0 100 100" class="spfig sp-${id}" stroke="#58CC02" stroke-width="5.5" stroke-linecap="round" fill="none" aria-hidden="true">${floor}${fr(ps[0],0)}${fr(ps[1],1)}</svg>`}
 function sportPop(ui,row){const pend=spPending(ui),done=spDone(ui),rest=spRestLeft(),cap=spToday()>=3;let p,btn='';
   if(!pend&&!done){p='Selesaikan level di atasnya untuk membuka level olahraga.'}
-  else{const plan=spPlan(false);p=`Gerak badan sebentar, kira-kira 2 menit: ${plan.map(x=>x.name).join(', ')}.`;btn=done?'Olahraga lagi':'Mulai olahraga +10 XP'}
+  else{const plan=spPlan(false);p=`Gerak badan sebentar, kira-kira 1 menit: ${plan.map(x=>x.name).join(', ')}.`;btn=done?'Olahraga lagi':'Mulai olahraga +10 XP'}
   if(pend&&(rest>0&&spFit().last||cap)){p=cap?'Kamu sudah olahraga 3 kali hari ini. Hebat! Badan juga butuh istirahat, jadi lanjut belajar saja.':`Kamu sudah olahraga ${Math.round((90*60e3-rest)/60e3)} menit lalu. Istirahat dulu, nanti olahraga lagi di level berikutnya.`;btn='Lanjut belajar'}
   row.insertAdjacentHTML('beforeend',`<div class="npop ${!pend&&!done?'lock':''}"><b>Level Olahraga</b><p>${esc(p)}</p>${btn?`<button class="primary press" id="nodeGo">${btn}</button>`:''}</div>`);row.classList.add('popopen');
   const g=$('#nodeGo');if(g)g.onclick=e=>{e.stopPropagation();closePop();if(pend&&(cap||(rest>0&&spFit().last))){P.sportDone=P.sportDone||{};P.sportDone[spKey(ui)]=1;save();renderPath();toast('check','Level olahraga dilewati untuk istirahat.');return}openSport(ui)};
@@ -7951,7 +7950,7 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
   const yest=dayKey(new Date(Date.now()-864e5)),missed=f.n>0&&!f.days[yest]&&!f.days[dayKey()];
   const week=()=>{const out=[];for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*864e5),k=dayKey(d);out.push(`<span class="spday ${f.days[k]?'on':''}"><i>${f.days[k]?'✓':''}</i>${['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]}</span>`)}return out.join('')};
   const render=()=>{const ex=st.plan&&st.plan[st.k];let body='';
-   if(st.phase==='intro'){const plan=spPlan(false);body=`<div class="sphead"><span class="spbadge">🏃 Level Olahraga</span><h2>Waktunya gerak badan!</h2><p class="note">Sekitar 2 menit.</p></div>
+   if(st.phase==='intro'){const plan=spPlan(false);body=`<div class="sphead"><span class="spbadge">🏃 Level Olahraga</span><h2>Waktunya gerak badan!</h2><p class="note">Sekitar 1 menit.</p></div>
      ${!f.intro?`<div class="spsafe"><b>Sebelum mulai</b><ul><li>Cari tempat lapang dan lantai yang tidak licin.</li><li>Berhenti kalau terasa sakit atau pusing.</li><li>Minum air putih setelahnya.</li></ul></div>`:''}
      ${missed?`<div class="spnote">Kemarin kamu belum olahraga. Tidak apa-apa, yang penting jangan bolos dua kali. Ayo mulai lagi hari ini!</div>`:''}
      <div class="spweek">${week()}</div>
@@ -7987,8 +7986,8 @@ function openSport(ui){if(!P)return;const f=spFit();let el=$('#sportOv');if(!el)
     st.left--;const t=el.querySelector('.sptime'),bb=el.querySelector('.spbar i');if(t)t.textContent=Math.max(0,st.left);if(bb)bb.style.width=(Math.max(0,st.left)/sec*100)+'%';if(st.left<=3&&st.left>0)tone([600],.03);
     if(st.left<=0){stop();tone([660,990,1320],.06);try{haptic([60,40,60])}catch(e){}done()}},1000)};
   const next=()=>{st.k++;if(st.k>=st.plan.length){st.phase='feel';render();return}stop();st.phase='rest';st.left=10;render();SPT.timer=setInterval(()=>{st.left--;const t=el.querySelector('.sptime');if(t)t.textContent=Math.max(0,st.left);if(st.left<=0){stop();st.phase=st.plan[st.k].t==='time'?'ready':'ex';render();sayEx()}},1000)};
-  const feel=fx=>{const main=st.plan.slice(1,3).map(x=>x.id);const warm=st.plan[0].id;
-   main.concat(warm).forEach(id=>{const cur=f.lv[id]||0;let d=fx==='easy'?2:fx==='ok'?1:-1;if(st.mini&&d>0)d=0;f.lv[id]=Math.max(0,cur+d)});
+  const feel=fx=>{const main=st.plan.map(x=>x.id);
+   main.forEach(id=>{const cur=f.lv[id]||0;let d=fx==='easy'?2:fx==='ok'?1:-1;if(st.mini&&d>0)d=0;f.lv[id]=Math.max(0,cur+d)});
    f.n=(f.n||0)+1;f.last=Date.now();try{ensureQuests();bump('sport',1)}catch(e){}f.days[dayKey()]=spToday()+1;P.sportDone=P.sportDone||{};P.sportDone[spKey(st.ui)]=1;
    addXp(10);P.gems=(P.gems||0)+5;save();try{sfx.win()}catch(e){}st.phase='end';render();setTimeout(()=>{try{burstConfetti()}catch(e){}},200)};
   st.phase='intro';render();el.hidden=false;el.scrollTop=0;document.body.classList.add('sporting')}
@@ -10772,7 +10771,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=201';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=202';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
