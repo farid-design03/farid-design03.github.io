@@ -3281,6 +3281,7 @@ html[data-theme=malam] .bddate{background:#3a2c0a}
 /* layar penuh di atas aplikasi: kunci gulir latar, hanya satu bilah gulir */
 .bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask{overscroll-behavior:contain}
 html:has(:is(.bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask):not([hidden])),html:has(:is(.bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask):not([hidden])) body{overflow:hidden!important}
+html body:not(#_x) .ncr .ncb{flex:none;font-size:12.5px!important;padding:8px 12px!important;letter-spacing:.03em;min-width:0;width:auto!important;white-space:nowrap}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3662,7 +3663,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=190"></script>
+<script src="av.js?v=191"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -10008,6 +10009,13 @@ function ncItems(){const out=[],me=FBX.user&&FBX.user.uid,today=dayKey();
   if(me&&typeof FQ!=='undefined'&&FQ.list)FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';
     if(+d['nudge_'+o])out.push({id:'fqn:'+d.id+':'+d['nudge_'+o],ic:(FQ_ST[+d['nudgeS_'+o]||0]||{}).e||'👋',tx:`<b>${esc(nm)}</b> mencolekmu: “${esc((FQ_ST[+d['nudgeS_'+o]||0]||FQ_ST[0]).t)}”`,t:+d['nudge_'+o],btn:'Misi',fn:()=>go('quest')});
     const gt=+d['gift_'+o]||0,got=d['giftGot_'+me]===true?gt:(+d['giftGot_'+me]||0);if(gt>got)out.push({id:'fqg:'+d.id+':'+gt,ic:'🎁',tx:`<b>${esc(nm)}</b> mengirim hadiah XP 2×`,t:gt,btn:'Pakai',fn:()=>go('quest'),hot:true})});
+  /* pertemanan & runtunan teman */
+  if(me&&window.FOL&&FOL.followers)FOL.followers.forEach(f=>{const back=(FOL.following||[]).some(x=>x.uid===f.uid);out.push({id:'fol:'+f.uid,ic:'👋',tx:`<b>${esc(f.name||'Seseorang')}</b> mulai mengikutimu`,sub:f.user?'@'+esc(f.user):'',t:f.at||0,btn:back?'Lihat':'Ikuti balik',hot:!back,
+    fn:async()=>{if(!back){try{await window.folDoN(f,true);try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}. Sekarang kalian bisa memulai Runtunan Teman!`)}catch(e){toast('lock',fbErr(e))}}else if(window.openUserProfile)openUserProfile(f.uid,{name:f.name,av:f.av})}})});
+  if(me&&window.FS&&FS.list)FS.list.forEach(x=>{const ou=x.m.find(u=>u!==me),o=((x.info||{})[ou])||{name:'Temanmu'};
+    if(x.from!==me)out.push({id:'fsi:'+x.id,ic:'🔥',tx:`<b>${esc(o.name)}</b> memilihmu sebagai teman runtunan`,sub:'Belajar setiap hari bersama untuk menjaga api tetap menyala',t:x.created||0,btn:'Lihat',fn:()=>openStreak('fr')});
+    const nv=+(x['nudge_'+ou]||0);if(nv)out.push({id:'fsn:'+x.id+':'+nv,ic:(FQ_ST[+x['nudgeS_'+ou]||0]||{}).e||'👋',tx:`<b>${esc(o.name)}</b> mencolekmu di Runtunan Teman: “${esc((FQ_ST[+x['nudgeS_'+ou]||0]||FQ_ST[0]).t)}”`,t:nv,btn:'Belajar',fn:()=>go('learn'),hot:dayKey(new Date(nv))===today})});
+  if(me&&typeof FQ!=='undefined'&&FQ.list)FQ.list.forEach(d=>{const o=d.members.find(x=>x!==me),nm=(d.names||{})[o]||'Temanmu';if(d['n_'+o]!=null&&d.created&&!(d.names||{})._mine)out.push({id:'fqi:'+d.id,ic:'🤝',tx:`Misi Teman minggu ini bersama <b>${esc(nm)}</b>`,sub:`Selesaikan ${d.goal||FQ.goal} level bersama`,t:d.created,btn:'Misi',fn:()=>go('quest')})});
   if(LIC.announce)out.push({id:'ann:'+qKey(LIC.announce),ic:'📢',tx:`<b>Pengumuman:</b> ${esc(LIC.announce)}`,t:0});
   NC.get('nlog',[]).forEach(x=>out.push({id:x.id,ic:x.ic,tx:esc(x.tx),t:x.t,btn:x.go?'Buka':'',fn:x.go?()=>go(x.go):null}));
   return out.sort((a,b)=>(!!b.hot-!!a.hot)||(b.t-a.t))}
@@ -10020,8 +10028,10 @@ function ncOpen(){const it=ncItems(),seen=new Set(NC.get('nseen',[]));
   hydrate($('#mbox'));$('#mNo').onclick=closeModal;
   $('#mbox').querySelectorAll('[data-nc]').forEach(b=>b.onclick=()=>{const x=it[+b.dataset.nc];closeModal();x.fn&&x.fn()});
   NC.set('nseen',[...new Set([...seen,...it.map(x=>x.id)])].slice(-200));ncBadge()}
-document.addEventListener('click',e=>{if(e.target.closest('#nBell'))ncOpen()});
+document.addEventListener('click',e=>{if(e.target.closest('#nBell')){ncOpen();ncRefresh().then(()=>{const m=$('#mbox');if(m&&m.querySelector('.ncw')&&!$('#modal').hidden)ncOpen()})}});
 setInterval(()=>{try{ncBadge()}catch(e){}},8000);
+async function ncRefresh(){try{if(!FBX.user||isT()||!P)return;if(window.folLoad)await window.folLoad();if(window.fsLoad)await window.fsLoad();if(window.FQ&&window.fqSync){try{FQ.list=null;await window.fqSync()}catch(e){}}ncBadge()}catch(e){}}
+setTimeout(ncRefresh,5000);setInterval(ncRefresh,90000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)ncRefresh()});window.ncRefresh=ncRefresh;
 window.ncBadge=ncBadge;
 /* ---------- gaya Duolingo: sambutan, masuk, masuk kembali, Facebook ---------- */
 const FB_ICON='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16.5 24v-9h3l.5-3.6h-3.5V9.2c0-1 .3-1.8 1.8-1.8h1.9V4.2c-.3 0-1.5-.2-2.8-.2-2.8 0-4.6 1.7-4.6 4.8v2.6H9.6V15h3.2v9z" fill="#fff"/></svg>';
@@ -10631,6 +10641,7 @@ const IKUTI_KEY=(()=>{try{const q=new URLSearchParams(location.search),v=q.get('
 window.folLoad=()=>folLoad();async function folLoad(){const me=FBX.user.uid;const [a,b]=await Promise.all([FB.db.collection('fol').where('from','==',me).get(),FB.db.collection('fol').where('to','==',me).get()]);
   FOL.following=a.docs.map(d=>{const x=d.data();return {uid:x.to,name:x.toName,av:x.toAv||null,user:x.toUser||'',at:x.at}});
   FOL.followers=b.docs.map(d=>{const x=d.data();return {uid:x.from,name:x.fromName,av:x.fromAv||null,user:x.fromUser||'',at:x.at}});return FOL}
+window.folDoN=(f,on)=>folDo(f,on);
 const isFollowing=uid=>!!(FOL.following||[]).some(x=>x.uid===uid);
 async function folDo(f,on){const me=FBX.user.uid,id=me+'_'+f.uid;if(f.uid===me)return;
   if(on){const d={from:me,to:f.uid,at:Date.now(),fromName:P.name,fromAv:P.avatar||null,fromUser:(FBX.me||{}).username||'',toName:f.name||'',toAv:f.av||null,toUser:f.user||f.username||''};await FB.db.doc('fol/'+id).set(d);
@@ -10642,7 +10653,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=190';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=191';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
