@@ -3151,6 +3151,11 @@ html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l
 .aved-prev.cheer svg .avb{animation:avPop .55s cubic-bezier(.3,1.5,.5,1)}
 @keyframes avPop{0%{transform:scale(1,1)}30%{transform:scale(1.05,.94)}60%{transform:scale(.97,1.05)}100%{transform:scale(1,1)}}
 @media (prefers-reduced-motion:reduce){svg .avb,svg .avh,svg .ave{animation:none!important}}
+/* hewan bergambar: bernapas + memiringkan kepala, diketuk melompat */
+.mascot:not([data-mood=happy]):not([data-mood=sad]) .mbody.pimg{animation:mPet 4.2s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes mPet{0%,100%{transform:translateY(0) scale(1,1) rotate(0)}22%{transform:translateY(-2px) scale(.985,1.035) rotate(-2.5deg)}50%{transform:translateY(0) scale(1.015,.985) rotate(0)}72%{transform:translateY(-2px) scale(.985,1.035) rotate(2.5deg)}}
+.mascot[data-mood=sad] .mbody.pimg{filter:saturate(.75) brightness(.97)}
+.mascot[data-mascot]{cursor:pointer;-webkit-tap-highlight-color:transparent}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3526,7 +3531,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=167"></script>
+<script src="av.js?v=168"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7191,7 +7196,8 @@ const PET_ART={
   <path d="M42 50 C46 60 54 64 60 64 C66 64 74 60 78 50 C70 56 50 56 42 50Z" fill="#1FB37A" stroke-width="3"/>
   <path d="M55 48 L60 58 L65 48Z" fill="#B9C4D6" stroke-width="2.5"/>
   ${pEyes(50,42,70,42,6.5,{iris:'#FFC23D'})}${pCap(60,28,.55,c)}`};
-function petSVG(id,cap){const f=PET_ART[id];if(!f)return null;
+const PET_IMG=new Set(['komodo','orangutan','gajah','jalak','harimau','badak','anoa','tarsius','babirusa','bekantan','kukang','kakatua','maleo','beruang','kuskus','owa','macan','banteng','pesut','elang','rangkong','kasuari','merak','cenderawasih']);
+function petSVG(id,cap){if(PET_IMG.has(id))return `<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse class="msh" cx="60" cy="118" rx="34" ry="5" fill="rgba(27,30,61,.15)"/><g class="mbody pimg"><image href="pets/${id}.webp?v=1" x="6" y="2" width="108" height="116" preserveAspectRatio="xMidYMax meet"/></g></svg>`;const f=PET_ART[id];if(!f)return null;
   return `<svg viewBox="0 0 120 124" aria-hidden="true"><ellipse class="msh" cx="60" cy="118" rx="34" ry="5" fill="rgba(27,30,61,.15)"/><g class="mbody" stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">${f(cap)}</g></svg>`}
 function openPets(){if(!P)return;P.pets=P.pets||['uli'];const gem=`<span style="width:16px;display:inline-block;vertical-align:-3px">${ICONS.gem}</span>`;
   const cap=(CAPS.find(c=>c[0]===(P.outfit||{}).cap)||CAPS[0])[2];
@@ -10412,7 +10418,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=167';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=168';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -10817,6 +10823,7 @@ async function fsNotice(){if(!rtOn())return;try{await fsLoad()}catch(e){return}c
 window.fsNotice=fsNotice;
 {const _rP3=renderProfile;renderProfile=function(){_rP3();try{mbRender()}catch(e){console.warn(e)}try{fsRender()}catch(e){console.warn(e)}}}
 
+document.addEventListener('pointerdown',e=>{const m=e.target.closest&&e.target.closest('.mascot[data-mascot]');if(!m||m.closest('button,a,.opt'))return;const md=m.dataset.mood;if(md&&md!=='idle'&&!m.dataset.tap)return;const old=md||'';m.dataset.tap='1';m.dataset.mood='idle';void m.offsetWidth;m.dataset.mood='happy';try{haptic(10)}catch(_){}clearTimeout(m._tt);m._tt=setTimeout(()=>{if(old)m.dataset.mood=old;else m.removeAttribute('data-mood');delete m.dataset.tap},1900)},{passive:true});
 if(window.__fbFail){bootApp=function(){const el=$('#auth');el.hidden=false;el.innerHTML=`<div class="onbin welcome"><div class="wtop"><div class="mascot wm" data-mascot data-mood="sad"></div><h1 class="wtitle" style="font-size:34px">Belum tersambung</h1><p class="wsub">Aplikasi butuh internet saat pertama kali dibuka. Periksa koneksi, lalu coba lagi.</p></div><div class="wbtns"><button class="primary press" onclick="location.reload()">COBA LAGI</button></div></div>`;hydrate(el)}}
 /* ---------- tombol kembali HP: tidak langsung keluar ---------- */
 const BACK={armed:false};
