@@ -3697,7 +3697,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=202"></script>
+<script src="av.js?v=203"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -7686,9 +7686,9 @@ function toast(icon,text){const t=$('#toast');t.innerHTML=`${ico(icon)}<span>${e
 function openHearts(){openModal(`<h3>Nyawamu habis</h3><div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div>${heartsPanel()}<button class="ghost" id="mClose">Nanti saja</button>`);bindHeartActs($('#mbox'));$('#mClose').onclick=closeModal}
 
 /* ---------- navigation ---------- */
-let curTab='learn';
+let curTab='learn';let TABSTK=[],TABBACK=false;
 const TAB_VIEW={learn:'vLearn',team:'vTeam',league:'vLeague',quest:'vQuest',shop:'vShop',profile:'vProfile'};
-function go(tab){curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
+function go(tab){if(!TABBACK&&tab!==curTab&&curTab!=='play'&&tab!=='play'){TABSTK=TABSTK.filter(x=>x!==curTab&&x!==tab);TABSTK.push(curTab);if(TABSTK.length>15)TABSTK.shift()}curTab=tab;if(tab!=='play')gameFSOff();closePop();document.body.dataset.tab=tab;setTimeout(()=>{try{renderSideFoot()}catch(e){}},0);if(document.body.classList.contains('teacher')&&T())applyTheme(T().cls,null);document.querySelectorAll('.nav').forEach(n=>n.setAttribute('aria-current',n.dataset.tab===tab?'page':'false'));
   if(tab==='learn')renderPath();if(tab==='team')renderTeam();if(tab==='league')renderLeague();if(tab==='quest')renderQuests();if(tab==='shop')renderShop();if(tab==='profile')renderProfile();if(TEACH_R[tab])TEACH_R[tab]();
   show(TAB_VIEW[tab]);renderTop();$('#practiceFab')&&($('#practiceFab').hidden=tab!=='learn');if(tab==='learn')setTimeout(scrollToCurrent,60)}
 
@@ -8624,7 +8624,7 @@ function renderRail(){if(!P)return;ensureQuests();const t=tierOf(P);const list=[
 
 /* ---------- onboarding (guided first steps) ---------- */
 /* ---------- boot ---------- */
-function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');bukaShortcut();setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900)}
+function afterLogin(){ensureDay();tickHearts();ensureQuests();save();rerenderMascots();renderTop();go('learn');TABSTK=[];bukaShortcut();setTimeout(()=>{const c=COURSE.find(x=>x.id===P.cls);if(c&&c.hidden)gradeMigrate();else askGender()},900)}
 function askGender(){if(!P||P.gender||document.body.classList.contains('teacher'))return;const o={gender:null};
   openModal(`<div style="text-align:center"><h3>Kamu laki-laki atau perempuan?</h3><p class="note" style="margin:0 0 6px"></p></div><div class="onbg">${[['L','Laki-laki'],['P','Perempuan']].map(([g,n])=>`<button class="onbgb" data-gd="${g}" aria-pressed="false"><span>${avatarSVG(Object.assign(avNorm({}),g==='P'?{hair:'panjang',brow:'lengkung',eyes:'lentik'}:{hair:'pendek',brow:'tebal'},{shirt:'biru',bg:g==='P'?'b4':'b2'}))}</span><b>${n}</b></button>`).join('')}</div>`);
   $('#mbox').querySelectorAll('[data-gd]').forEach(b=>b.onclick=()=>{P.gender=b.dataset.gd;const a=avNorm(P.avatar);const bad=Object.keys(AV_G).some(c=>!avFor(c,a[c],P.gender));if(bad){const d=avDefaultFor(P.gender);['hair','hc','brow','eyes','acc','adat','dunia'].forEach(c=>{if(!avFor(c,a[c],P.gender)||c==='hair'||c==='hc')a[c]=d[c]});P.avatar=a;P.color=avBgColor(a)}save();closeModal();renderTop();if(curTab==='profile')renderProfile();toast('check','Tersimpan. Terima kasih!')})}
@@ -9335,7 +9335,7 @@ function userTaken(u,exceptId){u=String(u).toLowerCase();return u==='admin'||(T(
 function suggestUser(name,exceptId){let b=slugBase(name);if(b.length<3)b=(b+'murid').slice(0,Math.max(3,b.length))+String(R(10,99));if(!userTaken(b,exceptId))return b;for(let i=2;i<999;i++)if(!userTaken(b+i,exceptId))return b+i;return b+R(1000,9999)}
 function ensureUsers(){const sorted=APP.profiles.slice().sort((a,b)=>(a.created||0)-(b.created||0));sorted.forEach(p=>{if(!p.user){const b=slugBase(p.name);p.user=userTaken(b,p.id)?b+String(p.id).slice(-3):b}})}
 function closeAuth(){$('#auth').hidden=true}
-function logout(){setSession(null);P=null;ADMIN_TOKEN=null;game=null;document.body.classList.remove('teacher','playing','lessonmode');$('#adminPanel').hidden=true;closeModal();closePop();showWelcome()}
+function logout(){TABSTK=[];setSession(null);P=null;ADMIN_TOKEN=null;game=null;document.body.classList.remove('teacher','playing','lessonmode');$('#adminPanel').hidden=true;closeModal();closePop();showWelcome()}
 
 /* ---------- alur bertahap (satu pertanyaan per layar) ---------- */
 function wzOpts(items,cur,cols){return `<div class="wzopts${cols?' wzgrid':''}">${items.map(x=>`<button class="onbopt wzopt press" data-wv="${esc(String(x.v))}" aria-pressed="${String(x.v)===String(cur)}" ${x.c?`style="--wc:${x.c}"`:''}>${x.g!=null?`<span class="sg" style="background:${x.c||'#9B6BFF'}">${x.g}</span>`:''}<span class="wzol">${esc(x.l)}${x.s?`<small>${esc(x.s)}</small>`:''}</span></button>`).join('')}</div>`}
@@ -10771,7 +10771,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=202';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=203';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -11183,25 +11183,33 @@ if(window.__fbFail){bootApp=function(){const el=$('#auth');el.hidden=false;el.in
 /* ---------- tombol kembali HP: tidak langsung keluar ---------- */
 const BACK={armed:false};
 function backArm(){if(BACK.armed)return;try{history.pushState({jk:1},'');BACK.armed=true}catch(e){}}
-function exitAsk(){openModal(`<div id="exitAsk" style="text-align:center"><div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3>Mau keluar dari JELAS?</h3><p>Progresmu sudah tersimpan. Tekan tombol kembali sekali lagi untuk keluar.</p></div><div class="acts"><button class="primary" id="mNo">Tetap di sini</button><button class="ghost" id="mYes" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
-  $('#mNo').onclick=()=>{closeModal();backArm()};$('#mYes').onclick=()=>{history.back();setTimeout(()=>toast('lock','Tekan tombol kembali di HP sekali lagi untuk keluar.'),400)}}
+/* Di halaman utama: tekan kembali 2x untuk keluar (pola aplikasi Android).
+   Aplikasi web tidak bisa menutup dirinya sendiri, jadi keluarnya lewat tombol kembali HP. */
+function exitAsk(){BACK.exitT=Date.now();toast('lock','Tekan kembali sekali lagi untuk keluar');clearTimeout(BACK.rt);BACK.rt=setTimeout(backArm,2200)}
+/* Lapisan (layar/menu yang menumpuk) yang ditutup oleh tombol kembali, paling atas dulu */
+const BACK_OV='#vxBig,#vpBig,#tdPop,#tdRes,#picker,#wz,#bdOv,#buyAsk,#fqSheet,#ajak,#avEd,#room,#sportOv,#pcOv,#scOv,#skOv,#spDet,.folov,#adminPanel,#pauseOv';
+function backTopOv(){let top=null,tz=-1e9;document.querySelectorAll(BACK_OV).forEach(el=>{if(el.hidden||!el.isConnected)return;const cs=getComputedStyle(el);if(cs.display==='none'||cs.visibility==='hidden')return;const z=parseInt(cs.zIndex)||0;if(z>=tz){tz=z;top=el}});return top}
+function backCloseOv(el){const vis=b=>b&&b.offsetParent!==null&&!b.disabled;
+  const sel=['[data-back]','[aria-label="Kembali"]','[aria-label="Tutup"]','.back','[id$="Back"]','[id$="X"]','[id$="Close"]','.x','.close'];
+  for(const q of sel){const b=[...el.querySelectorAll(q)].find(vis);if(b){b.click();return true}}
+  el.hidden=true;return true}
 function handleBack(){
   if(typeof VP!=='undefined'&&VP.on){closeVideo();return true}
   if(!$('#modal').hidden){closeModal();return true}
   if(!$('#pop').hidden){closePop();return true}
-  {const ae=document.getElementById('avEd');if(ae&&!ae.hidden){ae.hidden=true;return true}}
-  {const aj=document.getElementById('ajak');if(aj&&!aj.hidden){aj.hidden=true;return true}}
+  {const ov=backTopOv();if(ov&&ov.id!=='adminPanel'&&ov.id!=='room'){return backCloseOv(ov)}}
   {const ro=document.getElementById('room');if(ro&&!ro.hidden&&typeof roomClose==='function'){roomClose();return true}}
   if(typeof DUEL!=='undefined'&&DUEL&&DUEL.active&&!$('#vDuel').hidden){$('#duelQuit').click();return true}
   if(document.body.classList.contains('playing')){if(!$('#vDone').hidden){game=null;go(document.body.classList.contains('teacher')?'tdash':'learn')}else $('#quitBtn').click();return true}
   if(!$('#onb').hidden){const b=$('#onbBack')||$('#tsCancel');if(b){b.click();return true}}
   if(!$('#auth').hidden){const b=$('#lgBack');if(b){b.click();return true}}
+  if(!$('#adminPanel').hidden){const b=$('#adClose');if(b){b.click();return true}}
   const t=document.body.classList.contains('teacher'),home=t?'tdash':'learn';
-  if((P||t)&&$('#adminPanel').hidden&&curTab!==home){go(home);return true}
+  if(P||t){while(TABSTK.length){const prev=TABSTK.pop();if(prev&&prev!==curTab&&prev!=='play'&&(typeof TAB_VIEW==='undefined'||TAB_VIEW[prev])){TABBACK=true;try{go(prev)}finally{TABBACK=false}return true}}
+    if(curTab!==home){TABBACK=true;try{go(home)}finally{TABBACK=false}return true}}
   return false}
-window.addEventListener('popstate',()=>{BACK.armed=false;if(handleBack())backArm();else exitAsk()});
-const _closeModalB=closeModal;closeModal=function(){const wasExit=!!document.getElementById('exitAsk');_closeModalB.apply(this,arguments);if(wasExit)backArm()};
-window.addEventListener('load',()=>setTimeout(backArm,300));document.addEventListener('pointerdown',backArm,{once:true,capture:true});
+window.addEventListener('popstate',()=>{BACK.armed=false;if(handleBack()){BACK.exitT=0;backArm()}else if(BACK.exitT&&Date.now()-BACK.exitT<2200){/* tekan kedua: biarkan keluar */}else exitAsk()});
+window.addEventListener('load',()=>setTimeout(backArm,300));document.addEventListener('pointerdown',()=>{if(!BACK.armed&&!(BACK.exitT&&Date.now()-BACK.exitT<2200))backArm()},{capture:true,passive:true});
 /* ---------- navigasi laptop: kartu akun di menu samping & pintasan keyboard ---------- */
 
 /* ---------- tawaran memasang aplikasi (PWA) di HP ---------- */
