@@ -3099,6 +3099,18 @@ html body:not(#_x) .quest .qt{white-space:normal!important;overflow:visible!impo
 .skend{border:2px solid #FFC1C1;background:transparent;color:#EA2B2B;border-radius:12px;padding:6px 10px;font-weight:900;font-size:12px;box-shadow:none}.skdone{color:#58CC02;font-weight:900;font-size:20px}
 html[data-theme=malam] .skcalic{background:#1f2937}html[data-theme=malam] .skd.l::before,html[data-theme=malam] .skd.r::after{background:#5a3a12}
 .skflame,.skcalic{color:#FF9600}.skfl{color:#FFC800}.skfn{color:#AFAFAF}.skfn.lit{color:#FF9600}.skfr{box-sizing:border-box}.skfr>button,.skfr>small,.skfr>.skdone{flex:none}.skfr>small{white-space:nowrap;font-size:12px}
+.pcov{position:fixed;inset:0;z-index:2600;background:rgba(0,0,0,.6);display:flex;flex-direction:column}.pcov[hidden]{display:none}
+.pcwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 24px;min-height:0}
+.pccard{width:min(330px,82vw);background:#fff;border-radius:22px;padding:12px;box-shadow:0 10px 40px rgba(0,0,0,.3);animation:popIn .3s ease}
+.pcav{border-radius:16px;overflow:hidden;aspect-ratio:1/0.95;display:flex;align-items:flex-end;justify-content:center}.pcav svg{width:88%;height:auto;display:block}
+.pcfoot{display:flex;align-items:center;gap:8px;padding:12px 4px 2px}.pcid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pcid b{font-family:var(--display);font-size:22px;color:#3C3C3C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pcid small{font-weight:700;color:#777;letter-spacing:.04em;font-size:12px}
+.pcbrand{font-family:var(--display);font-weight:900;font-size:26px;color:#58CC02;letter-spacing:.02em;margin-top:6px}
+.pcqr{width:104px;height:104px;flex:none}
+.pcsheet{background:var(--card,#fff);border-radius:22px 22px 0 0;padding:14px 16px calc(22px + env(safe-area-inset-bottom));animation:spUp .25s ease-out}
+.pcx{background:none;border:0;box-shadow:none!important;font-size:24px;color:var(--muted);width:40px;height:40px;padding:0}
+.pcacts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.pcacts button{background:none;border:0;box-shadow:none!important;display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--ink);padding:0}
+.pci{width:60px;height:60px;border-radius:50%;background:var(--line,#ECECEC);display:grid;place-items:center;color:var(--ink)}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -9827,8 +9839,8 @@ async function fbDeleteAccount(pw){const u=FBX.user,me=FBX.me||{},st=!isT();
 const _rP2=renderProfile;
 function profFollowRow(){const pt=$('#profileTop');if(!pt||$('#pFollow'))return;const fc=FOL.following,fr=FOL.followers;
   pt.insertAdjacentHTML('beforeend',`<div class="pfollow" id="pFollow"><button class="pfc" data-fl="following"><b>${fc?fc.length:'–'}</b><span>Mengikuti</span></button><button class="pfc" data-fl="followers"><b>${fr?fr.length:'–'}</b><span>Pengikut</span></button></div>
-   <div class="pfbtns"><button class="ghost press" id="pAddFr"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="9" cy="8" r="4" fill="currentColor"/><path d="M2 20 C2 15 5 13 9 13 C13 13 16 15 16 20Z M19 7 V13 M16 10 H22" fill="currentColor" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>TAMBAHKAN TEMAN</button><button class="ghost press" id="pShare" aria-label="Bagikan profil">${shareIcon}</button></div>`);
-  pt.querySelectorAll('[data-fl]').forEach(b=>b.onclick=()=>openFollowList(b.dataset.fl));$('#pAddFr').onclick=openFindFriends;$('#pShare').onclick=shareProfile;
+   <div class="pfbtns"><button class="ghost press" id="pAddFr"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="9" cy="8" r="4" fill="currentColor"/><path d="M2 20 C2 15 5 13 9 13 C13 13 16 15 16 20Z M19 7 V13 M16 10 H22" fill="currentColor" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>TAMBAHKAN TEMAN</button><button class="ghost press" id="pShare" aria-label="Kartu profil & kode QR">${qrIcon}</button></div>`);
+  pt.querySelectorAll('[data-fl]').forEach(b=>b.onclick=()=>openFollowList(b.dataset.fl));$('#pAddFr').onclick=openFindFriends;$('#pShare').onclick=openProfileCard;
   if(!fc||!fr)folLoad().then(()=>{const r=$('#pFollow');if(r){r.querySelector('[data-fl=following] b').textContent=FOL.following.length;r.querySelector('[data-fl=followers] b').textContent=FOL.followers.length}}).catch(()=>{})}
 renderProfile=function(){if(FBX.user&&P&&!isT())P.unlimited=false;_rP2();if(FBX.user&&P&&!isT())profFollowRow();const su=$('#sUnl');if(su&&FBX.user&&!isT())su.closest('.set').remove();const host=$('#profileList');if(!host||!FBX.user||!P||isT())return;const m=FBX.me||{};
   host.insertAdjacentHTML('beforeend',googleOnly(FBX.user)?'<div class="prow"><button class="linkbtn" id="fbDel" style="color:var(--bad);flex:1">Hapus akun</button></div>':`<div class="prow"><span style="width:44px;height:44px;flex:none">${ICONS.key}</span><span class="grow"><b>Kode pemulihan</b><small>${m.rc?`Dipakai jika lupa sandi. <b id="rcShow" style="font-family:var(--title);letter-spacing:.1em">••••-••••</b>`:'Belum ada. Buat kode supaya akunmu bisa dipulihkan jika lupa sandi.'}</small></span>${m.rc?'<button class="smallbtn" id="rcEye">Lihat</button>':'<button class="smallbtn" id="rcMake">Buat kode</button>'}</div>
@@ -10359,6 +10371,39 @@ function folBtn(f,small){const on=isFollowing(f.uid);return `<button class="${on
 function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach(b=>b.onclick=async e=>{e.stopPropagation();const f=list.find(x=>x.uid===b.dataset.follow);if(!f)return;const on=!isFollowing(f.uid);b.disabled=true;
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
+function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
+  return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
+async function openProfileCard(){const u=(FBX.me||{}).username||P.user;if(!u){toast('lock','Nama penggunamu belum ada.');return}
+  const link=`${location.origin}${location.pathname}?ikuti=${encodeURIComponent(u)}`,text=`Ikuti aku di JELAS, yuk! Nama penggunaku @${u}. ${link}`;
+  try{await loadQR()}catch(e){shareProfile();return}
+  const qr=qrSvgOf(qrMatrix(link)),bg=avBgColor(P.avatar);
+  let el=$('#pcOv');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="pcov" id="pcOv" hidden></div>');el=$('#pcOv')}
+  el.innerHTML=`<div class="pcwrap"><div class="pccard" id="pcCard"><div class="pcav" style="background:${bg}">${avatarSVG(P.avatar||null,{nobg:true})}</div><div class="pcfoot"><div class="pcid"><b>${esc(P.name)}</b><small>${esc(u.toUpperCase())}</small><span class="pcbrand">JELAS</span></div>${qr}</div></div></div>
+   <div class="pcsheet"><button class="pcx" id="pcX" aria-label="Tutup">✕</button><div class="pcacts">
+    <button data-pc="msg"><span class="pci" style="background:#E8F5E9;color:#25A244"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" fill="currentColor"/></svg></span>Pesan</button>
+    <button data-pc="save"><span class="pci"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>Simpan</button>
+    <button data-pc="copy"><span class="pci"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>Salin tautan</button>
+    <button data-pc="more"><span class="pci"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg></span>Lainnya</button></div></div>`;
+  el.hidden=false;try{haptic(15)}catch(e){}
+  const close=()=>{el.hidden=true;el.innerHTML=''};$('#pcX').onclick=close;el.onclick=e=>{if(e.target===el||e.target.classList.contains('pcwrap'))close()};
+  const png=async()=>{const W=600,H=800,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');const rr=(x,y,w,h,r)=>{g.beginPath();g.roundRect?g.roundRect(x,y,w,h,r):g.rect(x,y,w,h)};
+    g.fillStyle='#fff';rr(0,0,W,H,36);g.fill();g.fillStyle=bg;rr(24,24,W-48,520,26);g.fill();
+    const img=src=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src});
+    const svgUrl=x=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(x.includes('xmlns=')?x:x.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"'));
+    const av=await img(svgUrl(avatarSVG(P.avatar||null,{nobg:true})));g.save();rr(24,24,W-48,520,26);g.clip();if(av)g.drawImage(av,75,64,450,480);g.restore();
+    const q=await img(svgUrl(qr));if(q)g.drawImage(q,W-24-190,566,190,190);
+    g.fillStyle='#3C3C3C';g.font='900 36px Nunito, system-ui, sans-serif';let nm=P.name;while(g.measureText(nm).width>340&&nm.length>3)nm=nm.slice(0,-2);g.fillText(nm===P.name?nm:nm+'…',40,620);
+    g.fillStyle='#777';g.font='700 22px Nunito, system-ui, sans-serif';g.fillText(u.toUpperCase(),40,656);g.fillStyle='#58CC02';g.font='900 46px Nunito, system-ui, sans-serif';g.fillText('JELAS',40,730);
+    return await new Promise(r=>cv.toBlob(r,'image/png'))};
+  el.querySelectorAll('[data-pc]').forEach(b=>b.onclick=async()=>{const k=b.dataset.pc;
+    if(k==='msg'){window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');return}
+    if(k==='copy'){copyText(link);return}
+    if(k==='save'){const bl=await png();if(!bl){toast('lock','Gagal membuat gambar.');return}const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download=`jelas-${u}.png`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('check','Kartu profil disimpan.');return}
+    if(k==='more'){try{const bl=await png();const f=bl&&new File([bl],`jelas-${u}.png`,{type:'image/png'});if(f&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text});return}if(navigator.share){await navigator.share({title:'JELAS',text});return}}catch(e){if(e&&e.name==='AbortError')return}copyText(text)}})}
+window.openProfileCard=openProfileCard;
 async function shareProfile(){const u=(FBX.me||{}).username||P.user;if(!u){toast('lock','Nama penggunamu belum ada.');return}
   const link=`${location.origin}${location.pathname}?ikuti=${encodeURIComponent(u)}`,text=`Ikuti aku di JELAS, yuk! Nama penggunaku @${u}. ${link}`;
   try{if(navigator.share){await navigator.share({title:'JELAS',text});return}}catch(e){if(e&&e.name==='AbortError')return}copyText(text)}
