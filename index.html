@@ -3281,8 +3281,6 @@ html[data-theme=malam] .bddate{background:#3a2c0a}
 /* layar penuh di atas aplikasi: kunci gulir latar, hanya satu bilah gulir */
 .bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask{overscroll-behavior:contain}
 html:has(:is(.bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask):not([hidden])),html:has(:is(.bdov,.skov,.scov,.pcov,.spdet,.fqsheet,.folov,.onb,.sportov,.aved,#modal,.buyask):not([hidden])) body{overflow:hidden!important}
-/* nyawa dimatikan sementara */
-html.noheart #heartBtn,html.noheart .lhearts,html.noheart .nyawa-sec,html.noheart #sUnl,html.noheart .set:has(#sUnl),html.noheart .set:has(#stUnl),html.noheart #rail .rcard:has([data-act=refill]){display:none!important}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3664,7 +3662,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=189"></script>
+<script src="av.js?v=190"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -5714,7 +5712,7 @@ function applyResult(k,frac){
     renderHUD();return {ok,gained,team:t}}
   if(ok){game.correct++;game.streak++;game.best=Math.max(game.best,game.streak);gained=10+Math.ceil(frac*10)+Math.min(game.streak-1,5)*2;game.score+=gained;sfx.ok()}
   else{game.streak=0;game.lives--;game.lostAt=game.i;sfx.bad();shakeCard()}
-  if(game.lesson){game.lesson.answers++;if(!ok){game.lesson.wrong++;if(game.lesson.usesHearts&&!P.unlimited){if(P.hearts>=5)P.heartsAt=Date.now();P.hearts=Math.max(0,P.hearts-1);save();renderTop()}}}
+  if(game.lesson){game.lesson.answers++;if(!ok){game.lesson.wrong++;if(game.lesson.usesHearts&&!HUNL()){if(P.hearts>=5)P.heartsAt=Date.now();P.hearts=Math.max(0,P.hearts-1);save();renderTop()}}}
   mascot(ok?'happy':'sad',ok?pick(CHEER):pick(COMFORT));
   renderHUD();return {ok,gained};
 }
@@ -7045,8 +7043,8 @@ function finish(){
    quests, shop, league, profile, onboarding
    ========================================================= */
 const K='#1B1E3D';
-/* Nyawa dimatikan sementara; ubah ke false untuk menyalakan lagi. */
-const HEARTS_OFF=true;window.HEARTS_OFF=HEARTS_OFF;if(HEARTS_OFF)document.documentElement.classList.add('noheart');
+/* Nyawa tanpa batas kecuali admin menyalakan batas di Panel Admin (config/app.hearts='limited'). */
+const HUNL=()=>!!(typeof P!=='undefined'&&P&&P.unlimited)||!(window.FBX&&FBX.cfg&&FBX.cfg.hearts==='limited');window.HUNL=HUNL;
 const ICONS={
  home:`<svg viewBox="0 0 48 48"><path d="M8 22 L24 9 L40 22 V41 H8Z" fill="#FFB65C" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><path d="M4 23 L24 6 L44 23" fill="none" stroke="#F2394B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><rect x="18" y="27" width="12" height="14" rx="3" fill="#3D8BFF" stroke="${K}" stroke-width="3"/></svg>`,
  team:`<svg viewBox="0 0 48 48"><g stroke="${K}" stroke-width="3" stroke-linejoin="round"><circle cx="16" cy="15" r="7" fill="#FFC23D"/><path d="M3 40 c0-10 6-15 13-15 s13 5 13 15z" fill="#3D8BFF"/><circle cx="33" cy="17" r="6" fill="#FFC23D"/><path d="M22 40 c0-9 5-13 11-13 s11 4 11 13z" fill="#26BF66"/></g></svg>`,
@@ -7464,7 +7462,7 @@ const shield0=c=>`<svg viewBox="0 0 48 48"><path d="M24 4 L41 10 V22 C41 33 33 4
 /* ---------- top bar & popovers ---------- */
 function renderTop(){if(!P)return;try{window.ncBadge&&ncBadge()}catch(e){}{const bp=$('#boostPill');if(bp){const m=boostLeft();bp.hidden=!m;const bn=$('#boostN');if(bn)bn.textContent=m?` ${m}m`:''}}const s=SUBJ();applyTheme(P.cls,s.id);const sb=$('#subjBtn');sb.style.setProperty('--uc',s.color);$('#subjGlyph').textContent=s.glyph;$('#subjName').textContent=s.name;
   $('#clsName').textContent=CLS().name;const st=shownStreak();$('#streakN').textContent=st;$('#streakBtn').classList.toggle('off',P.lastDay!==dayKey());
-  $('#gemN').textContent=P.gems;$('#heartN').textContent=P.unlimited?'∞':P.hearts;renderRail()}
+  $('#gemN').textContent=P.gems;$('#heartN').textContent=HUNL()?'∞':P.hearts;renderRail()}
 function closePop(){$('#pop').hidden=true;document.querySelectorAll('.nrow.popopen').forEach(r=>{r.classList.remove('popopen');const p=r.querySelector('.npop');if(p)p.remove()})}
 function openPop(btn,html){closePop();const pop=$('#pop');pop.innerHTML=html;pop.hidden=false;hydrate(pop);const r=btn.getBoundingClientRect();const w=pop.offsetWidth;
   pop.style.left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2))+'px';pop.style.top=(r.bottom+10)+'px'}
@@ -7596,7 +7594,7 @@ function rcDetail(k,title,art,r){const el=bdOv(`<div class="bdtop"><button class
 window.bdPage=bdPage;
 function gemPop(){openPop($('#gemBtn'),`<h4>${P.gems} permata</h4><p style="margin:0 0 10px;font-size:14px">Dapatkan permata dari peti, level sempurna, ujian, dan misi harian.</p><button class="primary" style="width:100%" id="popShop">Buka Toko</button>`);$('#popShop').onclick=()=>{closePop();go('shop')}}
 function heartTimer(){if(P.hearts>=5||!P.heartsAt)return '';const ms=HEART_MS-(Date.now()-P.heartsAt);const m=Math.max(0,Math.ceil(ms/60000));return `Nyawa berikutnya dalam ${m} menit.`}
-function heartsPanel(){return P.unlimited?`<p style="margin:0">Mode kelas aktif: nyawa tidak terbatas. Matikan di Profil → Pengaturan.</p>`:
+function heartsPanel(){return HUNL()?`<p style="margin:0">Nyawa tidak terbatas. Belajar sepuasnya!</p>`:
   `<div style="display:flex;gap:4px;margin-bottom:8px">${Array.from({length:5},(_,i)=>`<span style="width:30px;color:${i<P.hearts?'var(--red)':'#D8DCEC'}">${ICONS.heart}</span>`).join('')}</div><p style="margin:0 0 10px;font-size:14px">${P.hearts>=5?'Nyawamu penuh.':heartTimer()} Setiap jawaban salah di pelajaran mengurangi 1 nyawa.</p>
    <div style="display:flex;flex-direction:column;gap:8px"><button class="primary" data-act="refill" ${P.hearts>=5||P.gems<PRICE.heart?'disabled':''}>Isi penuh · ${PRICE.heart} permata</button><button class="ghost" data-act="practice">Latihan untuk +1 nyawa</button></div>`}
 /* konfirmasi sebelum membeli dengan permata, supaya tidak salah pencet */
@@ -8344,7 +8342,7 @@ function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES
   if(idx>pr.done)return;
   if(ni===2&&spPending(ui)){openSport(ui);return}
   if(nd.k==='chest'){openChest(idx);return}
-  if(nd.k!=='game'&&!P.unlimited&&P.hearts<=0){openHearts();return}
+  if(nd.k!=='game'&&!HUNL()&&P.hearts<=0){openHearts();return}
   const prev=s.units.slice(0,ui);const review=k=>prev.length?Array.from({length:k},()=>unitQs(pick(prev),1)[0]):unitQs(u,k);
   let qs,mode='kuis';
   if(nd.k==='lesson')qs=nd.n===1?unitQs(u,5):shuffle([...unitQs(u,3),...review(2)]);
@@ -8354,8 +8352,8 @@ function startNode(ui,ni){const s=SUBJ(),u=s.units[ui],nd=NODES[ni],idx=ui*NODES
 function startPractice(){const s=SUBJ(),doneUnits=Math.max(1,Math.floor(progOf().done/NODES.length));const pool=s.units.slice(0,Math.min(s.units.length,doneUnits));
   beginRun({kind:'practice',qs:Array.from({length:6},()=>unitQs(pick(pool),1)[0]),mode:'kuis',title:`Latihan · ${s.name}`})}
 function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');if(rr&&!o.room)rr.hidden=true}L=o.cls?LEVELS.find(l=>l.id===COURSE.find(c=>c.id===o.cls).lv):lvOf();const s=o.subj||SUBJ();S={id:s.id,name:o.title||s.name,make:()=>o.qs};MODE=o.mode;setLvColor(L);document.documentElement.style.setProperty('--lvc',s.color);
-  const usesHearts=!HEARTS_OFF&&(o.kind==='lesson'||o.kind==='test');
-  game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?3:(usesHearts&&!P.unlimited?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
+  const usesHearts=o.kind==='lesson'||o.kind==='test';
+  game={qs:o.qs,i:0,score:0,correct:0,lives:o.kind==='game'?3:(usesHearts&&!HUNL()?P.hearts:999),streak:0,best:0,results:[],locked:false,mode:o.mode,buzz:null,group:null,
     lesson:Object.assign({},o,{target:o.qs.length,reask:(o.kind==='lesson'||o.kind==='practice')&&!o.noReask,answers:0,wrong:0,start:Date.now(),usesHearts})};
   show('vPlay');document.body.classList.toggle('lessonmode',o.mode==='kuis');try{loadMateri().catch(()=>{})}catch(e){}
   $('#turn').hidden=true;$('#buzz').hidden=true;$('#teamBar').hidden=true;$('#feedback').hidden=true;
@@ -8363,7 +8361,7 @@ function beginRun(o){PLAY='solo';{const rr=document.getElementById('roomRace');i
   else{$('#checkBar').hidden=true;arcBegin()}}
 function selectOpt(k){if(!game||game.locked||!game.lesson)return;const q=game.qs[game.i];if(k<0||k>=q.opts.length)return;game.sel=k;
   $('#opts').querySelectorAll('.opt').forEach((b,i)=>b.classList.toggle('sel',i===k));$('#checkBtn').disabled=false;tone([520],.04)}
-function lessonHearts(){return `<span class="lhearts">${ICONS.heart.replace('fill="currentColor"','fill="#FF5A5F"')}<b>${!game.lesson.usesHearts||!P||P.unlimited?'∞':Math.max(0,P.hearts)}</b></span>`}
+function lessonHearts(){return `<span class="lhearts">${ICONS.heart.replace('fill="currentColor"','fill="#FF5A5F"')}<b>${!game.lesson.usesHearts||!P||HUNL()?'∞':Math.max(0,P.hearts)}</b></span>`}
 function quitAsk(){if(window.examActive&&window.examActive()){toast('lock','Selesaikan tugas dulu. Kamu tidak bisa keluar saat mode ujian.');return}if(game&&game.lesson&&game.lesson.room&&window.roomQuit){openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Keluar dari tantangan?</h3><p style="text-align:center">Nilaimu dihitung sampai soal ini, lalu kamu keluar dari ruang tanding. Teman lain tetap bisa melanjutkan.</p><div class="acts"><button class="primary" id="mStay">Lanjut main</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);hydrate($('#mbox'));
     $('#mStay').onclick=closeModal;$('#mLeave').onclick=()=>{closeModal();clearInterval(timerId);arcStop();roomQuit()};return}
   openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Tunggu, jangan berhenti dulu!</h3><p style="text-align:center">Kalau keluar sekarang, kemajuan di level ini akan hilang.</p><div class="acts"><button class="primary" id="mStay">Lanjut belajar</button><button class="ghost" id="mLeave" style="color:var(--bad)">Keluar</button></div>`);
@@ -8372,7 +8370,7 @@ function quitAsk(){if(window.examActive&&window.examActive()){toast('lock','Sele
 /* ---------- finishing a level ---------- */
 function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=game,o=g.lesson;if(o.kind==='eval'){evalDone();return}$('#checkBar').hidden=true;
   const answers=Math.max(1,o.answers);const acc=Math.round((answers-o.wrong)/answers*100);const secs=Math.round((Date.now()-o.start)/1000);
-  const noHearts=o.usesHearts&&!P.unlimited&&P.hearts<=0&&g.lives<=0;
+  const noHearts=o.usesHearts&&!HUNL()&&P.hearts<=0&&g.lives<=0;
   let passed=g.lives>0;let need=0;
   if(o.kind==='test'){need=Math.ceil(o.target*.7);passed=passed&&g.correct>=need}
   if(o.kind==='game'){need=Math.ceil(o.target/2);passed=g.correct>=need}
@@ -8380,7 +8378,7 @@ function finishRun(){clearInterval(timerId);if(arc.running)arcStop();const g=gam
   const perfect=o.wrong===0;
   let xp={lesson:10,game:10,test:15,practice:8}[o.kind]+(perfect&&o.kind!=='practice'?5:0);if(o.replay)xp=Math.ceil(xp/2);
   const gems=(perfect&&!o.replay?5:0)+(o.kind==='test'&&!o.replay?10:0);
-  let heartGain=false;if(o.kind==='practice'&&!P.unlimited&&P.hearts<5){P.hearts++;heartGain=true;if(P.hearts>=5)P.heartsAt=null}
+  let heartGain=false;if(o.kind==='practice'&&!HUNL()&&P.hearts<5){P.hearts++;heartGain=true;if(P.hearts>=5)P.heartsAt=null}
   if(o.kind!=='practice'&&!o.replay){const pr=progOf();if(pr.done===o.idx)pr.done++}
   const badgeBefore=BADGES.map(b=>blevel(b));const goalBefore=P.today.xp>=P.goal;
   P.stats.lessons++;if(perfect)P.stats.perfect++;if(o.kind==='test')P.stats.tests++;if(o.kind==='game'&&!P.stats.games.includes(g.mode))P.stats.games.push(g.mode);P.stats.correct+=g.correct;
@@ -8462,7 +8460,7 @@ function renderShop(){const gem=n=>`<span style="width:20px;color:#1C9BE8">${ICO
   const outfit=(list,kind)=>list.map(([id,name,col,price])=>{const own=P.owned[kind].includes(id),on=P.outfit[kind]===id;return `<div class="item"><span class="ii"><span class="swatchdot" style="background:${col}"></span></span><span class="it"><b>${name}</b><small>${on?'Sedang dipakai':own?'Sudah dimiliki':'Gaya baru untuk '+petName()}</small></span><button class="buy ${own?'owned':''}" data-kind="${kind}" data-id="${id}" data-price="${price}" ${on||(!own&&P.gems<price)?'disabled':''}>${on?'Dipakai':own?'Pakai':gem(price)}</button></div>`}).join('');
   $('#shopList').innerHTML=`<div class="card shopsec shopav"><div class="shopav-av" style="--av:${avBgColor(P.avatar)}">${avatarSVG(P.avatar||null)}</div><div style="flex:1;min-width:160px"><h3>Kostum avatar</h3><p class="note" style="margin:0"></p></div><button class="primary" id="shopAv">Ubah avatar</button></div><div class="card shopsec"><h3>Kamu punya ${P.gems} permata</h3></div>
    <div class="card shopsec nyawa-sec"><h3>Nyawa</h3>
-    <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${P.unlimited?'Mode kelas aktif: nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${P.unlimited||P.hearts>=5||P.gems<PRICE.heart?'disabled':''}>${gem(PRICE.heart)}</button></div>
+    <div class="item"><span class="ii">${ico('heartbig')}</span><span class="it"><b>Isi nyawa penuh</b><small>${HUNL()?'Nyawa tidak terbatas':`Nyawa sekarang ${P.hearts} dari 5`}</small></span><button class="buy" id="buyHeart" ${HUNL()||P.hearts>=5||P.gems<PRICE.heart?'disabled':''}>${gem(PRICE.heart)}</button></div>
     <div class="item"><span class="ii">${ico('target')}</span><span class="it"><b>Latihan</b><small>Ulangi materi yang sudah dipelajari, dapat +1 nyawa</small></span><button class="buy" id="buyPractice" style="color:var(--ok)">Gratis</button></div></div>
    <div class="card shopsec"><h3>Pengganda XP</h3><div class="item"><span class="ii">${ico('bolt')}</span><span class="it"><b>XP 2× selama 15 menit</b><small>${boostLeft()?`Aktif, sisa ${boostLeft()} menit`:'Semua XP yang kamu dapat jadi dua kali lipat'}</small></span><button class="buy" id="buyBoost" ${P.gems<PRICE.boost?'disabled':''}>${gem(PRICE.boost)}</button></div></div>
    <div class="card shopsec"><h3>Pelindung api</h3><div class="item"><span class="ii">${ico('ice')}</span><span class="it"><b>Pelindung api</b><small>Menjaga hari beruntun jika lupa belajar satu hari. Dimiliki: ${P.freeze} dari 2</small></span><button class="buy" id="buyFreeze" ${P.freeze>=2||P.gems<PRICE.freeze?'disabled':''}>${gem(PRICE.freeze)}</button></div></div>
@@ -8485,7 +8483,7 @@ function notifIsOn(){try{return !notifOff()&&'Notification' in window&&Notificat
 function openSettings(){if(!P)return;openModal(`<div class="setsheet"><div class="sethead"><h3 style="margin:0;flex:1">Pengaturan</h3><button class="back" id="setX" aria-label="Tutup">✕</button></div><div class="card settings" id="setBody"></div></div>`);
   $('#setX').onclick=closeModal;const el=$('#setBody');const tg=(id,on,label,small)=>`<div class="set"><span><b>${label}</b></span><button class="tgl" id="${id}" aria-pressed="${on}" aria-label="${label}"></button></div>`;
   const rs=()=>{
-  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+(window.fbNotifSet?`<div class="set"><span><b>Notifikasi</b><small>Tugas dari guru dan tantangan teman</small></span><button class="tgl" id="sNotif" aria-pressed="${notifIsOn()}" aria-label="Notifikasi"></button></div>`:'')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+(HEARTS_OFF?'':tg('sUnl',P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas'))+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
+  el.innerHTML=tg('sSound',soundOn,'Efek suara','Bunyi saat menjawab dan membaca soal TK')+tg('sMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+(window.fbNotifSet?`<div class="set"><span><b>Notifikasi</b><small>Tugas dari guru dan tantangan teman</small></span><button class="tgl" id="sNotif" aria-pressed="${notifIsOn()}" aria-label="Notifikasi"></button></div>`:'')+tg('sHap',hapOn,'Getar','HP bergetar saat tombol dipencet dan saat jawaban benar atau salah')+`<div class="set"><span><b>Coba getar</b><small>Tekan untuk memeriksa getaran HP-mu</small></span><button class="smallbtn" id="sHapT">Coba</button></div>`+((window.FBX&&FBX.cfg&&FBX.cfg.hearts==='limited')?tg('sUnl',!!P.unlimited,'Mode kelas: nyawa tak terbatas','Cocok untuk belajar bersama di kelas'):'')+tg('sTV',TV,'Layar TV','Huruf dan tombol lebih besar di layar lebar')+
    `<div class="set"><span><b>Target harian</b><small>XP yang ingin dikumpulkan setiap hari</small></span><div class="seg small" id="sGoal">${[10,20,30,50].map(n=>`<button data-g="${n}" aria-pressed="${n===P.goal}">${n}</button>`).join('')}</div></div>
     ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser</small></span><button class="smallbtn" id="sFull">Aktifkan</button></div>`;
   $('#sSound').onclick=()=>{soundOn=!soundOn;store.set('sound',soundOn);if(!soundOn){musicStop();try{speechSynthesis.cancel()}catch(e){}}else musicStart();(rs(),renderProfile())};
@@ -9047,7 +9045,7 @@ function renderTSet(){const t=T();
      <div class="tfield"><label for="stLabel">Nama kelas</label><input id="stLabel" maxlength="30" placeholder="Contoh: 5A" value="${esc(t.label||'')}"></div><div class="tfield"><label for="stCls">Jenjang</label><select id="stCls">${COURSE.filter(c=>!c.hidden||c.id===t.cls).map(c=>`<option value="${c.id}" ${c.id===t.cls?'selected':''}>${c.full}</option>`).join('')}</select></div><div class="tfield"><label for="stKkm">KKM</label><input id="stKkm" type="number" min="0" max="100" value="${t.kkm}"></div></div>
      <p class="sub" style="margin:0">Mengganti kelas juga memindahkan semua murid ke materi kelas tersebut.</p><button class="primary" id="stSave" style="align-self:flex-start">Simpan data kelas</button></div>`+
    addStudentBlock()+
-   `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${(HEARTS_OFF?'':'')+tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
+   `<div class="tcard settings" style="padding:6px 16px"><h3 style="padding-top:10px">Mode kelas</h3>${tg('stUnl',!!t.unlimited,'Nyawa tak terbatas untuk semua murid','Murid tidak terhenti saat salah menjawab')+tg('stTV',TV,'Layar TV','Huruf dan tombol lebih besar untuk TV sentuh')+tg('stMusic',MUS.on,'Musik latar','Musik ceria selama bermain')+tg('stSound',soundOn,'Efek suara','Bunyi jawaban dan pembacaan soal TK')}
      ${themeRow()}${instRow()}<div class="set"><span><b>Layar penuh</b><small>Sembunyikan tampilan browser di TV</small></span><button class="smallbtn" id="stFull">Aktifkan</button></div></div>
    ${licCard()}
    <div class="tcard"><h3>Keamanan</h3><div class="tform"><div class="tfield"><label for="stPin">Sandi guru baru</label><input id="stPin" type="password" autocomplete="new-password"></div><div class="tfield"><label for="stPin2">Ulangi sandi baru</label><input id="stPin2" type="password" autocomplete="new-password"></div></div><p class="sub" style="margin:0">Nama pengguna guru: <b>${esc(t.user||'guru')}</b></p><button class="ghost" id="stPinSave" style="align-self:flex-start">Ganti sandi guru</button></div>
@@ -10644,7 +10642,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=189';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=190';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -10869,6 +10867,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
    <div class="tcard"><h3>Pengaturan aplikasi</h3>
     <div class="tfield"><label for="adWa">Nomor WhatsApp admin (untuk tombol Hubungi admin)</label><input id="adWa" inputmode="tel" placeholder="Contoh: 6281234567890" value="${esc(FBX.cfg.wa||'')}"></div>
     <div class="tfield"><label for="adPrice">Harga Pro yang ditampilkan ke guru</label><input id="adPrice" placeholder="Contoh: Rp49.000 per bulan" value="${esc(FBX.cfg.price||'')}"></div>
+    <label class="adpay-on"><input type="checkbox" id="adHearts" ${FBX.cfg.hearts==='limited'?'checked':''}> <b>Batasi nyawa murid (5 nyawa, berkurang saat salah)</b></label><p class="note" style="margin:-6px 0 0">Jika tidak dicentang, semua murid mendapat nyawa tanpa batas.</p>
     <div class="tfield"><label for="adAnn">Pengumuman untuk semua guru (kosongkan jika tidak ada)</label><textarea id="adAnn" class="note-area">${esc(FBX.cfg.announce||'')}</textarea></div>
     <button class="primary" id="adCfg" style="align-self:flex-start">Simpan pengaturan</button></div>
    <div class="tcard"><h3>Pembayaran otomatis</h3><p class="sub" style="margin:0">Guru membayar sendiri lewat QRIS, e-wallet, atau transfer bank, lalu Pro aktif otomatis. Harga minimal Rp10.000.</p>
@@ -10890,7 +10889,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
   FB.db.collection('payments').get().then(q=>{const list=q.docs.map(d=>d.data()).sort((a,b)=>(b.created||0)-(a.created||0)).slice(0,30);const el=$('#adPays');if(!el)return;
     const paid=list.filter(x=>x.status==='PAID'),sum=paid.reduce((a,x)=>a+(+x.amount||0),0);
     el.innerHTML=list.length?`<p class="sub" style="margin:0 0 8px">${paid.length} lunas · total ${rupiah(sum)} (sebelum potongan biaya)</p><div class="tablewrap"><table class="ttable"><thead><tr><th>Tanggal</th><th>Guru</th><th>Paket</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>${list.map(x=>`<tr><td>${new Date(x.created||0).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="nm">${esc(x.email||'')}</td><td>${esc(x.planName||x.plan||'')}</td><td class="num">${rupiah(x.amount)}</td><td>${x.status==='PAID'?'<span class="pill ok">Lunas</span>':x.status==='EXPIRED'?'<span class="pill mute">Kedaluwarsa</span>':'<span class="pill mid">Menunggu</span>'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Belum ada pembayaran.</p>'}).catch(()=>{const el=$('#adPays');if(el)el.innerHTML='<p class="note">Belum bisa memuat. Pastikan aturan Firestore terbaru sudah dipasang.</p>'});
-  $('#adCfg').onclick=()=>{const c={wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),upd:Date.now()};
+  $('#adCfg').onclick=()=>{const c={wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),hearts:$('#adHearts').checked?'limited':'unlimited',upd:Date.now()};
     FB.db.doc('config/app').set(c,{merge:true}).then(()=>{FBX.cfg=Object.assign({},FBX.cfg,c);toast('check','Pengaturan aplikasi tersimpan.')}).catch(e=>toast('lock',fbErr(e)))};
   let rows=[];
   const draw=()=>{const q=$('#adFind').value.trim().toLowerCase();const now=Date.now();
