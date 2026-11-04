@@ -3371,32 +3371,53 @@ body.tkmode .nav[data-tab="league"],body.tkmode .nav[data-tab="team"]{display:no
 .aduhd{display:flex;align-items:center;gap:14px}.aduhd h3{margin:0 0 4px}.adurole{display:inline-block;padding:3px 10px;border-radius:999px;background:#E3F6E9;color:#1C8A57;font-size:12px;font-weight:800}.adurole.t{background:#F1EBFF;color:#5B2FD9}
 .adustat{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.adustat div{background:#F4F0FF;border-radius:12px;padding:8px 4px;text-align:center}.adustat b{display:block;font-size:17px;color:#5B2FD9}.adustat small{font-size:10.5px;color:var(--muted,#777);font-weight:700}
 .adukvs{display:flex;flex-direction:column}.adukv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line,#EEE);font-size:14px}.adukv span{color:var(--muted,#777)}.adukv b{text-align:right}
-/* Panel admin bermenu */
-#adminPanel .onbin.adbox{max-width:1180px!important;width:100%;padding:0!important;gap:0!important}
-.adlay{display:grid;grid-template-columns:250px minmax(0,1fr);grid-template-rows:auto 1fr;grid-template-areas:"side main" "foot main";min-height:100vh;width:100%}
-.adside{grid-area:side;display:flex;flex-direction:column;gap:18px;padding:24px 16px 12px;border-right:2px solid var(--line,#E5E5E5)}
-.adfoot{grid-area:foot;padding:12px 16px 24px;border-right:2px solid var(--line,#E5E5E5);display:flex;align-items:flex-end}
-.adfootin{display:flex;flex-direction:column;gap:8px;width:100%}.adfootin button{width:100%}
-.adbrand{display:flex;align-items:center;gap:10px;padding:0 6px}.adkey{width:40px;height:40px;flex:none;display:block}.adkey svg{width:100%;height:100%}
-.adbrand b{display:block;font:800 18px var(--title,sans-serif);color:var(--ink)}.adbrand small{display:block;font-size:12px;color:var(--muted,#777);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px}
-.adnav{display:flex;flex-direction:column;gap:6px}
-.adnb{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:2px solid transparent;background:none;color:var(--muted,#6b6b7b);font:800 15px var(--display,sans-serif);text-align:left;cursor:pointer;white-space:nowrap}
-.adnb svg{width:22px;height:22px;flex:none}.adnb:hover{background:var(--soft,#F6F4FB)}
-.adnb[aria-selected=true]{background:#F1EBFF;border-color:#B9A4F5;color:#5B2FD9}
-.admain{grid-area:main;padding:28px 32px 48px;display:flex;flex-direction:column;gap:16px;min-width:0}
-.adtitle{margin:0;font:800 26px var(--title,sans-serif);color:var(--ink)}
+/* Panel admin bermenu (gaya sama dengan Mode Guru) */
+#adminPanel{background:var(--bg,#fff);padding:0!important}
+#adminPanel .onbin.adbox{max-width:none!important;width:100%;padding:0!important;gap:0!important;margin:0!important}
+.adlay{display:grid;grid-template-columns:260px minmax(0,1fr);grid-template-rows:auto 1fr;grid-template-areas:"side main" "foot main";min-height:100vh;width:100%}
+.adside{grid-area:side;display:flex;flex-direction:column;gap:14px;padding:20px 14px 10px;background:var(--card,#fff);border-right:2px solid var(--line,#E5E5E5)}
+.adfoot{grid-area:foot;padding:10px 14px 22px;background:var(--card,#fff);border-right:2px solid var(--line,#E5E5E5);display:flex;align-items:flex-end}
+.adbrand{display:flex;align-items:center;gap:8px;padding:0 6px;font-family:var(--title);font-size:24px;color:var(--purple,#7C4DFF);line-height:1}
+.adbrand .logo{width:46px;flex:none}.adbn{display:flex;flex-direction:column;letter-spacing:.06em}.adbn small{font-family:var(--display);font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:2px}
+.adxm{display:none;margin-left:auto;width:42px;height:42px;border-radius:12px;border:2px solid var(--line,#E5E5E5);background:var(--card,#fff);box-shadow:0 3px 0 var(--line,#E5E5E5);cursor:pointer}.adxm i{width:22px;height:22px}
+.admode{align-self:stretch;margin:0 6px;text-align:center;background:#3A3A44;color:#fff;border-radius:999px;padding:5px 0;font:800 13px var(--display);letter-spacing:.12em}
+.adnav{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.adnb{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:14px;border:2px solid transparent;background:none;color:var(--ink);font:800 17px var(--display,sans-serif);letter-spacing:.02em;text-align:left;cursor:pointer;white-space:nowrap;transition:background .15s}
+.adnb i{width:32px;height:32px;flex:none}.adnb:hover{background:var(--soft,#F4F4F7)}
+.adnb[aria-selected=true]{background:#DDF4FF;border-color:#84D8FF;color:#1899D6}
+.adfootin{display:flex;flex-direction:column;gap:8px;width:100%;padding:14px;border-radius:18px;background:linear-gradient(160deg,#F3EEFF,#EAF6FF);border:2px solid #E4DAFB}
+.adfootin button{width:100%}
+.admain{grid-area:main;padding:0 32px 48px;display:flex;flex-direction:column;gap:16px;min-width:0;background:var(--bg,#fff)}
+.adtop{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:16px;justify-content:space-between;padding:22px 0 14px;background:var(--bg,#fff);border-bottom:2px solid var(--line,#E5E5E5);margin-bottom:4px}
+.adtitle{margin:0;font:800 24px var(--title,sans-serif);color:var(--ink)}.adgreet{margin:4px 0 0;color:var(--muted);font-size:15px}
+.adme{display:flex;align-items:center;gap:10px}.adme-av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#a855f7,#6d28d9);color:#fff;font:900 18px var(--title)}
+.adme-t b{display:block;font-size:15px}.adme-t small{display:block;color:var(--muted);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admain>.tcard>h3.adh:first-child{display:none}.adsub{margin:0;font-size:15px;color:var(--muted,#6b6b7b)}
+#adminPanel .admain .tcard{border-radius:20px;box-shadow:0 4px 0 var(--line,#E5E5E5)}
+#adminPanel .admain .fbstats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+#adminPanel .admain .fbstat{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:16px;border-radius:18px;box-shadow:0 4px 0 var(--line,#E5E5E5);min-width:0}
+#adminPanel .admain .fbstat::before{content:'';grid-row:1/3;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#a855f7,#6d28d9)}
+#adminPanel .admain .fbstat b{font-size:26px;line-height:1.1;grid-column:2}#adminPanel .admain .fbstat small{grid-column:2;font-size:13px}
+#adStats .fbstat:nth-child(1)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpath d='M2 9l10-5 10 5-10 5z'/%3E%3Cpath d='M6 11v5c3 2.5 9 2.5 12 0v-5'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 8px 18px rgba(37,99,235,.3)}
+#adStats .fbstat:nth-child(2)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6L3.4 9.3l6-.7z'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#a855f7,#6d28d9);box-shadow:0 8px 18px rgba(124,58,237,.3)}
+#adStats .fbstat:nth-child(3)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7.5V12l3 2'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#14b8a6,#0f766e);box-shadow:0 8px 18px rgba(13,148,136,.3)}
+#adStats .fbstat:nth-child(4)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6'/%3E%3Ccircle cx='17' cy='9' r='2.6'/%3E%3Cpath d='M16.5 14.2c2.6.3 4.4 2.3 5 5.3'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#ec4899,#be185d);box-shadow:0 8px 18px rgba(219,39,119,.3)}
+#adStats .fbstat:nth-child(5)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 8px 18px rgba(217,119,6,.3)}
+#aduStats .fbstat:nth-child(1)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6'/%3E%3Ccircle cx='17' cy='9' r='2.6'/%3E%3Cpath d='M16.5 14.2c2.6.3 4.4 2.3 5 5.3'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 8px 18px rgba(37,99,235,.3)}
+#aduStats .fbstat:nth-child(2)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='9' cy='8' r='3.5'/%3E%3Cpath d='M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6'/%3E%3Ccircle cx='17' cy='9' r='2.6'/%3E%3Cpath d='M16.5 14.2c2.6.3 4.4 2.3 5 5.3'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#a855f7,#6d28d9);box-shadow:0 8px 18px rgba(124,58,237,.3)}
+#aduStats .fbstat:nth-child(3)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpath d='M2 9l10-5 10 5-10 5z'/%3E%3Cpath d='M6 11v5c3 2.5 9 2.5 12 0v-5'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#14b8a6,#0f766e);box-shadow:0 8px 18px rgba(13,148,136,.3)}
+#aduStats .fbstat:nth-child(4)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 17l6-6 4 4 8-8'/%3E%3Cpath d='M15 7h6v6'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#ec4899,#be185d);box-shadow:0 8px 18px rgba(219,39,119,.3)}
+#aduStats .fbstat:nth-child(5)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E") center/22px no-repeat,linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 8px 18px rgba(217,119,6,.3)}
 @media (max-width:899px){
- .adlay{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;grid-template-areas:"side" "main" "foot";min-height:0}
- .adside{position:sticky;top:0;z-index:3;background:var(--bg,#fff);border-right:0;border-bottom:2px solid var(--line,#E5E5E5);padding:calc(12px + env(safe-area-inset-top,0px)) 0 0;gap:10px}
- .adbrand{padding:0 16px}.adkey{width:32px;height:32px}
- .adside{position:static;border-bottom:0;padding-bottom:0}
- .adnav{position:fixed;left:0;right:0;bottom:0;z-index:5;flex-direction:row;gap:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));background:var(--bg,#fff);border-top:2px solid var(--line,#E5E5E5)}
- .adnb{flex:1;flex-direction:column;gap:3px;padding:6px 2px;font-size:11px;border-radius:12px;justify-content:center;white-space:nowrap;min-width:0}.adnb span{overflow:hidden;text-overflow:ellipsis;max-width:100%}.adnb svg{width:24px;height:24px}
- .adlay{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
- .admain{padding:18px 16px 12px}.adtitle{font-size:22px}
- #adminPanel .admain .fbstats{display:grid;grid-template-columns:1fr 1fr;gap:8px}#adminPanel .admain .fbstat{min-width:0}
- .adfoot{border-right:0;padding:4px 16px calc(24px + env(safe-area-inset-bottom,0px))}.adfootin{flex-direction:row}.adfootin button{flex:1}
+ .adlay{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;grid-template-areas:"side" "main" "foot";min-height:0;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+ .adside{position:sticky;top:0;z-index:6;border-right:0;border-bottom:2px solid var(--line,#E5E5E5);padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;gap:0}
+ .adbrand{font-size:20px;padding:0}.adbrand .logo{width:38px}.adbn small{font-size:11px}.adxm{display:grid;place-items:center}
+ .admode{display:none}
+ .adnav{position:fixed;left:0;right:0;bottom:0;z-index:7;flex-direction:row;gap:2px;margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));background:var(--card,#fff);border-top:2px solid var(--line,#E5E5E5)}
+ .adnb{flex:1;flex-direction:column;gap:2px;padding:6px 2px;font-size:11px;letter-spacing:0;border-radius:14px;justify-content:center;min-width:0}.adnb span{overflow:hidden;text-overflow:ellipsis;max-width:100%}.adnb i{width:30px;height:30px}
+ .admain{padding:0 16px 12px}.adtop{position:static;padding:16px 0 10px;border-bottom:0}.adme{display:none}.adtitle{font-size:22px}.adgreet{font-size:13px}
+ #adminPanel .admain .fbstats{grid-template-columns:1fr 1fr;gap:10px}#adminPanel .admain .fbstat{grid-template-columns:1fr;row-gap:8px;padding:14px}#adminPanel .admain .fbstat::before{grid-row:auto;width:38px;height:38px}#adminPanel .admain .fbstat b,#adminPanel .admain .fbstat small{grid-column:1}#adminPanel .admain .fbstat b{font-size:22px}
+ .adfoot{border-right:0;padding:4px 16px 20px;background:none}.adfootin{flex-direction:row;padding:0;background:none;border:0}.adfootin #adOut{display:none}
 }
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
@@ -3779,7 +3800,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=209"></script>
+<script src="av.js?v=210"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -11151,7 +11172,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=209';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=210';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -11411,6 +11432,7 @@ const ADU_CARD=`<div class="tcard" id="aduCard"><h3>Pengguna</h3>
  <div class="aduchips">${[['all','Semua'],['student','Murid'],['teacher','Guru']].map(([k,l])=>`<button class="aduchip" data-adr="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('')}</div><div id="aduList"></div></div></div>`;
 /* Panel admin bermenu: satu bagian tampil dalam satu waktu */
 let ADMSEC='ringkasan';
+const ADM_I={ringkasan:'dash',pengguna:'team',guru:'report',bayar:'gem',atur:'gear'};
 const ADM_IC={ringkasan:'<path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"/>',pengguna:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.6.3 4.4 2.3 5 5.3"/>',guru:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',bayar:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>',atur:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>'};
 function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard')];if(cards.length<5)return;
   const [cRing,cUser,cGuru,cAtur,cBayar]=cards;const head=box.querySelector(':scope > .thead'),foot=[...box.children].find(x=>x.querySelector&&x.querySelector('#adTeach'));
@@ -11418,12 +11440,13 @@ function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const ca
   const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];
   secs.forEach(([k,,c])=>{c.dataset.sec=k;const h=c.querySelector(':scope > h3');if(h)h.classList.add('adh')});
   const lay=document.createElement('div');lay.className='adlay';
-  lay.innerHTML=`<aside class="adside"><div class="adbrand"><span class="adkey">${ICONS.key||''}</span><div><b>Panel Admin</b><small>${esc((FBX.user&&FBX.user.email)||'')}</small></div></div><nav class="adnav" role="tablist">${secs.map(([k,l])=>`<button class="adnb" role="tab" data-adsec="${k}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ADM_IC[k]}</svg><span>${l}</span></button>`).join('')}</nav></aside><main class="admain"><h2 class="adtitle"></h2></main><div class="adfoot"></div>`;
+  const hr=new Date().getHours(),sap=hr<11?'pagi':hr<15?'siang':hr<18?'sore':'malam',tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),em=(FBX.user&&FBX.user.email)||'';
+  lay.innerHTML=`<aside class="adside"><div class="adbrand"><span class="logo mascot" data-mascot></span><b class="adbn">JELAS<small>Jelajah Kelas</small></b><button class="adxm" id="adOutM" aria-label="Keluar"><i data-icon="exit"></i></button></div><div class="admode">MODE ADMIN</div><nav class="adnav" role="tablist">${secs.map(([k,l])=>`<button class="adnb" role="tab" data-adsec="${k}"><i data-icon="${ADM_I[k]}"></i><span>${l}</span></button>`).join('')}</nav></aside><main class="admain"><div class="adtop"><div><h2 class="adtitle"></h2><p class="adgreet">Selamat ${sap}, Admin. ${tgl}.</p></div><div class="adme"><span class="adme-av">${esc((em[0]||'A').toUpperCase())}</span><span class="adme-t"><b>Admin</b><small>${esc(em)}</small></span></div></div></main><div class="adfoot"></div>`;
   const main=lay.querySelector('.admain');secs.forEach(([,,c])=>main.appendChild(c));if(foot){foot.removeAttribute('style');foot.className='adfootin';lay.querySelector('.adfoot').appendChild(foot)}
   if(head)head.remove();box.classList.add('adbox');box.appendChild(lay);
   const show=k=>{ADMSEC=k;secs.forEach(([kk,l,c])=>{c.hidden=kk!==k;if(kk===k)lay.querySelector('.adtitle').textContent=l});lay.querySelectorAll('.adnb').forEach(b=>{const on=b.dataset.adsec===k;b.setAttribute('aria-selected',on);if(on&&innerWidth<900)try{b.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}});el.scrollTop=0;
     if(k==='pengguna'&&!ADU.rows){const b=$('#aduLoad');if(b)b.click()}};
-  lay.querySelectorAll('.adnb').forEach(b=>b.onclick=()=>show(b.dataset.adsec));show(ADMSEC)}
+  lay.querySelectorAll('.adnb').forEach(b=>b.onclick=()=>show(b.dataset.adsec));hydrate(lay);{const om=lay.querySelector('#adOutM');if(om)om.onclick=logout}show(ADMSEC)}
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>${esc(u.email)}</p></div></div>
