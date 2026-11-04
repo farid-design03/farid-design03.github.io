@@ -3361,6 +3361,16 @@ body.tkmode .nav[data-tab="league"],body.tkmode .nav[data-tab="team"]{display:no
 .prsub{display:flex;flex-direction:column;gap:8px}.prs{display:flex;align-items:center;gap:10px}.prs .sg{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:12px;flex:none}
 .prs .grow{flex:1;min-width:0}.prs small{display:block;color:var(--muted,#777);font-size:12px}.prs .mini{display:block;height:6px;border-radius:6px;background:#EEE;margin-top:4px;overflow:hidden}.prs .mini i{display:block;height:100%;background:#7C4DFF}
 .prl{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.adutools{display:flex;gap:8px;flex-wrap:wrap}.adutools input{flex:1;min-width:180px;min-height:44px;border-radius:12px;border:2px solid var(--line,#E5E5E5);padding:0 12px;background:var(--card,#fff);color:var(--ink);font:600 15px var(--body,sans-serif)}.adurow .grow{flex:1}.adutools select{min-height:44px;border-radius:12px;border:2px solid var(--line,#E5E5E5);padding:0 10px;background:var(--card,#fff);color:var(--ink);font-weight:700}
+.aduchips{display:flex;gap:8px;margin:10px 0}.aduchip{padding:8px 14px;border-radius:999px;border:2px solid var(--line,#E5E5E5);background:var(--card,#fff);color:var(--ink);font-weight:800;cursor:pointer}.aduchip[aria-pressed=true]{border-color:#7C4DFF;background:#F1EBFF;color:#5B2FD9}
+.adulist{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow:auto;padding-right:4px}
+.adurow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 12px;border-radius:14px;border:2px solid var(--line,#E5E5E5);background:var(--card,#fff);color:var(--ink);cursor:pointer}
+.adurow:hover{border-color:#B9A4F5}.adurow .avatar{width:42px;height:42px;flex:none}.adurow .grow{min-width:0}.adurow b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adurow small{display:block;color:var(--muted,#777);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.adumeta{text-align:right;font-size:12px;font-weight:700;color:var(--muted,#777);flex:none}.adumeta small{font-size:10px}
+.aduini{display:grid;place-items:center;background:#E4DAFB;color:#5B2FD9;font-weight:900;border-radius:50%}
+.aduhd{display:flex;align-items:center;gap:14px}.aduhd h3{margin:0 0 4px}.adurole{display:inline-block;padding:3px 10px;border-radius:999px;background:#E3F6E9;color:#1C8A57;font-size:12px;font-weight:800}.adurole.t{background:#F1EBFF;color:#5B2FD9}
+.adustat{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.adustat div{background:#F4F0FF;border-radius:12px;padding:8px 4px;text-align:center}.adustat b{display:block;font-size:17px;color:#5B2FD9}.adustat small{font-size:10.5px;color:var(--muted,#777);font-weight:700}
+.adukvs{display:flex;flex-direction:column}.adukv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line,#EEE);font-size:14px}.adukv span{color:var(--muted,#777)}.adukv b{text-align:right}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3742,7 +3752,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=206"></script>
+<script src="av.js?v=207"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -11114,7 +11124,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=206';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=207';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -11330,10 +11340,52 @@ async function notifyServer(type,id,extra){try{if(!FB.cfg.pushUrl||!FBX.user)ret
 window.notifyServer=(...a)=>notifyServer(...a);
 
 /* ---------- panel admin (penjual) ---------- */
+/* ===== Admin: jumlah pengguna dan profil pengguna ===== */
+const ADU={rows:null,role:'all',q:'',sort:'new',n:40};
+function aduAgo(ts){if(!ts)return '—';const d=Math.floor((Date.now()-ts)/864e5);if(d<=0)return 'hari ini';if(d===1)return 'kemarin';if(d<30)return d+' hari lalu';return new Date(ts).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}
+function aduP(r){if(r._p!==undefined)return r._p;let p=null;try{p=r.p?JSON.parse(r.p):null}catch(e){}r._p=p;return p}
+function aduCls(id){const c=(typeof COURSE!=='undefined'?COURSE:[]).find(x=>x.id===id);return c?(c.full||c.name):(id||'—')}
+function aduAv(r,big){const p=aduP(r);if(r.photo)return `<span class="avatar avimg"${big?' style="width:84px;height:84px"':''}><img src="${esc(r.photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></span>`;
+  if(p&&p.avatar)try{return `<span class="avatar avimg"${big?' style="width:84px;height:84px;--av:'+avBgColor(p.avatar)+'"':' style="--av:'+avBgColor(p.avatar)+'"'}>${avatarSVG(p.avatar)}</span>`}catch(e){}
+  const n=(r.name||r.username||r.email||'?').trim();return `<span class="avatar aduini"${big?' style="width:84px;height:84px;font-size:32px"':''}>${esc(n[0]?n[0].toUpperCase():'?')}</span>`}
+function aduCount(){const set=(i,v)=>{const el=document.querySelector(`#aduStats [data-i="${i}"] b`);if(el)el.textContent=v};const col=FB.db.collection('users'),wk=Date.now()-7*864e5;
+  const run=(i,q)=>{try{q.count().get().then(s=>set(i,s.data().count.toLocaleString('id-ID'))).catch(()=>set(i,'—'))}catch(e){set(i,'—')}};
+  run(0,col);run(1,col.where('role','==','student'));run(2,col.where('role','==','teacher'));run(3,col.where('upd','>',wk));run(4,col.where('created','>',wk))}
+function aduLoad(){const host=$('#aduList');host.innerHTML='<p class="note">Memuat daftar pengguna…</p>';
+  FB.db.collection('users').limit(3000).get().then(q=>{ADU.rows=q.docs.map(d=>Object.assign({id:d.id},d.data()));aduDraw()})
+   .catch(e=>{host.innerHTML=`<p class="note" style="color:var(--bad)">${esc(fbErr(e))}</p>`})}
+function aduDraw(){const host=$('#aduList');if(!host||!ADU.rows)return;const q=ADU.q.trim().toLowerCase();
+  let list=ADU.rows.filter(r=>(ADU.role==='all'||r.role===ADU.role)&&(!q||[r.name,r.username,r.email,r.school,r.clsName].some(v=>String(v||'').toLowerCase().includes(q))));
+  list.sort(ADU.sort==='new'?(a,b)=>(b.created||0)-(a.created||0):ADU.sort==='act'?(a,b)=>(b.upd||0)-(a.upd||0):(a,b)=>(b.xp||0)-(a.xp||0));
+  const shown=list.slice(0,ADU.n);
+  host.innerHTML=`<p class="note" style="margin:0 0 8px">${list.length.toLocaleString('id-ID')} pengguna${q||ADU.role!=='all'?' cocok':''}</p>`+(shown.length?`<div class="adulist">${shown.map(r=>`<button class="adurow press" data-adu="${esc(r.id)}">${aduAv(r)}<span class="grow"><b>${esc(r.name||r.username||r.email||'Tanpa nama')}</b><small>${r.role==='teacher'?'Guru':r.role==='student'?'Murid':esc(r.role||'?')} · ${r.role==='teacher'?esc(r.school||r.email||''):esc(aduCls(r.cls))}${r.username?' · @'+esc(r.username):''}</small></span><span class="adumeta"><small>Aktif</small>${aduAgo(r.upd)}</span></button>`).join('')}</div>`:'<p class="note">Tidak ada pengguna.</p>')
+   +(list.length>ADU.n?`<button class="ghost press" id="aduMore" style="margin-top:10px">Tampilkan lebih banyak (${list.length-ADU.n} lagi)</button>`:'');
+  hydrate(host);host.querySelectorAll('[data-adu]').forEach(b=>b.onclick=()=>aduOpen(ADU.rows.find(r=>r.id===b.dataset.adu)));
+  const m=$('#aduMore');if(m)m.onclick=()=>{ADU.n+=40;aduDraw()}}
+function aduOpen(r){if(!r)return;const p=aduP(r)||{},st=p.stats||{},now=Date.now();const t=(()=>{try{return TIERS[Math.min(TIERS.length-1,(p.lg&&p.lg.t)||0)][0]}catch(e){return '—'}})();
+  const kv=(k,v)=>v===undefined||v===null||v===''?'':`<div class="adukv"><span>${k}</span><b>${v}</b></div>`;
+  const pro=r.plan==='pro'&&(+r.proUntil||0)>now;
+  const body=r.role==='teacher'
+   ?kv('Email',esc(r.email||'—'))+kv('Sekolah',esc(r.school||'—'))+kv('Jumlah kelas',Array.isArray(r.classes)?r.classes.length:(r.classes?Object.keys(r.classes).length:'—'))+kv('Paket',pro?`Pro sampai ${fmtTs(+r.proUntil)}`:'Gratis')+kv('Bergabung',r.created?fmtTs(r.created):'—')+kv('Terakhir aktif',aduAgo(r.upd))
+   :kv('Nama pengguna',r.username?'@'+esc(r.username):'—')+kv('Kelas',esc(aduCls(r.cls||p.cls)))+kv('Kelas guru',esc(r.clsName||'Belum bergabung'))+kv('Masuk dengan',r.google?'Google':'Nama pengguna dan PIN')+kv('Bergabung',r.created?fmtTs(r.created):'—')+kv('Terakhir aktif',aduAgo(r.upd));
+  const stats=r.role==='teacher'?'':`<div class="adustat">${[[(r.xp||p.xp||0).toLocaleString('id-ID'),'XP'],[p.streak||0,'Runtunan'],[(p.rec&&p.rec.streak)||p.bestStreak||p.streak||0,'Rekor runtunan'],[p.gems||0,'Permata'],[st.lessons||0,'Pelajaran'],[st.correct||0,'Soal benar'],[t,'Liga'],[(p.pets||[]).length,'Peliharaan']].map(([v,l])=>`<div><b>${v}</b><small>${l}</small></div>`).join('')}</div>`;
+  openModal(`<div class="aduprof"><div class="aduhd">${aduAv(r,true)}<div><h3>${esc(r.name||r.username||r.email||'Tanpa nama')}</h3><span class="adurole ${r.role==='teacher'?'t':''}">${r.role==='teacher'?'Guru':'Murid'}</span></div></div>${stats}<div class="adukvs">${body}</div><p class="note" style="margin:10px 0 0;font-size:11px">ID: ${esc(r.id)}</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);
+  $('#mNo').onclick=closeModal}
+function aduInit(){if(!$('#aduCard'))return;aduCount();
+  $('#aduLoad').onclick=()=>{$('#aduLoad').hidden=true;$('#aduTools').hidden=false;aduLoad()};
+  $('#aduFind').oninput=e=>{ADU.q=e.target.value;ADU.n=40;aduDraw()};
+  $('#aduSort').onchange=e=>{ADU.sort=e.target.value;aduDraw()};
+  $('#aduCard').querySelectorAll('[data-adr]').forEach(b=>b.onclick=()=>{ADU.role=b.dataset.adr;ADU.n=40;$('#aduCard').querySelectorAll('[data-adr]').forEach(x=>x.setAttribute('aria-pressed',x===b));aduDraw()});
+  if(ADU.rows){$('#aduLoad').hidden=true;$('#aduTools').hidden=false;aduDraw()}}
+const ADU_CARD=`<div class="tcard" id="aduCard"><h3>Pengguna</h3>
+ <div class="fbstats" id="aduStats">${['Semua pengguna','Murid','Guru','Aktif 7 hari','Baru 7 hari'].map((l,i)=>`<div class="fbstat" data-i="${i}"><b>…</b><small>${l}</small></div>`).join('')}</div>
+ <button class="primary press" id="aduLoad" style="align-self:flex-start">Lihat daftar pengguna</button>
+ <div id="aduTools" hidden><div class="adutools"><input id="aduFind" placeholder="Cari nama, nama pengguna, email, sekolah" autocomplete="off"><select id="aduSort" aria-label="Urutkan"><option value="new">Terbaru</option><option value="act">Terakhir aktif</option><option value="xp">XP terbanyak</option></select></div>
+ <div class="aduchips">${[['all','Semua'],['student','Murid'],['teacher','Guru']].map(([k,l])=>`<button class="aduchip" data-adr="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('')}</div><div id="aduList"></div></div></div>`;
 openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>${esc(u.email)}</p></div></div>
-   <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>
+   <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}
    <div class="tcard"><h3>Guru dan paket Pro</h3><p class="sub" style="margin:0">Setelah guru membayar, cari emailnya lalu tekan +1 bulan atau +1 tahun. Fitur Pro langsung terbuka di perangkat guru.</p>
     <div class="tfield"><label for="adFind">Cari guru</label><input id="adFind" placeholder="Nama, email, atau sekolah" autocomplete="off"></div><div id="adList"><p class="note">Memuat…</p></div></div>
    <div class="tcard"><h3>Pengaturan aplikasi</h3>
@@ -11349,7 +11401,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
     <button class="primary" id="adPaySave" style="align-self:flex-start">Simpan paket</button>
     <h3 style="margin-top:8px">Pembayaran terakhir</h3><div id="adPays"><p class="note">Memuat…</p></div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="adTeach">Buka Mode Guru</button><button class="ghost" id="adOut" style="color:var(--bad)">Keluar</button></div></div>`;
-  hydrate(el);
+  hydrate(el);try{aduInit()}catch(e){console.warn(e)}
   $('#adOut').onclick=logout;
   $('#adTeach').onclick=async()=>{setSession({role:'teacher',uid:u.uid});el.hidden=true;busy(true);let s=null;try{s=await FB.db.doc('users/'+u.uid).get()}catch(e){}busy(false);
     if(s&&s.exists&&s.data().role==='teacher'){FBX.me=s.data();fbEnterTeacher(u,FBX.me)}else fbTeacherForm(u)};
@@ -11378,7 +11430,7 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
     const now=Date.now(),pro=rows.filter(r=>r.plan==='pro'&&(+r.proUntil||0)>now).length;
     const stat=(v,l)=>`<div class="fbstat"><b>${v}</b><small>${l}</small></div>`;
     $('#adStats').innerHTML=stat(rows.length,'Guru terdaftar')+stat(pro,'Guru Pro aktif')+stat(rows.filter(r=>!(r.plan==='pro'&&(+r.proUntil||0)>now)&&(+r.created||0)+TRIAL_DAYS*864e5>now).length,'Guru masa coba')+stat('…','Murid terdaftar')+stat(rows.filter(r=>(r.created||0)>now-7*864e5).length,'Guru baru 7 hari');
-    try{FB.db.collection('users').where('role','==','student').count().get().then(s=>{const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent=s.data().count}).catch(()=>{const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent='—'})}catch(e){const el2=$('#adStats').children[2];if(el2)el2.querySelector('b').textContent='—'}
+    try{FB.db.collection('users').where('role','==','student').count().get().then(s=>{const el2=$('#adStats').children[3];if(el2)el2.querySelector('b').textContent=s.data().count}).catch(()=>{const el2=$('#adStats').children[3];if(el2)el2.querySelector('b').textContent='—'})}catch(e){const el2=$('#adStats').children[3];if(el2)el2.querySelector('b').textContent='—'}
   }).catch(e=>{$('#adList').innerHTML=`<p class="note" style="color:var(--bad)">${esc(/permission/.test(String(e.code||''))?'Akses admin ditolak. Pastikan email admin sudah diverifikasi (klik tautan di email), lalu muat ulang halaman.':fbErr(e))}</p>`;$('#adStats').innerHTML=''})};
 }
 
