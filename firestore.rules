@@ -57,7 +57,7 @@ service cloud.firestore {
         && request.resource.data.teacherUid == null;
       allow update: if isAdmin()
         || (signedIn() && request.auth.uid == uid
-            && !changedKeys().hasAny(['role', 'plan', 'proUntil', 'created'])
+            && !changedKeys().hasAny(['role', 'plan', 'proUntil', 'created', 'disabled'])
             && (!changedKeys().hasAny(['teacherUid', 'classId']) || validJoin(uid)))
         || (signedIn() && resource.data.teacherUid == request.auth.uid
             && changedKeys().hasOnly(['classId', 'teacherUid', 'joinCode'])
@@ -71,14 +71,14 @@ service cloud.firestore {
         && request.resource.data.teacherUid == request.auth.uid;
       // Guru menambah murid (lewat undangan atau persetujuan permintaan gabung); batas murid paket gratis tetap berlaku.
       // Murid hanya boleh mengeluarkan dirinya sendiri; masuk kelas harus lewat guru.
-      allow update: if signedIn() && (
+      allow update: if isAdmin() || (signedIn() && (
           (resource.data.teacherUid == request.auth.uid && request.resource.data.teacherUid == request.auth.uid
             && (!changedKeys().hasAny(['members'])
                 || request.resource.data.members.size() <= resource.data.get('members', {}).size()
                 || request.resource.data.members.size() <= (isProUid(request.auth.uid) ? 2000 : 10)))
           || (changedKeys().hasOnly(['members'])
               && request.resource.data.members.diff(resource.data.members).affectedKeys().hasOnly([request.auth.uid])
-              && !(request.auth.uid in request.resource.data.members)));
+              && !(request.auth.uid in request.resource.data.members))));
       allow delete: if signedIn() && (resource.data.teacherUid == request.auth.uid || isAdmin());
 
       // Tugas dari guru pemilik kelas.
@@ -132,6 +132,15 @@ service cloud.firestore {
             && request.resource.data.players.diff(resource.data.players).affectedKeys().hasOnly([request.auth.uid])
             && request.resource.data.players.size() <= 8));
       allow delete: if signedIn() && resource.data.host == request.auth.uid;
+    }
+
+    // Laporan soal salah dari murid/guru. Hanya admin yang bisa membaca dan mengubah.
+    match /reports/{id} {
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'open'
+        && request.resource.data.q is string && request.resource.data.q.size() <= 2000
+        && request.resource.data.get('note', '').size() <= 500;
+      allow read, update, delete: if isAdmin();
     }
 
     // Catatan pembayaran: hanya ditulis server pembayaran (Cloudflare Worker).

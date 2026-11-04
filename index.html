@@ -3440,6 +3440,36 @@ html[data-theme=malam] .admode{background:#24324f}
 html[data-theme=malam] .adme{color:var(--ink)}
 @media (max-width:899px){.adtopr{display:none}.adthm{display:grid;margin-left:auto}.adxm{margin-left:4px}
  html[data-theme=malam] .adnav{background:#0f1729;border-color:#1e2a45}}
+/* Admin lanjutan */
+.adgrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.adpanel{background:var(--card,#fff);border:2px solid var(--line,#E5E5E5);border-radius:18px;box-shadow:0 4px 0 var(--line,#E5E5E5);padding:16px;min-width:0}
+.adph{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px}.adph b{font-size:15px}.adph span{font-size:12px;color:var(--muted);font-weight:700}
+.adbars{width:100%;height:150px;display:block}.adxl{position:relative;height:18px;margin-top:4px}.adxl span{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--muted);white-space:nowrap}
+.adleg{display:flex;gap:14px;font-size:12px;color:var(--muted);font-weight:700;margin-top:4px}.adleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.adhb{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:10px;align-items:center;margin:9px 0;font-size:13.5px}.adhb>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adhb>div{height:10px;border-radius:6px;background:var(--soft,#F1F1F4);overflow:hidden}.adhb i{display:block;height:100%;border-radius:6px;min-width:3px}.adhb b{font-size:13px}
+.adol{margin:0;padding:0;list-style:none;counter-reset:a;display:flex;flex-direction:column;gap:8px}.adol li{counter-increment:a;display:grid;grid-template-columns:26px 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center}
+.adol li::before{content:counter(a);grid-row:1/3;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#FEE2E2;color:#DC2626;font-weight:900;font-size:13px}.adol b{font-size:14px}.adol small{grid-column:2;color:var(--muted);font-size:12px}.adol span{grid-row:1/3;grid-column:3;font-weight:800}
+.adchips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.adchips>span{padding:8px 12px;border-radius:12px;background:var(--soft,#F4F0FF);font-size:13px;color:var(--muted);font-weight:700}.adchips b{color:var(--ink);margin-left:4px}
+.adfind{width:100%;min-height:44px;border-radius:12px;border:2px solid var(--line,#E5E5E5);padding:0 12px;background:var(--card,#fff);color:var(--ink);font:600 15px var(--body,sans-serif);margin:6px 0 8px;box-sizing:border-box}
+.adsch{margin-top:14px}.adsch h4{margin:0 0 8px;font-size:15px}.adsch h4 small{color:var(--muted);font-weight:700;margin-left:6px;font-size:12px}
+.adukvb{width:100%;background:none;border:0;border-bottom:1px solid var(--line,#EEE);cursor:pointer;color:var(--ink);font:inherit}.adukvb:hover{background:var(--soft,#F6F4FB)}
+.aduacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.aduacts button{flex:1 1 140px;min-height:42px}.aduacts .adbad{color:var(--bad)}
+.adurole.off,.adoff{background:#FEE2E2;color:#DC2626;font-style:normal;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:800}
+.adcsv{min-height:44px;padding:0 14px;white-space:nowrap}.adrowh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.adnb.addot{position:relative}.adnb.addot::after{content:'';position:absolute;top:6px;left:34px;width:10px;height:10px;border-radius:50%;background:#FF4B4B;border:2px solid var(--card,#fff)}
+.adrep{background:var(--card,#fff);border:2px solid var(--line,#E5E5E5);border-radius:18px;box-shadow:0 4px 0 var(--line,#E5E5E5);padding:14px 16px;margin-bottom:12px}.adrep.done{opacity:.65}
+.adrh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.adrwhy{background:#FEF3C7;color:#B45309;font-weight:800;font-size:12px;padding:3px 10px;border-radius:999px}.adrh small{color:var(--muted);font-size:12px;font-weight:700}
+.adrq{font-weight:700;font-size:15px;line-height:1.45}.adropts{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.adropts span{padding:5px 10px;border-radius:10px;border:2px solid var(--line,#E5E5E5);font-size:13px}.adropts .ok{border-color:#22C55E;background:#DCFCE7;color:#166534}.adropts .no{border-color:#F87171;background:#FEE2E2;color:#991B1B}
+.adrkv{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}.adrkv b{color:var(--ink)}.adrnote{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:var(--soft,#F6F4FB);font-size:14px;font-style:italic}
+.adrf{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}.adrf small{color:var(--muted);font-size:12px}.adrf span{display:flex;gap:8px}.adrf button{min-height:38px;padding:0 14px}
+.fbrep{display:inline-flex;align-items:center;gap:5px;margin-left:auto;padding:6px 10px;border-radius:10px;border:0;background:rgba(0,0,0,.06);color:inherit;font:800 12px var(--display,sans-serif);cursor:pointer;opacity:.85}.fbrep[hidden]{display:none}.fbrep:disabled{opacity:.4}
+.rpwhy{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
+.anns{display:flex;align-items:flex-start;gap:12px;margin:10px 16px 6px;padding:12px 14px;border-radius:16px;background:#F3EEFF;border:2px solid #D9CCFB;color:#3B2A6B}.anns b{display:block;font-size:14px}.anns span{font-size:14px;line-height:1.4}.annic{font-size:22px}.annx{border:0;background:none;font-size:16px;cursor:pointer;color:inherit;opacity:.6;padding:2px 4px}
+html[data-theme=malam] .adpanel,html[data-theme=malam] .adrep{background:#111a2e;border-color:#24324f;box-shadow:0 4px 0 #1a2540}html[data-theme=malam] .adchips>span,html[data-theme=malam] .adrnote{background:#16213a}
+html[data-theme=malam] .anns{background:#1d1640;border-color:#3b2f73;color:#ddd3ff}html[data-theme=malam] .fbrep{background:rgba(255,255,255,.1)}
+html[data-theme=malam] .adrwhy{background:#3b2a0a;color:#fbbf24}html[data-theme=malam] .adropts .ok{background:#0f2e1c;color:#86efac}html[data-theme=malam] .adropts .no{background:#3a1212;color:#fca5a5}
+@media (max-width:899px){.adnb.addot::after{top:4px;left:calc(50% + 6px)}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3821,7 +3851,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=213"></script>
+<script src="av.js?v=214"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -6261,6 +6291,7 @@ function answer(k){
   $('#fbText').innerHTML=ok?(q.exp||''):wrongInfo(q,k);bindFbRead();
   const last=game.i===game.qs.length-1||game.lives<=0;
   $('#nextBtn').textContent=game.lesson?(last?'Selesai':'Lanjut'):last?(team?'Lihat klasemen →':'Lihat rapor →'):'Lanjut →';
+  try{rpBtn()}catch(e){}
   if(L.id==='tk'){const ai=q.opts.indexOf(q.ans);const mine=k>=0?optSpeech(q,k):'';say((mine?mine+'. ':'')+(ok?pick(['Hebat, benar!','Pintar sekali!','Hore, betul!']):(q.match||q.warna||q.trace)?'Tidak apa-apa. Ayo lebih teliti lagi, ya.':`Belum tepat. Jawabannya, ${optSpeech(q,ai)||'yang ditandai hijau'}.`))}
   $('#nextBtn').focus({preventScroll:true});
 }
@@ -9989,13 +10020,13 @@ async function fbRepairStudent(u){try{const user=String(u.email||'').split('@')[
   if(!h)await FB.db.doc('handles/'+user).set({uid:u.uid,name,av:null,cls,kw:searchKw(name,user),upd:Date.now()}).catch(()=>{});
   FBX.me=me;setTimeout(()=>toast('check','Data akunmu dipulihkan. Silakan lanjut belajar.'),800);return me}catch(e){console.warn('pulihkan akun',e);return null}}
 function fbHideAuth(){$('#auth').hidden=true;$('#onb').hidden=true;$('#adminPanel').hidden=true;closeModal()}
-async function fbEnterStudent(u,me){let p=null;try{p=JSON.parse(me.p||'null')}catch(e){}
+async function fbEnterStudent(u,me){if(me&&me.disabled){adBlocked();return}let p=null;try{p=JSON.parse(me.p||'null')}catch(e){}
   if(!p)p=newProfile({name:me.name||'Murid',cls:me.cls||'sd2',goal:20});
   p.user=me.username;p.pass=me.pin;
   p.unlimited=false;APP={profiles:[p],cur:p.id,sessions:[],deleted:[],bank:[]};normalizeApp();P=APP.profiles[0];store.set('app',APP);
   setSession({role:'student',id:P.id,uid:u.uid});fbApplyPlan();busy(false);document.body.classList.remove('teacher');document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,3000);setTimeout(folNotice,4000);setTimeout(()=>window.fsNotice&&fsNotice(),6000);FBX.tasksAt=0;window.fbCheckRoomLink&&fbCheckRoomLink();fbListenInvites&&fbListenInvites();fbHandleSync&&fbHandleSync();setTimeout(()=>window.fbPushRegister&&fbPushRegister(),2500);fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner();setTimeout(()=>{taskNag();setTimeout(notifGate,400)},1200)})}
 function fbListenStudent(){const u=FBX.user;if(!u)return;try{jrListenStudent();setTimeout(jrUseLink,1500)}catch(e){console.warn(e)}
-  FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;
+  FBX.unsub.push(FB.db.doc('users/'+u.uid).onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;const d=s.data();FBX.me=d;if(d.disabled){adBlocked();return}
     if(document.body.classList.contains('playing')||document.body.classList.contains('lessonmode')||!P)return;
     try{const r=JSON.parse(d.p||'null');if(r&&(r.upd||0)>(P.upd||0)+1000){r.user=d.username;r.pass=d.pin;APP.profiles=[r];APP.cur=r.id;normalizeApp();P=APP.profiles[0];store.set('app',APP);renderTop();if(curTab==='learn')renderPath();if(curTab==='profile')renderProfile()}}catch(e){}},()=>{}))}
 window.fbAfterSignup=function(){FBX.busy=false;document.body.classList.add('fb-student');fbHideAuth();afterLogin();fbListenStudent();setTimeout(fqNotice,2500);setTimeout(folNotice,3500);window.fbCheckRoomLink&&setTimeout(fbCheckRoomLink,1500);setTimeout(()=>{fbListenInvites();fbHandleSync()},800);FBX.tasksAt=0;fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
@@ -10048,7 +10079,7 @@ function tclsNewForm(){const t=APP.teacher||{};
     $('#mYes').disabled=true;$('#mYes').textContent='Membuat…';try{await tclsAdd(label,$('#ncCls').value)}catch(e){$('#mYes').disabled=false;$('#mYes').textContent='Buat kelas';$('#ncErr').textContent=fbErr(e)}}}
 window.tclsPicker=tclsPicker;
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#tClsChip,.tclschip');if(b){e.preventDefault();tclsPicker()}});
-async function fbEnterTeacher(u,me){const ids=tclsList().map(c=>c.id);FBX.cid=me.curCls&&ids.includes(me.curCls)?me.curCls:u.uid;const ref=FB.db.doc('classes/'+FBX.cid);let cs=null;try{cs=await ref.get()}catch(e){}
+async function fbEnterTeacher(u,me){if(me&&me.disabled){adBlocked();return}const ids=tclsList().map(c=>c.id);FBX.cid=me.curCls&&ids.includes(me.curCls)?me.curCls:u.uid;const ref=FB.db.doc('classes/'+FBX.cid);let cs=null;try{cs=await ref.get()}catch(e){}
   let data=null;FBX.classDoc=cs&&cs.exists?cs.data():null;FBX.members=(FBX.classDoc&&FBX.classDoc.members)||{};
   if(FBX.classDoc){try{data=JSON.parse(FBX.classDoc.data||'null')}catch(e){}}
   const fresh=!data||!data.teacher;
@@ -10774,7 +10805,7 @@ function fbSubmitTask(tid,score,correct,total,ex){const m=FBX.me||{};if(!m.class
 const _finishRun=finishRun;
 finishRun=function(){const o=game&&game.lesson;if(o&&o.task&&FBX.user&&!isT()){const ok=Math.max(0,o.target-Math.min(o.target,o.wrong));fbSubmitTask(o.task,Math.round(ok/o.target*100),ok,o.target,{viol:EXAM?EXAM.viol:0});examEnd();setTimeout(()=>{if(curTab==='learn')fbTaskBanner()},300)}_finishRun()};
 const _renderPath=renderPath;
-renderPath=function(){_renderPath();if(!FBX.user||isT())return;examRecover();fbTaskBanner();notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
+renderPath=function(){_renderPath();if(!FBX.user||isT())return;try{annStudent()}catch(e){}examRecover();fbTaskBanner();notifBanner();if(Date.now()-FBX.tasksAt>60000)fbLoadTasks().then(()=>{if(curTab==='learn')fbTaskBanner()})};
 
 /* ---------- peringkat kelas online ---------- */
 const _rL=renderLeague;
@@ -11193,7 +11224,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=213';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=214';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -11420,7 +11451,7 @@ function aduAv(r,big){const p=aduP(r);if(r.photo)return `<span class="avatar avi
 function aduCount(){const set=(i,v)=>{const el=document.querySelector(`#aduStats [data-i="${i}"] b`);if(el)el.textContent=v};
   /* hitung dari daftar pengguna (SDK compat tidak punya count()); hasilnya disimpan supaya daftar tidak dibaca ulang */
   const fill=rows=>{const wk=Date.now()-7*864e5,n=x=>x.toLocaleString('id-ID');set(0,n(rows.length));set(1,n(rows.filter(r=>r.role==='student').length));set(2,n(rows.filter(r=>r.role==='teacher').length));set(3,n(rows.filter(r=>(r.upd||0)>wk).length));set(4,n(rows.filter(r=>(r.created||0)>wk).length));
-    const ms=document.querySelector('#adStats').children[3];if(ms&&ms.querySelector('b'))ms.querySelector('b').textContent=n(rows.filter(r=>r.role==='student').length)};
+    try{adCharts(rows)}catch(e){console.warn(e)}const ms=document.querySelector('#adStats').children[3];if(ms&&ms.querySelector('b'))ms.querySelector('b').textContent=n(rows.filter(r=>r.role==='student').length)};
   if(ADU.rows){fill(ADU.rows);return}
   FB.db.collection('users').limit(3000).get().then(q=>{ADU.rows=q.docs.map(d=>Object.assign({id:d.id},d.data()));fill(ADU.rows);if($('#aduList')&&!$('#aduTools').hidden)aduDraw()}).catch(()=>{[0,1,2,3,4].forEach(i=>set(i,'—'))})}
 window.aduCount=aduCount;
@@ -11431,7 +11462,7 @@ function aduDraw(){const host=$('#aduList');if(!host||!ADU.rows)return;const q=A
   let list=ADU.rows.filter(r=>(ADU.role==='all'||r.role===ADU.role)&&(!q||[r.name,r.username,r.email,r.school,r.clsName].some(v=>String(v||'').toLowerCase().includes(q))));
   list.sort(ADU.sort==='new'?(a,b)=>(b.created||0)-(a.created||0):ADU.sort==='act'?(a,b)=>(b.upd||0)-(a.upd||0):(a,b)=>(b.xp||0)-(a.xp||0));
   const shown=list.slice(0,ADU.n);
-  host.innerHTML=`<p class="note" style="margin:0 0 8px">${list.length.toLocaleString('id-ID')} pengguna${q||ADU.role!=='all'?' cocok':''}</p>`+(shown.length?`<div class="adulist">${shown.map(r=>`<button class="adurow press" data-adu="${esc(r.id)}">${aduAv(r)}<span class="grow"><b>${esc(r.name||r.username||r.email||'Tanpa nama')}</b><small>${r.role==='teacher'?'Guru':r.role==='student'?'Murid':esc(r.role||'?')} · ${r.role==='teacher'?esc(r.school||r.email||''):esc(aduCls(r.cls))}${r.username?' · @'+esc(r.username):''}</small></span><span class="adumeta"><small>Aktif</small>${aduAgo(r.upd)}</span></button>`).join('')}</div>`:'<p class="note">Tidak ada pengguna.</p>')
+  host.innerHTML=`<p class="note" style="margin:0 0 8px">${list.length.toLocaleString('id-ID')} pengguna${q||ADU.role!=='all'?' cocok':''}</p>`+(shown.length?`<div class="adulist">${shown.map(r=>`<button class="adurow press" data-adu="${esc(r.id)}">${aduAv(r)}<span class="grow"><b>${esc(r.name||r.username||r.email||'Tanpa nama')}${r.disabled?' <em class="adoff">Nonaktif</em>':''}</b><small>${r.role==='teacher'?'Guru':r.role==='student'?'Murid':esc(r.role||'?')} · ${r.role==='teacher'?esc(r.school||r.email||''):esc(aduCls(r.cls))}${r.username?' · @'+esc(r.username):''}</small></span><span class="adumeta"><small>Aktif</small>${aduAgo(r.upd)}</span></button>`).join('')}</div>`:'<p class="note">Tidak ada pengguna.</p>')
    +(list.length>ADU.n?`<button class="ghost press" id="aduMore" style="margin-top:10px">Tampilkan lebih banyak (${list.length-ADU.n} lagi)</button>`:'');
   hydrate(host);host.querySelectorAll('[data-adu]').forEach(b=>b.onclick=()=>aduOpen(ADU.rows.find(r=>r.id===b.dataset.adu)));
   const m=$('#aduMore');if(m)m.onclick=()=>{ADU.n+=40;aduDraw()}}
@@ -11442,27 +11473,135 @@ function aduOpen(r){if(!r)return;const p=aduP(r)||{},st=p.stats||{},now=Date.now
    ?kv('Email',esc(r.email||'—'))+kv('Sekolah',esc(r.school||'—'))+kv('Jumlah kelas',Array.isArray(r.classes)?r.classes.length:(r.classes?Object.keys(r.classes).length:'—'))+kv('Paket',pro?`Pro sampai ${fmtTs(+r.proUntil)}`:'Gratis')+kv('Bergabung',r.created?fmtTs(r.created):'—')+kv('Terakhir aktif',aduAgo(r.upd))
    :kv('Nama pengguna',r.username?'@'+esc(r.username):'—')+kv('Kelas',esc(aduCls(r.cls||p.cls)))+kv('Kelas guru',esc(r.clsName||'Belum bergabung'))+kv('Masuk dengan',r.google?'Google':'Nama pengguna dan PIN')+kv('Bergabung',r.created?fmtTs(r.created):'—')+kv('Terakhir aktif',aduAgo(r.upd));
   const stats=r.role==='teacher'?'':`<div class="adustat">${[[(r.xp||p.xp||0).toLocaleString('id-ID'),'XP'],[p.streak||0,'Runtunan'],[(p.rec&&p.rec.streak)||p.bestStreak||p.streak||0,'Rekor runtunan'],[p.gems||0,'Permata'],[st.lessons||0,'Pelajaran'],[st.correct||0,'Soal benar'],[t,'Liga'],[(p.pets||[]).length,'Peliharaan']].map(([v,l])=>`<div><b>${v}</b><small>${l}</small></div>`).join('')}</div>`;
-  openModal(`<div class="aduprof"><div class="aduhd">${aduAv(r,true)}<div><h3>${esc(r.name||r.username||r.email||'Tanpa nama')}</h3><span class="adurole ${r.role==='teacher'?'t':''}">${r.role==='teacher'?'Guru':'Murid'}</span></div></div>${stats}<div class="adukvs">${body}</div><p class="note" style="margin:10px 0 0;font-size:11px">ID: ${esc(r.id)}</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);
-  $('#mNo').onclick=closeModal}
+  openModal(`<div class="aduprof"><div class="aduhd">${aduAv(r,true)}<div><h3>${esc(r.name||r.username||r.email||'Tanpa nama')}</h3><span class="adurole ${r.role==='teacher'?'t':''}">${r.role==='teacher'?'Guru':'Murid'}</span>${r.disabled?' <span class="adurole off">Nonaktif</span>':''}</div></div>${stats}<div class="adukvs">${body}</div><div class="aduacts"><button class="ghost press" data-aa="nama">Ubah nama</button>${r.role==='student'?`<button class="ghost press" data-aa="pindah">Pindah kelas</button>${r.classId?'<button class="ghost press" data-aa="keluar">Keluarkan dari kelas</button>':''}`:''}${isAdminRow(r)?'':`<button class="ghost press" data-aa="${r.disabled?'on':'off'}">${r.disabled?'Aktifkan lagi':'Nonaktifkan'}</button><button class="ghost press adbad" data-aa="hapus">Hapus data</button>`}</div><p class="note" style="margin:10px 0 0;font-size:11px">ID: ${esc(r.id)}</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);
+  $('#mNo').onclick=closeModal;document.querySelectorAll('#mbox [data-aa]').forEach(b=>b.onclick=()=>aduAct(r,b.dataset.aa))}
+function isAdminRow(r){return !!(FBX.user&&r.id===FBX.user.uid)}
 function aduInit(){if(!$('#aduCard'))return;aduCount();
   $('#aduLoad').onclick=()=>{$('#aduLoad').hidden=true;$('#aduTools').hidden=false;aduLoad()};
   $('#aduFind').oninput=e=>{ADU.q=e.target.value;ADU.n=40;aduDraw()};
-  $('#aduSort').onchange=e=>{ADU.sort=e.target.value;aduDraw()};
+  $('#aduSort').onchange=e=>{ADU.sort=e.target.value;aduDraw()};$('#aduCsv').onclick=aduCSV;
   $('#aduCard').querySelectorAll('[data-adr]').forEach(b=>b.onclick=()=>{ADU.role=b.dataset.adr;ADU.n=40;$('#aduCard').querySelectorAll('[data-adr]').forEach(x=>x.setAttribute('aria-pressed',x===b));aduDraw()});
   if(ADU.rows){$('#aduLoad').hidden=true;$('#aduTools').hidden=false;aduDraw()}}
 const ADU_CARD=`<div class="tcard" id="aduCard"><h3>Pengguna</h3>
  <div class="fbstats" id="aduStats">${['Semua pengguna','Murid','Guru','Aktif 7 hari','Baru 7 hari'].map((l,i)=>`<div class="fbstat" data-i="${i}"><b>…</b><small>${l}</small></div>`).join('')}</div>
  <button class="primary press" id="aduLoad" style="align-self:flex-start">Lihat daftar pengguna</button>
- <div id="aduTools" hidden><div class="adutools"><input id="aduFind" placeholder="Cari nama, nama pengguna, email, sekolah" autocomplete="off"><select id="aduSort" aria-label="Urutkan"><option value="new">Terbaru</option><option value="act">Terakhir aktif</option><option value="xp">XP terbanyak</option></select></div>
+ <div id="aduTools" hidden><div class="adutools"><input id="aduFind" placeholder="Cari nama, nama pengguna, email, sekolah" autocomplete="off"><select id="aduSort" aria-label="Urutkan"><option value="new">Terbaru</option><option value="act">Terakhir aktif</option><option value="xp">XP terbanyak</option></select><button class="ghost press adcsv" id="aduCsv">⬇ CSV</button></div>
  <div class="aduchips">${[['all','Semua'],['student','Murid'],['teacher','Guru']].map(([k,l])=>`<button class="aduchip" data-adr="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('')}</div><div id="aduList"></div></div></div>`;
+/* ===== Admin lanjutan: grafik, statistik belajar, kelas, laporan soal, tindakan pengguna, CSV ===== */
+const ADX={cls:null,rep:null,repF:'open'};window.ADU=ADU;window.ADX=ADX;
+const adNum=x=>Number(x||0).toLocaleString('id-ID');
+function adSubjName(id){for(const c of (typeof COURSE!=='undefined'?COURSE:[])){const s=(c.subjects||[]).find(x=>x.id===id);if(s)return s.name}return id||'—'}
+function adLvl(cls){if(cls==='tk')return 'TK';const g=+String(cls||'').replace(/\D/g,'');return g>=10?'SMA/SMK':g>=7?'SMP':g>=1?'SD':'Lainnya'}
+/* --- grafik pertumbuhan & statistik belajar (dihitung dari data yang sudah dibaca) --- */
+function adCharts(rows){const g=$('#adGrowth'),l=$('#adLearn');if(!g&&!l)return;const now=new Date(),D=30,day=864e5;
+  const t0=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()-(D-1)*day;
+  const bins=Array.from({length:D},(_,i)=>({t:t0+i*day,s:0,g:0}));rows.forEach(r=>{const c=+r.created||0;if(c<t0)return;const i=Math.floor((c-t0)/day);if(i>=0&&i<D){if(r.role==='teacher')bins[i].g++;else bins[i].s++}});
+  const mx=Math.max(1,...bins.map(b=>b.s+b.g)),W=600,H=150,bw=W/D;
+  const bars=bins.map((b,i)=>{const hs=b.s/mx*(H-20),hg=b.g/mx*(H-20),x=i*bw+2,w=bw-4;return `<g><title>${new Date(b.t).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}: ${b.s} murid, ${b.g} guru</title>${hs?`<rect x="${x}" y="${H-hs}" width="${w}" height="${hs}" rx="2" fill="#8B5CF6"/>`:''}${hg?`<rect x="${x}" y="${H-hs-hg}" width="${w}" height="${hg}" rx="2" fill="#22C55E"/>`:''}${!hs&&!hg?`<rect x="${x}" y="${H-2}" width="${w}" height="2" rx="1" fill="var(--line,#E5E5E5)"/>`:''}</g>`}).join('');
+  const lab=[0,10,20,29].map(i=>`<span style="left:${(i+.5)/D*100}%">${new Date(bins[i].t).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</span>`).join('');
+  const sum30=bins.reduce((a,b)=>a+b.s+b.g,0),wk=Date.now()-7*day,mo=Date.now()-30*day,tdy=t0+(D-1)*day;
+  const act=[['Hari ini',rows.filter(r=>(r.upd||0)>=tdy).length,'#22C55E'],['1–7 hari',rows.filter(r=>(r.upd||0)<tdy&&(r.upd||0)>=wk).length,'#3B82F6'],['8–30 hari',rows.filter(r=>(r.upd||0)<wk&&(r.upd||0)>=mo).length,'#F59E0B'],['Lebih dari 30 hari',rows.filter(r=>(r.upd||0)<mo).length,'#9CA3AF']];const am=Math.max(1,...act.map(a=>a[1]));
+  if(g)g.innerHTML=`<h3 class="adsub">Pertumbuhan</h3><div class="adgrid2"><div class="adpanel"><div class="adph"><b>Pendaftar baru · 30 hari</b><span>${adNum(sum30)} orang</span></div><svg viewBox="0 0 ${W} ${H}" class="adbars" preserveAspectRatio="none" role="img" aria-label="Pendaftar baru per hari">${bars}</svg><div class="adxl">${lab}</div><div class="adleg"><span><i style="background:#8B5CF6"></i>Murid</span><span><i style="background:#22C55E"></i>Guru</span></div></div>
+   <div class="adpanel"><div class="adph"><b>Terakhir aktif</b><span>${adNum(rows.length)} pengguna</span></div>${act.map(([k,v,c])=>`<div class="adhb"><span>${k}</span><div><i style="width:${v/am*100}%;background:${c}"></i></div><b>${adNum(v)}</b></div>`).join('')}</div></div>`;
+  if(!l)return;const st=rows.filter(r=>r.role==='student');const subj={},weak={},lv={};let les=0,cor=0;
+  st.forEach(r=>{const p=aduP(r)||{};les+=(p.stats&&p.stats.lessons)||0;cor+=(p.stats&&p.stats.correct)||0;const L=adLvl(r.cls||p.cls);lv[L]=(lv[L]||0)+1;const mine=new Set();
+    Object.entries(p.prog||{}).forEach(([k,v])=>{const sid=k.split('/')[1];if(!sid||!v||!v.done)return;const o=subj[sid]=subj[sid]||{n:0,done:0,q:0,ok:0};mine.add(sid);o.done+=v.done});
+    Object.entries((p.rep&&p.rep.s)||{}).forEach(([k,v])=>{const sid=k.split('/')[1];if(!sid||!v.n)return;const o=subj[sid]=subj[sid]||{n:0,done:0,q:0,ok:0};mine.add(sid);o.q+=v.n||0;o.ok+=v.ok||0});
+    mine.forEach(sid=>subj[sid].n++);
+    (p.weak||[]).forEach(w=>{if(!w._u)return;const k=(w._s||'')+'|'+w._u;weak[k]=(weak[k]||0)+1})});
+  const sl=Object.entries(subj).sort((a,b)=>b[1].n-a[1].n).slice(0,8),smx=Math.max(1,...sl.map(x=>x[1].n));
+  const wl=Object.entries(weak).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  l.innerHTML=`<h3 class="adsub">Statistik belajar murid</h3><div class="adgrid2"><div class="adpanel"><div class="adph"><b>Mata pelajaran terpopuler</b><span>murid yang sudah mulai</span></div>${sl.length?sl.map(([id,o])=>`<div class="adhb"><span>${esc(adSubjName(id))}</span><div><i style="width:${o.n/smx*100}%;background:#8B5CF6"></i></div><b>${adNum(o.n)}${o.q>=10?` · ${Math.round(o.ok/o.q*100)}%`:''}</b></div>`).join(''):'<p class="note">Belum ada data.</p>'}<p class="note" style="margin:8px 0 0;font-size:12px">Persen = jawaban benar 45 hari terakhir (jika datanya cukup).</p></div>
+   <div class="adpanel"><div class="adph"><b>Unit yang paling sering salah</b><span>jumlah murid</span></div>${wl.length?`<ol class="adol">${wl.map(([k,n])=>{const [sid,u]=k.split('|');return `<li><b>${esc(u)}</b><small>${esc(adSubjName(sid))}</small><span>${adNum(n)}</span></li>`}).join('')}</ol>`:'<p class="note">Belum ada data.</p>'}</div></div>
+   <div class="adchips"><span>Total pelajaran selesai <b>${adNum(les)}</b></span><span>Total soal benar <b>${adNum(cor)}</b></span>${['TK','SD','SMP','SMA/SMK'].map(k=>`<span>Murid ${k} <b>${adNum(lv[k]||0)}</b></span>`).join('')}</div>`}
+/* --- unduh CSV --- */
+function adCSV(name,head,rows){const q=v=>{const s=String(v==null?'':v);return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};const txt='﻿'+[head,...rows].map(r=>r.map(q).join(';')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv;charset=utf-8'}));a.download=name+'-'+dayKey()+'.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('check','File CSV diunduh. Bisa dibuka di Excel atau Google Sheets.')}
+function aduList(){const q=ADU.q.trim().toLowerCase();return (ADU.rows||[]).filter(r=>(ADU.role==='all'||r.role===ADU.role)&&(!q||[r.name,r.username,r.email,r.school,r.clsName].some(v=>String(v||'').toLowerCase().includes(q))))}
+function aduCSV(){const L=aduList();if(!L.length){toast('lock','Tidak ada pengguna untuk diunduh.');return}const d=t=>t?new Date(t).toLocaleDateString('id-ID'):'';
+  adCSV('pengguna-jelas',['Nama','Peran','Nama pengguna','Email','Kelas','Kelas guru','Sekolah','XP','Runtunan','Status','Bergabung','Terakhir aktif'],L.map(r=>{const p=aduP(r)||{};return [r.name||'',r.role==='teacher'?'Guru':'Murid',r.username||'',r.email||'',r.role==='teacher'?'':aduCls(r.cls||p.cls),r.clsName||'',r.school||'',r.xp||p.xp||0,p.streak||0,r.disabled?'Nonaktif':'Aktif',d(r.created),d(r.upd)]}))}
+function payCSV(){const L=window.AD_PAYS||[];if(!L.length){toast('lock','Belum ada pembayaran.');return}
+  adCSV('pembayaran-jelas',['Tanggal','Email guru','Paket','Jumlah (Rp)','Status','ID'],L.map(x=>[new Date(x.created||0).toLocaleString('id-ID'),x.email||'',x.planName||x.plan||'',x.amount||0,x.status==='PAID'?'Lunas':x.status==='EXPIRED'?'Kedaluwarsa':'Menunggu',x.id||x.ref||'']))}
+/* --- kelas dan sekolah --- */
+function adClsLoad(force){const host=$('#adClsList');if(!host)return Promise.resolve();if(ADX.cls&&!force){adClsDraw();return Promise.resolve()}host.innerHTML='<p class="note">Memuat kelas…</p>';
+  return FB.db.collection('classes').limit(2000).get().then(q=>{ADX.cls=q.docs.map(d=>Object.assign({id:d.id},d.data()));adClsDraw()}).catch(e=>{host.innerHTML=`<p class="note" style="color:var(--bad)">${esc(fbErr(e))}</p>`})}
+function adClsName(c){return c.label||aduCls(c.cls)}
+function adClsDraw(){const host=$('#adClsList');if(!host||!ADX.cls)return;const q=(($('#adClsFind')||{}).value||'').trim().toLowerCase(),wk=Date.now()-7*864e5,rows=ADU.rows||[];
+  const L=ADX.cls.map(c=>{const mem=Object.keys(c.members||{});const act=rows.filter(r=>r.classId===c.id&&(r.upd||0)>wk).length;return Object.assign(c,{_n:mem.length,_a:act})}).filter(c=>!q||[c.name,c.school,adClsName(c)].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>b._n-a._n);
+  const sch={};L.forEach(c=>{const k=(c.school||'').trim()||'Tanpa nama sekolah';(sch[k]=sch[k]||[]).push(c)});
+  const tot=L.reduce((a,c)=>a+c._n,0);
+  host.innerHTML=`<div class="adchips"><span>Kelas <b>${adNum(L.length)}</b></span><span>Sekolah <b>${adNum(Object.keys(sch).length)}</b></span><span>Murid di kelas <b>${adNum(tot)}</b></span><span>Rata-rata murid per kelas <b>${L.length?Math.round(tot/L.length):0}</b></span></div>`+
+   (L.length?Object.entries(sch).sort((a,b)=>b[1].reduce((x,c)=>x+c._n,0)-a[1].reduce((x,c)=>x+c._n,0)).map(([s,cs])=>`<div class="adsch"><h4>${esc(s)} <small>${cs.length} kelas · ${adNum(cs.reduce((x,c)=>x+c._n,0))} murid</small></h4><div class="adulist">${cs.map(c=>`<button class="adurow press" data-acl="${esc(c.id)}"><span class="avatar aduini" style="border-radius:14px">${esc((adClsName(c)[0]||'K').toUpperCase())}</span><span class="grow"><b>${esc(adClsName(c))}</b><small>Guru: ${esc(c.name||'—')}</small></span><span class="adumeta"><small>Murid</small>${adNum(c._n)}<small style="margin-top:2px">${c._n?`${Math.round(c._a/c._n*100)}% aktif`:'—'}</small></span></button>`).join('')}</div></div>`).join(''):'<p class="note">Belum ada kelas.</p>');
+  host.querySelectorAll('[data-acl]').forEach(b=>b.onclick=()=>adClsOpen(ADX.cls.find(c=>c.id===b.dataset.acl)))}
+function adClsOpen(c){if(!c)return;const rows=ADU.rows||[],mem=Object.entries(c.members||{});
+  const list=mem.map(([uid,nm])=>{const r=rows.find(x=>x.id===uid);return {uid,nm:(r&&r.name)||nm,r}}).sort((a,b)=>((b.r&&b.r.upd)||0)-((a.r&&a.r.upd)||0));
+  openModal(`<div class="aduprof"><h3 style="margin:0">${esc(adClsName(c))}</h3><p class="note" style="margin:2px 0 10px">${esc(c.school||'')}${c.school?' · ':''}Guru: ${esc(c.name||'—')}</p><div class="adukvs">${list.length?list.map(m=>`<button class="adukv adukvb" data-amu="${esc(m.uid)}"><span>${esc(m.nm||'Murid')}</span><b>${m.r?aduAgo(m.r.upd):'—'}</b></button>`).join(''):'<p class="note">Belum ada murid.</p>'}</div><p class="note" style="margin:10px 0 0;font-size:11px">ID kelas: ${esc(c.id)}</p></div><div class="acts"><button class="ghost" id="mNo">Tutup</button></div>`);
+  $('#mNo').onclick=closeModal;document.querySelectorAll('#mbox [data-amu]').forEach(b=>b.onclick=()=>{const r=rows.find(x=>x.id===b.dataset.amu);if(r)aduOpen(r);else toast('lock','Data murid ini tidak ditemukan.')})}
+/* --- laporan soal --- */
+const RP_WHY=[['kunci','Kunci jawaban salah'],['jelas','Soal tidak jelas'],['ketik','Ada salah ketik'],['tampil','Gambar atau suara bermasalah'],['lain','Lainnya']];
+function adRepLoad(){const host=$('#adRepList');if(!host)return;host.innerHTML='<p class="note">Memuat laporan…</p>';
+  FB.db.collection('reports').limit(500).get().then(q=>{ADX.rep=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(b.created||0)-(a.created||0));adRepDraw();adRepBadge()}).catch(e=>{host.innerHTML=`<p class="note" style="color:var(--bad)">${esc(/permission/.test(String(e.code||e.message||''))?'Belum bisa memuat. Aturan Firestore terbaru sedang dipasang, coba lagi beberapa menit lagi.':fbErr(e))}</p>`})}
+function adRepBadge(){const n=(ADX.rep||[]).filter(r=>r.status==='open').length;document.querySelectorAll('#adminPanel .adnb[data-adsec="laporan"]').forEach(b=>b.classList.toggle('addot',n>0));const el=$('#adRepN');if(el)el.textContent=n?`${n} baru`:''}
+function adRepDraw(){const host=$('#adRepList');if(!host||!ADX.rep)return;const L=ADX.rep.filter(r=>ADX.repF==='all'||r.status===ADX.repF);
+  host.innerHTML=L.length?L.map(r=>`<div class="adrep${r.status==='done'?' done':''}"><div class="adrh"><span class="adrwhy">${esc((RP_WHY.find(w=>w[0]===r.why)||[,'Laporan'])[1])}</span><small>${esc(adSubjName(r.subj))}${r.unit?' · '+esc(r.unit):''}${r.cls?' · '+esc(aduCls(r.cls)):''}</small></div>
+    <div class="adrq">${esc(r.q||'')}</div>${r.opts&&r.opts.length?`<div class="adropts">${r.opts.map(o=>`<span class="${o===r.ans?'ok':o===r.picked&&o!==r.ans?'no':''}">${esc(o)}</span>`).join('')}</div>`:''}
+    <div class="adrkv"><span>Kunci: <b>${esc(r.ans||'—')}</b></span>${r.picked?`<span>Dipilih pelapor: <b>${esc(r.picked)}</b></span>`:''}</div>${r.note?`<p class="adrnote">“${esc(r.note)}”</p>`:''}
+    <div class="adrf"><small>${esc(r.name||'Pengguna')} (${r.role==='teacher'?'guru':'murid'}) · ${aduAgo(r.created)}</small><span>${r.status==='done'?`<button class="ghost press" data-rpo="${esc(r.id)}">Buka lagi</button>`:`<button class="primary press" data-rpd="${esc(r.id)}">Selesai</button>`}<button class="ghost press" data-rpx="${esc(r.id)}" style="color:var(--bad)">Hapus</button></span></div></div>`).join(''):`<p class="note">${ADX.repF==='open'?'Tidak ada laporan baru. 🎉':'Belum ada laporan.'}</p>`;
+  const upd=(id,st)=>{const r=ADX.rep.find(x=>x.id===id);FB.db.doc('reports/'+id).update({status:st,doneAt:Date.now()}).then(()=>{r.status=st;adRepDraw();adRepBadge()}).catch(e=>toast('lock',fbErr(e)))};
+  host.querySelectorAll('[data-rpd]').forEach(b=>b.onclick=()=>upd(b.dataset.rpd,'done'));host.querySelectorAll('[data-rpo]').forEach(b=>b.onclick=()=>upd(b.dataset.rpo,'open'));
+  host.querySelectorAll('[data-rpx]').forEach(b=>b.onclick=()=>{const id=b.dataset.rpx;FB.db.doc('reports/'+id).delete().then(()=>{ADX.rep=ADX.rep.filter(x=>x.id!==id);adRepDraw();adRepBadge();toast('check','Laporan dihapus.')}).catch(e=>toast('lock',fbErr(e)))})}
+/* murid & guru: tombol Laporkan soal di panel umpan balik */
+function rpBtn(){const fb=$('#feedback');if(!fb)return;let b=$('#fbReport');const ok=!!(window.FBX&&FBX.user&&game&&game.lesson&&game.lesson.kind!=='eval'&&!(window.examActive&&examActive())&&!(P&&P.cls==='tk'));
+  if(!b){const t=$('#fbTitle');if(!t)return;t.insertAdjacentHTML('afterend','<button class="fbrep" id="fbReport" type="button" aria-label="Laporkan soal ini" title="Laporkan soal"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4m0 0h11l-2 4 2 4H5"/></svg><span>Laporkan</span></button>');b=$('#fbReport');b.onclick=e=>{e.stopPropagation();rpOpen()}}
+  b.hidden=!ok;b.disabled=false}
+function rpOpen(){if(!game)return;const q=game.qs[game.i]||{};const plain=t=>String(t==null?'':t).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();let why='kunci';
+  openModal(`<h3 style="text-align:center;margin:0">Laporkan soal</h3><p class="note" style="text-align:center;margin:4px 0 10px">Laporanmu dibaca admin untuk memperbaiki soal.</p><div class="rpwhy">${RP_WHY.map(([k,l])=>`<button class="aduchip" data-rw="${k}" aria-pressed="${k===why}">${l}</button>`).join('')}</div><textarea id="rpNote" class="note-area" maxlength="400" placeholder="Ceritakan masalahnya (tidak wajib)"></textarea><div class="acts"><button class="primary press" id="rpGo">Kirim laporan</button><button class="ghost" id="mNo">Batal</button></div>`);
+  document.querySelectorAll('#mbox [data-rw]').forEach(b=>b.onclick=()=>{why=b.dataset.rw;document.querySelectorAll('#mbox [data-rw]').forEach(x=>x.setAttribute('aria-pressed',x===b))});$('#mNo').onclick=closeModal;
+  $('#rpGo').onclick=()=>{const b=$('#rpGo');b.disabled=true;let sid='';try{sid=q._s||SUBJ().id}catch(e){}
+    const d={q:plain(q._ans!=null?q.q.replace(/<span class="qtag">[^<]*<\/span>/,'').replace(/<div class="bsclaim">[\s\S]*<\/div>$/,''):q.q).slice(0,1900)||'(soal bergambar)',ans:plain(q._ans!=null?q._ans:q.ans).slice(0,300),opts:(q.opts||[]).slice(0,6).map(o=>plain(o).slice(0,200)),picked:q.picked!=null?plain(q.picked).slice(0,200):(q._typed?String(q._typed).slice(0,200):''),why,note:$('#rpNote').value.trim().slice(0,450),
+      cls:(P&&P.cls)||(isT()&&T()&&T().cls)||'',subj:sid,unit:q._u||'',mode:(game.lesson&&game.lesson.kind)||'',uid:FBX.user.uid,name:(P&&P.name)||(T()&&T().name)||'',role:isT()?'teacher':'student',status:'open',created:Date.now()};
+    FB.db.collection('reports').add(d).then(()=>{closeModal();toast('check','Terima kasih! Laporanmu sudah dikirim ke admin.');const r=$('#fbReport');if(r)r.disabled=true}).catch(e=>{b.disabled=false;toast('lock',fbErr(e))})}}
+/* --- tindakan admin pada pengguna --- */
+function aduAct(r,k){const doc=FB.db.doc('users/'+r.id),done=(m)=>{toast('check',m);aduDraw();try{aduCount()}catch(e){}aduOpen(r)};
+  if(k==='nama'){openModal(`<h3 style="margin:0">Ubah nama</h3><p class="note">Misalnya jika nama tidak pantas.</p><div class="tfield"><label for="anNm">Nama baru</label><input id="anNm" maxlength="40" value="${esc(r.name||'')}"></div><div class="acts"><button class="primary press" id="anGo">Simpan</button><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
+    $('#anGo').onclick=()=>{const nm=$('#anNm').value.trim().slice(0,40);if(nm.length<2){toast('lock','Nama minimal 2 huruf.');return}const up={name:nm};const p=aduP(r);if(p){p.name=nm;p.upd=Date.now();up.p=JSON.stringify(p);up.upd=Date.now()}
+      doc.update(up).then(()=>{Object.assign(r,up);r._p=undefined;done('Nama diganti.')}).catch(e=>toast('lock',fbErr(e)))};return}
+  if(k==='off'||k==='on'){const off=k==='off';openModal(`<h3 style="margin:0">${off?'Nonaktifkan akun?':'Aktifkan lagi akun?'}</h3><p>${off?`<b>${esc(r.name||'Pengguna')}</b> tidak bisa masuk sampai diaktifkan lagi. Datanya tetap tersimpan.`:`<b>${esc(r.name||'Pengguna')}</b> bisa masuk lagi seperti biasa.`}</p><div class="acts"><button class="primary press" id="anGo" ${off?'style="background:var(--bad)"':''}>${off?'Nonaktifkan':'Aktifkan'}</button><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
+    $('#anGo').onclick=()=>doc.update({disabled:off}).then(()=>{r.disabled=off;done(off?'Akun dinonaktifkan.':'Akun diaktifkan lagi.')}).catch(e=>toast('lock',fbErr(e)));return}
+  if(k==='keluar'){openModal(`<h3 style="margin:0">Keluarkan dari kelas?</h3><p><b>${esc(r.name||'Murid')}</b> dikeluarkan dari <b>${esc(r.clsName||'kelasnya')}</b>. Progres belajarnya tetap tersimpan.</p><div class="acts"><button class="primary press" id="anGo">Keluarkan</button><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
+    $('#anGo').onclick=()=>{const b=FB.db.batch();if(r.classId)b.update(FB.db.doc('classes/'+r.classId),{['members.'+r.id]:firebase.firestore.FieldValue.delete()});b.update(doc,{classId:null,teacherUid:null,joinCode:null,clsName:null});
+      b.commit().then(()=>{if(ADX.cls){const c=ADX.cls.find(x=>x.id===r.classId);if(c&&c.members)delete c.members[r.id]}Object.assign(r,{classId:null,teacherUid:null,joinCode:null,clsName:null});done('Murid dikeluarkan dari kelas.')}).catch(e=>toast('lock',fbErr(e)))};return}
+  if(k==='pindah'){const pick=()=>{const L=(ADX.cls||[]).filter(c=>c.id!==r.classId).sort((a,b)=>String(a.school||'').localeCompare(String(b.school||''))||adClsName(a).localeCompare(adClsName(b)));
+      openModal(`<h3 style="margin:0">Pindahkan ke kelas</h3><p class="note">${esc(r.name||'Murid')} sekarang di: <b>${esc(r.clsName||'belum ada kelas')}</b></p><input id="apFind" class="adfind" placeholder="Cari kelas, guru, atau sekolah" autocomplete="off"><div class="adulist" id="apList" style="max-height:46vh;overflow:auto"></div><div class="acts"><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
+      const draw=()=>{const q=$('#apFind').value.trim().toLowerCase();$('#apList').innerHTML=L.filter(c=>!q||[c.name,c.school,adClsName(c)].some(v=>String(v||'').toLowerCase().includes(q))).map(c=>`<button class="adurow press" data-apc="${esc(c.id)}"><span class="grow"><b>${esc(adClsName(c))}</b><small>${esc(c.school||'')}${c.school?' · ':''}Guru: ${esc(c.name||'—')}</small></span><span class="adumeta">${adNum(Object.keys(c.members||{}).length)}<small>murid</small></span></button>`).join('')||'<p class="note">Tidak ada kelas.</p>';
+        document.querySelectorAll('#apList [data-apc]').forEach(b=>b.onclick=()=>{const c=L.find(x=>x.id===b.dataset.apc);const bt=FB.db.batch();if(r.classId)bt.update(FB.db.doc('classes/'+r.classId),{['members.'+r.id]:firebase.firestore.FieldValue.delete()});
+          bt.update(FB.db.doc('classes/'+c.id),{['members.'+r.id]:r.name||'Murid'});const up={classId:c.id,teacherUid:c.teacherUid,joinCode:null,clsName:adClsName(c)};bt.update(doc,up);
+          bt.commit().then(()=>{if(ADX.cls){const o=ADX.cls.find(x=>x.id===r.classId);if(o&&o.members)delete o.members[r.id];c.members=Object.assign({},c.members||{},{[r.id]:r.name||'Murid'})}Object.assign(r,up);done(`Dipindahkan ke ${adClsName(c)}.`)}).catch(e=>toast('lock',fbErr(e)))})};
+      $('#apFind').oninput=draw;draw()};
+    if(ADX.cls)pick();else{toast('clock','Memuat daftar kelas…');FB.db.collection('classes').limit(2000).get().then(q=>{ADX.cls=q.docs.map(d=>Object.assign({id:d.id},d.data()));pick()}).catch(e=>toast('lock',fbErr(e)))}return}
+  if(k==='hapus'){openModal(`<h3 style="margin:0;color:var(--bad)">Hapus data pengguna?</h3><p>Semua data <b>${esc(r.name||'pengguna')}</b> (progres, XP, kelas) dihapus dan <b>tidak bisa dikembalikan</b>. Akun masuknya tetap ada, jadi jika ia masuk lagi akan mulai dari awal.</p><div class="tfield"><label for="ahTx">Ketik HAPUS untuk melanjutkan</label><input id="ahTx" autocomplete="off"></div><div class="acts"><button class="primary press" id="anGo" style="background:var(--bad)">Hapus permanen</button><button class="ghost" id="mNo">Batal</button></div>`);$('#mNo').onclick=()=>aduOpen(r);
+    $('#anGo').onclick=()=>{if($('#ahTx').value.trim().toUpperCase()!=='HAPUS'){toast('lock','Ketik HAPUS dulu.');return}const b=FB.db.batch();if(r.classId)b.update(FB.db.doc('classes/'+r.classId),{['members.'+r.id]:firebase.firestore.FieldValue.delete()});b.delete(doc);
+      b.commit().then(()=>{ADU.rows=ADU.rows.filter(x=>x!==r);closeModal();aduDraw();try{aduCount()}catch(e){}toast('check','Data pengguna dihapus.')}).catch(e=>toast('lock',fbErr(e)))};return}}
+/* akun yang dinonaktifkan admin */
+function adBlocked(){if(window._adBlk&&Date.now()-window._adBlk<4000)return;window._adBlk=Date.now();const wa=(window.FBX&&FBX.cfg&&FBX.cfg.wa)||'';
+  try{logout()}catch(e){}try{FB.auth.signOut()}catch(e){}
+  setTimeout(()=>{try{openModal(`<div class="mascot" data-mascot data-mood="sad" style="width:110px;margin:0 auto"></div><h3 style="text-align:center">Akunmu dinonaktifkan</h3><p style="text-align:center">Admin menonaktifkan akun ini. Hubungi admin atau gurumu untuk mengaktifkannya lagi.</p><div class="acts">${wa?`<a class="primary press" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">Hubungi admin</a>`:''}<button class="ghost" id="mNo">Tutup</button></div>`);hydrate($('#mbox'));$('#mNo').onclick=closeModal}catch(e){}},700)}
+window.adBlocked=adBlocked;
+/* pengumuman untuk murid */
+function annStudent(){try{const host=$('#vLearn');if(!host||!FBX.user||!P||isT())return;const old=$('#annS');const tx=(FBX.cfg&&FBX.cfg.announceS)||'';const key='jelas-ann-'+qKey(tx);let seen=false;try{seen=!!localStorage.getItem(key)}catch(e){}
+  if(!tx||seen){if(old)old.remove();return}if(old&&old.dataset.k===key)return;if(old)old.remove();
+  const el=document.createElement('div');el.id='annS';el.className='anns';el.dataset.k=key;el.innerHTML=`<span class="annic" aria-hidden="true">📢</span><div class="grow"><b>Pengumuman</b><span>${esc(tx)}</span></div><button class="annx" aria-label="Tutup pengumuman">✕</button>`;
+  const anchor=host.querySelector('.pathwrap,.path,#path')||host.firstElementChild;if(anchor&&anchor.parentElement===host)host.insertBefore(el,anchor);else host.prepend(el);
+  el.querySelector('.annx').onclick=()=>{try{localStorage.setItem(key,'1')}catch(e){}el.remove()}}catch(e){}}
 /* Panel admin bermenu: satu bagian tampil dalam satu waktu */
 let ADMSEC='ringkasan';
-const ADM_I={ringkasan:'dash',pengguna:'team',guru:'report',bayar:'gem',atur:'gear'};
+const ADM_I={ringkasan:'dash',pengguna:'team',kelas:'teach',laporan:'quiz',guru:'report',bayar:'gem',atur:'gear'};
 const ADM_IC={ringkasan:'<path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"/>',pengguna:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.8 3.4-6 6.5-6s5.7 2.2 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.6.3 4.4 2.3 5 5.3"/>',guru:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',bayar:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/>',atur:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>'};
-function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard')];if(cards.length<5)return;
-  const [cRing,cUser,cGuru,cAtur,cBayar]=cards;const head=box.querySelector(':scope > .thead'),foot=[...box.children].find(x=>x.querySelector&&x.querySelector('#adTeach'));
+function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const cards=[...box.querySelectorAll(':scope > .tcard')];if(cards.length<7)return;
+  const [cRing,cUser,cGuru,cAtur,cBayar,cKls,cRep]=cards;const head=box.querySelector(':scope > .thead'),foot=[...box.children].find(x=>x.querySelector&&x.querySelector('#adTeach'));
   const st=$('#aduStats');{const h0=cRing.querySelector(':scope > h3');if(h0)h0.insertAdjacentHTML('afterend','<h3 class="adsub">Guru</h3>')}if(st){cRing.insertAdjacentHTML('beforeend','<h3 class="adsub" style="margin-top:8px">Semua pengguna</h3>');cRing.appendChild(st)}
-  const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];
+  cRing.insertAdjacentHTML('beforeend','<div id="adGrowth"></div><div id="adLearn"></div>');if(ADU.rows)try{adCharts(ADU.rows)}catch(e){}
+  const secs=[['ringkasan','Ringkasan',cRing],['pengguna','Pengguna',cUser],['kelas','Kelas',cKls],['laporan','Laporan soal',cRep],['guru','Guru & Pro',cGuru],['bayar','Pembayaran',cBayar],['atur','Pengaturan',cAtur]];
   secs.forEach(([k,,c])=>{c.dataset.sec=k;const h=c.querySelector(':scope > h3');if(h)h.classList.add('adh')});
   const lay=document.createElement('div');lay.className='adlay';
   const hr=new Date().getHours(),sap=hr<11?'pagi':hr<15?'siang':hr<18?'sore':'malam',tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),em=(FBX.user&&FBX.user.email)||'';
@@ -11470,10 +11609,12 @@ function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const ca
   const main=lay.querySelector('.admain');secs.forEach(([,,c])=>main.appendChild(c));if(foot){foot.removeAttribute('style');foot.className='adfootin';lay.querySelector('.adfoot').appendChild(foot)}
   if(head)head.remove();box.classList.add('adbox');box.appendChild(lay);
   const show=k=>{ADMSEC=k;secs.forEach(([kk,l,c])=>{c.hidden=kk!==k;if(kk===k)lay.querySelector('.adtitle').textContent=l});lay.querySelectorAll('.adnb').forEach(b=>{const on=b.dataset.adsec===k;b.setAttribute('aria-selected',on);if(on&&innerWidth<900)try{b.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}});el.scrollTop=0;
-    if(k==='pengguna'&&!ADU.rows){const b=$('#aduLoad');if(b)b.click()}};
+    if(k==='pengguna'){const b=$('#aduLoad');if(b&&!b.hidden)b.click()}if(k==='kelas')adClsLoad();if(k==='laporan'&&ADX.rep)adRepDraw()};
   lay.querySelectorAll('.adnb').forEach(b=>b.onclick=()=>show(b.dataset.adsec));hydrate(lay);try{applyUITheme()}catch(e){}lay.querySelectorAll('.adpbtn').forEach(b=>b.onclick=adProfile);
   /* bagian berisi kartu sendiri tampil tanpa kartu luar */
-  [cRing,cUser,cGuru].forEach(c=>c.classList.add('adflat'));show(ADMSEC)}
+  [cRing,cUser,cGuru,cKls,cRep].forEach(c=>c.classList.add('adflat'));
+  {const f=$('#adClsFind');if(f)f.oninput=adClsDraw}cRep.querySelectorAll('[data-rpf]').forEach(b=>b.onclick=()=>{ADX.repF=b.dataset.rpf;cRep.querySelectorAll('[data-rpf]').forEach(x=>x.setAttribute('aria-pressed',x===b));adRepDraw()});
+  {const pc=$('#adPayCsv');if(pc)pc.onclick=payCSV}adRepLoad();show(ADMSEC)}
 function adName(){const m=(window.FBX&&FBX.me)||{};return m.name||(FBX.user&&FBX.user.displayName)||'Admin'}
 function adPhoto(){const m=(window.FBX&&FBX.me)||{};return (typeof m.photo==='string'&&m.photo)||(FBX.user&&FBX.user.photoURL)||''}
 function adAv(){const ph=adPhoto(),n=adName();return `<span class="adme-av">${ph?`<img src="${esc(ph)}" alt="" referrerpolicy="no-referrer">`:esc((n[0]||'A').toUpperCase())}</span>`}
@@ -11497,7 +11638,7 @@ function adProfile(){const u=FBX.user||{},own=!!adPhoto();const row=(k,ic,l,cls)
     else if(k==='swap'){logout();setTimeout(()=>{try{showBack()}catch(e){}},300)}
     else if(k==='out')logout()})}
 window.adProfile=adProfile;
-openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}ADU.rows=null;el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
+openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();return}ADU.rows=null;ADX.cls=null;ADX.rep=null;el.hidden=false;$('#auth').hidden=true;$('#onb').hidden=true;document.body.classList.remove('teacher');
   el.innerHTML=`<div class="onbin" style="max-width:920px;gap:14px">
    <div class="thead"><span style="width:52px;height:52px;flex:none">${ICONS.key}</span><div class="grow"><h2>Panel Admin</h2><p>${esc(u.email)}</p></div></div>
    <div class="tcard"><h3>Ringkasan</h3><div class="fbstats" id="adStats"><p class="note">Memuat…</p></div></div>${ADU_CARD}
@@ -11508,13 +11649,16 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
     <div class="tfield"><label for="adPrice">Harga Pro yang ditampilkan ke guru</label><input id="adPrice" placeholder="Contoh: Rp49.000 per bulan" value="${esc(FBX.cfg.price||'')}"></div>
     <label class="adpay-on"><input type="checkbox" id="adHearts" ${FBX.cfg.hearts==='limited'?'checked':''}> <b>Batasi nyawa murid (5 nyawa, berkurang saat salah)</b></label><p class="note" style="margin:-6px 0 0">Jika tidak dicentang, semua murid mendapat nyawa tanpa batas.</p>
     <div class="tfield"><label for="adAnn">Pengumuman untuk semua guru (kosongkan jika tidak ada)</label><textarea id="adAnn" class="note-area">${esc(FBX.cfg.announce||'')}</textarea></div>
+    <div class="tfield"><label for="adAnnS">Pengumuman untuk semua murid (tampil di halaman Belajar, kosongkan jika tidak ada)</label><textarea id="adAnnS" class="note-area">${esc(FBX.cfg.announceS||'')}</textarea></div>
     <button class="primary" id="adCfg" style="align-self:flex-start">Simpan pengaturan</button></div>
    <div class="tcard"><h3>Pembayaran otomatis</h3><p class="sub" style="margin:0">Guru membayar sendiri lewat QRIS, e-wallet, atau transfer bank, lalu Pro aktif otomatis. Harga minimal Rp10.000.</p>
     <label class="adpay-on"><input type="checkbox" id="adPayOn" ${FBX.cfg.payOn?'checked':''}> <b>Aktifkan tombol Bayar untuk guru</b></label>
     <div class="adplans">${[0,1,2].map(i=>{const p=payPlans()[i]||PLANS_DEF[i]||{};return `<div class="adplan"><div class="tfield"><label for="apN${i}">Nama paket ${i+1}</label><input id="apN${i}" value="${esc(p.name||'')}" placeholder="Contoh: 1 bulan"></div><div class="tfield"><label for="apD${i}">Lama (hari)</label><input id="apD${i}" type="number" min="1" value="${p.days||''}"></div><div class="tfield"><label for="apP${i}">Harga (Rp)</label><input id="apP${i}" type="number" min="10000" step="1000" value="${p.price||''}"></div></div>`}).join('')}</div>
     <p class="note" style="margin:0">Kosongkan harga untuk menyembunyikan paket.</p><p class="note" id="adPayErr" style="color:var(--bad);font-weight:700;margin:0"></p>
     <button class="primary" id="adPaySave" style="align-self:flex-start">Simpan paket</button>
-    <h3 style="margin-top:8px">Pembayaran terakhir</h3><div id="adPays"><p class="note">Memuat…</p></div></div>
+    <div class="adrowh"><h3 style="margin:8px 0 0">Pembayaran terakhir</h3><button class="ghost press adcsv" id="adPayCsv">⬇ Unduh CSV</button></div><div id="adPays"><p class="note">Memuat…</p></div></div>
+   <div class="tcard" id="adClsCard"><h3>Kelas</h3><input id="adClsFind" class="adfind" placeholder="Cari kelas, guru, atau sekolah" autocomplete="off"><div id="adClsList"><p class="note">Memuat…</p></div></div>
+   <div class="tcard" id="adRepCard"><h3>Laporan soal</h3><p class="note" style="margin:0">Laporan dari murid dan guru tentang soal yang salah atau kurang jelas.</p><div class="aduchips">${[['open','Baru'],['done','Selesai'],['all','Semua']].map(([k,l])=>`<button class="aduchip" data-rpf="${k}" aria-pressed="${k==='open'}">${l}</button>`).join('')}</div><div id="adRepList"><p class="note">Memuat…</p></div></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="primary" id="adTeach">Buka Mode Guru</button><button class="ghost" id="adOut" style="color:var(--bad)">Keluar</button></div></div>`;
   hydrate(el);try{aduInit()}catch(e){console.warn(e)}try{adMenu(el)}catch(e){console.warn(e)}
   $('#adOut').onclick=logout;
@@ -11525,10 +11669,10 @@ openAdmin=function(){const el=$('#adminPanel'),u=FBX.user;if(!u){showLogin();ret
       if(!name||days<1)bad=`Paket ${i+1}: isi nama dan lama hari.`;else if(price<10000)bad=`Paket ${i+1}: harga minimal Rp10.000.`;else plans.push({id:ids[i],name,days,price})});
     const on=$('#adPayOn').checked;if(!bad&&on&&!plans.length)bad='Isi minimal satu paket.';$('#adPayErr').textContent=bad;if(bad)return;
     const c={payOn:on,plans,upd:Date.now()};FB.db.doc('config/app').set(c,{merge:true}).then(()=>{FBX.cfg=Object.assign({},FBX.cfg,c);toast('check',on?'Paket tersimpan. Tombol Bayar aktif untuk guru.':'Paket tersimpan. Tombol Bayar belum aktif.')}).catch(e=>toast('lock',fbErr(e)))};
-  FB.db.collection('payments').get().then(q=>{const list=q.docs.map(d=>d.data()).sort((a,b)=>(b.created||0)-(a.created||0)).slice(0,30);const el=$('#adPays');if(!el)return;
+  FB.db.collection('payments').get().then(q=>{window.AD_PAYS=q.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(b.created||0)-(a.created||0));const list=window.AD_PAYS.slice(0,30);const el=$('#adPays');if(!el)return;
     const paid=list.filter(x=>x.status==='PAID'),sum=paid.reduce((a,x)=>a+(+x.amount||0),0);
     el.innerHTML=list.length?`<p class="sub" style="margin:0 0 8px">${paid.length} lunas · total ${rupiah(sum)} (sebelum potongan biaya)</p><div class="tablewrap"><table class="ttable"><thead><tr><th>Tanggal</th><th>Guru</th><th>Paket</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>${list.map(x=>`<tr><td>${new Date(x.created||0).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="nm">${esc(x.email||'')}</td><td>${esc(x.planName||x.plan||'')}</td><td class="num">${rupiah(x.amount)}</td><td>${x.status==='PAID'?'<span class="pill ok">Lunas</span>':x.status==='EXPIRED'?'<span class="pill mute">Kedaluwarsa</span>':'<span class="pill mid">Menunggu</span>'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Belum ada pembayaran.</p>'}).catch(()=>{const el=$('#adPays');if(el)el.innerHTML='<p class="note">Belum bisa memuat. Pastikan aturan Firestore terbaru sudah dipasang.</p>'});
-  $('#adCfg').onclick=()=>{const c={wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),hearts:$('#adHearts').checked?'limited':'unlimited',upd:Date.now()};
+  $('#adCfg').onclick=()=>{const c={wa:$('#adWa').value.replace(/\D/g,''),price:$('#adPrice').value.trim(),announce:$('#adAnn').value.trim(),announceS:($('#adAnnS')?$('#adAnnS').value.trim():''),hearts:$('#adHearts').checked?'limited':'unlimited',upd:Date.now()};
     FB.db.doc('config/app').set(c,{merge:true}).then(()=>{FBX.cfg=Object.assign({},FBX.cfg,c);toast('check','Pengaturan aplikasi tersimpan.')}).catch(e=>toast('lock',fbErr(e)))};
   let rows=[];
   const draw=()=>{const q=$('#adFind').value.trim().toLowerCase();const now=Date.now();
