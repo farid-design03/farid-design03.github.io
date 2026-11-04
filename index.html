@@ -3423,6 +3423,23 @@ body.tkmode .nav[data-tab="league"],body.tkmode .nav[data-tab="team"]{display:no
  #adminPanel .admain .fbstats{grid-template-columns:1fr 1fr;gap:10px}#adminPanel .admain .fbstat{grid-template-columns:1fr;row-gap:8px;padding:14px}#adminPanel .admain .fbstat::before{grid-row:auto;width:38px;height:38px}#adminPanel .admain .fbstat b,#adminPanel .admain .fbstat small{grid-column:1}#adminPanel .admain .fbstat b{font-size:22px}
  .adfoot{display:none!important}.adfootin{flex-direction:row;padding:0;background:none;border:0}.adfootin #adOut{display:none}
 }
+/* Mode malam: latar modal tetap transparan (tanpa garis tepi di pinggir layar) */
+html[data-theme=malam] #modal.modal{background:rgba(2,6,18,.66)!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+/* Panel admin: tombol mode malam/siang dan penyesuaian mode malam */
+.adtopr{display:flex;align-items:center;gap:6px}
+.adth{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;border:0;background:none;cursor:pointer;flex:none}.adth:hover{background:var(--soft,#F4F4F7)}.adth svg{width:24px;height:24px}
+.adthm{display:none}
+html[data-theme=malam] #adminPanel,html[data-theme=malam] .admain,html[data-theme=malam] .adtop{background:#0a0f1e}
+html[data-theme=malam] .adside,html[data-theme=malam] .adfoot{background:#0f1729;border-color:#1e2a45}
+html[data-theme=malam] .adtop{border-color:#1e2a45}
+html[data-theme=malam] #adminPanel .admain .tcard.adflat{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+html[data-theme=malam] .adnb{color:#dbe4f5}html[data-theme=malam] .adnb:hover,html[data-theme=malam] .adme:hover,html[data-theme=malam] .adth:hover{background:#16213a}
+html[data-theme=malam] .adnb[aria-selected=true]{background:rgba(28,176,246,.14);border-color:#1c6fa3;color:#7dd3fc}
+html[data-theme=malam] .adfootin{background:#111a2e;border-color:#24324f}
+html[data-theme=malam] .admode{background:#24324f}
+html[data-theme=malam] .adme{color:var(--ink)}
+@media (max-width:899px){.adtopr{display:none}.adthm{display:grid;margin-left:auto}.adxm{margin-left:4px}
+ html[data-theme=malam] .adnav{background:#0f1729;border-color:#1e2a45}}
 /* Toko: judul bagian besar gelap */
 html body:not(.teacher) #vShop .shopsec h3{font-size:22px!important;color:var(--ink)!important;text-transform:none!important;letter-spacing:0!important}
 /* Profil: ringkasan tanpa kotak */
@@ -3804,7 +3821,7 @@ html[data-theme=malam] .plstick{background:#0a0f1e}
 <div class="syncpill" id="syncPill" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
-<script src="av.js?v=211"></script>
+<script src="av.js?v=212"></script>
 <script>
 /* ---------- visual assets ---------- */
 const INK='#1B1E3D';
@@ -11176,7 +11193,7 @@ function folBind(root,list,after){root.querySelectorAll('[data-follow]').forEach
   try{await folDo(f,on);if(on){try{sfx.ok()}catch(_){}toast('team',`Kamu mengikuti ${f.name}.`)}b.outerHTML=folBtn(f,b.classList.contains('sm'));folBind(root,list,after);after&&after()}catch(err){b.disabled=false;toast('lock',fbErr(err))}})}
 const shareIcon='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 3 V15 M7 8 L12 3 L17 8 M5 13 V19 C5 20 6 21 7 21 H17 C18 21 19 20 19 19 V13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const qrIcon='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" stroke-linecap="round"/></svg>';
-let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=211';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
+let QRP=null;function loadQR(){return QRP||(QRP=new Promise((ok,no)=>{if(window.QRCodeLib)return ok();const sc=document.createElement('script');sc.src='lib/qr.js?v=212';sc.onload=()=>ok();sc.onerror=()=>{QRP=null;no(new Error('qr'))};document.head.appendChild(sc)}))}
 function qrMatrix(text){const Q=window.QRCodeLib,q=new Q(-1,Q.ECL.M);q.addData(text);q.make();const n=q.getModuleCount(),m=[];for(let r=0;r<n;r++){m.push([]);for(let c=0;c<n;c++)m[r].push(q.isDark(r,c))}return m}
 function qrSvgOf(m){const n=m.length;let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(m[r][c])d+=`M${c} ${r}h1.02v1.02h-1.02z`;
   return `<svg viewBox="-2 -2 ${n+4} ${n+4}" class="pcqr" shape-rendering="crispEdges" aria-label="Kode QR profil"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#1C1E3D"/></svg>`}
@@ -11445,12 +11462,12 @@ function adMenu(el){const box=el.querySelector('.onbin');if(!box)return;const ca
   secs.forEach(([k,,c])=>{c.dataset.sec=k;const h=c.querySelector(':scope > h3');if(h)h.classList.add('adh')});
   const lay=document.createElement('div');lay.className='adlay';
   const hr=new Date().getHours(),sap=hr<11?'pagi':hr<15?'siang':hr<18?'sore':'malam',tgl=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),em=(FBX.user&&FBX.user.email)||'';
-  lay.innerHTML=`<aside class="adside"><div class="adbrand"><span class="logo mascot" data-mascot></span><b class="adbn">JELAS<small>Jelajah Kelas</small></b><button class="adxm adpbtn" aria-label="Profil admin">${adAv()}</button></div><div class="admode">MODE ADMIN</div><nav class="adnav" role="tablist">${secs.map(([k,l])=>`<button class="adnb" role="tab" data-adsec="${k}"><i data-icon="${ADM_I[k]}"></i><span>${l}</span></button>`).join('')}</nav></aside><main class="admain"><div class="adtop"><div><h2 class="adtitle"></h2><p class="adgreet">Selamat ${sap}, Admin. ${tgl}.</p></div><button class="adme adpbtn" aria-label="Profil admin">${adAv()}<span class="adme-t"><b>${esc(adName())}</b><small>${esc(em)}</small></span><svg class="adchev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></div></main><div class="adfoot"></div>`;
+  lay.innerHTML=`<aside class="adside"><div class="adbrand"><span class="logo mascot" data-mascot></span><b class="adbn">JELAS<small>Jelajah Kelas</small></b><button class="thbtn adth adthm" data-thsw aria-label="Ganti mode">${thBtnIn()}</button><button class="adxm adpbtn" aria-label="Profil admin">${adAv()}</button></div><div class="admode">MODE ADMIN</div><nav class="adnav" role="tablist">${secs.map(([k,l])=>`<button class="adnb" role="tab" data-adsec="${k}"><i data-icon="${ADM_I[k]}"></i><span>${l}</span></button>`).join('')}</nav></aside><main class="admain"><div class="adtop"><div><h2 class="adtitle"></h2><p class="adgreet">Selamat ${sap}, Admin. ${tgl}.</p></div><div class="adtopr"><button class="thbtn adth" data-thsw aria-label="Ganti mode">${thBtnIn()}</button><button class="adme adpbtn" aria-label="Profil admin">${adAv()}<span class="adme-t"><b>${esc(adName())}</b><small>${esc(em)}</small></span><svg class="adchev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></div></div></main><div class="adfoot"></div>`;
   const main=lay.querySelector('.admain');secs.forEach(([,,c])=>main.appendChild(c));if(foot){foot.removeAttribute('style');foot.className='adfootin';lay.querySelector('.adfoot').appendChild(foot)}
   if(head)head.remove();box.classList.add('adbox');box.appendChild(lay);
   const show=k=>{ADMSEC=k;secs.forEach(([kk,l,c])=>{c.hidden=kk!==k;if(kk===k)lay.querySelector('.adtitle').textContent=l});lay.querySelectorAll('.adnb').forEach(b=>{const on=b.dataset.adsec===k;b.setAttribute('aria-selected',on);if(on&&innerWidth<900)try{b.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}});el.scrollTop=0;
     if(k==='pengguna'&&!ADU.rows){const b=$('#aduLoad');if(b)b.click()}};
-  lay.querySelectorAll('.adnb').forEach(b=>b.onclick=()=>show(b.dataset.adsec));hydrate(lay);lay.querySelectorAll('.adpbtn').forEach(b=>b.onclick=adProfile);
+  lay.querySelectorAll('.adnb').forEach(b=>b.onclick=()=>show(b.dataset.adsec));hydrate(lay);try{applyUITheme()}catch(e){}lay.querySelectorAll('.adpbtn').forEach(b=>b.onclick=adProfile);
   /* bagian berisi kartu sendiri tampil tanpa kartu luar */
   [cRing,cUser,cGuru].forEach(c=>c.classList.add('adflat'));show(ADMSEC)}
 function adName(){const m=(window.FBX&&FBX.me)||{};return m.name||(FBX.user&&FBX.user.displayName)||'Admin'}
